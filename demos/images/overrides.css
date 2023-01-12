@@ -1,0 +1,29 @@
+.sun-icon {
+    position: absolute;
+    left: -25px;
+    z-index: 99999;
+    height: 20px;
+    width: 20px;
+  }
+
+.moon-icon {
+    position: absolute;
+    right: -25px;
+    z-index: 99999;
+    height: 17px;
+    width: 17px;
+  }
+
+.icon-div-outer {
+    align-items: center;
+    justify-content: space-around;
+    height: 27px;
+    display: flex;
+    flex-direction: row;
+    width: 50px;
+    position: relative;
+  }
+
+.ddk-container.ddk-container .hamburger-inner, .ddk-container .hamburger-inner::before, .ddk-container .hamburger-inner::after, .ddk-container .hamburger.is-active .hamburger-inner {
+    background-color:var(--body_text)
+}

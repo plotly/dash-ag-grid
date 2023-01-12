@@ -1,0 +1,9 @@
+include dash_ag_grid/dash_ag_grid.min.js
+include dash_ag_grid/dash_ag_grid.min.js.map
+include dash_ag_grid/async-dashaggrid.js
+include dash_ag_grid/async-dashaggrid.js.map
+include dash_ag_grid/metadata.json
+include dash_ag_grid/package-info.json
+include README.md
+include LICENSE
+include package.json
