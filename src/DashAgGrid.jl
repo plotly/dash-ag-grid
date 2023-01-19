@@ -3,10 +3,9 @@ module DashAgGrid
 using Dash
 
 const resources_path = realpath(joinpath( @__DIR__, "..", "deps"))
-const version = "1.3.1"
+const version = "2.0.0"
 
-include("jl/aggrid.jl")
-include("jl/aggridcolumn.jl")
+include("jl/''_aggrid.jl")
 
 function __init__()
     DashBase.register_package(

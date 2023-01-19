@@ -4,12 +4,25 @@ import LazyLoader from '../LazyLoader';
 import React, {Component, lazy, Suspense} from 'react';
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
+const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
+
+function getGrid(enable) {
+    if (enable) {
+        return RealAgGridEnterprise
+    } else {
+        return RealAgGrid
+    }
+}
 
 export default class DashAgGrid extends Component {
+
     render() {
+        const {enableEnterpriseModules} = this.props
+
+        const RealComponent = getGrid(enableEnterpriseModules)
         return (
             <Suspense fallback={null}>
-                <RealAgGrid {...this.props} />
+                <RealComponent {...this.props} />
             </Suspense>
         );
     }
@@ -17,11 +30,20 @@ export default class DashAgGrid extends Component {
 
 DashAgGrid.defaultProps = {
     style: {height: '400px', width: '100%'},
-    theme: 'alpine',
+    className: 'ag-theme-alpine',
     enableResetColumnState: false,
     enableExportDataAsCsv: false,
+    enableSelectAll: false,
+    enableSelectAllFiltered: false,
+    enableDeselectAll: false,
+    enableAutoSizeAllColumns: false,
+    enableAutoSizeAllColumnsSkipHeaders: false,
+    enableEnterpriseModules: false,
+    enableUpdateColumnDefs: false,
     persisted_props: ['selectionChanged'],
     persistence_type: 'local',
+    suppressDragLeaveHidesColumns: true,
+    dangerously_allow_html: false,
 };
 DashAgGrid.propTypes = {
     /********************************
@@ -39,14 +61,14 @@ DashAgGrid.propTypes = {
     setProps: PropTypes.func,
 
     /**
-     * The children of this component
-     */
-    children: PropTypes.node,
-
-    /**
      * The CSS style for the component
      */
     style: PropTypes.object,
+
+    /**
+     * The class for the ag-grid.  Can specify the ag-grid theme here.
+     */
+    className: PropTypes.string,
 
     /**
      * Used to allow user interactions in this component to be persisted when
@@ -77,6 +99,12 @@ DashAgGrid.propTypes = {
      */
     persistence_type: PropTypes.oneOf(['local', 'session', 'memory']),
 
+
+    /**
+    * Enables the use of html for the whole table, this is required if wanting to turn on for columns
+    */
+    dangerously_allow_html: PropTypes.bool,
+
     /********************************
      * CUSTOM PROPS
      *******************************/
@@ -90,6 +118,59 @@ DashAgGrid.propTypes = {
      * If true, the internal method exportDataAsCsv() will be called
      */
     enableExportDataAsCsv: PropTypes.bool,
+
+    /**
+     * If true, the internal method selectAll() will be called
+     */
+    enableSelectAll: PropTypes.bool,
+
+    /**
+     * If true, the internal method selectAllFiltered() will be called
+     */
+    enableSelectAllFiltered: PropTypes.bool,
+
+    /**
+     * If true, the internal method deselectAll() will be called
+     */
+    enableDeselectAll: PropTypes.bool,
+
+    /**
+     * If true, the internal method autoSizeAllColumns(false) will be called
+     */
+    enableAutoSizeAllColumns: PropTypes.bool,
+
+    /**
+     * If true, the internal method autoSizeAllColumns(true) will be called
+     */
+    enableAutoSizeAllColumnsSkipHeaders: PropTypes.bool,
+
+    /**
+     * If true, the internal method updateColumnDefs() will be called
+     */
+    enableUpdateColumnDefs: PropTypes.bool,
+
+    /**
+     * If true, the internal method deleteSelectedRows() will be called
+     */
+    enableDeleteSelectedRows: PropTypes.bool,
+
+    /**
+     * If true, the internal method addRows() will be called
+     */
+    enableAddRows: PropTypes.oneOfType([
+                PropTypes.bool, PropTypes.Object
+        ]),
+
+    /**
+    * This is required for change detection in rowData
+    */
+    setRowId: PropTypes.string,
+
+
+    /**
+     * Current state of the columns
+     */
+    columnState: PropTypes.array,
 
     /**
      * Object with properties to pass to the exportDataAsCsv() method
@@ -172,7 +253,7 @@ DashAgGrid.propTypes = {
     columnSize: PropTypes.oneOf(['sizeToFit', 'autoSizeAll']),
 
     /**
-     * The ag-grid provided theme to use. More info here: https://www.ag-grid.com/javascript-grid/themes-provided/
+     * Use this with Dash Enterprise only.  Sets the ag-grid theme.  Use ddk for dark themes.
      */
     theme: PropTypes.oneOf(['alpine', 'balham', 'material', 'bootstrap']),
 
@@ -304,6 +385,7 @@ DashAgGrid.propTypes = {
      * Array of Column Definitions.
      */
     columnDefs: PropTypes.any,
+
 
     /**
      * A default column definition.
@@ -850,6 +932,16 @@ DashAgGrid.propTypes = {
      * (Client-Side Row Model only) Set the data to be displayed as rows in the grid.
      */
     rowData: PropTypes.any,
+
+    /**
+     * Snapshot of rowData before edits
+     */
+    data_previous: PropTypes.any,
+
+    /**
+     * Snapshot of rowData before edits -- timestamp
+     */
+    data_previous_timestamp: PropTypes.any,
 
     /**
      * (Client-Side Row Model only) Enables Immutable Data mode, for compatibility with
@@ -1859,6 +1951,11 @@ DashAgGrid.propTypes = {
         PropTypes.oneOf(['columns', 'filters']),
         PropTypes.object,
     ]),
+
+    /**
+     * Other ag-grid options
+     */
+    dashGridOptions: PropTypes.object,
 };
 
 export const propTypes = DashAgGrid.propTypes;

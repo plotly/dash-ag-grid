@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, lazy, require} from 'react';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
 import {omit} from 'ramda';
@@ -7,19 +7,15 @@ import {propTypes, defaultProps} from '../components/AgGrid.react';
 import MarkdownRenderer from '../renderers/markdownRenderer';
 import RowMenuRenderer from '../renderers/rowMenuRenderer';
 
-import {AgGridReact, AgGridColumn} from '@ag-grid-community/react';
-import {ModuleRegistry} from '@ag-grid-community/core';
-import {AllCommunityModules} from '@ag-grid-community/all-modules';
-import {AllModules} from '@ag-grid-enterprise/all-modules';
-import {LicenseManager} from '@ag-grid-enterprise/core';
+import 'ag-grid-community';
+import { AgGridReact } from 'ag-grid-react';
 
 import lodash from 'lodash';
 
-import '@ag-grid-community/core/dist/styles/ag-grid.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-alpine.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-balham.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-bootstrap.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-material.css';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
+import 'ag-grid-community/styles/ag-theme-material.css';
 
 // Rate-limit for resizing columns when table div is resized
 const RESIZE_DEBOUNCE_MS = 200;
@@ -28,21 +24,32 @@ export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
 
-        if (props.enableEnterpriseModules) {
-            ModuleRegistry.registerModules(AllModules);
-            if (props.licenseKey) {
-                LicenseManager.setLicenseKey(props.licenseKey);
-            }
-        } else {
-            ModuleRegistry.registerModules(AllCommunityModules);
+        this.state = {
+            gridApi: null,
+            columnApi: null,
+            components: {
+                rowMenu: this.generateRenderer(RowMenuRenderer),
+                markdown: this.generateRenderer(MarkdownRenderer),
+            },
+            openGroups: new Set(),
+            filterModel: {},
+            dangerously_allow_html: JSON.parse(JSON.stringify(this.props.dangerously_allow_html)),
+
+        };
+
+        if (this.props.rowData) {
+            this.setState({
+                        rowData: JSON.parse(JSON.stringify(this.props.rowData))
+                    })
         }
 
         this.onGridReady = this.onGridReady.bind(this);
         this.onSelectionChanged = this.onSelectionChanged.bind(this);
         this.onCellClicked = this.onCellClicked.bind(this);
         this.onCellValueChanged = this.onCellValueChanged.bind(this);
-        this.onRowDataChanged = this.onRowDataChanged.bind(this);
+        this.onRowDataUpdated = this.onRowDataUpdated.bind(this);
         this.onFilterChanged = this.onFilterChanged.bind(this);
+        this.onSortChanged = this.onSortChanged.bind(this);
         this.onRowGroupOpened = this.onRowGroupOpened.bind(this);
         this.onDisplayedColumnsChanged = this.onDisplayedColumnsChanged.bind(
             this
@@ -55,17 +62,19 @@ export default class DashAgGrid extends Component {
         this.exportDataAsCsv = this.exportDataAsCsv.bind(this);
         this.setSelection = this.setSelection.bind(this);
 
+        //Additional Exposure
+        this.setUpCols = this.setUpCols.bind(this);
+        this.selectAll = this.selectAll.bind(this);
+        this.selectAllFiltered = this.selectAllFiltered.bind(this);
+        this.deselectAll = this.deselectAll.bind(this);
+        this.autoSizeAllColumns = this.autoSizeAllColumns.bind(this);
+        this.updateColumnDefs = this.updateColumnDefs.bind(this);
+        this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
+        this.addRows = this.addRows.bind(this);
+        this.getRowData = this.getRowData.bind(this);
+
         this.selectionEventFired = false;
-        this.state = {
-            gridApi: null,
-            columnApi: null,
-            frameworkComponents: {
-                rowMenu: this.generateRenderer(RowMenuRenderer),
-                markdown: this.generateRenderer(MarkdownRenderer)
-            },
-            openGroups: new Set(),
-            filterModel: {},
-        };
+
     }
 
     setSelection(selection) {
@@ -84,6 +93,52 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    setUpCols(cellStyle) {
+        const templateMessage = 'you are trying to use a dangerous element that could lead to XSS'
+        if (this.props.columnDefs) {
+            this.props.setProps(
+                {columnDefs: this.props.columnDefs.map((columnDef) => {
+                    if ('children' in columnDef) {
+                        columnDef['children'] = columnDef['children'].map((child) => {
+                                if ("headerComponentParams" in child) {
+                                    if ('template' in child['headerComponentParams'] && !(child['dangerously_allow_html']
+                                    && this.state.dangerously_allow_html)) {
+                                        child['headerComponentParams']['template'] = '<div></div>'
+                                        console.error({field: child['field'], message: templateMessage})
+                                    }
+                                }
+                                if ('cellStyle' in child) {
+                                    return child
+                                }
+                                return {
+                                        ...omit(['id'], child),
+                                        cellStyle: (params) =>
+                                            this.handleDynamicCellStyle({params, cellStyle}),
+                                    }
+                            })
+                        }
+                    if ("headerComponentParams" in columnDef) {
+                        if ('template' in columnDef['headerComponentParams'] && !(columnDef['dangerously_allow_html']
+                                    && this.state.dangerously_allow_html)) {
+                            columnDef['headerComponentParams']['template'] = '<div></div>'
+                            console.error({field: columnDef['field'], message: templateMessage})
+                        }
+                    }
+                    if ('cellStyle' in columnDef) {
+                        return columnDef
+                    }
+                    return {
+                            ...omit(['id'], columnDef),
+                            cellStyle: (params) =>
+                                this.handleDynamicCellStyle({params, cellStyle}),
+                        }
+
+                    })
+                }
+            )
+        }
+    }
+
     onFilterChanged(e) {
         const {setProps} = this.props;
         let virtualRowData = [];
@@ -96,14 +151,60 @@ export default class DashAgGrid extends Component {
         setProps({virtualRowData: virtualRowData});
     }
 
-    componentDidUpdate(prevProps) {
+    getRowData() {
+        let newRowData = [];
+        this.state.gridApi.forEachNode((node) => {
+            newRowData.push(node.data);
+        })
+        return newRowData;
+    }
+
+    onSortChanged(e) {
+        const {setProps, columnState} = this.props;
+        let virtualRowData = [];
+        this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
+            virtualRowData.push(node.data);
+        });
+
+        setProps({
+            virtualRowData: virtualRowData,
+            columnState: this.state.gridColumnApi.getColumnState(),
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
         const {
             selectionChanged,
             getDetailResponse,
             detailCellRendererParams,
             masterDetail,
             setProps,
+            cellStyle,
+            dashGridOptions,
+            rowData,
+            columnSize,
         } = this.props;
+
+        if (rowData) {
+
+            if (this.state.rowData) {
+                if (JSON.stringify(rowData) != JSON.stringify(this.state.rowData)) {
+
+                    this.props.setProps({
+                        data_previous: JSON.parse(JSON.stringify(this.state.rowData)),
+                        data_previous_timestamp: Date.now(),
+                    })
+
+                    this.setState({
+                        rowData: JSON.parse(JSON.stringify(rowData))
+                    })
+                }
+            } else {
+                this.setState({
+                        rowData: JSON.parse(JSON.stringify(rowData))
+                    })
+            }
+        }
 
         if (this.isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = this.props.getRowsResponse;
@@ -126,11 +227,23 @@ export default class DashAgGrid extends Component {
             this.setSelection(selectionChanged);
         }
 
+        if (JSON.stringify(cellStyle) != JSON.stringify(prevProps.cellStyle) ||
+         JSON.stringify(this.props.columnDefs) != JSON.stringify(prevProps.columnDefs) ||
+        prevProps.columnSize != columnSize) {
+            this.props.setProps({columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
+            this.setUpCols(cellStyle)
+        }
+
+        if (dashGridOptions != prevProps.dashGridOptions) {
+            this.props.setProps(JSON.parse(JSON.stringify({...this.props.dashGridOptions})))
+        }
+
         // Reset selection event flag
         this.selectionEventFired = false;
+
     }
 
-    onRowDataChanged() {
+    onRowDataUpdated({api, columnApi, context, type}) {
         // Handles preserving existing selections when rowData is updated in a callback
         const {selectionChanged} = this.props;
         const {openGroups, filterModel} = this.state;
@@ -216,6 +329,7 @@ export default class DashAgGrid extends Component {
         this.props.setProps({gridReady: true});
         // Hydrate virtualRowData
         this.onFilterChanged(true);
+
     }
 
     onCellClicked({value, column: {colId}, rowIndex}) {
@@ -294,57 +408,105 @@ export default class DashAgGrid extends Component {
         });
     }
 
+    selectAll() {
+        this.state.gridApi.selectAll()
+        this.props.setProps({
+            enableSelectAll: false,
+        });
+    }
+
+    selectAllFiltered() {
+        this.state.gridApi.selectAllFiltered()
+        this.props.setProps({
+            enableSelectAllFiltered: false,
+        });
+    }
+
+    deselectAll() {
+        this.state.gridApi.deselectAll()
+        this.props.setProps({
+            enableDeselectAll: false,
+        });
+    }
+
+    deleteSelectedRows() {
+        const sel = this.state.gridApi.getSelectedRows();
+        this.state.gridApi.applyTransaction({remove: sel});
+        this.props.setProps({
+            enableDeleteSelectedRows: false,
+            rowData: this.getRowData()
+        });
+    }
+
+    addRows(data) {
+        if (data !== true) {
+            this.state.gridApi.applyTransaction({add: data})
+        } else {
+            const cols = this.state.gridColumnApi.getColumnState()
+            const adding = {}
+            for (var x=0; x<cols.length; x++) {
+                adding[cols[x]['colId']] = ''
+            }
+            this.state.gridApi.applyTransaction({add: [adding]})
+        }
+        this.props.setProps({
+                enableAddRows: false,
+                rowData: this.getRowData()
+            })
+    }
+
+    autoSizeAllColumns(skipHeader) {
+        const allColumnIds = [];
+        this.state.gridColumnApi.getColumnState().forEach((column) => {
+          allColumnIds.push(column.colId);
+        });
+        this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+        this.props.setProps({
+            enableAutoSizeAllColumns: false,
+            enableAutoSizeAllColumnsSkipHeaders: false,
+        });
+    };
+
+    updateColumnDefs () {
+        this.props.setProps({
+            columnState: JSON.parse(JSON.stringify(this.state.gridColumnApi.getColumnState())),
+            enableUpdateColumnDefs: false
+        })
+    }
+
     render() {
         const {
             id,
-            children = null,
             cellStyle,
-            columnDefs,
             style,
             theme,
+            className,
             enableResetColumnState,
             enableExportDataAsCsv,
+            enableSelectAll,
+            enableSelectAllFiltered,
+            enableDeselectAll,
+            enableAutoSizeAllColumns,
+            enableAutoSizeAllColumnsSkipHeaders,
+            enableDeleteSelectedRows,
+            enableAddRows,
+            enableUpdateColumnDefs,
             csvExportParams,
             detailCellRendererParams,
             setProps,
+            setRowId,
             ...restProps
         } = this.props;
 
-        const styledColumnDefs =
-            columnDefs &&
-            columnDefs.map((columnDef) => {
-                if ('cellStyle' in columnDef) {
-                    return columnDef;
-                }
+        let getRowId
 
-                return {
-                    ...omit(['id'], columnDef),
-                    cellStyle: (params) =>
-                        this.handleDynamicCellStyle({params, cellStyle}),
-                };
-            });
+        if (setRowId) {
+            getRowId = (params) => params.data[setRowId]
+        }
+
+        this.setUpCols(cellStyle)
 
         const cols = [];
-
-        if (children) {
-            React.Children.map(children, (child) => {
-                if ('_dashprivate_layout' in child.props) {
-                    const childProps = child.props._dashprivate_layout.props;
-
-                    cols.push(
-                        <AgGridColumn
-                            {...omit(['id'], childProps)}
-                            cellStyle={(params) =>
-                                this.handleDynamicCellStyle({
-                                    params,
-                                    cellStyle,
-                                })
-                            }
-                        ></AgGridColumn>
-                    );
-                }
-            });
-        }
 
         if (enableResetColumnState) {
             this.resetColumnState();
@@ -352,6 +514,38 @@ export default class DashAgGrid extends Component {
 
         if (enableExportDataAsCsv) {
             this.exportDataAsCsv(csvExportParams);
+        }
+
+        if (enableSelectAll) {
+            this.selectAll();
+        }
+
+        if (enableSelectAllFiltered) {
+            this.selectAllFiltered();
+        }
+
+        if (enableDeselectAll) {
+            this.deselectAll();
+        }
+
+        if (enableAutoSizeAllColumns) {
+            this.autoSizeAllColumns(false);
+        }
+
+        if (enableAutoSizeAllColumnsSkipHeaders) {
+            this.autoSizeAllColumns(true);
+        }
+
+        if (enableUpdateColumnDefs) {
+            this.updateColumnDefs();
+        }
+
+        if (enableDeleteSelectedRows) {
+            this.deleteSelectedRows();
+        }
+
+        if (enableAddRows) {
+            this.addRows(enableAddRows);
         }
 
         const callbackGetDetail = (params) => {
@@ -384,49 +578,36 @@ export default class DashAgGrid extends Component {
         return (
             <div
                 id={id}
-                className={'ag-theme-' + theme}
+                className={theme ? 'ag-theme-' + theme : className}
                 style={{
                     ...style,
-                    ...{
-                        '--ag-data-color': 'var(--text)',
-                        '--ag-foreground-color': 'var(--text)',
-                        '--ag-background-color': 'var(--background_content)',
-                        '--ag-odd-row-background-color':
-                            'var(--background_page)',
-                        '--ag-header-background-color':
-                            'var(--background_page)',
-                        '--ag-border-color': 'var(--border)',
-                        '--ag-secondary-border-color': 'var(--border)',
-                        '--ag-checkbox-checked-color': 'var(--accent)',
-                        '--ag-control-panel-background-color':
-                            'var(--background_page)',
-                        'font-family': 'var(--font_family, Arial)',
-                    },
                 }}
             >
                 <AgGridReact
+                    getRowId={getRowId}
                     onGridReady={this.onGridReady}
                     onSelectionChanged={this.onSelectionChanged}
                     onCellClicked={this.onCellClicked}
                     onCellValueChanged={this.onCellValueChanged}
                     onFilterChanged={this.onFilterChanged}
-                    onRowDataChanged={this.onRowDataChanged}
+                    onSortChanged={this.onSortChanged}
+                    onRowDataUpdated={this.onRowDataUpdated}
                     onRowGroupOpened={this.onRowGroupOpened}
                     onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}
                     onGridSizeChanged={lodash.debounce(
                         this.onGridSizeChanged,
                         RESIZE_DEBOUNCE_MS
                     )}
-                    columnDefs={styledColumnDefs}
-                    frameworkComponents={this.state.frameworkComponents}
+                    components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
                     {...omit(['theme'], restProps)}
+                    {...this.props.dashGridOptions}
                 >
                     {cols}
                 </AgGridReact>
             </div>
         );
-    }
+    };
 }
 
 DashAgGrid.defaultProps = defaultProps;
