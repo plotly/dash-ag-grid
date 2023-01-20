@@ -114,43 +114,6 @@ declarative_api_example = html.Div(
     ]
 )
 
-children_api_example = html.Div(
-    [
-        dcc.Markdown(
-            "This example is the same as above but passes column definitions as children of the parent grid."
-        ),
-        dag.AgGrid(
-            id="cell-renderer-table-2",
-            columnSize="sizeToFit",
-            rowData=rowData,
-            children=[
-                dag.AgGridColumn(
-                    id="column1",
-                    field="make",
-                    sortable=True,
-                ),
-                dag.AgGridColumn(id="column2", field="model"),
-                dag.AgGridColumn(
-                    id="column3",
-                    field="price",
-                ),
-                dag.AgGridColumn(
-                    id="column4",
-                    field="link",
-                    cellRenderer="markdown",
-                ),
-                dag.AgGridColumn(
-                    id="column5",
-                    field="image",
-                    cellRenderer="markdown",
-                ),
-            ],
-        ),
-        html.Hr(),
-    ],
-    style={"marginTop": "10px"},
-)
-
 raw_html_example = html.Div(
     [
         dcc.Markdown(
@@ -204,7 +167,6 @@ app.layout = html.Div(
     [
         row_menu_example,
         declarative_api_example,
-        children_api_example,
         raw_html_example,
     ],
     style={"flexWrap": "wrap"},

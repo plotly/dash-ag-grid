@@ -2,13 +2,17 @@
 Demonstration of working with AG-Grid in a variety of use-cases involving selections.
 """
 import dash_ag_grid as dag
-import dash
-from dash import Input, Output, html, dcc
+from dash import Dash, Input, Output, html, dcc, ctx, no_update
 
-app = dash.Dash(__name__)
+app = Dash(__name__)
 
 columnDefs = [
-    {"headerName": "Make", "field": "make"},
+    {
+        "headerName": "Make",
+        "field": "make",
+        "checkboxSelection": True,
+        "headerCheckboxSelection": True,
+    },
     {"headerName": "Model", "field": "model"},
     {"headerName": "Price", "field": "price"},
 ]
@@ -22,27 +26,13 @@ rowData = [
 
 app.layout = html.Div(
     [
-        dcc.Markdown(
-            "Select rows and the data will be used to populate a second component."
-        ),
+        dcc.Markdown("Select rows and the data will be displayed below the table."),
         dag.AgGrid(
             id="selectable-grid",
             rowData=rowData,
+            columnDefs=columnDefs,
             columnSize="sizeToFit",
             rowSelection="multiple",
-            children=[
-                dag.AgGridColumn(
-                    field="make",
-                    checkboxSelection=True,
-                    headerCheckboxSelection=True,
-                ),
-                dag.AgGridColumn(
-                    field="model",
-                ),
-                dag.AgGridColumn(
-                    field="price",
-                ),
-            ],
         ),
         dcc.Markdown(id="currentSelections"),
         html.Hr(),
@@ -55,19 +45,7 @@ app.layout = html.Div(
             columnSize="sizeToFit",
             rowSelection="multiple",
             persistence=True,
-            children=[
-                dag.AgGridColumn(
-                    field="make",
-                    checkboxSelection=True,
-                    headerCheckboxSelection=True,
-                ),
-                dag.AgGridColumn(
-                    field="model",
-                ),
-                dag.AgGridColumn(
-                    field="price",
-                ),
-            ],
+            columnDefs=columnDefs,
         ),
         html.Hr(),
         dcc.Markdown(
@@ -85,16 +63,10 @@ app.layout = html.Div(
             rowData=rowData,
             columnSize="sizeToFit",
             rowSelection="multiple",
-            children=[
-                dag.AgGridColumn(
-                    field="make",
-                ),
-                dag.AgGridColumn(
-                    field="model",
-                ),
-                dag.AgGridColumn(
-                    field="price",
-                ),
+            columnDefs=[
+                {"headerName": "Make", "field": "make"},
+                {"headerName": "Model", "field": "model"},
+                {"headerName": "Price", "field": "price"},
             ],
         ),
         html.Hr(),
@@ -127,15 +99,12 @@ def display_selected_car2(selectionChanged):
     Input("selectable-grid-callbacks", "selectionChanged"),
 )
 def select_rows(values, selectionChanged):
-    ctx = dash.callback_context
-    trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    if ctx.triggered_id == "selection-checklist":
+        return no_update, [i for i in rowData if i["make"] in values]
+    if ctx.triggered_id == "selectable-grid-callbacks":
+        return [i["make"] for i in selectionChanged], no_update
 
-    if trigger_id == "selection-checklist":
-        return dash.no_update, [i for i in rowData if i["make"] in values]
-    elif trigger_id == "selectable-grid-callbacks":
-        return [i["make"] for i in selectionChanged], dash.no_update
-
-    return dash.no_update, dash.no_update
+    return no_update, no_update
 
 
 if __name__ == "__main__":

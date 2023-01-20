@@ -3,13 +3,13 @@ Triggering a popup when a cell is clicked with a callback.
 """
 import dash_ag_grid as dag
 import dash
-from dash import Input, Output, html, dcc
+from dash import Input, Output, html, dcc, ctx
 import dash_bootstrap_components as dbc
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 columnDefs = [
-    {"headerName": "Make", "field": "make"},
+    {"headerName": "Make", "field": "make", "checkboxSelection": True},
     {"headerName": "Model", "field": "model"},
     {"headerName": "Price", "field": "price"},
 ]
@@ -29,20 +29,9 @@ app.layout = html.Div(
         dag.AgGrid(
             id="selectable-grid-popup",
             rowData=rowData,
+            columnDefs=columnDefs,
             columnSize="sizeToFit",
             rowSelection="single",
-            children=[
-                dag.AgGridColumn(
-                    field="make",
-                    checkboxSelection=True,
-                ),
-                dag.AgGridColumn(
-                    field="model",
-                ),
-                dag.AgGridColumn(
-                    field="price",
-                ),
-            ],
         ),
         dbc.Modal(
             [
@@ -62,9 +51,8 @@ app.layout = html.Div(
     Input("selectable-grid-popup", "selectionChanged"),
     Input("close", "n_clicks"),
 )
-def open_modal(selection, close_clicks):
-    ctx = dash.callback_context
-    if "close" in ctx.triggered[0]["prop_id"]:
+def open_modal(selection, _):
+    if ctx.triggered_id == "close":
         return False, dash.no_update
     if selection:
         return True, "You selected " + ", ".join(
@@ -78,7 +66,7 @@ def open_modal(selection, close_clicks):
             ]
         )
 
-    return dash.no_update
+    return dash.no_update, dash.no_update
 
 
 if __name__ == "__main__":
