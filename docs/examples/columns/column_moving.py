@@ -25,11 +25,9 @@ columnDefs = [
     },
     {"field": "country"},
     {"field": "year"},
-    {"field": "total"},
     {"field": "age"},
-    # requires ag-grid >=V28
-    # {"field": 'total', "lockPosition": 'right', "cellClass": 'locked-col'},
-    # {"field": "age", "lockPosition": "left", "cellClass": "locked-col"},
+    {"field": 'total', "lockPosition": 'right', "cellClass": 'locked-col'},
+    {"field": "age", "lockPosition": "left", "cellClass": "locked-col"},
 ]
 
 

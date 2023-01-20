@@ -32,33 +32,16 @@ The grid property suppressDragLeaveHidesColumns will stop columns getting remove
 The column property suppressMovable changes whether the column can be dragged. The column header cannot be dragged by the user to move the columns when suppressMovable=true. However the column can be inadvertently moved by placing other columns around it thus only making it practical if all columns have this property.
 
 ### Lock Position
-> Requires ag-grid>=V28.0
 
 The column property lockPosition locks columns to one side of the grid. When lockPosition is set as either "left" or "right", the column will always be locked to that position, cannot be dragged by the user, and cannot be moved out of position by dragging other columns.
 
 #### Suppress Movable Example
 The example below demonstrates these properties as follows:
-- The Athlete column has moving suppressed. It is not possible to move this column, but it is possible to move other columns around it.
-- The grid has suppressDragLeaveHidesColumns set to true so columns dragged outside of the grid are not hidden (normally dragging a column out of the grid will hide the column).
-- The defaultColDef has lockPinned set to true so it is not possible to pin columns.
-
-"""
-
-text2 = """
-` `
-` `
-` `
-### Suppress Movable & Lock Position Example
-
-> Requires ag-grid>=V28.0
-
-The example below demonstrates these properties as follows:
-
 - The Age column is locked "left" as the first column in the scrollable area of the grid. It is not possible to move this column, or have other columns moved over it to impact its position. As a result the Age column marks the beginning of the scrollable area regardless of its position within the column definitions.
 - The Total column is locked "right" and likewise its position can not be impacted by moving other columns.
 - The Athlete column has moving suppressed. It is not possible to move this column, but it is possible to move other columns around it.
 - The grid has suppressDragLeaveHidesColumns set to true so columns dragged outside of the grid are not hidden (normally dragging a column out of the grid will hide the column).
-- The defaultColDef has lockPinned set to true so it is not possible to pin columns to the left or right of the locked columns.
+- The defaultColDef has lockPinned set to true so it is not possible to pin columns.
 
 """
 
@@ -67,7 +50,7 @@ layout = html.Div(
     [
         make_md(text1),
         example_app("examples.columns.column_moving", make_layout=make_tabs),
-        make_md(text2)
+
         #  up_next("text"),
     ],
 )
