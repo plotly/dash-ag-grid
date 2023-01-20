@@ -3,6 +3,12 @@
 All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.2] - 2023-01-13
+
+### Updated
+
+- #146 Update DashAgGrid component to be async.
+
 ## [1.3.1] - 2022-05-05
 
 ### Fixed
