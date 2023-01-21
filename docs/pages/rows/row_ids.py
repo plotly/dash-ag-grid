@@ -52,7 +52,6 @@ layout = html.Div(
         example_app("examples.rows.row_ids", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.rows.row_ids_from_data", make_layout=make_tabs),
-
         # up_next("text"),
     ],
 )

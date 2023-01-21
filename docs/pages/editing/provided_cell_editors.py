@@ -22,7 +22,7 @@ The grid comes with some cell editors provided out of the box. These cell editor
 
 """
 
-text2= """
+text2 = """
 
 ### Text Cell Editor
 Simple text editor that uses the standard HTML input. This editor is the default if none other specified.
@@ -103,15 +103,26 @@ Note there is no need to specify `cellEditorPopup=True` for Select Cell Editor a
 > If you are unhappy with the additional click required, we advise you don't depend on the browsers standard Select (ie avoid `agSelectCellEditor`) and instead use `agRichSelectCellEditor` (Available in AG Grid Enterprise).
 >
 
+
 """
+
+
+text3 = """
+>
+> Cell Editing can also be performed via Cell Editor Components; please see:
+> - <dccLink href='/editing/cell-editors' children='Cell editors' /> to see regular and popup cell editors.
+>
+> For a dropdown menu in a cell see: the 
+> - <dccLink href='/components/row-menu' children='row-menu ' /> 
+"""
+
 
 layout = html.Div(
     [
-
         make_md(text1),
+        make_md(text2),
         example_app("examples.editing.provided_cell_editors", make_layout=make_tabs),
-        make_md(text2)
-
+        make_md(text3)
         # up_next("text"),
     ],
 )

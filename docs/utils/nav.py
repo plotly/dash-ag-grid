@@ -91,7 +91,7 @@ def make_sidebar_category(category="/", title=""):
         ),
         title=title,
         # sets category to be open at the start
-        id="start" if (category == "/columns") else ""
+        id="start" if (category == "/columns") else "",
     )
 
 
@@ -146,18 +146,21 @@ def make_side_nav():
                     make_sidebar_category(category="/selection", title="Selection"),
                     make_sidebar_category(category="/rendering", title="Rendering"),
                     make_sidebar_category(category="/editing", title="Editing"),
-                    make_sidebar_category(category="/import-export", title="Import & Export"),
+                    make_sidebar_category(
+                        category="/import-export", title="Import & Export"
+                    ),
                     make_sidebar_category(category="/components", title="Components"),
                     make_sidebar_category(
                         category="/enterprise", title="Enterprise Features"
                     ),
-                    make_sidebar_category(category="/other-examples", title="Other Examples")
+                    make_sidebar_category(
+                        category="/other-examples", title="Other Examples"
+                    ),
                 ],
                 flush=True,
                 always_open=True,
-                active_item="start"
+                active_item="start",
             ),
-
             # example of a category with hash tags
             # dbc.Accordion(
             #     [

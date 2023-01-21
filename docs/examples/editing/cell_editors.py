@@ -28,7 +28,9 @@ rowData = [
 
 app.layout = html.Div(
     [
-        dcc.Markdown("This grid hascell editor popups and regular editing cells."),
+        dcc.Markdown(
+            "In this grid, the __Make__ column has a popup below the cell,  the __Model__ has a popup above the cell, and the __Price__ has the default (in cell) editor."
+        ),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=rowData,

@@ -29,16 +29,14 @@ columnDefs = [
 ]
 ```
 
-By default the grid provides simple string editing and stores the result as a string. The example below shows string editing enabled on all columns by setting `editable=True on the `defaultColDef`.
+By default the grid provides simple string editing and stores the result as a string. The example below shows string editing enabled on all columns by setting `editable=True` on the `defaultColDef`.
 
 """
 
 layout = html.Div(
     [
-
         make_md(text1),
         example_app("examples.editing.overview", make_layout=make_tabs),
-
         # up_next("text"),
     ],
 )

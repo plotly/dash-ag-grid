@@ -15,10 +15,8 @@ text1 = """
 
 layout = html.Div(
     [
-
         make_md(text1),
         example_app("examples.layout.theme", make_layout=make_tabs),
-
         # up_next("text"),
     ],
 )
