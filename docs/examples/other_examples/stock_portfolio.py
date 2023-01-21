@@ -54,18 +54,18 @@ columnDefs = [
         "headerName": "Shares",
         "field": "quantity",
         "editable": True,
-        "type": 'rightAligned'
+        "type": "rightAligned",
     },
     {
         "headerName": "Last Close Price",
         "field": "price",
-        "type": 'rightAligned',
+        "type": "rightAligned",
         "valueFormatter": "Number(value).toFixed(2)",
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
         "headerName": "Market Value",
-        "type": 'rightAligned',
+        "type": "rightAligned",
         "valueGetter": "Number(data.price) * Number(data.quantity)",
         "valueFormatter": "Number(value).toFixed(2)",
         "cellRenderer": "agAnimateShowChangeCellRenderer",

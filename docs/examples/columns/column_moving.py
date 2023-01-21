@@ -26,7 +26,7 @@ columnDefs = [
     {"field": "country"},
     {"field": "year"},
     {"field": "age"},
-    {"field": 'total', "lockPosition": 'right', "cellClass": 'locked-col'},
+    {"field": "total", "lockPosition": "right", "cellClass": "locked-col"},
     {"field": "age", "lockPosition": "left", "cellClass": "locked-col"},
 ]
 

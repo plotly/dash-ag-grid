@@ -11,7 +11,7 @@ register_page(
     title="Dash AG Grid Editing",
 )
 
-text1="""
+text1 = """
 # Undo / Redo Edits
 This section covers how to allow users to undo / redo their cell edits.
 
@@ -53,10 +53,8 @@ Note that the grid needs focus for these shortcuts to have an effect.
 
 layout = html.Div(
     [
-
         make_md(text1),
         example_app("examples.editing.undo_redo", make_layout=make_tabs),
-
         # up_next("text"),
     ],
 )

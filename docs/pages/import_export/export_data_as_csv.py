@@ -23,7 +23,6 @@ layout = html.Div(
     [
         make_md(text1),
         example_app("examples.import_export.export_data_as_csv", make_layout=make_tabs),
-
         #  up_next("text"),
     ],
 )

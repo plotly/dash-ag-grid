@@ -50,7 +50,6 @@ layout = html.Div(
     [
         make_md(text1),
         example_app("examples.columns.column_moving", make_layout=make_tabs),
-
         #  up_next("text"),
     ],
 )
