@@ -158,7 +158,7 @@ DashAgGrid.propTypes = {
      * If true, the internal method addRows() will be called
      */
     enableAddRows: PropTypes.oneOfType([
-                PropTypes.bool, PropTypes.Object
+                PropTypes.bool, PropTypes.arrayOf(PropTypes.any)
         ]),
 
     /**
@@ -250,7 +250,7 @@ DashAgGrid.propTypes = {
     /**
      * Size the columns automatically or to fit their contents
      */
-    columnSize: PropTypes.oneOf(['sizeToFit', 'autoSizeAll']),
+    columnSize: PropTypes.oneOf(['sizeToFit', 'autoSizeAll', null]),
 
     /**
      * Use this with Dash Enterprise only.  Sets the ag-grid theme.  Use ddk for dark themes.
@@ -261,6 +261,19 @@ DashAgGrid.propTypes = {
      * Object used to perform the cell styling. See AG-Grid Cell Style.
      */
     cellStyle: PropTypes.shape({
+        styleConditions: PropTypes.arrayOf(
+            PropTypes.shape({
+                condition: PropTypes.string.isRequired,
+                style: PropTypes.object.isRequired,
+            })
+        ),
+        defaultStyle: PropTypes.object,
+    }),
+
+    /**
+     * Object used to perform the row styling. See AG-Grid Row Style.
+     */
+    getRowStyle: PropTypes.shape({
         styleConditions: PropTypes.arrayOf(
             PropTypes.shape({
                 condition: PropTypes.string.isRequired,
