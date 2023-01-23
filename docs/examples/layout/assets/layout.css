@@ -1,0 +1,57 @@
+
+.ag-theme-alpine.color-fonts {
+    --ag-foreground-color: rgb(126, 46, 132);
+    --ag-background-color: rgb(249, 245, 227);
+    --ag-header-foreground-color: rgb(204, 245, 172);
+    --ag-header-background-color: rgb(209, 64, 129);
+    --ag-odd-row-background-color: rgb(0, 0, 0, 0.03);
+    --ag-header-column-resize-handle-color: rgb(126, 46, 132);
+
+    --ag-font-size: 17px;
+    --ag-font-family: monospace;
+}
+
+
+.ag-theme-alpine.borders {
+    /* disable all borders */
+    --ag-borders: none;
+    /* then add back a border between rows */
+    --ag-row-border-style: dashed;
+    --ag-row-border-width: 5px;
+    --ag-row-border-color: rgb(150, 150, 200);
+}
+
+.ag-theme-alpine.headers1 {
+    --ag-header-height: 30px;
+    --ag-header-foreground-color: white;
+    --ag-header-background-color: black;
+    --ag-header-cell-hover-background-color: rgb(80, 40, 140);
+    --ag-header-cell-moving-background-color: rgb(80, 40, 140);
+}
+.ag-theme-alpine.headers1 .ag-header.headers1 {
+    font-family: cursive;
+}
+.ag-theme-alpine.headers1 .ag-header-group-cell.headers1 {
+    font-weight: normal;
+    font-size: 22px;
+}
+.ag-theme-alpine.headers1 .ag-header-cell.headers1 {
+    font-size: 18px;
+}
+
+.ag-theme-alpine.headers2 {
+    --ag-header-column-separator-display: block;
+    --ag-header-column-separator-height: 100%;
+    --ag-header-column-separator-width: 2px;
+    --ag-header-column-separator-color: purple;
+
+    --ag-header-column-resize-handle-display: block;
+    --ag-header-column-resize-handle-height: 25%;
+    --ag-header-column-resize-handle-width: 5px;
+    --ag-header-column-resize-handle-color: orange;
+}
+
+.ag-theme-alpine.selection {
+    /* bright green, 10% opacity */
+    --ag-selected-row-background-color: rgb(0, 255, 0, 0.1);
+}

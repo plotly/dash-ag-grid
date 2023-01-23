@@ -45,13 +45,13 @@ def make_header(text, spacing="mt-4"):
 navbar = dbc.NavbarSimple(
     [
         html.A(
-            html.Img(src=plotly_logo, height=50, className="m-2"),
+            html.Img(src=plotly_logo, height=50, className="m-2 shadow rounded"),
             href=dash_docs_url,
             target="blank",
             title="Plotly",
         ),
         html.A(
-            html.Img(src=aggrid_logo, height=50, className="m-2"),
+            html.Img(src=aggrid_logo, height=50, className="m-2 shadow rounded"),
             href=aggrid_docs_url,
             target="blank",
             title="Plotly",

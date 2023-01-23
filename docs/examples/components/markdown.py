@@ -1,5 +1,5 @@
 """
-Working with images and row menus.
+Working with Markdown.
 """
 import dash_ag_grid as dag
 import dash
