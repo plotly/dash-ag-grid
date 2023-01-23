@@ -5,12 +5,13 @@ from utils.utils import app_description
 
 register_page(
     __name__,
-    order=1,
+    order=2,
     description=app_description,
     title="Dash AG Grid Layout and Style",
 )
 
 text1 = """
+# Overview of grid style and conditional cell style
 """
 
 layout = html.Div(

@@ -1,5 +1,5 @@
 """
-Working with images and row menus.
+Working with raw html in Markdown component
 """
 import dash_ag_grid as dag
 import dash
@@ -18,6 +18,30 @@ columnDefs = [
     {"headerName": "Link", "field": "link", "cellRenderer": "markdown"},
     {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
 ]
+
+
+columnDefs_allow_html = [
+    {
+        "headerName": "Make",
+        "field": "make",
+        "sortable": True,
+        "cellRenderer": "markdown",
+    },
+    {
+        "headerName": "Model",
+        "field": "model",
+        "cellRenderer": "markdown",
+        "dangerously_allow_html": True,
+    },
+    {
+        "headerName": "Link",
+        "field": "link",
+        "cellRenderer": "markdown",
+        "dangerously_allow_html": True,
+    },
+    {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
+]
+
 
 rowData = [
     {
@@ -68,7 +92,7 @@ raw_html_example2 = html.Div(
         dag.AgGrid(
             id="cell-renderer-table-3",
             columnSize="sizeToFit",
-            columnDefs=columnDefs,
+            columnDefs=columnDefs_allow_html,
             rowData=rowData,
             dangerously_allow_html=True,
         ),
