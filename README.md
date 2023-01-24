@@ -4,6 +4,17 @@ Dash AG Grid is a Dash component wrapper for the AG Grid Javascript package, ena
 
 The underlying AG Grid Javascript package is a third-party software component developed by [AG Grid Ltd](http://www.ag-grid.com/). Many AG Grid features are available for free in the AG Grid [Community version](https://github.com/ag-grid/ag-grid). However, some features require a paid subscription to the AG Grid Enterprise version ([more info available here](https://www.ag-grid.com/license-pricing.php)). The demos which use Enterprise features are clearly marked.
 
+**Dash AG Grid is currently a prerelease**
+
+We're working hard to get it ready for its initial v2.0.0 open-source release on PyPI. In the meantime if you'd like to try it out, you can clone this repo and follow the instructions in _Developing in this repo_ below to build the component and install it in development mode. At that point you can use `import dash_ag_grid as dag` in your own app. There are two apps in the `docs/` folder that you can run to learn about the component. To run these, first install the docs requirements:
+```
+cd docs/
+pip install -r requirements.txt
+```
+Then you can run the apps there:
+- `demo_stock_portfolio.py` and `demo_stock_portfolio_simple.py` are small apps demonstrating some key features of Dash AG Grid, such as calculated columns, conditional formatting, and connecting its data and selected rows to graphs.
+- `app.py` runs a comprehensive documentation app. After we complete the open-source release, this will be merged into the main dash docs at https://dash.plotly.com/ but right now this app is the best way to explore Dash AG Grid.
+
 ## Contributing
 
 Dash AG Grid welcomes community contributions!
