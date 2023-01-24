@@ -2,4 +2,4 @@
 # Switch into a virtual environment
 # pip install -r requirements.txt
 
-dash[ci,dev,testing]>=1.15.0
+dash[ci,dev,testing]>=2.0
