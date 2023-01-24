@@ -64,6 +64,9 @@
         "webpack-cli": "3.3.6",
         "webpack-serve": "3.1.0"
     },
+    "files": [
+        "/dash_ag_grid/*{.js,.map}"
+    ],
     "engines": {
         "node": ">=8.11.0",
         "npm": ">=6.1.0"
