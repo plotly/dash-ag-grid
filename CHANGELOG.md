@@ -8,39 +8,39 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ### Removed
 
+- [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
+  - Remove `agGridColumns` component due to deprecation in AG Grid v29
+  - Remove some hardcoded CSS
+
 ### Added
 
+- [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
+  - Add `className` prop for css customization native to ag-grid
+  - Add `enable*` props for easier user / dash manipulation, for creating buttons
+  - Add overarching `dangerously_allow_html` prop to grid props only provided at render, to keep `columnDefs` from receiving possible updates to execute malicious JavaScript
+  - Add `data_previous` and `data_previous_timestamp` props to allow easier change tracking in callbacks
+  - Add `dashGridOptions` prop to allow for arbitrary use of AG Grid props not explicitly listed
+  - Add `setRowId` prop to allow `rowData` change detection
+  - Add `columnState` prop to retrieve the current state of the columns after user interaction
+
+- [#6](https://github.com/plotly/dash-ag-grid/pull/6)
+  - Allow strings of functions to be passed as parameters to `valueGetterFunction`, `valueFormatterFunction`. This allows for functions to be parsed even in a strict CSP environment.
+  - Add row conditional formatting via `getRowStyle`, acts similar to `cellStyles`
+  - Add ability for custom parsing functions to be passed via the namespace `window.dashAgGridFunctions`
+  - Allow for `null` to be passed to `columnSize`, to prevent the fit to width or autosize being the only options
+
 ### Updated
+- [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
+  - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
+  - Update markdown renderer to use github markdown, and also have the ability to be passed a target for links, to avoid `dangerously_allow_html`
+  - Update `requirements.txt` (Python dependencies for demos and docs) to allow the latest packages
 
 ### Fixed
+- [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
+  - Fix issue where conditional formatting was not applied to nested columns
+  - Fix issue where columns would not take edits or adjustments due to becoming static
 
-## [Unreleased] - 2023-01-23
-_More additional functions and security measures_:
-- allowing for strings of functions to be passed as parameters to `valueGetterFunction`, `valueFormatterFunction`
-  - this allows for functions to be parsed even when the app is completely locked down, (meta tags, etc)
-- added row conditional formatting via `getRowStyle` acts similar to `cellStyles`
-- added ability for custom parsing functions to be passed via the namespace `window.dashAgGridFunctions`
-- allowed for `null` to be passed to `columnSize`, to prevent the fit to width or autosize being the only options
-- fixed props issue for `enableAddRows`
-
-
-## [Unreleased] - 2023-01-20
-_Major overhaul of dash-ag-grid_:
-- bringing ag-grid from version v27.x to v29.x+
-- added secondary `agGridEnterprise.react.js` as additional importing `ag-grid-enterprise` due to all-modules no longer supported
-- updating props for breaking changes due to version update
-- adding props for easier user / dash manipulation (enable... props ) for creating buttons
-- removing `agGridColumns` due to deprecation and removal due to v29
-- added `className` support for css customization native to ag-grid (removed hardcoded styling as well)
-- added overarching `dangerously_allow_html` to grid props only provided at render, to keep `columnDefs` from receiving possible updates to show unsafe html
-- added `data_previous` and `data_previous_timestamp` to allow for use with user change logs
-- added `dashGridOptions` to allow for arbitrary use of props not explicitly listed
-- added `setRowId` for allowing `rowData` change detection to work
-- added prop `columnState` to allow for pulling the current state of the columns after user interaction, necessary for saving layouts outside of snapshots
-- fixed issue where conditional formatting was not applied to nested columns
-- fixed issue where columns would not take edits or adjustments due to becoming static
-- updated `markdownRenderer.js` to use github markdown, and also have the ability to be passed a target for links, to avoid `dangerously_allow_html`
-- updated `requirements.txt` to pull the latest packages
+- [#6](https://github.com/plotly/dash-ag-grid/pull/6) Fix props issue for `enableAddRows`
 
 ## [1.3.2] - 2023-01-13
 
