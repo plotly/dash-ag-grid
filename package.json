@@ -22,7 +22,7 @@
         "build:activated": "npm run build:js && npm run build:backends-activated"
     },
     "author": "Plotly <chris@plot.ly>",
-    "license": "Commercial",
+    "license": "MIT",
     "dependencies": {
         "@material-ui/core": "^4.11.4",
         "@material-ui/icons": "^4.11.2",
