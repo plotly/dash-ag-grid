@@ -3,6 +3,34 @@
 All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased] - 2023-01-23
+_More additional functions and security measures_:
+- allowing for strings of functions to be passed as parameters to `valueGetterFunction`, `valueFormatterFunction`
+  - this allows for functions to be parsed even when the app is completely locked down, (meta tags, etc)
+- added row conditional formatting via `getRowStyle` acts similar to `cellStyles`
+- added ability for custom parsing functions to be passed via the namespace `window.dashAgGridFunctions`
+- allowed for `null` to be passed to `columnSize`, to prevent the fit to width or autosize being the only options
+- fixed props issue for `enableAddRows`
+
+
+## [Unreleased] - 2023-01-20
+_Major overhaul of dash-ag-grid_:
+- bringing ag-grid from version v27.x to v29.x+
+- added secondary `agGridEnterprise.react.js` as additional importing `ag-grid-enterprise` due to all-modules no longer supported
+- updating props for breaking changes due to version update
+- adding props for easier user / dash manipulation (enable... props ) for creating buttons
+- removing `agGridColumns` due to deprecation and removal due to v29
+- added `className` support for css customization native to ag-grid (removed hardcoded styling as well)
+- added overarching `dangerously_allow_html` to grid props only provided at render, to keep `columnDefs` from receiving possible updates to show unsafe html
+- added `data_previous` and `data_previous_timestamp` to allow for use with user change logs
+- added `dashGridOptions` to allow for arbitrary use of props not explicitly listed
+- added `setRowId` for allowing `rowData` change detection to work
+- added prop `columnState` to allow for pulling the current state of the columns after user interaction, necessary for saving layouts outside of snapshots
+- fixed issue where conditional formatting was not applied to nested columns
+- fixed issue where columns would not take edits or adjustments due to becoming static
+- updated `markdownRenderer.js` to use github markdown, and also have the ability to be passed a target for links, to avoid `dangerously_allow_html`
+- updated `requirements.txt` to pull the latest packages
+
 ## [1.3.2] - 2023-01-13
 
 ### Updated

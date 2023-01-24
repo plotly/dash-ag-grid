@@ -6,6 +6,7 @@ import {propTypes, defaultProps} from '../components/AgGrid.react';
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
 import RowMenuRenderer from '../renderers/rowMenuRenderer';
+import * as customFunctions from '../renderers/customFunctions';
 
 import 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
@@ -57,10 +58,12 @@ export default class DashAgGrid extends Component {
         this.onGridSizeChanged = this.onGridSizeChanged.bind(this);
         this.updateColumnWidths = this.updateColumnWidths.bind(this);
         this.handleDynamicCellStyle = this.handleDynamicCellStyle.bind(this);
+        this.handleDynamicRowStyle = this.handleDynamicRowStyle.bind(this);
         this.generateRenderer = this.generateRenderer.bind(this);
         this.resetColumnState = this.resetColumnState.bind(this);
         this.exportDataAsCsv = this.exportDataAsCsv.bind(this);
         this.setSelection = this.setSelection.bind(this);
+        this.parseParamFunction = this.parseParamFunction.bind(this);
 
         //Additional Exposure
         this.setUpCols = this.setUpCols.bind(this);
@@ -72,6 +75,7 @@ export default class DashAgGrid extends Component {
         this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
         this.addRows = this.addRows.bind(this);
         this.getRowData = this.getRowData.bind(this);
+        this.fixCols = this.fixCols.bind(this);
 
         this.selectionEventFired = false;
 
@@ -93,6 +97,36 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    fixCols(columnDef, templateMessage) {
+        const test = (base, target) => {
+            if (target in columnDef) {
+                if (!(columnDef['dangerously_allow_html']
+                        && this.state.dangerously_allow_html)) {
+                    if (typeof columnDef[target] !== 'function') {
+                        console.error({field: columnDef['field'], message: templateMessage})
+                        columnDef[target] = ''
+                    }
+                }
+            }
+            if (base in columnDef) {
+                const newFunc = (params) => this.parseParamFunction({params}, columnDef[base])
+                columnDef[target] = newFunc
+            }
+        }
+        if ("headerComponentParams" in columnDef) {
+            if ('template' in columnDef['headerComponentParams'] && !(columnDef['dangerously_allow_html']
+                        && this.state.dangerously_allow_html)) {
+                columnDef['headerComponentParams']['template'] = '<div></div>'
+                console.error({field: columnDef['field'], message: templateMessage})
+            }
+        }
+
+        test('valueGetterFunction','valueGetter')
+        test('valueFormatterFunction','valueFormatter')
+
+        return columnDef
+    }
+
     setUpCols(cellStyle) {
         const templateMessage = 'you are trying to use a dangerous element that could lead to XSS'
         if (this.props.columnDefs) {
@@ -100,13 +134,8 @@ export default class DashAgGrid extends Component {
                 {columnDefs: this.props.columnDefs.map((columnDef) => {
                     if ('children' in columnDef) {
                         columnDef['children'] = columnDef['children'].map((child) => {
-                                if ("headerComponentParams" in child) {
-                                    if ('template' in child['headerComponentParams'] && !(child['dangerously_allow_html']
-                                    && this.state.dangerously_allow_html)) {
-                                        child['headerComponentParams']['template'] = '<div></div>'
-                                        console.error({field: child['field'], message: templateMessage})
-                                    }
-                                }
+                                child = this.fixCols(child, templateMessage)
+
                                 if ('cellStyle' in child) {
                                     return child
                                 }
@@ -117,13 +146,9 @@ export default class DashAgGrid extends Component {
                                     }
                             })
                         }
-                    if ("headerComponentParams" in columnDef) {
-                        if ('template' in columnDef['headerComponentParams'] && !(columnDef['dangerously_allow_html']
-                                    && this.state.dangerously_allow_html)) {
-                            columnDef['headerComponentParams']['template'] = '<div></div>'
-                            console.error({field: columnDef['field'], message: templateMessage})
-                        }
-                    }
+
+                    columnDef = this.fixCols(columnDef, templateMessage)
+
                     if ('cellStyle' in columnDef) {
                         return columnDef
                     }
@@ -361,7 +386,7 @@ export default class DashAgGrid extends Component {
     }
 
     /**
-     * @params AG-Grid Cell Style rules attribute.
+     * @params AG-Grid Styles rules attribute.
      * See: https://www.ag-grid.com/react-grid/cell-styles/#cell-style-cell-class--cell-class-rules-params
      */
     handleDynamicCellStyle({params, cellStyle = {}}) {
@@ -380,6 +405,41 @@ export default class DashAgGrid extends Component {
         }
 
         return defaultStyle ? defaultStyle : null;
+    }
+
+    /**
+     * @params AG-Grid Styles rules attribute.
+     * See: https://www.ag-grid.com/react-grid/row-styles/#row-style-row-class--row-class-rules-params
+     */
+    handleDynamicRowStyle({params, getRowStyle = {}}) {
+        const {styleConditions, defaultStyle} = getRowStyle;
+
+        if (styleConditions && styleConditions.length > 0) {
+            for (const styleCondition of styleConditions) {
+                const {condition, style} = styleCondition;
+                const parsedCondition = esprima.parse(condition).body[0]
+                    .expression;
+
+                if (evaluate(parsedCondition, {...params})) {
+                    return style;
+                }
+            }
+        }
+
+        return defaultStyle ? defaultStyle : null;
+    }
+
+    parseParamFunction({params}, tempFunction) {
+        try {
+            const parsedCondition = esprima.parse(tempFunction).body[0]
+                    .expression;
+            const value = evaluate(parsedCondition, {...params, ...customFunctions, ...window.dashAgGridFunctions})
+            return value
+        } catch (err) {
+            console.log(err)
+        }
+        //const value = evaluate(parsedCondition, {...params})
+        return ''
     }
 
     generateRenderer(Renderer) {
@@ -478,6 +538,7 @@ export default class DashAgGrid extends Component {
         const {
             id,
             cellStyle,
+            getRowStyle,
             style,
             theme,
             className,
@@ -505,6 +566,11 @@ export default class DashAgGrid extends Component {
         }
 
         this.setUpCols(cellStyle)
+        
+        let newRowStyle;
+        if (getRowStyle) {
+            newRowStyle = (params) => this.handleDynamicRowStyle({params, getRowStyle})
+        }
 
         const cols = [];
 
@@ -585,6 +651,7 @@ export default class DashAgGrid extends Component {
             >
                 <AgGridReact
                     getRowId={getRowId}
+                    getRowStyle={newRowStyle}
                     onGridReady={this.onGridReady}
                     onSelectionChanged={this.onSelectionChanged}
                     onCellClicked={this.onCellClicked}
