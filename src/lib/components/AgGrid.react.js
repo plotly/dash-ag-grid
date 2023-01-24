@@ -248,7 +248,9 @@ DashAgGrid.propTypes = {
     }),
 
     /**
-     * Size the columns automatically or to fit their contents
+     * Size the columns autoSizeAll changes the column sizes to fit the column's content,
+     * sizeToFit changes the column sizes to fit the width of the table
+     * and null bypasses the altering of the column widths
      */
     columnSize: PropTypes.oneOf(['sizeToFit', 'autoSizeAll', null]),
 
@@ -361,7 +363,7 @@ DashAgGrid.propTypes = {
         /**
          * Data retreived from the server
          */
-        rowData: PropTypes.arrayOf(PropTypes.any),
+        rowData: PropTypes.arrayOf(PropTypes.object),
 
         /**
          * Current row count, if known
