@@ -158,7 +158,7 @@ DashAgGrid.propTypes = {
      * If true, the internal method addRows() will be called
      */
     enableAddRows: PropTypes.oneOfType([
-                PropTypes.bool, PropTypes.arrayOf(PropTypes.any)
+                PropTypes.bool, PropTypes.arrayOf(PropTypes.object)
         ]),
 
     /**
