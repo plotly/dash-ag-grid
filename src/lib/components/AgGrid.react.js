@@ -164,11 +164,7 @@ DashAgGrid.propTypes = {
     /**
      * If true, the internal method updateRows() will be called
      */
-<<<<<<< HEAD
     enableUpdateRows: PropTypes.arrayOf(PropTypes.object),
-=======
-    enableUpdateRows: PropTypes.arrayOf(PropTypes.object)
->>>>>>> d730a374d79777d4b935b1f014fa134054752aa9
 
     /**
     * This is required for change detection in rowData
