@@ -519,7 +519,7 @@ export default class DashAgGrid extends Component {
     updateRows(data) {
         this.state.gridApi.applyTransaction({update: data})
         this.props.setProps({
-                enableUpdateRows: false,
+                enableUpdateRows: null,
                 rowData: this.getRowData()
             })
     }
