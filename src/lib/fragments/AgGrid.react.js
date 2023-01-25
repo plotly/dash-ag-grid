@@ -74,6 +74,7 @@ export default class DashAgGrid extends Component {
         this.updateColumnDefs = this.updateColumnDefs.bind(this);
         this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
         this.addRows = this.addRows.bind(this);
+        this.updateRows = this.updateRows.bind(this);
         this.getRowData = this.getRowData.bind(this);
         this.fixCols = this.fixCols.bind(this);
 
@@ -515,6 +516,14 @@ export default class DashAgGrid extends Component {
             })
     }
 
+    updateRows(data) {
+        this.state.gridApi.applyTransaction({update: data})
+        this.props.setProps({
+                enableUpdateRows: false,
+                rowData: this.getRowData()
+            })
+    }
+
     autoSizeAllColumns(skipHeader) {
         const allColumnIds = [];
         this.state.gridColumnApi.getColumnState().forEach((column) => {
@@ -551,6 +560,7 @@ export default class DashAgGrid extends Component {
             enableAutoSizeAllColumnsSkipHeaders,
             enableDeleteSelectedRows,
             enableAddRows,
+            enableUpdateRows,
             enableUpdateColumnDefs,
             csvExportParams,
             detailCellRendererParams,
@@ -612,6 +622,10 @@ export default class DashAgGrid extends Component {
 
         if (enableAddRows) {
             this.addRows(enableAddRows);
+        }
+
+        if (enableUpdateRows) {
+            this.updateRows(enableUpdateRows);
         }
 
         const callbackGetDetail = (params) => {
