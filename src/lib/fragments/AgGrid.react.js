@@ -99,19 +99,23 @@ export default class DashAgGrid extends Component {
     }
 
     fixCols(columnDef, templateMessage) {
-        const test = (base, target) => {
+        const test = (target) => {
             if (target in columnDef) {
                 if (!(columnDef['dangerously_allow_html']
                         && this.state.dangerously_allow_html)) {
                     if (typeof columnDef[target] !== 'function') {
-                        console.error({field: columnDef['field'], message: templateMessage})
-                        columnDef[target] = ''
+                        if (!('function' in columnDef[target])) {
+                            columnDef[target] = (params) => {return ''}
+                            console.error({field: columnDef['field'] || columnDef['headerName'], message: templateMessage})
+                        }
                     }
                 }
-            }
-            if (base in columnDef) {
-                const newFunc = (params) => this.parseParamFunction({params}, columnDef[base])
-                columnDef[target] = newFunc
+                if (typeof columnDef[target] !== 'function') {
+                    if ('function' in columnDef[target]) {
+                        const newFunc = JSON.parse(JSON.stringify(columnDef[target]['function']))
+                        columnDef[target] = (params) => this.parseParamFunction({params},newFunc)
+                    }
+                }
             }
         }
         if ("headerComponentParams" in columnDef) {
@@ -122,8 +126,8 @@ export default class DashAgGrid extends Component {
             }
         }
 
-        test('valueGetterFunction','valueGetter')
-        test('valueFormatterFunction','valueFormatter')
+        test('valueGetter')
+        test('valueFormatter')
 
         return columnDef
     }
