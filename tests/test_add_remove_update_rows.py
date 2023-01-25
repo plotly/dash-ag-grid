@@ -50,7 +50,8 @@ columnDefs = [
         "headerName": "Stock Ticker",
         "field": "ticker",
         "type": "textAligned",
-        "filter": True
+        "filter": True,
+        "editable": True
     },
     {
         "headerName": "Company",
@@ -133,13 +134,14 @@ def updateRows(n1):
     Input('addRow','n_clicks'),
     Input('addBORR','n_clicks')
 )
-def updateRows(n1,n2):
+def addRows(n1,n2):
     if ctx.triggered:
         if ctx.triggered_id == 'addRow':
             ### here we are telling the grid to add a single blank row
             return True
         else:
-            ### here we are telling the grid to add a single row with information, this can also be many
+            ### here we are telling the grid to add a single row with information, this can also be many,
+            ### these need to be unique keys upon the rowID (ticker)
             return [{'ticker':'BORR', 'company':'Testing', 'quantity':500, 'price':5.00}]
     return dash.no_update
 
