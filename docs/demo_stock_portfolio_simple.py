@@ -61,6 +61,7 @@ columnDefs = [
         "field": "price",
         "type": "rightAligned",
         "valueFormatter": "Number(value).toFixed(2)",
+        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -68,6 +69,7 @@ columnDefs = [
         "type": "rightAligned",
         "valueGetter": "Number(data.price) * Number(data.quantity)",
         "valueFormatter": "Number(value).toFixed(2)",
+        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
 ]
@@ -88,6 +90,7 @@ table = dag.AgGrid(
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
+    dangerously_allow_html=True,
     dashGridOptions={"undoRedoCellEditing": True, "rowSelection": "single"},
 )
 
