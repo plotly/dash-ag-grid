@@ -215,6 +215,15 @@ export default class DashAgGrid extends Component {
             columnSize,
         } = this.props;
 
+        if (prevProps.enableUpdateRows && this.props.enableUpdateRows) {
+            if (!(JSON.stringify(this.props.enableUpdateRows).includes(JSON.stringify(prevProps.enableUpdateRows)))) {
+                console.log('stacking')
+                this.props.setProps({
+                    enableUpdateRows: prevProps.enableUpdateRows.concat(this.props.enableUpdateRows)
+                })
+            }
+        }
+
         if (rowData) {
 
             if (this.state.rowData) {
@@ -521,11 +530,13 @@ export default class DashAgGrid extends Component {
     }
 
     updateRows(data) {
+        try {
         this.state.gridApi.applyTransaction({update: data})
         this.props.setProps({
                 enableUpdateRows: null,
                 rowData: this.getRowData()
             })
+        } catch {}
     }
 
     autoSizeAllColumns(skipHeader) {

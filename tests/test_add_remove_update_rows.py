@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import yfinance as yf
 import dash
+import random
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY],
            meta_tags=[{'http-equiv': 'content-security-policy',
@@ -69,6 +70,7 @@ columnDefs = [
         "field": "price",
         "valueFormatter": {"function":"""toFixed(value)"""},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
+        "editable":True
     },
     {
         "headerName": "Market Value",
@@ -113,20 +115,35 @@ app.layout = dbc.Container(
         header,
         dbc.Button('Add Row', id='addRow'),
         dbc.Button('Add BORR', id='addBORR'),
-        dbc.Button('Update TSLA', id='updateTSLA'),
+        # dbc.Button('Update TSLA', id='updateTSLA'),
         dbc.Button('Sell Selected', id='deleteSelections', color='danger'),
         dbc.Row(dbc.Col(table, className="py-4")),
+        dcc.Interval(id='randomize', interval=100)
     ],
 )
 
+# @app.callback(
+#     Output('portfolio-grid','enableUpdateRows'),
+#     Input('updateTSLA','n_clicks')
+# )
+# def updateRows(n1):
+#     ### here we are updating a single row, this can also be many rows linking upon the rowID (ticker)
+#     if n1:
+#         return [{'ticker':'TSLA', 'company':'Testing', 'quantity':500, 'price':5.00}]
+#     return dash.no_update
+
 @app.callback(
-    Output('portfolio-grid','enableUpdateRows'),
-    Input('updateTSLA','n_clicks')
+    Output("portfolio-grid", "enableUpdateRows"),
+    Input("randomize", 'n_intervals'),
+    State("portfolio-grid", "rowData"),
+    prevent_initial_call=True
 )
-def updateRows(n1):
-    ### here we are updating a single row, this can also be many rows linking upon the rowID (ticker)
-    if n1:
-        return [{'ticker':'TSLA', 'company':'Testing', 'quantity':500, 'price':5.00}]
+def randomHoldings(n, d):
+    if n:
+        df2 = pd.DataFrame(d)
+        df2['quantity'] = [random.randint(1,120) for i in range(len(d))]
+
+        return [df2.to_dict('records')[n%len(d)]]
     return dash.no_update
 
 @app.callback(
