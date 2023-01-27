@@ -8,31 +8,15 @@ import dash_bootstrap_components as dbc
 
 
 # Links
-dbc_logo = "https://user-images.githubusercontent.com/72614349/133677816-5ea52424-bfd3-4405-9ccf-8ad0dbd18020.png"
-bootstrap_logo = "https://user-images.githubusercontent.com/72614349/133683669-eef08b42-2eff-49df-b0a5-33a7754a2b86.png"
-bootstrap_url = "https://getbotstrap.com/docs/5.1/getting-started/introduction/"
 plotly_logo = "https://user-images.githubusercontent.com/72614349/182969599-5ae4f531-ea01-4504-ac88-ee1c962c366d.png"
 plotly_logo_dark = "https://user-images.githubusercontent.com/72614349/182967824-c73218d8-acbf-4aab-b1ad-7eb35669b781.png"
 plotly_ddk_url = "https://plotly.com/dash/design-kit/"
 aggrid_logo = "https://user-images.githubusercontent.com/72614349/211098297-c208fed6-6bda-4f1d-8506-3051e1a8ec07.png"
 aggrid_docs_url = "https://www.ag-grid.com/react-data-grid/"
-dbc_home_url = "https://dash-bootstrap-components.opensource.faculty.ai/"
-dbc_components_url = (
-    "https://dash-bootstrap-components.opensource.faculty.ai/docs/components/"
-)
+
 examples_index_url = "https://dash-example-index.herokuapp.com/"
 dash_docs_url = "https://dash.plotly.com/"
 dash_forum_url = "https://community.plotly.com/"
-
-# other:
-dmc_docs_url = "https://www.dash-mantine-components.com/"
-dash_extensions_docs = "https://www.dash-extensions.com/"
-dash_tools_url = "https://github.com/andrew-hossack/dash-tools"
-multi_page_app_demos = "https://github.com/AnnMarieW/dash-multi-page-app-demos"
-
-# tutorials
-formattable_url = "https://formattable.pythonanywhere.com/"
-legend_and_annotations = "https://plotly-annotations.herokuapp.com/"
 
 
 def make_header(text, spacing="mt-4"):
@@ -87,11 +71,10 @@ def make_sidebar_category(category="/", title=""):
             ],
             vertical=True,
             pills=True,
-            # className="bg-light",
         ),
         title=title,
         # sets category to be open at the start
-        id="start" if (category == "/columns") else "",
+        item_id="start" if (category == "/columns") else "",
     )
 
 
