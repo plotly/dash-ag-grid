@@ -38,10 +38,8 @@ export default class DashAgGrid extends Component {
 
         };
 
-        if (this.props.rowData) {
-            this.setState({
-                        rowData: JSON.parse(JSON.stringify(this.props.rowData))
-                    })
+        if (this.props.enableUpdateRows) {
+            this.state.enableUpdateRows = JSON.parse(JSON.stringify(this.props.enableUpdateRows));
         }
 
         this.onGridReady = this.onGridReady.bind(this);
@@ -64,6 +62,8 @@ export default class DashAgGrid extends Component {
         this.exportDataAsCsv = this.exportDataAsCsv.bind(this);
         this.setSelection = this.setSelection.bind(this);
         this.parseParamFunction = this.parseParamFunction.bind(this);
+        this.buildArray = this.buildArray.bind(this);
+        this.fixCols = this.fixCols.bind(this);
 
         //Additional Exposure
         this.setUpCols = this.setUpCols.bind(this);
@@ -76,7 +76,6 @@ export default class DashAgGrid extends Component {
         this.addRows = this.addRows.bind(this);
         this.updateRows = this.updateRows.bind(this);
         this.getRowData = this.getRowData.bind(this);
-        this.fixCols = this.fixCols.bind(this);
 
         this.selectionEventFired = false;
 
@@ -202,6 +201,40 @@ export default class DashAgGrid extends Component {
         });
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (JSON.stringify(nextProps) === JSON.stringify(this.props)) {
+            return false;
+        }
+        return true
+    }
+
+    buildArray(arr1, arr2) {
+        if (arr1) {
+            if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
+                for (var x = 0; x < arr2.length; x++) {
+                    if (!arr1.includes(arr2[x])) {
+                        arr1.push(arr2[x])
+                    }
+                }
+            }
+        } else {
+            arr1 = JSON.parse(JSON.stringify(arr2))
+        }
+        return arr1
+    }
+
+    componentDidMount() {
+        this.state.mounted = true
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (this.props.enableUpdateRows && !this.state.mounted) {
+            if (nextProps.enableUpdateRows !== this.props.enableUpdateRows) {
+                this.state.enableUpdateRows = this.buildArray(this.state.enableUpdateRows, this.props.enableUpdateRows)
+            }
+        }
+    }
+
     componentDidUpdate(prevProps, prevState) {
         const {
             selectionChanged,
@@ -215,33 +248,20 @@ export default class DashAgGrid extends Component {
             columnSize,
         } = this.props;
 
-        if (prevProps.enableUpdateRows && this.props.enableUpdateRows) {
-            if (!(JSON.stringify(this.props.enableUpdateRows).includes(JSON.stringify(prevProps.enableUpdateRows)))) {
-                console.log('stacking')
-                this.props.setProps({
-                    enableUpdateRows: prevProps.enableUpdateRows.concat(this.props.enableUpdateRows)
-                })
-            }
-        }
-
         if (rowData) {
+            if (this.state.gridApi) {
+                if (this.state.rowData) {
+                    if (JSON.stringify(rowData) != JSON.stringify(this.state.rowData)) {
+                        this.props.setProps({
+                            data_previous: JSON.parse(JSON.stringify(this.state.rowData)),
+                            data_previous_timestamp: Date.now(),
+                        })
 
-            if (this.state.rowData) {
-                if (JSON.stringify(rowData) != JSON.stringify(this.state.rowData)) {
-
-                    this.props.setProps({
-                        data_previous: JSON.parse(JSON.stringify(this.state.rowData)),
-                        data_previous_timestamp: Date.now(),
-                    })
-
-                    this.setState({
-                        rowData: JSON.parse(JSON.stringify(rowData))
-                    })
+                        this.setState({
+                            rowData: JSON.parse(JSON.stringify(rowData))
+                        })
+                    }
                 }
-            } else {
-                this.setState({
-                        rowData: JSON.parse(JSON.stringify(rowData))
-                    })
             }
         }
 
@@ -362,6 +382,10 @@ export default class DashAgGrid extends Component {
             gridApi: params.api,
             gridColumnApi: params.columnApi,
         });
+
+        if (this.props.rowData) {
+            this.state.rowData = JSON.parse(JSON.stringify(this.props.rowData))
+        }
 
         // Handles applying selections when a selection was persisted by Dash
         this.setSelection(selectionChanged);
@@ -530,13 +554,26 @@ export default class DashAgGrid extends Component {
     }
 
     updateRows(data) {
-        try {
-        this.state.gridApi.applyTransaction({update: data})
-        this.props.setProps({
-                enableUpdateRows: null,
-                rowData: this.getRowData()
-            })
-        } catch {}
+        if (this.state.mounted) {
+            if (this.state.gridApi) {
+                if (this.state.enableUpdateRows) {
+                    console.log(JSON.parse(JSON.stringify(this.state.enableUpdateRows)))
+                    this.state.gridApi.applyTransaction({update: this.state.enableUpdateRows})
+                    this.state.enableUpdateRows = null;
+                }
+                this.state.gridApi.applyTransaction({update: data})
+                this.props.setProps({
+                    enableUpdateRows: null,
+                    rowData: this.getRowData()
+                })
+            } else {
+                if (this.state.enableUpdateRows) {
+                    this.state.enableUpdateRows = this.buildArray(this.state.enableUpdateRows, data)
+                } else {
+                    this.state.enableUpdateRows = JSON.parse(JSON.stringify(data))
+                }
+            }
+        }
     }
 
     autoSizeAllColumns(skipHeader) {

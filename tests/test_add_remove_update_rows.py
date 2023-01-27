@@ -90,6 +90,10 @@ defaultColDef = {
     "floatingFilter": True,
 }
 
+df2 = df.copy()
+df2 = df2.to_dict('records')
+df2[0]['quantity'] = 30
+
 table = dag.AgGrid(
     id="portfolio-grid",
     className="ag-theme-alpine-dark",
@@ -105,6 +109,7 @@ table = dag.AgGrid(
                     {"condition": "data.quantity > 50", "style": {"color": "orange"}},
                 ]
             },
+    enableUpdateRows=[df2[0]]
 
 )
 
@@ -118,7 +123,8 @@ app.layout = dbc.Container(
         # dbc.Button('Update TSLA', id='updateTSLA'),
         dbc.Button('Sell Selected', id='deleteSelections', color='danger'),
         dbc.Row(dbc.Col(table, className="py-4")),
-        dcc.Interval(id='randomize', interval=100)
+        dcc.Interval(id='randomize', interval=1, max_intervals=100),
+        html.Div(id='previous')
     ],
 )
 
@@ -132,19 +138,34 @@ app.layout = dbc.Container(
 #         return [{'ticker':'TSLA', 'company':'Testing', 'quantity':500, 'price':5.00}]
 #     return dash.no_update
 
-@app.callback(
+app.clientside_callback(
+    """
+        function (n, d) {
+        if (n) {
+            df2 = d[n%d.length]
+            df2['quantity'] = n
+            return [df2]
+        }
+        return window.dash_clientside.no_update
+    }
+    """,
     Output("portfolio-grid", "enableUpdateRows"),
     Input("randomize", 'n_intervals'),
     State("portfolio-grid", "rowData"),
     prevent_initial_call=True
 )
-def randomHoldings(n, d):
-    if n:
-        df2 = pd.DataFrame(d)
-        df2['quantity'] = [random.randint(1,120) for i in range(len(d))]
 
-        return [df2.to_dict('records')[n%len(d)]]
-    return dash.no_update
+app.clientside_callback(
+    """function (n, d) {
+        if (n) {
+            return JSON.stringify(d)
+        }
+        return window.dash_clientside.no_update
+    }""",
+    Output("previous", "children"),
+    Input("portfolio-grid", "data_previous_timestamp"),
+    State("portfolio-grid", "data_previous")
+)
 
 @app.callback(
     Output('portfolio-grid','enableAddRows'),
