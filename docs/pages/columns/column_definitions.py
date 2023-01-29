@@ -9,7 +9,7 @@ register_page(
     order=1,
     description=app_description,
     title="Dash AG Grid Column Definitions",
-    path="/"
+   # path="/"
     # name="Bootstrap Utility Classes",
     # hashtags=["intro","background", "border", "color", "spacing", "text", "position"],
 )

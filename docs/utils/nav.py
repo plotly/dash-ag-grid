@@ -74,7 +74,7 @@ def make_sidebar_category(category="/", title=""):
         ),
         title=title,
         # sets category to be open at the start
-        item_id="start" if (category == "/columns") else "",
+        item_id="start" if (category == "/") else "",
     )
 
 
