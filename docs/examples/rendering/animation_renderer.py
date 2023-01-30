@@ -25,16 +25,19 @@ columnDefs = [
         "headerName": "API C",
         "field": "c",
         "cellRenderer": "agAnimateShowChangeCellRenderer",
+        "dangerously_allow_html": True,
     },
     {
         "headerName": "Total",
         "valueGetter": "Number(data.a) + Number(data.b) + Number(data.c)",
         "cellRenderer": "agAnimateShowChangeCellRenderer",
+        "dangerously_allow_html": True,
     },
     {
         "headerName": "Average",
         "valueGetter": "Math.round((Number(data.a) + Number(data.b) + Number(data.c)) * 10 / 3) /10",
         "cellRenderer": "agAnimateShowChangeCellRenderer",
+        "dangerously_allow_html": True,
     },
 ]
 
@@ -48,7 +51,7 @@ defaultColDef = {
 app.layout = html.Div(
     [
         dcc.Markdown(
-            "This grid demonstrates the renderer for animating changes to the date.  Try entering new values into the editable columns and press the button to update column c in a callback"
+            "This grid demonstrates the renderer for animating changes.  Try entering new values into the editable columns and press the button to update column c in a callback"
         ),
         html.Button("Update column C", id="live-data-grid-btn"),
         dag.AgGrid(
@@ -59,6 +62,7 @@ app.layout = html.Div(
             defaultColDef=defaultColDef,
             # setting a row ID is required when updating data in a callback
             setRowId="index",
+            dangerously_allow_html=True,
         ),
     ],
     style={"margin": 20},

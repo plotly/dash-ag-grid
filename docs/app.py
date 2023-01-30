@@ -1,5 +1,5 @@
 import dash
-from dash import Dash, html, dcc
+from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 from utils.nav import navbar, make_side_nav
 from utils.utils import example_apps
@@ -40,7 +40,8 @@ app.layout = dbc.Container(
         navbar,
         dbc.Row(
             [
-                dbc.Col(make_side_nav(), xs=5, md=3, xl=2, id="sidebar"),
+                dcc.Location(id="url"),
+                dbc.Col(make_side_nav(), xs=5, md=3, xl=2),
                 dbc.Col(
                     html.Div(
                         dash.page_container,
@@ -58,6 +59,19 @@ app.layout = dbc.Container(
     className="mb-4",
     fluid=True,
 )
+
+
+@app.callback(Output("sidebar", "active_item"), Input("url", "pathname"))
+def open_sidebar_category(path):
+    """
+    This opens the accordion sidebar category when navigating to it from the feature preview section.
+    """
+    if path == "/":
+        return "/getting-started"
+    # get the sidebar category (first segment of the path)
+    segments = path.split("/")
+    category = "/" + segments[1]
+    return category
 
 
 if __name__ == "__main__":
