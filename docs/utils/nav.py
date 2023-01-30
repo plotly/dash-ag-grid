@@ -53,7 +53,7 @@ navbar = dbc.NavbarSimple(
 
 
 def make_sidebar_category(category="/", title=""):
-    include_home = category == "/columns"
+    include_home = category == "/getting-started"
     return dbc.AccordionItem(
         dbc.Nav(
             [
@@ -73,8 +73,7 @@ def make_sidebar_category(category="/", title=""):
             pills=True,
         ),
         title=title,
-        # sets category to be open at the start
-        item_id="start" if (category == "/") else "",
+        item_id=category,
     )
 
 
@@ -142,7 +141,7 @@ def make_side_nav():
                 ],
                 flush=True,
                 always_open=True,
-                active_item="start",
+                id="sidebar",
             ),
             # example of a category with hash tags
             # dbc.Accordion(
