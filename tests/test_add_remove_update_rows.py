@@ -12,7 +12,6 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY],
                                   " style-src https://* 'self' 'unsafe-inline'; "
                                   "font-src data: https://* 'self' 'unsafe-inline';"
                                   "img-src data: https://* 'self'"}],
-           external_scripts=['https://cdn.jsdelivr.net/npm/d3-format@3']
            )
 
 equities = {
@@ -68,14 +67,14 @@ columnDefs = [
     {
         "headerName": "Last Close Price",
         "field": "price",
-        "valueFormatter": {"function":"""toFixed(value)"""},
+        "valueFormatter": {"function":"""Number(value).toFixed(2)"""},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
         "editable":True
     },
     {
         "headerName": "Market Value",
-        "valueGetter": {"function":"Round(data.price * data.quantity)"},
-        "valueFormatter": {"function":"toFixed(value)"},
+        "valueGetter": {"function":"Math.floor(data.price * data.quantity * 100) / 100"},
+        "valueFormatter": {"function":"""d3.format("($,.2f")(value)"""},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
 ]

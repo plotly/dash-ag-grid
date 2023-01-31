@@ -6,7 +6,7 @@ import {propTypes, defaultProps} from '../components/AgGrid.react';
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
 import RowMenuRenderer from '../renderers/rowMenuRenderer';
-import * as customFunctions from '../renderers/customFunctions';
+import {customFunctions} from '../renderers/customFunctions';
 
 import 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
@@ -17,6 +17,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
+import * as d3 from 'd3'
 
 // Rate-limit for resizing columns when table div is resized
 const RESIZE_DEBOUNCE_MS = 200;
@@ -471,7 +472,7 @@ export default class DashAgGrid extends Component {
         try {
             const parsedCondition = esprima.parse(tempFunction).body[0]
                     .expression;
-            const value = evaluate(parsedCondition, {...params, ...customFunctions, ...window.dashAgGridFunctions})
+            const value = evaluate(parsedCondition, {...params, d3, ...customFunctions, ...window.dashAgGridFunctions})
             return value
         } catch (err) {
             console.log(err)
