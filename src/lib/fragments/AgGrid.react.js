@@ -104,14 +104,14 @@ export default class DashAgGrid extends Component {
                 if (!(columnDef['dangerously_allow_html']
                         && this.state.dangerously_allow_html)) {
                     if (typeof columnDef[target] !== 'function') {
-                        if (!('function' in columnDef[target])) {
+                        if (!(Object.keys(columnDef[target]).includes('function'))) {
                             columnDef[target] = (params) => {return ''}
                             console.error({field: columnDef['field'] || columnDef['headerName'], message: templateMessage})
                         }
                     }
                 }
                 if (typeof columnDef[target] !== 'function') {
-                    if ('function' in columnDef[target]) {
+                    if (Object.keys(columnDef[target]).includes('function')) {
                         const newFunc = JSON.parse(JSON.stringify(columnDef[target]['function']))
                         columnDef[target] = (params) => this.parseParamFunction({params},newFunc)
                     }
