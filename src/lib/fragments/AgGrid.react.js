@@ -119,6 +119,15 @@ export default class DashAgGrid extends Component {
                 }
             }
         }
+
+        //Overwriting column options with table defaults
+        if (!this.state.dangerously_allow_html) {
+            columnDef['dangerously_allow_html'] = false
+        }
+        if (!this.state.dangerously_allow_js_code) {
+            columnDef['dangerously_allow_js_code'] = false
+        }
+
         if ("headerComponentParams" in columnDef) {
             if ('template' in columnDef['headerComponentParams'] && !(columnDef['dangerously_allow_html']
                         && this.state.dangerously_allow_html)) {
