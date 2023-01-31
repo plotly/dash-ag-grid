@@ -36,6 +36,7 @@ export default class DashAgGrid extends Component {
             openGroups: new Set(),
             filterModel: {},
             dangerously_allow_html: JSON.parse(JSON.stringify(this.props.dangerously_allow_html)),
+            dangerously_allow_js_code: JSON.parse(JSON.stringify(this.props.dangerously_allow_js_code))
 
         };
 
@@ -101,8 +102,8 @@ export default class DashAgGrid extends Component {
     fixCols(columnDef, templateMessage) {
         const test = (target) => {
             if (target in columnDef) {
-                if (!(columnDef['dangerously_allow_html']
-                        && this.state.dangerously_allow_html)) {
+                if (!(columnDef['dangerously_allow_js_code']
+                        && this.state.dangerously_allow_js_code)) {
                     if (typeof columnDef[target] !== 'function') {
                         if (!(Object.keys(columnDef[target]).includes('function'))) {
                             columnDef[target] = (params) => {return ''}
@@ -128,6 +129,8 @@ export default class DashAgGrid extends Component {
 
         test('valueGetter')
         test('valueFormatter')
+        test('valueParser')
+        test('valueSetter')
 
         return columnDef
     }
