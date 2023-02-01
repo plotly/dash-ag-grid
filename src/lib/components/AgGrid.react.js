@@ -43,8 +43,7 @@ DashAgGrid.defaultProps = {
     persisted_props: ['selectionChanged'],
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
-    dangerously_allow_html: false,
-    dangerously_allow_js_code: false,
+    dangerously_allow_code: false,
 };
 DashAgGrid.propTypes = {
     /********************************
