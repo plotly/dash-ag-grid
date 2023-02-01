@@ -101,7 +101,9 @@ DashAgGrid.propTypes = {
 
 
     /**
-    * Enables the use of html and js for the whole table, this is required if wanting to turn on for columns
+    * Allow strings containing JavaScript code or HTML in certain props.
+    * If your app stores Dash layouts for later retrieval this is dangerous
+    * because it can lead to cross-site-scripting attacks.
     */
     dangerously_allow_code: PropTypes.bool,
 
