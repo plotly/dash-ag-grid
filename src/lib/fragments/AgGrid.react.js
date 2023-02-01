@@ -17,7 +17,13 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
-import * as d3 from 'd3'
+
+// d3 imports
+import * as d3Format from "d3-format"
+import * as d3Time from "d3-time"
+import * as d3TimeFormat from "d3-time-format"
+import * as d3Array from "d3-array"
+const d3 = {...d3Format, ...d3Time, ...d3TimeFormat, ...d3Array};
 
 // Rate-limit for resizing columns when table div is resized
 const RESIZE_DEBOUNCE_MS = 200;
@@ -38,6 +44,17 @@ export default class DashAgGrid extends Component {
             dangerously_allow_code: JSON.parse(JSON.stringify(this.props.dangerously_allow_code)),
 
         };
+
+        const customComponents = window.dashAgGridComponentFunctions
+        if (customComponents) {
+            Object.keys(customComponents).forEach(function(key, index) {
+                if (typeof customComponents[key] != 'function') {
+                    customComponents[key] = this.generateRenderer(JSON.parse(JSON.stringify(customComponents[key])))
+                }
+            })
+
+            this.state.components = Object.assign(this.state.components, {...customComponents})
+        }
 
         if (this.props.enableUpdateRows) {
             this.state.enableUpdateRows = JSON.parse(JSON.stringify(this.props.enableUpdateRows));
@@ -109,6 +126,13 @@ export default class DashAgGrid extends Component {
                             console.error({field: columnDef['field'] || columnDef['headerName'], message: templateMessage})
                         }
                     }
+                }
+                if (typeof columnDef[target] !== 'function') {
+                    if (Object.keys(columnDef[target]).includes('function')) {
+                        const newFunc = JSON.parse(JSON.stringify(columnDef[target]['function']))
+                        columnDef[target] = (params) => this.parseParamFunction({params}, newFunc)
+                    }
+
                 }
             }
         }
