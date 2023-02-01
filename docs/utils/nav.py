@@ -40,6 +40,11 @@ navbar = dbc.NavbarSimple(
             target="blank",
             title="Plotly",
         ),
+        html.Div([
+            html.Div("Alpha Release", className="small text-white pt-2"),
+            html.Div("2.0.0a1", className="text-white"),
+        ], className="vstack"),
+
     ],
     brand="Dash AG Grid",
     #  brand_href=dash.get_relative_path("/"),
@@ -113,7 +118,6 @@ def make_sidebar_category_hash(page, title):
     )
 
 
-# TODO - refactor this if not using hashtags
 def make_side_nav():
     return html.Div(
         [
@@ -126,6 +130,7 @@ def make_side_nav():
                     make_sidebar_category(category="/rows", title="Rows"),
                     make_sidebar_category(category="/layout", title="Layout & Style"),
                     make_sidebar_category(category="/selection", title="Selection"),
+                    make_sidebar_category(category="/filtering", title="Filtering"),
                     make_sidebar_category(category="/rendering", title="Rendering"),
                     make_sidebar_category(category="/editing", title="Editing"),
                     make_sidebar_category(
