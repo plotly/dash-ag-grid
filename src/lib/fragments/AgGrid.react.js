@@ -35,8 +35,7 @@ export default class DashAgGrid extends Component {
             },
             openGroups: new Set(),
             filterModel: {},
-            dangerously_allow_html: JSON.parse(JSON.stringify(this.props.dangerously_allow_html)),
-            dangerously_allow_js_code: JSON.parse(JSON.stringify(this.props.dangerously_allow_js_code))
+            dangerously_allow_code: JSON.parse(JSON.stringify(this.props.dangerously_allow_code)),
 
         };
 
@@ -102,8 +101,8 @@ export default class DashAgGrid extends Component {
     fixCols(columnDef, templateMessage) {
         const test = (target) => {
             if (target in columnDef) {
-                if (!(columnDef['dangerously_allow_js_code']
-                        && this.state.dangerously_allow_js_code)) {
+                if (!(columnDef['dangerously_allow_code']
+                        && this.state.dangerously_allow_code)) {
                     if (typeof columnDef[target] !== 'function') {
                         if (!(Object.keys(columnDef[target]).includes('function'))) {
                             columnDef[target] = (params) => {return ''}
@@ -111,26 +110,17 @@ export default class DashAgGrid extends Component {
                         }
                     }
                 }
-                if (typeof columnDef[target] !== 'function') {
-                    if (Object.keys(columnDef[target]).includes('function')) {
-                        const newFunc = JSON.parse(JSON.stringify(columnDef[target]['function']))
-                        columnDef[target] = (params) => this.parseParamFunction({params},newFunc)
-                    }
-                }
             }
         }
 
         //Overwriting column options with table defaults
-        if (!this.state.dangerously_allow_html) {
-            columnDef['dangerously_allow_html'] = false
-        }
-        if (!this.state.dangerously_allow_js_code) {
-            columnDef['dangerously_allow_js_code'] = false
+        if (!this.state.dangerously_allow_code) {
+            columnDef['dangerously_allow_code'] = false
         }
 
         if ("headerComponentParams" in columnDef) {
-            if ('template' in columnDef['headerComponentParams'] && !(columnDef['dangerously_allow_html']
-                        && this.state.dangerously_allow_html)) {
+            if ('template' in columnDef['headerComponentParams'] && !(columnDef['dangerously_allow_code']
+                        && this.state.dangerously_allow_code)) {
                 columnDef['headerComponentParams']['template'] = '<div></div>'
                 console.error({field: columnDef['field'], message: templateMessage})
             }

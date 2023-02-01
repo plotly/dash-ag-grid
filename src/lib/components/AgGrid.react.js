@@ -102,14 +102,9 @@ DashAgGrid.propTypes = {
 
 
     /**
-    * Enables the use of html for the whole table, this is required if wanting to turn on for columns
+    * Enables the use of html and js for the whole table, this is required if wanting to turn on for columns
     */
-    dangerously_allow_html: PropTypes.bool,
-
-    /**
-    * Enables the use of javascript code for the whole table, this is required if wanting to turn on for columns
-    */
-    dangerously_allow_js_code: PropTypes.bool,
+    dangerously_allow_code: PropTypes.bool,
 
     /********************************
      * CUSTOM PROPS
