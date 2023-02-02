@@ -20,7 +20,7 @@ text1 = """
 
 layout = html.Div(
     [
-        make_md((text1)),
+        make_md(text1),
         make_md(enterprise_blurb),
         example_app("examples.enterprise.master_detail", make_layout=make_tabs),
         # up_next("text"),

@@ -193,11 +193,6 @@ def make_tabs(code, show_app, show_code, notes, notes_first, image):
                     className="p-4",
                 ),
                 dbc.Tab(
-                    show_app,
-                    label="Run App",
-                    className="p-4",
-                ),
-                dbc.Tab(
                     make_code_div(code),
                     label="View Code",
                     className="p-4",
