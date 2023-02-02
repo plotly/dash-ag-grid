@@ -13,14 +13,14 @@ register_page(
 )
 
 text1 = """
-# Infinate Scroll
+# Infinite Scroll
 
 """
 
 
 layout = html.Div(
     [
-        make_md((text1)),
+        make_md(text1),
         make_md(enterprise_blurb),
         example_app("examples.enterprise.infinite_scroll", make_layout=make_tabs),
         # up_next("text"),

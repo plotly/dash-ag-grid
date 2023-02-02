@@ -82,7 +82,7 @@ Setting --ag-alpine-active-color in the Sass API will:
 
 > ### Generating semi-transparent colours
 >
-> To make a semi-transparent version of a colour, you can use one of these techniques. If your colour is defined as a 6-digit hex value (#RRGGBB) convert it to an 8-digit hex value (#RRGGBBAA). If your colour is defined as a rgb value (rgb(R, G, B)) add a fourth value to specificy opactity (rgb(R, G, B, A)).
+> To make a semi-transparent version of a colour, you can use one of these techniques. If your colour is defined as a 6-digit hex value (#RRGGBB) convert it to an 8-digit hex value (#RRGGBBAA). If your colour is defined as a rgb value (rgb(R, G, B)) add a fourth value to specify opacity (rgb(R, G, B, A)).
 >
 >So for example, the color deeppink is hex #FF1493 or rgb rgb(255, 20, 147).
 
