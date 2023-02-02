@@ -275,23 +275,6 @@ export default class DashAgGrid extends Component {
             columnSize,
         } = this.props;
 
-        if (rowData) {
-            if (this.state.gridApi) {
-                if (this.state.rowData) {
-                    if (JSON.stringify(rowData) != JSON.stringify(this.state.rowData)) {
-                        this.props.setProps({
-                            data_previous: JSON.parse(JSON.stringify(this.state.rowData)),
-                            data_previous_timestamp: Date.now(),
-                        })
-
-                        this.setState({
-                            rowData: JSON.parse(JSON.stringify(rowData))
-                        })
-                    }
-                }
-            }
-        }
-
         if (this.isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = this.props.getRowsResponse;
             this.getRowsParams.successCallback(rowData, rowCount);
@@ -410,10 +393,6 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
-        if (this.props.rowData) {
-            this.state.rowData = JSON.parse(JSON.stringify(this.props.rowData))
-        }
-
         // Handles applying selections when a selection was persisted by Dash
         this.setSelection(selectionChanged);
         this.props.setProps({gridReady: true});
@@ -426,9 +405,10 @@ export default class DashAgGrid extends Component {
         this.props.setProps({cellClicked: {value, colId, rowIndex}});
     }
 
-    onCellValueChanged({oldValue, newValue, column: {colId}, rowIndex}) {
+    onCellValueChanged({oldValue, newValue, column: {colId}, rowIndex, data, node}) {
+        const nodeId = JSON.parse(JSON.stringify(node.id))
         this.props.setProps({
-            cellValueChanged: {oldValue, newValue, colId, rowIndex},
+            cellValueChanged: {rowIndex, nodeId, data, oldValue, newValue, colId},
         });
     }
 
@@ -584,7 +564,6 @@ export default class DashAgGrid extends Component {
         if (this.state.mounted) {
             if (this.state.gridApi) {
                 if (this.state.enableUpdateRows) {
-                    console.log(JSON.parse(JSON.stringify(this.state.enableUpdateRows)))
                     this.state.gridApi.applyTransaction({update: this.state.enableUpdateRows})
                     this.state.enableUpdateRows = null;
                 }
@@ -644,14 +623,14 @@ export default class DashAgGrid extends Component {
             csvExportParams,
             detailCellRendererParams,
             setProps,
-            setRowId,
+            rowIdSetter,
             ...restProps
         } = this.props;
 
         let getRowId
 
-        if (setRowId) {
-            getRowId = (params) => params.data[setRowId]
+        if (rowIdSetter) {
+            getRowId = (params) => this.parseParamFunction({params}, rowIdSetter)
         }
 
         this.setUpCols(cellStyle)

@@ -171,7 +171,7 @@ DashAgGrid.propTypes = {
     /**
     * This is required for change detection in rowData
     */
-    setRowId: PropTypes.string,
+    rowIdSetter: PropTypes.string,
 
 
     /**
@@ -954,16 +954,6 @@ DashAgGrid.propTypes = {
      * (Client-Side Row Model only) Set the data to be displayed as rows in the grid.
      */
     rowData: PropTypes.any,
-
-    /**
-     * Snapshot of rowData before edits
-     */
-    data_previous: PropTypes.any,
-
-    /**
-     * Snapshot of rowData before edits -- timestamp
-     */
-    data_previous_timestamp: PropTypes.any,
 
     /**
      * (Client-Side Row Model only) Enables Immutable Data mode, for compatibility with
