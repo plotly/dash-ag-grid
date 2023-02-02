@@ -35,6 +35,7 @@ export default class DashAgGrid extends Component {
             openGroups: new Set(),
             filterModel: {},
             dangerously_allow_html: JSON.parse(JSON.stringify(this.props.dangerously_allow_html)),
+            n_clicks: 0
 
         };
 
@@ -358,7 +359,8 @@ export default class DashAgGrid extends Component {
     }
 
     onCellClicked({value, column: {colId}, rowIndex}) {
-        this.props.setProps({cellClicked: {value, colId, rowIndex}});
+        let n_clicks = this.state.n_clicks++
+        this.props.setProps({cellClicked: {value, colId, rowIndex, n_clicks}});
     }
 
     onCellValueChanged({oldValue, newValue, column: {colId}, rowIndex}) {
@@ -566,7 +568,7 @@ export default class DashAgGrid extends Component {
         }
 
         this.setUpCols(cellStyle)
-        
+
         let newRowStyle;
         if (getRowStyle) {
             newRowStyle = (params) => this.handleDynamicRowStyle({params, getRowStyle})
