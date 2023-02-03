@@ -35,8 +35,6 @@ export default class DashAgGrid extends Component {
             openGroups: new Set(),
             filterModel: {},
             dangerously_allow_html: JSON.parse(JSON.stringify(this.props.dangerously_allow_html)),
-            n_clicks: 0
-
         };
 
         if (this.props.rowData) {
@@ -359,8 +357,8 @@ export default class DashAgGrid extends Component {
     }
 
     onCellClicked({value, column: {colId}, rowIndex}) {
-        let n_clicks = this.state.n_clicks++
-        this.props.setProps({cellClicked: {value, colId, rowIndex, n_clicks}});
+        const timestamp = Date.now()
+        this.props.setProps({cellClicked: {value, colId, rowIndex, timestamp}});
     }
 
     onCellValueChanged({oldValue, newValue, column: {colId}, rowIndex}) {
