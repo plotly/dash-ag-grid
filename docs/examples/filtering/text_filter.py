@@ -12,55 +12,55 @@ data = requests.get(
 ).json()
 
 
-
 athleteFilterParams = {
-  'filterOptions': ['contains', 'notContains'],
-  'debounceMs': 200,
-  'suppressAndOrCondition': True,
+    "filterOptions": ["contains", "notContains"],
+    "debounceMs": 200,
+    "suppressAndOrCondition": True,
 }
 
 countryFilterParams = {
-  'filterOptions': ['contains'],
-  'trimInput': True,
-  'debounceMs': 1000,
+    "filterOptions": ["contains"],
+    "trimInput": True,
+    "debounceMs": 1000,
 }
 
 columnDefs = [
     {
-        'field': 'athlete',
-        'filterParams': athleteFilterParams,
+        "field": "athlete",
+        "filterParams": athleteFilterParams,
     },
     {
-        'field': 'country',
-        'filter': 'agTextColumnFilter',
-        'filterParams': countryFilterParams,
+        "field": "country",
+        "filter": "agTextColumnFilter",
+        "filterParams": countryFilterParams,
     },
     {
-        'field': 'sport',
-        'filter': 'agTextColumnFilter',
-        'filterParams': {
-            'caseSensitive': True,
-            'defaultOption': 'startsWith',
+        "field": "sport",
+        "filter": "agTextColumnFilter",
+        "filterParams": {
+            "caseSensitive": True,
+            "defaultOption": "startsWith",
         },
     },
 ]
 defaultColDef = {
-    'flex': 1,
-    'sortable': True,
-    'filter': True,
+    "flex": 1,
+    "sortable": True,
+    "filter": True,
 }
 
 
-app.layout= html.Div([
-    dag.AgGrid(
-        rowData=data,
-        columnDefs=columnDefs,
-        columnSize="sizeToFit",
-        defaultColDef=defaultColDef
-    ),
-])
+app.layout = html.Div(
+    [
+        dag.AgGrid(
+            rowData=data,
+            columnDefs=columnDefs,
+            columnSize="sizeToFit",
+            defaultColDef=defaultColDef,
+        ),
+    ]
+)
 
 
 if __name__ == "__main__":
     app.run_server(debug=True)
-

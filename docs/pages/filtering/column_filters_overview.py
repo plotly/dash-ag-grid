@@ -102,7 +102,7 @@ Column filters are tied to a specific column. Quick filter is not tied to any pa
 """
 
 
-text3="""
+text3 = """
 ### Provided Filter UI
 
 Each provided filter is displayed in a UI with optional buttons at the bottom.
@@ -143,7 +143,7 @@ The example below demonstrates using the different buttons. It also demonstrates
 - The Age and Year columns have `closeOnApply` set to `True`, so the filter popup will be closed immediately when the filter is applied, reset or cancelled. Pressing Enter will also apply the filter and close the popup.
 """
 
-text4= """
+text4 = """
 ### Simple Filter Parts (For text, number and date filters)
 Each Simple Filter follows the same layout. The only layout difference is the type of input field presented to the user: for Text and Number Filters a text field is displayed, whereas for Date Filters a date picker field is displayed.
 (Note - date filter is not yet available in Dash)
@@ -242,7 +242,7 @@ The following example demonstrates those configuration options that can be appli
 
 """
 
-text6= """"
+text6 = """"
 ### Style Header on Filter
 Each time a filter is applied to a column the CSS class ag-header-cell-filtered is added to the header. This can be used for adding style to headers that are filtered.
 
@@ -279,7 +279,6 @@ layout = html.Div(
         make_md(text4),
         make_md(text5),
         example_app("examples.filtering.filter_options", make_layout=make_tabs),
-        make_md(text6)
-
+        make_md(text6),
     ],
 )

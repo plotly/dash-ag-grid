@@ -59,10 +59,8 @@ For these reasons, the Number Filter allows you to control what characters the u
 """
 
 
-
 layout = html.Div(
     [
         make_md(text1),
-
     ],
 )

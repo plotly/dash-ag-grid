@@ -15,10 +15,8 @@ data = requests.get(
 
 # basic columns definition with column defaults
 columnDefs = [
-
-
     {"field": "athlete"},
-    {"field": "age", "filter": "agNumberColumnFilter", "maxWidth": 100 },
+    {"field": "age", "filter": "agNumberColumnFilter", "maxWidth": 100},
     {"field": "country"},
     {"field": "year"},
     {"field": "sport"},
@@ -27,7 +25,9 @@ columnDefs = [
 
 app.layout = html.Div(
     [
-        dcc.Markdown("This grid has a number filter on the 'Age' column and a text filter on the other columns"),
+        dcc.Markdown(
+            "This grid has a number filter on the 'Age' column and a text filter on the other columns"
+        ),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=data,

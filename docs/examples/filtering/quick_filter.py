@@ -1,4 +1,3 @@
-
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output
 import dash_bootstrap_components as dbc
@@ -7,7 +6,7 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 
 columnDefs = [
-    {"headerName": "Employee", "field": "employee", "sortable":True},
+    {"headerName": "Employee", "field": "employee", "sortable": True},
     {"headerName": "Number Sick Days", "field": "sickDays", "editable": True},
 ]
 
@@ -44,14 +43,13 @@ app.layout = html.Div(
             rowData=rowData,
             columnSize="sizeToFit",
         ),
-
     ],
     style={"margin": 20},
 )
 
+
 @app.callback(
-    Output("quick-filter-grid", "quickFilterText"),
-    Input("quick-filter-input", "value")
+    Output("quick-filter-grid", "quickFilterText"), Input("quick-filter-input", "value")
 )
 def update_filter(filter_value):
     return filter_value

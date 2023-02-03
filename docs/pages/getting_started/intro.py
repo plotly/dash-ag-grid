@@ -1,16 +1,11 @@
-
 from dash import Dash, html, dcc, register_page
 import dash_bootstrap_components as dbc
 from utils.utils import app_description
 from utils.other_components import up_next, make_md
 
 register_page(
-    __name__,
-    order=0,
-    description=app_description,
-    title="Dash AG Grid",
-    path="/"
-  )
+    __name__, order=0, description=app_description, title="Dash AG Grid", path="/"
+)
 
 # #links
 medium_article = "https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers"
@@ -246,6 +241,6 @@ layout = html.Div(
         make_feature_card(img_editing, text_editing),
         make_feature_card(img_components_markdown, text_components_markdown),
         make_feature_card(img_components_rowmenu, text_components_rowmenu),
-        make_md(text_enterprise)
+        make_md(text_enterprise),
     ],
 )
