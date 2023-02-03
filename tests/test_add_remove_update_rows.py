@@ -42,6 +42,8 @@ data = {
     "company": [name for name in equities.values()],
     "quantity": [75, 40, 100, 50, 40, 60, 20, 40],
     "price": [last_close(ticker) for ticker in equities],
+    "binary": [False for ticker in equities],
+    "testdate":['2023-02-01' for ticker in equities]
 }
 df = pd.DataFrame(data)
 
@@ -51,7 +53,8 @@ columnDefs = [
         "field": "ticker",
         "type": "textAligned",
         "filter": True,
-        "editable": True
+        "editable": True,
+        "cellRenderer": "stockLink"
     },
     {
         "headerName": "Company",
@@ -68,7 +71,6 @@ columnDefs = [
         "headerName": "Last Close Price",
         "field": "price",
         "valueFormatter": {"function":"""Number(value).toFixed(2)"""},
-        "cellRenderer": "agAnimateShowChangeCellRenderer",
         "editable":True
     },
     {
@@ -77,6 +79,21 @@ columnDefs = [
         "valueFormatter": {"function":"""d3.format("($,.2f")(value)"""},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
+    {
+        "field":"binary",
+        "cellRenderer": "checkbox",
+        "editable":True
+    },
+    {
+        "field":"testdate",
+        "valueFormatter": {"function":"""(d3.timeParse("%Y-%m-%d")(value))"""},
+        "type":"date",
+        "filter": "agDateColumnFilter"
+    },
+    {
+        "headerName":"testing",
+        "valueGetter": {"function":"node.id"}
+    }
 ]
 
 
@@ -101,15 +118,14 @@ table = dag.AgGrid(
     columnSize=None,
     defaultColDef=defaultColDef,
     rowSelection="single",
-    setRowId='ticker',
+    getRowId='data.ticker + "|" + data.company',
     dashGridOptions={'undoRedoCellEditing':True, 'undoRedoCellEditingLimit': 20},
     getRowStyle={
                 "styleConditions": [
                     {"condition": "data.quantity > 50", "style": {"color": "orange"}},
                 ]
             },
-    enableUpdateRows=[df2[0]]
-
+    rowTransaction={'update':[{'ticker':'AAPL', 'company':'Apple', 'quantity':30, 'price':'154.50'}]}
 )
 
 header = html.Div("My Portfolio", className="h2 p-2 text-white bg-primary text-center")
@@ -143,54 +159,27 @@ app.clientside_callback(
         if (n) {
             df2 = d[n%d.length]
             df2['quantity'] = n
-            return [df2]
+            return {'update': [df2]}
         }
         return window.dash_clientside.no_update
     }
     """,
-    Output("portfolio-grid", "enableUpdateRows"),
+    Output("portfolio-grid", "rowTransaction"),
     Input("randomize", 'n_intervals'),
     State("portfolio-grid", "rowData"),
     prevent_initial_call=True
 )
 
 app.clientside_callback(
-    """function (n, d) {
+    """function (n) {
         if (n) {
-            return JSON.stringify(d)
+            return JSON.stringify(n)
         }
         return window.dash_clientside.no_update
     }""",
     Output("previous", "children"),
-    Input("portfolio-grid", "data_previous_timestamp"),
-    State("portfolio-grid", "data_previous")
+    Input("portfolio-grid", "cellClicked"),
 )
-
-@app.callback(
-    Output('portfolio-grid','enableAddRows'),
-    Input('addRow','n_clicks'),
-    Input('addBORR','n_clicks')
-)
-def addRows(n1,n2):
-    if ctx.triggered:
-        if ctx.triggered_id == 'addRow':
-            ### here we are telling the grid to add a single blank row
-            return True
-        else:
-            ### here we are telling the grid to add a single row with information, this can also be many,
-            ### these need to be unique keys upon the rowID (ticker)
-            return [{'ticker':'BORR', 'company':'Testing', 'quantity':500, 'price':5.00}]
-    return dash.no_update
-
-@app.callback(
-    Output('portfolio-grid', 'enableDeleteSelectedRows'),
-    Input('deleteSelections', 'n_clicks')
-)
-def deleteRows(n1):
-    ### here we are telling the grid to delete the currently selected rows
-    if n1:
-        return True
-    return dash.no_update
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=12345)
