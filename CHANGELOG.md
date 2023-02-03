@@ -41,6 +41,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - Fix issue where columns would not take edits or adjustments due to becoming static
 
 - [#6](https://github.com/plotly/dash-ag-grid/pull/6) Fix props issue for `enableAddRows`
+- [#19](https://github.com/plotly/dash-ag-grid/pull/19) Fixed `cellClicked` as reported in [#17](https://github.com/plotly/dash-ag-grid/issues/17)
 
 ## [1.3.2] - 2023-01-13
 
