@@ -32,18 +32,11 @@ export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            gridApi: null,
-            columnApi: null,
-            components: {
-                rowMenu: this.generateRenderer(RowMenuRenderer),
-                markdown: this.generateRenderer(MarkdownRenderer),
-            },
-            openGroups: new Set(),
-            filterModel: {},
-            dangerously_allow_code: JSON.parse(JSON.stringify(this.props.dangerously_allow_code)),
-
-        };
+        this.state = {...this.props.parentState}
+        this.state.components = {
+            rowMenu: this.generateRenderer(RowMenuRenderer),
+            markdown: this.generateRenderer(MarkdownRenderer),
+        }
 
         const customComponents = window.dashAgGridComponentFunctions
         if (customComponents) {
@@ -54,10 +47,6 @@ export default class DashAgGrid extends Component {
             })
 
             this.state.components = Object.assign(this.state.components, {...customComponents})
-        }
-
-        if (this.props.enableUpdateRows) {
-            this.state.enableUpdateRows = JSON.parse(JSON.stringify(this.props.enableUpdateRows));
         }
 
         this.onGridReady = this.onGridReady.bind(this);
@@ -89,10 +78,9 @@ export default class DashAgGrid extends Component {
         this.selectAllFiltered = this.selectAllFiltered.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
         this.autoSizeAllColumns = this.autoSizeAllColumns.bind(this);
-        this.updateColumnDefs = this.updateColumnDefs.bind(this);
+        this.updateColumnState = this.updateColumnState.bind(this);
         this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
-        this.addRows = this.addRows.bind(this);
-        this.updateRows = this.updateRows.bind(this);
+        this.rowTransaction = this.rowTransaction.bind(this);
         this.getRowData = this.getRowData.bind(this);
 
         this.selectionEventFired = false;
@@ -235,31 +223,8 @@ export default class DashAgGrid extends Component {
         return true
     }
 
-    buildArray(arr1, arr2) {
-        if (arr1) {
-            if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
-                for (var x = 0; x < arr2.length; x++) {
-                    if (!arr1.includes(arr2[x])) {
-                        arr1.push(arr2[x])
-                    }
-                }
-            }
-        } else {
-            arr1 = JSON.parse(JSON.stringify(arr2))
-        }
-        return arr1
-    }
-
     componentDidMount() {
         this.state.mounted = true
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (this.props.enableUpdateRows && !this.state.mounted) {
-            if (nextProps.enableUpdateRows !== this.props.enableUpdateRows) {
-                this.state.enableUpdateRows = this.buildArray(this.state.enableUpdateRows, this.props.enableUpdateRows)
-            }
-        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -300,11 +265,12 @@ export default class DashAgGrid extends Component {
          JSON.stringify(this.props.columnDefs) != JSON.stringify(prevProps.columnDefs) ||
         prevProps.columnSize != columnSize) {
             this.props.setProps({columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
+            this.setState({origColumnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
             this.setUpCols(cellStyle)
         }
 
         if (dashGridOptions != prevProps.dashGridOptions) {
-            this.props.setProps(JSON.parse(JSON.stringify({...this.props.dashGridOptions})))
+            this.props.setProps(JSON.parse(JSON.stringify({...omit(['cellClassRules', 'rowClassRules'], this.props.dashGridOptions)})))
         }
 
         // Reset selection event flag
@@ -393,6 +359,12 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
+        if (this.state.rowTransaction) {
+            this.state.rowTransaction.map((data) => this.state.gridApi.applyTransaction(data))
+            this.state.rowTransaction = null;
+            this.props.setProps({rowData: this.getRowData()})
+        }
+
         // Handles applying selections when a selection was persisted by Dash
         this.setSelection(selectionChanged);
         this.props.setProps({gridReady: true});
@@ -478,7 +450,8 @@ export default class DashAgGrid extends Component {
         try {
             const parsedCondition = esprima.parse(tempFunction).body[0]
                     .expression;
-            const value = evaluate(parsedCondition, {...params, d3, ...customFunctions, ...window.dashAgGridFunctions})
+            const value = evaluate(parsedCondition, {...params, d3, ...customFunctions, ...window.dashAgGridFunctions,
+            ...window.dashSharedVariables})
             return value
         } catch (err) {
             console.log(err)
@@ -502,35 +475,35 @@ export default class DashAgGrid extends Component {
     resetColumnState() {
         this.state.gridColumnApi.resetColumnState();
         this.props.setProps({
-            enableResetColumnState: false,
+            resetColumnState: false,
         });
     }
 
     exportDataAsCsv(csvExportParams) {
         this.state.gridApi.exportDataAsCsv(csvExportParams);
         this.props.setProps({
-            enableExportDataAsCsv: false,
+            exportDataAsCsv: false,
         });
     }
 
     selectAll() {
         this.state.gridApi.selectAll()
         this.props.setProps({
-            enableSelectAll: false,
+            selectAll: false,
         });
     }
 
     selectAllFiltered() {
         this.state.gridApi.selectAllFiltered()
         this.props.setProps({
-            enableSelectAllFiltered: false,
+            selectAllFiltered: false,
         });
     }
 
     deselectAll() {
         this.state.gridApi.deselectAll()
         this.props.setProps({
-            enableDeselectAll: false,
+            deselectAll: false,
         });
     }
 
@@ -538,45 +511,39 @@ export default class DashAgGrid extends Component {
         const sel = this.state.gridApi.getSelectedRows();
         this.state.gridApi.applyTransaction({remove: sel});
         this.props.setProps({
-            enableDeleteSelectedRows: false,
+            deleteSelectedRows: false,
             rowData: this.getRowData()
         });
     }
 
-    addRows(data) {
-        if (data !== true) {
-            this.state.gridApi.applyTransaction({add: data})
-        } else {
-            const cols = this.state.gridColumnApi.getColumnState()
-            const adding = {}
-            for (var x=0; x<cols.length; x++) {
-                adding[cols[x]['colId']] = ''
+    buildArray(arr1, arr2) {
+        if (arr1) {
+            if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
+                arr1.push(arr2)
             }
-            this.state.gridApi.applyTransaction({add: [adding]})
+        } else {
+            arr1 = [JSON.parse(JSON.stringify(arr2))]
         }
-        this.props.setProps({
-                enableAddRows: false,
-                rowData: this.getRowData()
-            })
+        return arr1
     }
 
-    updateRows(data) {
+    rowTransaction(data) {
         if (this.state.mounted) {
             if (this.state.gridApi) {
-                if (this.state.enableUpdateRows) {
-                    this.state.gridApi.applyTransaction({update: this.state.enableUpdateRows})
-                    this.state.enableUpdateRows = null;
+                if (this.state.rowTransaction) {
+                    this.state.rowTransaction.map((data) => this.state.gridApi.applyTransaction(data))
+                    this.state.rowTransaction = null;
                 }
-                this.state.gridApi.applyTransaction({update: data})
+                this.state.gridApi.applyTransaction(data)
                 this.props.setProps({
-                    enableUpdateRows: null,
+                    rowTransaction: null,
                     rowData: this.getRowData()
                 })
             } else {
-                if (this.state.enableUpdateRows) {
-                    this.state.enableUpdateRows = this.buildArray(this.state.enableUpdateRows, data)
+                if (this.state.rowTransaction) {
+                    this.state.rowTransaction = this.buildArray(this.state.rowTransaction, data)
                 } else {
-                    this.state.enableUpdateRows = JSON.parse(JSON.stringify(data))
+                    this.state.rowTransaction = [JSON.parse(JSON.stringify(data))]
                 }
             }
         }
@@ -589,15 +556,15 @@ export default class DashAgGrid extends Component {
         });
         this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
         this.props.setProps({
-            enableAutoSizeAllColumns: false,
-            enableAutoSizeAllColumnsSkipHeaders: false,
+            autoSizeAllColumns: false,
+            autoSizeAllColumnsSkipHeaders: false,
         });
     };
 
-    updateColumnDefs () {
+    updateColumnState () {
         this.props.setProps({
             columnState: JSON.parse(JSON.stringify(this.state.gridColumnApi.getColumnState())),
-            enableUpdateColumnDefs: false
+            updateColumnState: false
         })
     }
 
@@ -609,28 +576,36 @@ export default class DashAgGrid extends Component {
             style,
             theme,
             className,
-            enableResetColumnState,
-            enableExportDataAsCsv,
-            enableSelectAll,
-            enableSelectAllFiltered,
-            enableDeselectAll,
-            enableAutoSizeAllColumns,
-            enableAutoSizeAllColumnsSkipHeaders,
-            enableDeleteSelectedRows,
-            enableAddRows,
-            enableUpdateRows,
-            enableUpdateColumnDefs,
+            resetColumnState,
+            exportDataAsCsv,
+            selectAll,
+            selectAllFiltered,
+            deselectAll,
+            autoSizeAllColumns,
+            autoSizeAllColumnsSkipHeaders,
+            deleteSelectedRows,
+            rowTransaction,
+            updateColumnState,
             csvExportParams,
             detailCellRendererParams,
             setProps,
-            rowIdSetter,
             ...restProps
         } = this.props;
 
-        let getRowId
+        //Disable cellClassRules and rowClassRules if dangerously_allow_code is disabled
+        let cellClassRules;
+        let rowClassRules;
+        if (!this.state.dangerously_allow_code) {
+            cellClassRules = null;
+            rowClassRules = null;
+        } else {
+            cellClassRules = this.props.cellClassRules;
+            rowClassRules = this.props.rowClassRules;
+        }
 
-        if (rowIdSetter) {
-            getRowId = (params) => this.parseParamFunction({params}, rowIdSetter)
+        let getRowId;
+        if (this.props.getRowId) {
+            getRowId = (params) => this.parseParamFunction({params}, JSON.parse(JSON.stringify(this.props.getRowId)))
         }
 
         this.setUpCols(cellStyle)
@@ -642,48 +617,44 @@ export default class DashAgGrid extends Component {
 
         const cols = [];
 
-        if (enableResetColumnState) {
+        if (resetColumnState) {
             this.resetColumnState();
         }
 
-        if (enableExportDataAsCsv) {
+        if (exportDataAsCsv) {
             this.exportDataAsCsv(csvExportParams);
         }
 
-        if (enableSelectAll) {
+        if (selectAll) {
             this.selectAll();
         }
 
-        if (enableSelectAllFiltered) {
+        if (selectAllFiltered) {
             this.selectAllFiltered();
         }
 
-        if (enableDeselectAll) {
+        if (deselectAll) {
             this.deselectAll();
         }
 
-        if (enableAutoSizeAllColumns) {
+        if (autoSizeAllColumns) {
             this.autoSizeAllColumns(false);
         }
 
-        if (enableAutoSizeAllColumnsSkipHeaders) {
+        if (autoSizeAllColumnsSkipHeaders) {
             this.autoSizeAllColumns(true);
         }
 
-        if (enableUpdateColumnDefs) {
-            this.updateColumnDefs();
+        if (updateColumnState) {
+            this.updateColumnState();
         }
 
-        if (enableDeleteSelectedRows) {
+        if (deleteSelectedRows) {
             this.deleteSelectedRows();
         }
 
-        if (enableAddRows) {
-            this.addRows(enableAddRows);
-        }
-
-        if (enableUpdateRows) {
-            this.updateRows(enableUpdateRows);
+        if (rowTransaction) {
+            this.rowTransaction(rowTransaction);
         }
 
         const callbackGetDetail = (params) => {
@@ -739,8 +710,10 @@ export default class DashAgGrid extends Component {
                     )}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
-                    {...omit(['theme'], restProps)}
-                    {...this.props.dashGridOptions}
+                    cellClassRules={cellClassRules}
+                    rowClassRules={rowClassRules}
+                    {...omit(['theme', 'cellClassRules', 'rowClassRules', 'getRowId'], restProps)}
+                    {...omit(['cellClassRules', 'rowClassRules'], this.props.dashGridOptions)}
                 >
                     {cols}
                 </AgGridReact>

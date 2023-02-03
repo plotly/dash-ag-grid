@@ -15,9 +15,47 @@ function getGrid(enable) {
 }
 
 export default class DashAgGrid extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            gridApi: null,
+            columnApi: null,
+
+            openGroups: new Set(),
+            filterModel: {},
+            dangerously_allow_code: this.props.dangerously_allow_code,
+            origColumnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))
+
+        };
+
+        this.buildArray = this.buildArray.bind(this);
+    }
+
+
+    buildArray(arr1, arr2) {
+        if (arr1) {
+            if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
+                arr1.push(arr2)
+            }
+        } else {
+            arr1 = [JSON.parse(JSON.stringify(arr2))]
+        }
+        return arr1
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (this.props.rowTransaction && !this.state.mounted) {
+            if (nextProps.rowTransaction !== this.props.rowTransaction) {
+                this.state.rowTransaction = this.buildArray(this.state.rowTransaction, this.props.rowTransaction)
+            }
+        }
+    }
 
     render() {
         const {enableEnterpriseModules} = this.props
+
+        this.props.setProps({parentState: this.state})
 
         const RealComponent = getGrid(enableEnterpriseModules)
         return (
@@ -31,15 +69,15 @@ export default class DashAgGrid extends Component {
 DashAgGrid.defaultProps = {
     style: {height: '400px', width: '100%'},
     className: 'ag-theme-alpine',
-    enableResetColumnState: false,
-    enableExportDataAsCsv: false,
-    enableSelectAll: false,
-    enableSelectAllFiltered: false,
-    enableDeselectAll: false,
-    enableAutoSizeAllColumns: false,
-    enableAutoSizeAllColumnsSkipHeaders: false,
+    resetColumnState: false,
+    exportDataAsCsv: false,
+    selectAll: false,
+    selectAllFiltered: false,
+    deselectAll: false,
+    autoSizeAllColumns: false,
+    autoSizeAllColumnsSkipHeaders: false,
     enableEnterpriseModules: false,
-    enableUpdateColumnDefs: false,
+    updateColumnState: false,
     persisted_props: ['selectionChanged'],
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
@@ -114,64 +152,57 @@ DashAgGrid.propTypes = {
     /**
      * If true, the internal method resetColumnState() will be called
      */
-    enableResetColumnState: PropTypes.bool,
+    resetColumnState: PropTypes.bool,
 
     /**
      * If true, the internal method exportDataAsCsv() will be called
      */
-    enableExportDataAsCsv: PropTypes.bool,
+    exportDataAsCsv: PropTypes.bool,
 
     /**
      * If true, the internal method selectAll() will be called
      */
-    enableSelectAll: PropTypes.bool,
+    selectAll: PropTypes.bool,
 
     /**
      * If true, the internal method selectAllFiltered() will be called
      */
-    enableSelectAllFiltered: PropTypes.bool,
+    selectAllFiltered: PropTypes.bool,
 
     /**
      * If true, the internal method deselectAll() will be called
      */
-    enableDeselectAll: PropTypes.bool,
+    deselectAll: PropTypes.bool,
 
     /**
      * If true, the internal method autoSizeAllColumns(false) will be called
      */
-    enableAutoSizeAllColumns: PropTypes.bool,
+    autoSizeAllColumns: PropTypes.bool,
 
     /**
      * If true, the internal method autoSizeAllColumns(true) will be called
      */
-    enableAutoSizeAllColumnsSkipHeaders: PropTypes.bool,
+    autoSizeAllColumnsSkipHeaders: PropTypes.bool,
 
     /**
-     * If true, the internal method updateColumnDefs() will be called
+     * If true, the internal method updateColumnState() will be called
      */
-    enableUpdateColumnDefs: PropTypes.bool,
+    updateColumnState: PropTypes.bool,
 
     /**
      * If true, the internal method deleteSelectedRows() will be called
      */
-    enableDeleteSelectedRows: PropTypes.bool,
+    deleteSelectedRows: PropTypes.bool,
 
     /**
-     * If true, the internal method addRows() will be called
+     * If true, the internal method rowTransaction() will be used
      */
-    enableAddRows: PropTypes.oneOfType([
-                PropTypes.bool, PropTypes.arrayOf(PropTypes.object)
-        ]),
-
-    /**
-     * If true, the internal method updateRows() will be called
-     */
-    enableUpdateRows: PropTypes.arrayOf(PropTypes.object),
+    rowTransaction: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.object)),
 
     /**
     * This is required for change detection in rowData
     */
-    rowIdSetter: PropTypes.string,
+    getRowId: PropTypes.string,
 
 
     /**
