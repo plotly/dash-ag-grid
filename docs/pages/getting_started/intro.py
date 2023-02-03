@@ -1,16 +1,11 @@
-
 from dash import Dash, html, dcc, register_page
 import dash_bootstrap_components as dbc
 from utils.utils import app_description
 from utils.other_components import up_next, make_md
 
 register_page(
-    __name__,
-    order=0,
-    description=app_description,
-    title="Dash AG Grid",
-    path="/"
-  )
+    __name__, order=0, description=app_description, title="Dash AG Grid", path="/"
+)
 
 # #links
 medium_article = "https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers"
@@ -93,7 +88,7 @@ text2 = """
 
 `pip install dash-ag-grid==2.0.0a1`
 
- 1. Read the [Medium article](https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers) or watch the [webinar]() introducing Dash AG Grid.
+ 1. Read the [Medium article](https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers) or watch the [webinar](https://www.youtube.com/watch?v=Ggekq7C5pz4?utm_source=Webinar%3A+AG+Grid+1%2F26%2F23&utm_medium=medium_article&utm_content=AnnouncingDashAGGrids) introducing Dash AG Grid.
  2. See the live [stock portfolio demo app](https://sales-demo.plotly.com/dash-ag-grid) from the webinar hosted by Plotly.
  3. Get the code for the demo app in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)
  4. Learn more about [AG Grid](https://www.ag-grid.com/react-data-grid) in the upstream docs, including more information on community features and licensing for the enterprise version.
@@ -122,12 +117,10 @@ Below you will find just a few examples to get you started.
 text_callbacks = """
 ### AG Grid with Dash callbacks
 
-This is the sample app from the webinar.  See it [live]((https://sales-demo.plotly.com/dash-ag-grid)), get the [code](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py) in GitHub
+This is the sample app from the [webinar](https://www.youtube.com/watch?v=Ggekq7C5pz4?utm_source=Webinar%3A+AG+Grid+1%2F26%2F23&utm_medium=medium_article&utm_content=AnnouncingDashAGGrid).  See the app [live]((https://sales-demo.plotly.com/dash-ag-grid)), get the [code](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py) in GitHub
 
 This grid uses the `selectionChanged` prop to update the stock price figure, and the `cellValueChanged` prop in to update the
  pie chart in callbacks. 
-[See it live here](https://sales-demo.plotly.com/dash-ag-grid) and see the code in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)
- 
 """
 img_callbacks = "https://user-images.githubusercontent.com/72614349/215555251-6e4a3248-d789-449d-8036-7e84a43c1b63.gif"
 
@@ -248,6 +241,6 @@ layout = html.Div(
         make_feature_card(img_editing, text_editing),
         make_feature_card(img_components_markdown, text_components_markdown),
         make_feature_card(img_components_rowmenu, text_components_rowmenu),
-        make_md(text_enterprise)
+        make_md(text_enterprise),
     ],
 )

@@ -40,11 +40,13 @@ navbar = dbc.NavbarSimple(
             target="blank",
             title="Plotly",
         ),
-        html.Div([
-            html.Div("Alpha Release", className="small text-white pt-2"),
-            html.Div("2.0.0a1", className="text-white"),
-        ], className="vstack"),
-
+        html.Div(
+            [
+                html.Div("Alpha Release", className="small text-white pt-2"),
+                html.Div("2.0.0a1", className="text-white"),
+            ],
+            className="vstack",
+        ),
     ],
     brand="Dash AG Grid",
     #  brand_href=dash.get_relative_path("/"),

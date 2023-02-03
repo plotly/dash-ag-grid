@@ -30,6 +30,5 @@ layout = html.Div(
     [
         make_md(text1),
         example_app("examples.filtering.quick_filter", make_layout=make_tabs),
-
     ],
 )

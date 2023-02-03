@@ -1,0 +1,8 @@
+.header-style-on-filter .ag-header-cell-filtered {
+  background-color: #1b6d85 !important;
+  color: #fff !important;
+}
+
+header-style-on-filter .ag-header-cell-filtered span {
+  color: #fff !important;
+}
