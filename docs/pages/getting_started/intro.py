@@ -78,7 +78,7 @@ Welcome to the Dash AG Grid documentation.  These docs are a Dash version of the
 
 text2 = """  
 >
-> #### 🚧 This is an alpha release - for preview only. 🚧
+> #### 🚧 This is an alpha release 🚧
 >  Please do not use V2.0.0a1 in production.  We are adding new features, fixing bugs and known breaking changes are still to come.  
 > Feel free to give it a try and let us know what you think! 
 >
