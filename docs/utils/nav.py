@@ -140,6 +140,9 @@ def make_side_nav():
                     ),
                     make_sidebar_category(category="/components", title="Components"),
                     make_sidebar_category(
+                        category="/scrolling", title="Scrolling & Pagination"
+                    ),
+                    make_sidebar_category(
                         category="/enterprise", title="Enterprise Features"
                     ),
                     make_sidebar_category(
