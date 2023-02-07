@@ -81,6 +81,7 @@ defaultColDef = {
     "sortable": True,
     "editable": False,
     "floatingFilter": True,
+    "minWidth": 125
 }
 
 table = dag.AgGrid(
