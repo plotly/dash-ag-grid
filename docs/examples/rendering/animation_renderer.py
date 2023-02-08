@@ -25,19 +25,16 @@ columnDefs = [
         "headerName": "API C",
         "field": "c",
         "cellRenderer": "agAnimateShowChangeCellRenderer",
-        "dangerously_allow_html": True,
     },
     {
         "headerName": "Total",
         "valueGetter": "Number(data.a) + Number(data.b) + Number(data.c)",
         "cellRenderer": "agAnimateShowChangeCellRenderer",
-        "dangerously_allow_html": True,
     },
     {
         "headerName": "Average",
         "valueGetter": "Math.round((Number(data.a) + Number(data.b) + Number(data.c)) * 10 / 3) /10",
         "cellRenderer": "agAnimateShowChangeCellRenderer",
-        "dangerously_allow_html": True,
     },
 ]
 
@@ -61,8 +58,8 @@ app.layout = html.Div(
             columnSize="sizeToFit",
             defaultColDef=defaultColDef,
             # setting a row ID is required when updating data in a callback
-            setRowId="index",
-            dangerously_allow_html=True,
+            getRowId="index",
+            dangerously_allow_code=True,
         ),
     ],
     style={"margin": 20},

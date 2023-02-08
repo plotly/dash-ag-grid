@@ -16,14 +16,14 @@ register_page(
 text1 = """
 # Components
 
-In Dash AG Grid community there are a limited number of in cell components and editors.  
+In Dash AG Grid community there are a limited number of in cell components and editors.
 
 Cell Editing components:
  - See the <dccLink href='/editing/cell-editors' children='Cell editors' />  section for regular and popup cell editors.
  - See the <dccLink href='/editing/provided-cell-editors' children='Provided cell editors' />  section for select (dropdown) editors, and large text (textarea) editors
 
 Other components:
- - <dccLink href='/components/markdown' children='Markdown' /> .  Renders markdown syntax or html when `dangerously_allow_html=True`
+ - <dccLink href='/components/markdown' children='Markdown' /> .  Renders markdown syntax or html when `dangerously_allow_code=True`
  - <dccLink href='/components/row-menu' children='Row Menu' />  To access menu options in a callback
  - <dccLink href='/rendering/animation-renderer' children='Cell change animation renderer' />
 
@@ -35,11 +35,11 @@ text2 = """
 ### Markdown with HTML
 
 By default the grid does not allow raw html to reduce the risk of [XSS attacks.](https://owasp.org/www-community/attacks/xss/). For more
- information, see this community forum post on [writing secure dash apps ](https://community.plotly.com/t/writing-secure-dash-apps-community-thread/54619)  
+ information, see this community forum post on [writing secure dash apps ](https://community.plotly.com/t/writing-secure-dash-apps-community-thread/54619)
 
-The first example does not have `dangerously_allow_html` enabled, so the links which are raw html do not render.  
+The first example does not have `dangerously_allow_code` enabled, so the links which are raw html do not render.
 
-The second example has `dangerously_allow_html=True`. Note that you need to set this _both_ on the grid level and in `columnDefs`
+The second example has `dangerously_allow_code=True`. Note that you need to set this _both_ on the grid level and in `columnDefs`
 """
 
 

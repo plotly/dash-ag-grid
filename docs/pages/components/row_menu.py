@@ -14,14 +14,14 @@ register_page(
 text1 = """
 # Components
 
-In Dash AG Grid community there are a limited number of in cell components and editors.  
+In Dash AG Grid community there are a limited number of in cell components and editors.
 
 Cell Editing components:
  - See the <dccLink href='/editing/cell-editors' children='Cell editors' />  section for regular and popup cell editors.
  - See the <dccLink href='/editing/provided-cell-editors' children='Provided cell editors' />  section for select (dropdown) editors, and large text (textarea) editors
 
 Other components:
- - <dccLink href='/components/markdown' children='Markdown' /> .  Renders markdown syntax or html when `dangerously_allow_html=True`
+ - <dccLink href='/components/markdown' children='Markdown' /> .  Renders markdown syntax or html when `dangerously_allow_code=True`
  - <dccLink href='/components/row-menu' children='Row Menu' />  To access menu options in a callback
  - <dccLink href='/rendering/animation-renderer' children='Cell change animation renderer' />
 

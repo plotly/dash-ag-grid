@@ -31,13 +31,11 @@ columnDefs_allow_html = [
         "headerName": "Model",
         "field": "model",
         "cellRenderer": "markdown",
-        "dangerously_allow_html": True,
     },
     {
         "headerName": "Link",
         "field": "link",
         "cellRenderer": "markdown",
-        "dangerously_allow_html": True,
     },
     {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
 ]
@@ -87,14 +85,14 @@ raw_html_example1 = html.Div(
 raw_html_example2 = html.Div(
     [
         dcc.Markdown(
-            "This grid has both Markdown and raw HTML. `dangerously_allow_html=True` so the links render"
+            "This grid has both Markdown and raw HTML. `dangerously_allow_code=True` so the links render"
         ),
         dag.AgGrid(
             id="cell-renderer-table-3",
             columnSize="sizeToFit",
             columnDefs=columnDefs_allow_html,
             rowData=rowData,
-            dangerously_allow_html=True,
+            dangerously_allow_code=True,
         ),
     ]
 )
