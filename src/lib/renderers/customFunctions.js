@@ -1,3 +1,4 @@
-export function Round(v, a=2) {
-    return Math.round(v * (10**a)) / (10**a)
+export const customFunctions = {
+    "Math": Math,
+    "Number": Number
 }

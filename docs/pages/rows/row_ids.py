@@ -33,15 +33,15 @@ text2 = """
 When the Application assigns Row IDs, this provides a common Row ID across the grid and the Application. This has advantages such as:
 
 1. The grid API getRowNode(id) can be called with the Application known ID (eg employeeId) to get the Row Node for a particular piece of data.
-2. When updating Row Data (either by updating the rowData attribute, or using Update Transactions), the grid uses the Row ID to map old vs new data (e.g. it can work out which Rows to add / remove / update rather than doing a blanket replacement of old vs new data). This allows the grid to keep state such as Row Selection.  
+2. When updating Row Data (either by updating the rowData attribute, or using Update Transactions), the grid uses the Row ID to map old vs new data (e.g. it can work out which Rows to add / remove / update rather than doing a blanket replacement of old vs new data). This allows the grid to keep state such as Row Selection.
 
 
-Setting Row IDs is done using the `setRowId` prop:
-> `setRowId` (string) Sets the ID for a particular row node based on the data.
- 
+Setting Row IDs is done using the `getRowId` prop:
+> `getRowId` (string) Sets the ID for a particular row node based on the data.
+
 _Note:  Row IDs are required when updating rowData in a callback_
 
-The example below uses  `setRowId="id"` to use the "id" column for the data for the Row ID   
+The example below uses  `getRowId="id"` to use the "id" column for the data for the Row ID
 
 """
 

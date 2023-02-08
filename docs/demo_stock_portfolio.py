@@ -64,7 +64,6 @@ columnDefs = [
         "type": "rightAligned",
         "filter": "agNumberColumnFilter",
         "valueFormatter": "Number(value).toFixed(2)",
-        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -73,7 +72,6 @@ columnDefs = [
         "filter": "agNumberColumnFilter",
         "valueGetter": "Number(data.price) * Number(data.quantity)",
         "valueFormatter": "Number(value).toFixed(2)",
-        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -129,7 +127,7 @@ table = dag.AgGrid(
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
     cellStyle=cellStyle,
-    dangerously_allow_html=True,
+    dangerously_allow_code=True,
     dashGridOptions={"undoRedoCellEditing": True, "rowSelection": "single"},
 )
 

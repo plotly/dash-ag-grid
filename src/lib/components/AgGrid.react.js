@@ -15,6 +15,42 @@ function getGrid(enable) {
 }
 
 export default class DashAgGrid extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            gridApi: null,
+            columnApi: null,
+
+            openGroups: new Set(),
+            filterModel: {},
+            dangerously_allow_code: this.props.dangerously_allow_code,
+            origColumnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))
+
+        };
+
+        this.buildArray = this.buildArray.bind(this);
+    }
+
+
+    buildArray(arr1, arr2) {
+        if (arr1) {
+            if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
+                arr1.push(arr2)
+            }
+        } else {
+            arr1 = [JSON.parse(JSON.stringify(arr2))]
+        }
+        return arr1
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (this.props.rowTransaction && !this.state.mounted) {
+            if (nextProps.rowTransaction !== this.props.rowTransaction) {
+                this.state.rowTransaction = this.buildArray(this.state.rowTransaction, this.props.rowTransaction)
+            }
+        }
+    }
 
     render() {
         const {enableEnterpriseModules} = this.props
@@ -22,7 +58,7 @@ export default class DashAgGrid extends Component {
         const RealComponent = getGrid(enableEnterpriseModules)
         return (
             <Suspense fallback={null}>
-                <RealComponent {...this.props} />
+                <RealComponent parentState={this.state} {...this.props} />
             </Suspense>
         );
     }
@@ -31,19 +67,19 @@ export default class DashAgGrid extends Component {
 DashAgGrid.defaultProps = {
     style: {height: '400px', width: '100%'},
     className: 'ag-theme-alpine',
-    enableResetColumnState: false,
-    enableExportDataAsCsv: false,
-    enableSelectAll: false,
-    enableSelectAllFiltered: false,
-    enableDeselectAll: false,
-    enableAutoSizeAllColumns: false,
-    enableAutoSizeAllColumnsSkipHeaders: false,
+    resetColumnState: false,
+    exportDataAsCsv: false,
+    selectAll: false,
+    selectAllFiltered: false,
+    deselectAll: false,
+    autoSizeAllColumns: false,
+    autoSizeAllColumnsSkipHeaders: false,
     enableEnterpriseModules: false,
-    enableUpdateColumnDefs: false,
+    updateColumnState: false,
     persisted_props: ['selectionChanged'],
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
-    dangerously_allow_html: false,
+    dangerously_allow_code: false,
 };
 DashAgGrid.propTypes = {
     /********************************
@@ -101,9 +137,11 @@ DashAgGrid.propTypes = {
 
 
     /**
-    * Enables the use of html for the whole table, this is required if wanting to turn on for columns
+    * Allow strings containing JavaScript code or HTML in certain props.
+    * If your app stores Dash layouts for later retrieval this is dangerous
+    * because it can lead to cross-site-scripting attacks.
     */
-    dangerously_allow_html: PropTypes.bool,
+    dangerously_allow_code: PropTypes.bool,
 
     /********************************
      * CUSTOM PROPS
@@ -112,59 +150,57 @@ DashAgGrid.propTypes = {
     /**
      * If true, the internal method resetColumnState() will be called
      */
-    enableResetColumnState: PropTypes.bool,
+    resetColumnState: PropTypes.bool,
 
     /**
      * If true, the internal method exportDataAsCsv() will be called
      */
-    enableExportDataAsCsv: PropTypes.bool,
+    exportDataAsCsv: PropTypes.bool,
 
     /**
      * If true, the internal method selectAll() will be called
      */
-    enableSelectAll: PropTypes.bool,
+    selectAll: PropTypes.bool,
 
     /**
      * If true, the internal method selectAllFiltered() will be called
      */
-    enableSelectAllFiltered: PropTypes.bool,
+    selectAllFiltered: PropTypes.bool,
 
     /**
      * If true, the internal method deselectAll() will be called
      */
-    enableDeselectAll: PropTypes.bool,
+    deselectAll: PropTypes.bool,
 
     /**
      * If true, the internal method autoSizeAllColumns(false) will be called
      */
-    enableAutoSizeAllColumns: PropTypes.bool,
+    autoSizeAllColumns: PropTypes.bool,
 
     /**
      * If true, the internal method autoSizeAllColumns(true) will be called
      */
-    enableAutoSizeAllColumnsSkipHeaders: PropTypes.bool,
+    autoSizeAllColumnsSkipHeaders: PropTypes.bool,
 
     /**
-     * If true, the internal method updateColumnDefs() will be called
+     * If true, the internal method updateColumnState() will be called
      */
-    enableUpdateColumnDefs: PropTypes.bool,
+    updateColumnState: PropTypes.bool,
 
     /**
      * If true, the internal method deleteSelectedRows() will be called
      */
-    enableDeleteSelectedRows: PropTypes.bool,
+    deleteSelectedRows: PropTypes.bool,
 
     /**
-     * If true, the internal method addRows() will be called
+     * If true, the internal method rowTransaction() will be used
      */
-    enableAddRows: PropTypes.oneOfType([
-                PropTypes.bool, PropTypes.arrayOf(PropTypes.object)
-        ]),
+    rowTransaction: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.object)),
 
     /**
     * This is required for change detection in rowData
     */
-    setRowId: PropTypes.string,
+    getRowId: PropTypes.string,
 
 
     /**
@@ -947,16 +983,6 @@ DashAgGrid.propTypes = {
      * (Client-Side Row Model only) Set the data to be displayed as rows in the grid.
      */
     rowData: PropTypes.any,
-
-    /**
-     * Snapshot of rowData before edits
-     */
-    data_previous: PropTypes.any,
-
-    /**
-     * Snapshot of rowData before edits -- timestamp
-     */
-    data_previous_timestamp: PropTypes.any,
 
     /**
      * (Client-Side Row Model only) Enables Immutable Data mode, for compatibility with
