@@ -1,4 +1,5 @@
 import React, {Component, lazy, require} from 'react';
+import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
 import {omit} from 'ramda';
@@ -724,4 +725,4 @@ export default class DashAgGrid extends Component {
 }
 
 DashAgGrid.defaultProps = defaultProps;
-DashAgGrid.propTypes = propTypes;
+DashAgGrid.propTypes = {parentState: PropTypes.any, ...propTypes};

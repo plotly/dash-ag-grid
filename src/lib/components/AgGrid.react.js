@@ -55,12 +55,10 @@ export default class DashAgGrid extends Component {
     render() {
         const {enableEnterpriseModules} = this.props
 
-        this.props.setProps({parentState: this.state})
-
         const RealComponent = getGrid(enableEnterpriseModules)
         return (
             <Suspense fallback={null}>
-                <RealComponent {...this.props} />
+                <RealComponent parentState={this.state} {...this.props} />
             </Suspense>
         );
     }
