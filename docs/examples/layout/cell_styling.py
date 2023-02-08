@@ -57,22 +57,6 @@ grid_with_individual_cell_style = html.Div(
     ]
 )
 
-grid_with_basic_row_style = html.Div(
-    [
-        html.H3(children="Grid with Basic Row Style"),
-        dag.AgGrid(
-            columnDefs=columnDefs,
-            rowData=rowData,
-            columnSize="sizeToFit",
-            defaultColDef=dict(
-                resizable=True,
-            ),
-            rowStyle={"background": "yellow"},
-        ),
-        html.Hr(),
-    ]
-)
-
 grid_with_conditional_cell_styles = html.Div(
     [
         html.H3(children="Grid with Conditional Cell Styles"),
@@ -106,7 +90,6 @@ app.layout = html.Div(
     [
         dcc.Markdown("Examples of cell styling using the AG-Grid Cell Style approach."),
         grid_with_default_cell_styles,
-        grid_with_basic_row_style,
         grid_with_individual_cell_style,
         grid_with_conditional_cell_styles,
     ]

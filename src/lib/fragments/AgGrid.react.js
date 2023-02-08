@@ -374,7 +374,8 @@ export default class DashAgGrid extends Component {
     }
 
     onCellClicked({value, column: {colId}, rowIndex}) {
-        this.props.setProps({cellClicked: {value, colId, rowIndex}});
+        const timestamp = Date.now()
+        this.props.setProps({cellClicked: {value, colId, rowIndex, timestamp}});
     }
 
     onCellValueChanged({oldValue, newValue, column: {colId}, rowIndex, data, node}) {
@@ -609,7 +610,7 @@ export default class DashAgGrid extends Component {
         }
 
         this.setUpCols(cellStyle)
-        
+
         let newRowStyle;
         if (getRowStyle) {
             newRowStyle = (params) => this.handleDynamicRowStyle({params, getRowStyle})

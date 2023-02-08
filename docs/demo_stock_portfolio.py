@@ -50,7 +50,6 @@ columnDefs = [
     {
         "headerName": "Company",
         "field": "company",
-        "unhide": True,
     },
     {
         "headerName": "Shares",
@@ -65,6 +64,7 @@ columnDefs = [
         "type": "rightAligned",
         "filter": "agNumberColumnFilter",
         "valueFormatter": "Number(value).toFixed(2)",
+        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -73,6 +73,7 @@ columnDefs = [
         "filter": "agNumberColumnFilter",
         "valueGetter": "Number(data.price) * Number(data.quantity)",
         "valueFormatter": "Number(value).toFixed(2)",
+        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -99,6 +100,7 @@ defaultColDef = {
     "sortable": True,
     "editable": False,
     "floatingFilter": True,
+    "minWidth": 125
 }
 
 cellStyle = {
@@ -127,6 +129,7 @@ table = dag.AgGrid(
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
     cellStyle=cellStyle,
+    dangerously_allow_html=True,
     dashGridOptions={"undoRedoCellEditing": True, "rowSelection": "single"},
 )
 
@@ -194,4 +197,4 @@ def update_portfolio_stats(_, data):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8060)
