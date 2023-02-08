@@ -58,7 +58,7 @@ app.layout = html.Div(
 
 
 @app.callback(
-    Output("reset-column-state-grid", "enableResetColumnState"),
+    Output("reset-column-state-grid", "resetColumnState"),
     Output("reset-column-state-grid", "updateColumnState"),
     Input("reset-column-state-button", "n_clicks"),
     Input("get-column-state-button", "n_clicks"),
