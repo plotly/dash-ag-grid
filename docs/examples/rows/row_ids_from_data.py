@@ -9,7 +9,7 @@ from dash import Dash, html, dcc
 app = Dash(__name__)
 
 columnDefs = [
-    {"headerName": "Row ID", "valueGetter": "node.id"},
+    {"headerName": "Row ID", "valueGetter": {"function":"node.id"}},
     {"field": "make"},
     {"field": "model"},
     {"field": "price"},
@@ -33,8 +33,7 @@ app.layout = html.Div(
             rowData=data,
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
-            getRowId="id",
-            dangerously_allow_code=True,
+            getRowId="data.id",
         ),
     ],
     style={"margin": 20},

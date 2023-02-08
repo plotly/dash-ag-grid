@@ -59,15 +59,23 @@ app.layout = html.Div(
 
 @app.callback(
     Output("reset-column-state-grid", "enableResetColumnState"),
-    Output("reset-column-state-grid-pre", "children"),
+    Output("reset-column-state-grid", "updateColumnState"),
     Input("reset-column-state-button", "n_clicks"),
     Input("get-column-state-button", "n_clicks"),
-    State("reset-column-state-grid", "columnState"),
 )
-def reset_column_state(n_reset, n_state, col_state):
+def reset_column_state(n_reset, n_state):
     if ctx.triggered_id == "reset-column-state-button":
-        return True, json.dumps(col_state, indent=2)
-    return False, json.dumps(col_state, indent=2)
+        return True, False
+    elif ctx.triggered_id == "get-column-state-button":
+        return False, True
+    return dash.no_update
+
+@app.callback(
+    Output("reset-column-state-grid-pre", "children"),
+    Input("reset-column-state-grid", "columnState"),
+)
+def display_column_state(col_state):
+    return json.dumps(col_state, indent=2),
 
 
 if __name__ == "__main__":
