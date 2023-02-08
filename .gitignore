@@ -2,7 +2,7 @@
 .vscode/
 
 # Build artifacts
-dash_ag_grid/
+dash_ag_grid/*
 !dash_ag_grid/__init__.py
 R/
 deps/

@@ -40,12 +40,22 @@ _js_dist = [
         'dynamic': True
     },
     {
-        'relative_package_path': 'async-dashaggrid.js',
+        'relative_package_path': 'async-community.js',
         'namespace': package_name,
         'async': True
     },
     {
-        'relative_package_path': 'async-dashaggrid.js.map',
+        'relative_package_path': 'async-community.js.map',
+        'namespace': package_name,
+        'dynamic': True
+    },
+    {
+        'relative_package_path': 'async-enterprise.js',
+        'namespace': package_name,
+        'async': True
+    },
+    {
+        'relative_package_path': 'async-enterprise.js.map',
         'namespace': package_name,
         'dynamic': True
     },
