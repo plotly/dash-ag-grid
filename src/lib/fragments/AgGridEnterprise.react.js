@@ -1,4 +1,4 @@
-import React, {Component, lazy, Suspense} from 'react';
+import React, {Component} from 'react';
 import 'ag-grid-enterprise';
 import DashAgGrid from './AgGrid.react';
 import { LicenseManager } from  'ag-grid-enterprise'

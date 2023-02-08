@@ -1,4 +1,4 @@
-import React, {Component, lazy, require} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
