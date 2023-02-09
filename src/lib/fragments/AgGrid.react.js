@@ -105,10 +105,14 @@ export default class DashAgGrid extends Component {
     }
 
     fixCols(columnDef, templateMessage) {
+
+        const columnFunctions = ['editable', 'checkboxSelection']
+        const expressWarn = ['valueGetter', 'valueFormatter', 'valueParser', 'valueSetter', 'filterValueGetter']
+
         const test = (target) => {
             if (target in columnDef) {
                 if (!(columnDef['dangerously_allow_code']
-                        && this.state.dangerously_allow_code)) {
+                        && this.state.dangerously_allow_code) && expressWarn.includes(target)) {
                     if (typeof columnDef[target] !== 'function') {
                         if (!(Object.keys(columnDef[target]).includes('function'))) {
                             columnDef[target] = (params) => {return ''}
@@ -121,7 +125,6 @@ export default class DashAgGrid extends Component {
                         const newFunc = JSON.parse(JSON.stringify(columnDef[target]['function']))
                         columnDef[target] = (params) => this.parseParamFunction({params}, newFunc)
                     }
-
                 }
             }
         }
@@ -139,10 +142,7 @@ export default class DashAgGrid extends Component {
             }
         }
 
-        test('valueGetter')
-        test('valueFormatter')
-        test('valueParser')
-        test('valueSetter')
+        columnFunctions.concat(expressWarn).map(test)
 
         return columnDef
     }
