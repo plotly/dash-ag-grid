@@ -130,9 +130,7 @@ export default class DashAgGrid extends Component {
         }
 
         //Overwriting column options with table defaults
-        if (!this.state.dangerously_allow_code) {
-            columnDef['dangerously_allow_code'] = false
-        }
+        columnDef['dangerously_allow_code'] = this.state.dangerously_allow_code
 
         if ("headerComponentParams" in columnDef) {
             if ('template' in columnDef['headerComponentParams'] && !(columnDef['dangerously_allow_code']
@@ -439,7 +437,8 @@ export default class DashAgGrid extends Component {
                 const parsedCondition = esprima.parse(condition).body[0]
                     .expression;
 
-                if (evaluate(parsedCondition, {...params})) {
+                if (evaluate(parsedCondition, {...params, d3, ...customFunctions, ...window.dashAgGridFunctions,
+            ...window.dashSharedVariables})) {
                     return style;
                 }
             }
