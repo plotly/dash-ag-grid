@@ -4,6 +4,7 @@ import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
 import {omit} from 'ramda';
 import {propTypes, defaultProps} from '../components/AgGrid.react';
+import {expressWarn, gridFunctions, columnFunctions} from '../utils/functionVars'
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
 import RowMenuRenderer from '../renderers/rowMenuRenderer';
@@ -106,9 +107,6 @@ export default class DashAgGrid extends Component {
 
     fixCols(columnDef, templateMessage) {
 
-        const columnFunctions = ['editable', 'checkboxSelection']
-        const expressWarn = ['valueGetter', 'valueFormatter', 'valueParser', 'valueSetter', 'filterValueGetter']
-
         const test = (target) => {
             if (target in columnDef) {
                 if (!(columnDef['dangerously_allow_code']
@@ -123,7 +121,7 @@ export default class DashAgGrid extends Component {
                 if (typeof columnDef[target] !== 'function') {
                     if (Object.keys(columnDef[target]).includes('function')) {
                         const newFunc = JSON.parse(JSON.stringify(columnDef[target]['function']))
-                        columnDef[target] = (params) => this.parseParamFunction({params}, newFunc)
+                        columnDef[target] = (params) => this.parseParamFunction(params, newFunc)
                     }
                 }
             }
@@ -424,6 +422,14 @@ export default class DashAgGrid extends Component {
         return defaultStyle ? defaultStyle : null;
     }
 
+    evaluateFunction = (tempFunction, params) => {
+        const parsedCondition = esprima.parse(tempFunction).body[0]
+                    .expression;
+        const value = evaluate(parsedCondition, {params, d3, ...customFunctions, ...window.dashAgGridFunctions,
+        ...window.dashSharedVariables})
+        return value
+    }
+
     /**
      * @params AG-Grid Styles rules attribute.
      * See: https://www.ag-grid.com/react-grid/row-styles/#row-style-row-class--row-class-rules-params
@@ -434,11 +440,8 @@ export default class DashAgGrid extends Component {
         if (styleConditions && styleConditions.length > 0) {
             for (const styleCondition of styleConditions) {
                 const {condition, style} = styleCondition;
-                const parsedCondition = esprima.parse(condition).body[0]
-                    .expression;
 
-                if (evaluate(parsedCondition, {...params, d3, ...customFunctions, ...window.dashAgGridFunctions,
-            ...window.dashSharedVariables})) {
+                if (this.evaluateFunction(condition, params)) {
                     return style;
                 }
             }
@@ -447,17 +450,12 @@ export default class DashAgGrid extends Component {
         return defaultStyle ? defaultStyle : null;
     }
 
-    parseParamFunction({params}, tempFunction) {
+    parseParamFunction(params, tempFunction) {
         try {
-            const parsedCondition = esprima.parse(tempFunction).body[0]
-                    .expression;
-            const value = evaluate(parsedCondition, {...params, d3, ...customFunctions, ...window.dashAgGridFunctions,
-            ...window.dashSharedVariables})
-            return value
+            return this.evaluateFunction(tempFunction, params)
         } catch (err) {
             console.log(err)
         }
-        //const value = evaluate(parsedCondition, {...params})
         return ''
     }
 
@@ -593,6 +591,81 @@ export default class DashAgGrid extends Component {
             ...restProps
         } = this.props;
 
+        const replaceFunc = (keyPair) => {
+            const target = Object.keys(keyPair)[0]
+            const varType = keyPair[target]
+//            if (!varType || varType == 'params') {   <---- unused currently
+                if (target in this.props) {
+                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                        if (typeof this.props[target] !== 'function') {
+                            if (!(Object.keys(this.props[target]).includes('function'))) {
+                                this.props[target] = (params) => {return ''}
+                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
+                            }
+                        }
+                    }
+                    if (typeof this.props[target] !== 'function') {
+                        if (Object.keys(this.props[target]).includes('function')) {
+                            const newFunc = JSON.parse(JSON.stringify(this.props[target]['function']))
+                            this.props[target] = (params) => this.parseParamFunction(params, newFunc)
+                        }
+                    }
+                }
+                if (target in this.props.dashGridOptions) {
+                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                        if (typeof this.props.dashGridOptions[target] !== 'function') {
+                            if (!(Object.keys(this.props.dashGridOptions[target]).includes('function'))) {
+                                this.props.dashGridOptions[target] = (params) => {return ''}
+                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
+                            }
+                        }
+                    }
+                    if (typeof this.props.dashGridOptions[target] !== 'function') {
+                        if (Object.keys(this.props.dashGridOptions[target]).includes('function')) {
+                            const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target]['function']))
+                            this.props.dashGridOptions[target] = (params) => this.parseParamFunction(params, newFunc)
+                        }
+                    }
+                }
+//            }
+//            else if (varType == 'rowNode') { <---- unused currently
+//                if (target in this.props) {
+//                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+//                        if (typeof this.props[target] !== 'function') {
+//                            if (!(Object.keys(this.props[target]).includes('function'))) {
+//                                this.props[target] = (rowNode) => {return ''}
+//                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
+//                            }
+//                        }
+//                    }
+//                    if (typeof this.props[target] !== 'function') {
+//                        if (Object.keys(this.props[target]).includes('function')) {
+//                            const newFunc = JSON.parse(JSON.stringify(this.props[target]['function']))
+//                            this.props[target] = (rowNode) => this.parseParamFunction(rowNode, newFunc)
+//                        }
+//                    }
+//                }
+//                if (target in this.props.dashGridOptions) {
+//                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+//                        if (typeof this.props.dashGridOptions[target] !== 'function') {
+//                            if (!(Object.keys(this.props.dashGridOptions[target]).includes('function'))) {
+//                                this.props.dashGridOptions[target] = (rowNode) => {return ''}
+//                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
+//                            }
+//                        }
+//                    }
+//                    if (typeof this.props.dashGridOptions[target] !== 'function') {
+//                        if (Object.keys(this.props.dashGridOptions[target]).includes('function')) {
+//                            const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target]['function']))
+//                            this.props.dashGridOptions[target] = (rowNode) => this.parseParamFunction(rowNode, newFunc)
+//                        }
+//                    }
+//                }
+//            }
+        }
+
+        gridFunctions.map(replaceFunc)
+
         //Disable cellClassRules and rowClassRules if dangerously_allow_code is disabled
         let cellClassRules;
         let rowClassRules;
@@ -606,7 +679,7 @@ export default class DashAgGrid extends Component {
 
         let getRowId;
         if (this.props.getRowId) {
-            getRowId = (params) => this.parseParamFunction({params}, JSON.parse(JSON.stringify(this.props.getRowId)))
+            getRowId = (params) => this.parseParamFunction(params, JSON.parse(JSON.stringify(this.props.getRowId)))
         }
 
         this.setUpCols(cellStyle)
@@ -615,8 +688,6 @@ export default class DashAgGrid extends Component {
         if (getRowStyle) {
             newRowStyle = (params) => this.handleDynamicRowStyle({params, getRowStyle})
         }
-
-        const cols = [];
 
         if (resetColumnState) {
             this.resetColumnState();
@@ -716,7 +787,6 @@ export default class DashAgGrid extends Component {
                     {...omit(['theme', 'cellClassRules', 'rowClassRules', 'getRowId'], restProps)}
                     {...omit(['cellClassRules', 'rowClassRules'], this.props.dashGridOptions)}
                 >
-                    {cols}
                 </AgGridReact>
             </div>
         );

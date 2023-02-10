@@ -1,5 +1,5 @@
 import dash_ag_grid as dag
-from dash import Dash, html, dcc, Input, Output, State, ctx
+from dash import Dash, html, dcc, Input, Output, State, ctx, ALL
 import dash_bootstrap_components as dbc
 import pandas as pd
 import yfinance as yf
@@ -43,7 +43,8 @@ data = {
     "quantity": [75, 40, 100, 50, 40, 60, 20, 40],
     "price": [last_close(ticker) for ticker in equities],
     "binary": [False for ticker in equities],
-    "testdate":['2023-02-01' for ticker in equities]
+    "testdate": ['2023-02-01' for ticker in equities],
+    "button": [{"className":"btn btn-warning", "id":"testing", "n_clicks":0} for ticker in equities]
 }
 df = pd.DataFrame(data)
 
@@ -54,13 +55,16 @@ columnDefs = [
         "type": "textAligned",
         "filter": True,
         "editable": True,
-        "cellRenderer": "stockLink"
+        "cellRenderer": "stockLink",
+        "checkboxSelection": True,
+        "headerCheckboxSelection": True,
+        'showDisabledCheckboxes': True
     },
     {
         "headerName": "Company",
         "field": "company",
         "type": "textAligned",
-        "filter": True
+        "filter": True,
     },
     {
         "headerName": "Shares",
@@ -70,13 +74,13 @@ columnDefs = [
     {
         "headerName": "Last Close Price",
         "field": "price",
-        "valueFormatter": {"function":"""Number(value).toFixed(2)"""},
+        "valueFormatter": {"function":"""Number(params.value).toFixed(2)"""},
         "editable":True
     },
     {
         "headerName": "Market Value",
-        "valueGetter": {"function":"Math.floor(data.price * data.quantity * 100) / 100"},
-        "valueFormatter": {"function":"""d3.format("($,.2f")(value)"""},
+        "valueGetter": {"function":"Math.floor(params.data.price * params.data.quantity * 100) / 100"},
+        "valueFormatter": {"function":"""d3.format("($,.2f")(params.value)"""},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -86,14 +90,20 @@ columnDefs = [
     },
     {
         "field":"testdate",
-        "valueFormatter": {"function":"""(d3.timeParse("%Y-%m-%d")(value))"""},
+        "valueFormatter": {"function":"""(d3.timeParse("%Y-%m-%d")(params.value))"""},
         "type":"date",
         "filter": "agDateColumnFilter"
     },
     {
         "headerName":"testing",
-        "valueGetter": {"function":"node.id"}
-    }
+        "valueGetter": {"function":"params.node.id"}
+    },
+    {
+        "headerName":"testingButton",
+        "cellRenderer":"myCustomButton",
+        "field":"button",
+     }
+
 ]
 
 
@@ -118,14 +128,19 @@ table = dag.AgGrid(
     columnSize=None,
     defaultColDef=defaultColDef,
     rowSelection="single",
-    getRowId='data.ticker + "|" + data.company',
-    dashGridOptions={'undoRedoCellEditing':True, 'undoRedoCellEditingLimit': 20},
+    getRowId='params.data.ticker + "|" + params.data.company',
+
+    dashGridOptions={'undoRedoCellEditing':True, 'undoRedoCellEditingLimit': 20,
+                     'isRowSelectable': {"function":"selectAAPL(params)"},
+
+                     },
     getRowStyle={
                 "styleConditions": [
-                    {"condition": "data.quantity > 50", "style": {"color": "orange"}},
+                    {"condition": "params.data.quantity > 50", "style": {"color": "orange"}},
                 ]
             },
-    rowTransaction={'update':[{'ticker':'AAPL', 'company':'Apple', 'quantity':30, 'price':'154.50'}]}
+    rowTransaction={'update':[{'ticker':'AAPL', 'company':'Apple', 'quantity':30, 'price':'154.50'}]},
+
 )
 
 header = html.Div("My Portfolio", className="h2 p-2 text-white bg-primary text-center")
@@ -178,7 +193,7 @@ app.clientside_callback(
         return window.dash_clientside.no_update
     }""",
     Output("previous", "children"),
-    Input("portfolio-grid", "cellClicked"),
+    Input("portfolio-grid", "cellValueChanged"),
 )
 
 if __name__ == "__main__":

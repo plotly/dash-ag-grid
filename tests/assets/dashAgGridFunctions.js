@@ -6,3 +6,7 @@ dagfuncs.Round = function(v, a=2) {
 dagfuncs.toFixed = function(v, a=2) {
     return Number(v).toFixed(a)
 }
+
+dagfuncs.selectAAPL = function (rowNode) {
+    return rowNode.data.ticker ? rowNode.data.ticker == 'AAPL' : false;
+}

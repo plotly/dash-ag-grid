@@ -22,3 +22,30 @@ dagcomponentfuncs.checkbox = function (props) {
         style: {'cursor':'pointer'}
     })
 }
+
+dagcomponentfuncs.myCustomButton = function (props) {
+
+    const {setProps, data} = props;
+
+    if (!props.value) {
+        return React.createElement('button')
+    }
+
+    function onClick() {
+        let colId = props.column.colId;
+        let newData = JSON.parse(JSON.stringify(props.node.data[colId]));
+        newData["n_clicks"]++
+        props.node.setDataValue(colId, newData);
+    }
+
+    const id = JSON.stringify({'index': props.rowIndex, 'type':'customButton'})
+    return React.createElement('div',
+    {style: {'width':'100%','height':'100%', 'padding':'5px', 'display':'flex',
+     'justifyContent':'center', 'alignItems':'center'}},
+    React.createElement('button', {
+        onClick: onClick,
+        id: props.value.id,
+        className: props.value.className,
+
+    }, 'testing'))
+}
