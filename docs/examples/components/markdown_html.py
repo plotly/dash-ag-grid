@@ -31,11 +31,13 @@ columnDefs_allow_html = [
         "headerName": "Model",
         "field": "model",
         "cellRenderer": "markdown",
+        "dangerously_allow_code": True,
     },
     {
         "headerName": "Link",
         "field": "link",
         "cellRenderer": "markdown",
+        "dangerously_allow_code": True,
     },
     {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
 ]
