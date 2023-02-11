@@ -98,7 +98,7 @@ defaultColDef = {
     "sortable": True,
     "editable": False,
     "floatingFilter": True,
-    "minWidth": 125
+    "minWidth": 125,
 }
 
 cellStyle = {

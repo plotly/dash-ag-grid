@@ -33,7 +33,9 @@ columnDefs = [
     },
     {
         "headerName": "Average",
-        "valueGetter": {"function": "Math.round((Number(data.a) + Number(data.b) + Number(data.c)) * 10 / 3) /10"},
+        "valueGetter": {
+            "function": "Math.round((Number(data.a) + Number(data.b) + Number(data.c)) * 10 / 3) /10"
+        },
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
 ]
