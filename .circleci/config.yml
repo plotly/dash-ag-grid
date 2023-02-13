@@ -1,0 +1,38 @@
+version: 2.1
+
+orbs:
+  browser-tools: circleci/browser-tools@1.4.0
+
+jobs:
+  test:
+    docker:
+      - image: cimg/python:3.9.9-node
+        auth:
+          username: dashautomation
+          password: $DASH_PAT_DOCKERHUB
+    steps:
+      - checkout
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
+      - run:
+          name: Install Python deps
+          command: |
+            python -m venv venv && . venv/bin/activate
+            pip install --upgrade pip wheel
+            pip install -r tests/requirements.txt
+      - run:
+          name: Build package
+          command: |
+            . venv/bin/activate
+            npm ci
+            npm run build
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            pytest --headless
+
+workflows:
+  run-tests:
+    jobs:
+      - test
