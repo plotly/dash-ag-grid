@@ -343,6 +343,14 @@ export default class DashAgGrid extends Component {
         };
     }
 
+    applyRowTransaction(data, gridApi = this.state.gridApi) {
+        if ('async' in data) {
+            if (data['async']) {gridApi.applyTransactionAsync(data)}
+            else {gridApi.applyTransaction(data)}
+            }
+            else {gridApi.applyTransactionAsync(data)}
+    }
+
     onGridReady(params) {
         // Applying Infinite Row Model
         // see: https://www.ag-grid.com/javascript-grid/infinite-scrolling/
@@ -359,7 +367,7 @@ export default class DashAgGrid extends Component {
         this.updateColumnWidths()
 
         if (this.state.rowTransaction) {
-            this.state.rowTransaction.map((data) => this.state.gridApi.applyTransaction(data))
+            this.state.rowTransaction.map((data) => this.applyRowTransaction(data, params.api))
             this.state.rowTransaction = null;
             this.props.setProps({rowData: this.getRowData()})
         }
@@ -532,10 +540,10 @@ export default class DashAgGrid extends Component {
         if (this.state.mounted) {
             if (this.state.gridApi) {
                 if (this.state.rowTransaction) {
-                    this.state.rowTransaction.map((data) => this.state.gridApi.applyTransaction(data))
+                    this.state.rowTransaction.map((data) => this.applyRowTransaction(data))
                     this.state.rowTransaction = null;
                 }
-                this.state.gridApi.applyTransaction(data)
+                this.applyRowTransaction(data)
                 this.props.setProps({
                     rowTransaction: null,
                     rowData: this.getRowData()
