@@ -174,7 +174,7 @@ app.clientside_callback(
         if (n) {
             df2 = d[n%d.length]
             df2['quantity'] = n
-            return {'update': [df2]}
+            return {'async': true, 'update': [df2]}
         }
         return window.dash_clientside.no_update
     }
