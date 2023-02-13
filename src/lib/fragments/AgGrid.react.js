@@ -109,8 +109,7 @@ export default class DashAgGrid extends Component {
 
         const test = (target) => {
             if (target in columnDef) {
-                if (!(columnDef['dangerously_allow_code']
-                        && this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
                     if (typeof columnDef[target] !== 'function') {
                         if (!(Object.keys(columnDef[target]).includes('function'))) {
                             columnDef[target] = (params) => {return ''}
@@ -127,12 +126,8 @@ export default class DashAgGrid extends Component {
             }
         }
 
-        //Overwriting column options with table defaults
-        columnDef['dangerously_allow_code'] = this.state.dangerously_allow_code
-
         if ("headerComponentParams" in columnDef) {
-            if ('template' in columnDef['headerComponentParams'] && !(columnDef['dangerously_allow_code']
-                        && this.state.dangerously_allow_code)) {
+            if ('template' in columnDef['headerComponentParams'] && !(this.state.dangerously_allow_code)) {
                 columnDef['headerComponentParams']['template'] = '<div></div>'
                 console.error({field: columnDef['field'], message: templateMessage})
             }
@@ -471,13 +466,14 @@ export default class DashAgGrid extends Component {
 
     generateRenderer(Renderer) {
         const {setProps} = this.props;
+        const {dangerously_allow_code} = this.state;
 
         const setCellProps = (props) => {
             setProps({clickData: props.clickData, hoverData: props.hoverData});
         };
 
         return (props) => (
-            <Renderer setProps={setCellProps} {...props}></Renderer>
+            <Renderer setProps={setCellProps} dangerously_allow_code={dangerously_allow_code} {...props}></Renderer>
         );
     }
 
@@ -598,6 +594,7 @@ export default class DashAgGrid extends Component {
             csvExportParams,
             detailCellRendererParams,
             setProps,
+            dangerously_allow_code,
             ...restProps
         } = this.props;
 
@@ -796,8 +793,9 @@ export default class DashAgGrid extends Component {
                     detailCellRendererParams={newDetailCellRendererParams}
                     cellClassRules={cellClassRules}
                     rowClassRules={rowClassRules}
-                    {...omit(['theme', 'cellClassRules', 'rowClassRules', 'getRowId'], restProps)}
                     {...omit(['cellClassRules', 'rowClassRules'], this.props.dashGridOptions)}
+                    {...omit(['theme', 'cellClassRules', 'rowClassRules', 'getRowId'], restProps)}
+
                 >
                 </AgGridReact>
             </div>

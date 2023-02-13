@@ -8,7 +8,7 @@ export default function MarkdownRenderer(props) {
     // Markdown renderer with HTML rendering enabled.
     // rehypeRaw allows HTML rendering.
     // Convert <p> tags to simple <divs> using the components prop.
-    const rehypePlugins = props.colDef.dangerously_allow_code ? [rehypeRaw] : []
+    const rehypePlugins = props.dangerously_allow_code ? [rehypeRaw] : []
 
     return (
         <ReactMarkdown
