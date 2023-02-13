@@ -6,7 +6,7 @@ orbs:
 jobs:
   test:
     docker:
-      - image: cimg/python:3.9-node
+      - image: cimg/python:3.9.9-node
         auth:
           username: dashautomation
           password: $DASH_PAT_DOCKERHUB
