@@ -259,6 +259,7 @@ export default class DashAgGrid extends Component {
             this.props.setProps({columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
             this.setState({origColumnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
             this.setUpCols(cellStyle)
+            this.updateColumnWidths()
         }
 
         if (dashGridOptions != prevProps.dashGridOptions) {
