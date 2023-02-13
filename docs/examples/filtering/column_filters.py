@@ -18,7 +18,13 @@ columnDefs = [
     {"field": "athlete"},
     {"field": "age", "filter": "agNumberColumnFilter", "maxWidth": 100},
     {"field": "country"},
-    {"field": "year"},
+    {
+        "headerName": "date",
+        "filter": "agDateColumnFilter",
+        "valueGetter": {"function": "d3.timeParse('%m/%d/%Y')(data.date)"},
+        "valueFormatter": {"function": "data.date"},
+    },
+
     {"field": "sport"},
     {"field": "total"},
 ]
@@ -26,7 +32,7 @@ columnDefs = [
 app.layout = html.Div(
     [
         dcc.Markdown(
-            "This grid has a number filter on the 'Age' column and a text filter on the other columns"
+            "This grid has a number filter on the 'Age' column, a date filter on the date and a text filter on the other columns"
         ),
         dag.AgGrid(
             columnDefs=columnDefs,
@@ -39,4 +45,4 @@ app.layout = html.Div(
 )
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=True)
