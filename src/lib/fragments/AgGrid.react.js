@@ -176,15 +176,17 @@ export default class DashAgGrid extends Component {
     }
 
     onFilterChanged(e) {
-        const {setProps} = this.props;
-        let virtualRowData = [];
-        this.state.gridApi.forEachNodeAfterFilter((node) => {
-            virtualRowData.push(node.data);
-        });
+        if (this.props.rowModelType == 'clientside') {
+            const {setProps} = this.props;
+            let virtualRowData = [];
+            this.state.gridApi.forEachNodeAfterFilter((node) => {
+                virtualRowData.push(node.data);
+            });
 
-        const filterModel = this.state.gridApi.getFilterModel();
-        this.setState({filterModel: filterModel});
-        setProps({virtualRowData: virtualRowData});
+            const filterModel = this.state.gridApi.getFilterModel();
+            this.setState({filterModel: filterModel});
+            setProps({virtualRowData: virtualRowData});
+        }
     }
 
     getRowData() {
