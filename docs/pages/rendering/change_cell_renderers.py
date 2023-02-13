@@ -8,8 +8,6 @@ register_page(
     order=1,
     description=app_description,
     title="Dash AG Grid Rendering",
-    # name="Bootstrap Utility Classes",
-    # hashtags=["intro","background", "border", "color", "spacing", "text", "position"],
 )
 
 text1 = """
@@ -31,7 +29,7 @@ Changes to any of the first 3 columns results in animations in the Total and Ave
 layout = html.Div(
     [
         make_md(text1),
-        example_app("examples.rendering.animation_renderer", make_layout=make_tabs),
+        example_app("examples.rendering.change_cell_renderers", make_layout=make_tabs),
         # up_next("text"),
     ],
 )
