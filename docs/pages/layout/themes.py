@@ -16,24 +16,24 @@ text1 = """
 The grid is styled with CSS, and a theme is simply a CSS class that applies styles to the grid. Most users choose a provided theme and then customise it to meet their needs. It is also possible to create your own themes.
 
 ### Provided Themes
-The grid comes with several provided themes which act as a great starting point for any application-specific customisations. Click the theme name to see a demo.
+The grid comes with several provided themes which act as a great starting point for any application-specific customisations.
 
 __Alpine__
 - ag-theme-alpine
 - ag-theme-alpine-dark  
 
-File name ag-theme-alpine[.min].css	 
+File name `ag-theme-alpine[.min].css`	 
 
 Modern looking themes with high contrast, and generous padding.  
 
-__Recommendation__: This is the recommended grid theme and an excellent choice for most applications.
+__Recommendation__: This is the recommended grid theme and an excellent choice for most applications.  It is the default theme for Dash apps.
 
 ------------------
 __Balham__
 - ag-theme-balham
 - ag-theme-balham-dark  
 
-File name ag-theme-balham[.min].css	
+File name `ag-theme-balham[.min].css`	
 Themes for professional data-heavy applications     
 
 __Recommendation__: Balham was the recommended theme before Alpine was developed. It is still an excellent choice for applications that need to fit more data onto each page.
@@ -43,7 +43,7 @@ __Recommendation__: Balham was the recommended theme before Alpine was developed
 __Material__
 - ag-theme-material  
 
-File name ag-theme-material[.min].css	
+File name `ag-theme-material[.min].css`	
 A theme designed according to the Google Material Language Specs.  
 
 __Recommendation__: This theme looks great for simple applications with lots of white space, and is the obvious choice if the rest of your application follows the Google Material Design spec. However, the Material spec doesn't cater for advanced grid features such as grouped columns and tool panels. If your application uses these features, consider using ag-theme-alpine instead.
@@ -53,7 +53,7 @@ __Recommendation__: This theme looks great for simple applications with lots of 
 __Bootstrap__
 - ag-bootstrap  
 
-File name ag-theme-bootstrap[.min].css  
+File name `ag-theme-bootstrap[.min].css` 
 
 A theme designed to work well with Bootstrap theme.
 
@@ -67,7 +67,7 @@ A theme designed to work well with Bootstrap theme.
 ### Applying a Theme to an App
 To use a theme, add the theme to the `className` prop in the component or a html.Div or other element that contains your grid. The following is an example of using the Alpine theme:
 
-> The grid must always have a theme class set on its container, whether this is a provided theme or your own.
+> The grid must always have a theme class set on its container, whether this is a provided theme or your own.  The default is `className="ag-theme-alpine"`
 
 ### Creating your own theme
 The majority of users select a provided theme and make customisations using CSS. If your chosen provided theme has elements that you don't want, you will need to add CSS rules to remove them. If your desired look and feel is very different from the provided theme, at some point it becomes easier to start from scratch. To do this, you can define your own theme.

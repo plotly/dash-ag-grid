@@ -38,7 +38,7 @@ defaultColDef = {
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Demonstration of suppress movable and not allowing lock Pinn"),
+        dcc.Markdown("Demonstration of suppress movable and not allowing lock Pin"),
         dag.AgGrid(
             id="my-grid",
             rowData=data,
