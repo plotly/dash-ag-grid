@@ -621,19 +621,21 @@ export default class DashAgGrid extends Component {
                         }
                     }
                 }
-                if (target in this.props.dashGridOptions) {
-                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
-                        if (typeof this.props.dashGridOptions[target] !== 'function') {
-                            if (!(Object.keys(this.props.dashGridOptions[target]).includes('function'))) {
-                                this.props.dashGridOptions[target] = (params) => {return ''}
-                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
+                if (this.props.dashGridOptions) {
+                    if (target in this.props.dashGridOptions) {
+                        if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                            if (typeof this.props.dashGridOptions[target] !== 'function') {
+                                if (!(Object.keys(this.props.dashGridOptions[target]).includes('function'))) {
+                                    this.props.dashGridOptions[target] = (params) => {return ''}
+                                    console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
+                                }
                             }
                         }
-                    }
-                    if (typeof this.props.dashGridOptions[target] !== 'function') {
-                        if (Object.keys(this.props.dashGridOptions[target]).includes('function')) {
-                            const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target]['function']))
-                            this.props.dashGridOptions[target] = (params) => this.parseParamFunction(params, newFunc)
+                        if (typeof this.props.dashGridOptions[target] !== 'function') {
+                            if (Object.keys(this.props.dashGridOptions[target]).includes('function')) {
+                                const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target]['function']))
+                                this.props.dashGridOptions[target] = (params) => this.parseParamFunction(params, newFunc)
+                            }
                         }
                     }
                 }
