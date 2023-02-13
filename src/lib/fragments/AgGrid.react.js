@@ -356,6 +356,8 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
+        this.updateColumnWidths()
+
         if (this.state.rowTransaction) {
             this.state.rowTransaction.map((data) => this.state.gridApi.applyTransaction(data))
             this.state.rowTransaction = null;
@@ -383,11 +385,11 @@ export default class DashAgGrid extends Component {
     }
 
     onDisplayedColumnsChanged(e) {
-        this.updateColumnWidths();
+//        this.updateColumnWidths();
     }
 
     onGridSizeChanged(e) {
-        this.updateColumnWidths();
+//        this.updateColumnWidths();
     }
 
     updateColumnWidths() {
