@@ -84,13 +84,12 @@ text2 = """
 
 ## Auto Header Height
 
-> Note requires ag-grid >=28
 
-The column header row can have its height set automatically based on the content of the header cells. This is most useful when used together with Custom Header Components or when using the wrapHeaderText column property.
+The column header row can have its height set automatically based on the content of the header cells. This is most useful when used together with Custom Header Components or when using the `wrapHeaderText` column property.
 
-To enable this, set autoHeaderHeight=true on the column definition you want to adjust the header height for. If more than one column has this property enabled, then the header row will be sized to the maximum of these column's header cells so no content overflows.
+To enable this, set `autoHeaderHeight=True` on the column definition you want to adjust the header height for. If more than one column has this property enabled, then the header row will be sized to the maximum of these column's header cells so no content overflows.
 
-The example below demonstrates using the autoHeaderHeight property in conjunction with the wrapHeaderText property, so that long column names are fully displayed.
+The example below demonstrates using the `autoHeaderHeight` property in conjunction with the `wrapHeaderText` property, so that long column names are fully displayed.
 
 Note that the long column header names wrap onto another line
 Try making a column smaller by dragging the resize handle on the column header, observe that the header will expand so the full header content is still visible.
@@ -112,7 +111,7 @@ You can provide a tooltip to the header using colDef.headerTooltip.
 The example below shows header tooltips. Note the following:
 
 All the columns, apart from Country and Year, have a header tooltip set.
-We have set the Grid tooltipShowDelay property to 500ms to make the tooltips appear quicker.
+We have set the Grid `tooltipShowDelay` property to 500ms to make the tooltips appear quicker.
 
 
 """

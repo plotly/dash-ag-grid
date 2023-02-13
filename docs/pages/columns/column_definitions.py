@@ -87,9 +87,9 @@ text3 = """
 
 The grid also provides additional ways to help simplify and avoid duplication of column definitions. This is done through the following:
 
-- defaultColDef: contains properties that all columns will inherit.
-- defaultColGroupDef: contains properties that all column groups will inherit.
-- columnTypes: specific column types containing properties that column definitions can inherit.
+- `defaultColDef`: contains properties that all columns will inherit.
+- `defaultColGroupDef`: contains properties that all column groups will inherit.
+- `columnTypes`: specific column types containing properties that column definitions can inherit.
 
 Default columns and column types can specify any of the [column properties](https://www.ag-grid.com/react-data-grid/column-properties/) available on a column.
 

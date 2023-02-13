@@ -1,11 +1,3 @@
-"""
-This app is for Alpha version 2.0.0a1
-
-pip install dash-ag-grid==2.0.0a1
-
-"""
-
-
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
@@ -72,7 +64,6 @@ columnDefs = [
         "type": "rightAligned",
         "filter": "agNumberColumnFilter",
         "valueFormatter": "Number(value).toFixed(2)",
-        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -81,7 +72,6 @@ columnDefs = [
         "filter": "agNumberColumnFilter",
         "valueGetter": "Number(data.price) * Number(data.quantity)",
         "valueFormatter": "Number(value).toFixed(2)",
-        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -108,7 +98,7 @@ defaultColDef = {
     "sortable": True,
     "editable": False,
     "floatingFilter": True,
-    "minWidth": 125
+    "minWidth": 125,
 }
 
 cellStyle = {
@@ -137,7 +127,7 @@ table = dag.AgGrid(
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
     cellStyle=cellStyle,
-    dangerously_allow_html=True,
+    dangerously_allow_code=True,
     dashGridOptions={"undoRedoCellEditing": True, "rowSelection": "single"},
 )
 
