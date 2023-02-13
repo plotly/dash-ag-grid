@@ -9,7 +9,7 @@ from dash import Dash, html, dcc
 app = Dash(__name__)
 
 columnDefs = [
-    {"headerName": "Row ID", "valueGetter": {"function":"node.id"}},
+    {"headerName": "Row ID", "valueGetter": {"function": "node.id"}},
     {"field": "make"},
     {"field": "model"},
     {"field": "price"},

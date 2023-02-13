@@ -68,7 +68,7 @@ defaultColDef = {
 app.layout = html.Div(
     [
         dcc.Markdown(
-            "This editable grid demonstrates formatting numbers for different locales using d3-format."
+            "This editable grid demonstrates formatting numbers for different locales using d3-format.  Try changing the specifier and/or the values!"
         ),
         dag.AgGrid(
             columnDefs=columnDefs,
