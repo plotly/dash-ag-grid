@@ -20,13 +20,13 @@ Column filters are filters that are applied to the data at the column level. Man
 
 In `dash-ag-grid` community there are two provided filters:
 - `agTextColumnFilter` the default text filter
-- `agNumberColumnFilter`, a number filter.
-- `agDateColumnFilter`  - not available yet, but comming soon
+- `agNumberColumnFilter` - a number filter.
+- `agDateColumnFilter`  - a date filter
 - `agSetColumnFilter` - Enterprise Only
 
 ### Example: Simple Filters
-The example below demonstrates simple filters. Note that the "Age" column has a number filter and the
-other columns have a text filter.
+The example below demonstrates simple filters. Note that the "Age" column has a number filter, the
+date has a date filter and the other columns have a text filter.
 """
 
 text2 = """
@@ -36,6 +36,7 @@ Set filtering on a column using the column definition property filter. The prope
  - `boolean`: Set to `True` to enable the default filter. The default is Text Filter for AG Grid Community and Set Filter for AG Grid Enterprise.
  - `string` : Provide a specific filter to use instead of the default filter.
 
+The date filter uses d3.time-format.  See the [Rendering section](/rendering/value-formatters) for more information.
 The code below shows some column definitions with filters set:
 ```
 columnDefs = [
@@ -50,6 +51,14 @@ columnDefs = [
 
     # use no filter (leaving unspecified means use no filter)
     { field: 'sport' },
+    
+    # sets the date filter
+      {
+        "headerName": "date",
+        "filter": "agDateColumnFilter",
+        "valueGetter": {"function": "d3.timeParse('%m/%d/%Y')(data.date)"},
+        "valueFormatter": {"function": "data.date"},
+    },
 ]
 ```
 
@@ -146,10 +155,8 @@ The example below demonstrates using the different buttons. It also demonstrates
 text4 = """
 ### Simple Filter Parts (For text, number and date filters)
 Each Simple Filter follows the same layout. The only layout difference is the type of input field presented to the user: for Text and Number Filters a text field is displayed, whereas for Date Filters a date picker field is displayed.
-(Note - date filter is not yet available in Dash)
 
-
-![filter-parts](https://user-images.githubusercontent.com/72614349/216053251-89ff7290-118b-4521-8ddf-42851cd0eb36.png)
+![aggrid_filters](https://user-images.githubusercontent.com/72614349/218348069-7c6df4d5-59cb-44d1-a2a0-ae8a954a504a.png)
 
 
 ### Filter Options

@@ -6,10 +6,10 @@ app = Dash(__name__)
 
 
 columnDefs = [
-    {"headerName": "Description", "field": "description"},
-    {"headerName": "d3.format", "field": "format", "minWidth": 300},
-    {"headerName": "Specifier", "field": "specifier", "minWidth": 150},
-    {"headerName": "Value", "field": "value", "minWidth": 150},
+    {"headerName": "Description", "field": "description",  "minWidth": 300},
+    {"headerName": "d3.format", "field": "format", "minWidth": 300, "cellRenderer": "markdown"},
+    {"headerName": "Specifier", "field": "specifier", "minWidth": 10},
+    {"headerName": "Value", "field": "value", "minWidth": 125},
     {
         "headerName": "Formatted Value",
         "field": "formatted",
@@ -21,7 +21,7 @@ columnDefs = [
 rowData = [
     {
         "description": "fixed decimal",
-        "format": "d3.format('.1f')(0.1234)",
+        "format": "`d3.format('.1f')(0.1234)`",
         "specifier": ".1f",
         "value": 0.1234,
         "formatted": 0.1234,
@@ -29,7 +29,7 @@ rowData = [
     },
     {
         "description": "fixed decimal",
-        "format": "d3.format('.2f')(0.1234)",
+        "format": "`d3.format('.2f')(0.1234)`",
         "specifier": ".2f",
         "value": 0.1234,
         "formatted": 0.1234,
@@ -37,7 +37,7 @@ rowData = [
     },
     {
         "description": "rounded percentage",
-        "format": "d3.format('.0%')(0.1234)",
+        "format": "`d3.format('.0%')(0.1234)`",
         "specifier": ".0%",
         "value": 0.1234,
         "formatted": 0.1234,
@@ -45,7 +45,7 @@ rowData = [
     },
     {
         "description": "rounded percentage",
-        "format": "d3.format('.1%')(0.1234)",
+        "format": "`d3.format('.1%')(0.1234)`",
         "specifier": ".1%",
         "value": 0.1234,
         "formatted": 0.1234,
@@ -53,7 +53,7 @@ rowData = [
     },
     {
         "description": "localized fixed-point currency",
-        "format": "d3.format('$,.2f')(1000.1234)",
+        "format": "`d3.format('$,.2f')(1000.1234)`",
         "specifier": "$,.2f",
         "value": 1000.1234,
         "formatted": 1000.1234,
@@ -61,7 +61,7 @@ rowData = [
     },
     {
         "description": "localized fixed-point currency",
-        "format": "d3.format('$,.2f')(-1000.1234)",
+        "format": "`d3.format('$,.2f')(-1000.1234)`",
         "specifier": "$,.2f",
         "value": -1000.1234,
         "formatted": -1000.1234,
@@ -69,7 +69,7 @@ rowData = [
     },
     {
         "description": "localized fixed-point currency",
-        "format": "d3.format('($,.2f')(-1000.1234)",
+        "format": "`d3.format('($,.2f')(-1000.1234)`",
         "specifier": "($,.2f",
         "value": -1000.1234,
         "formatted": -1000.1234,
@@ -77,7 +77,7 @@ rowData = [
     },
     {
         "description": "signed",
-        "format": "d3.format('+')(12)",
+        "format": "`d3.format('+')(12)`",
         "specifier": "+",
         "value": 12,
         "formatted": 12,
@@ -85,7 +85,7 @@ rowData = [
     },
     {
         "description": "dot filled and centered",
-        "format": "d3.format('.^20')(12)",
+        "format": "`d3.format('.^20')(12)`",
         "specifier": ".^20",
         "value": 12,
         "formatted": 12,
@@ -93,7 +93,7 @@ rowData = [
     },
     {
         "description": "SI-prefix with two significant digits",
-        "format": "d3.format('.2s')(421e6)",
+        "format": "`d3.format('.2s')(421e6)`",
         "specifier": ".2s",
         "value": 42e6,
         "formatted": 42e6,
@@ -101,7 +101,7 @@ rowData = [
     },
     {
         "description": "grouped thousands with two significant digits",
-        "format": "d3.format(',.2r')(4223)",
+        "format": "`d3.format(',.2r')(4223)`",
         "specifier": ",.2r",
         "value": 4223,
         "formatted": 4223,
