@@ -176,7 +176,7 @@ export default class DashAgGrid extends Component {
     }
 
     onFilterChanged(e) {
-        if (this.props.rowModelType == 'clientside') {
+        if (this.props.rowModelType == 'clientSide') {
             const {setProps} = this.props;
             let virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilter((node) => {
@@ -604,76 +604,40 @@ export default class DashAgGrid extends Component {
         const replaceFunc = (keyPair) => {
             const target = Object.keys(keyPair)[0]
             const varType = keyPair[target]
-//            if (!varType || varType == 'params') {   <---- unused currently
-                if (target in this.props) {
+            if (target in this.props) {
+                if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                    if (typeof this.props[target] !== 'function') {
+                        if (!(Object.keys(this.props[target]).includes('function'))) {
+                            this.props[target] = (params) => {return ''}
+                            console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
+                        }
+                    }
+                }
+                if (typeof this.props[target] !== 'function') {
+                    if (Object.keys(this.props[target]).includes('function')) {
+                        const newFunc = JSON.parse(JSON.stringify(this.props[target]['function']))
+                        this.props[target] = (params) => this.parseParamFunction(params, newFunc)
+                    }
+                }
+            }
+            if (this.props.dashGridOptions) {
+                if (target in this.props.dashGridOptions) {
                     if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
-                        if (typeof this.props[target] !== 'function') {
-                            if (!(Object.keys(this.props[target]).includes('function'))) {
-                                this.props[target] = (params) => {return ''}
+                        if (typeof this.props.dashGridOptions[target] !== 'function') {
+                            if (!(Object.keys(this.props.dashGridOptions[target]).includes('function'))) {
+                                this.props.dashGridOptions[target] = (params) => {return ''}
                                 console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
                             }
                         }
                     }
-                    if (typeof this.props[target] !== 'function') {
-                        if (Object.keys(this.props[target]).includes('function')) {
-                            const newFunc = JSON.parse(JSON.stringify(this.props[target]['function']))
-                            this.props[target] = (params) => this.parseParamFunction(params, newFunc)
+                    if (typeof this.props.dashGridOptions[target] !== 'function') {
+                        if (Object.keys(this.props.dashGridOptions[target]).includes('function')) {
+                            const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target]['function']))
+                            this.props.dashGridOptions[target] = (params) => this.parseParamFunction(params, newFunc)
                         }
                     }
                 }
-                if (this.props.dashGridOptions) {
-                    if (target in this.props.dashGridOptions) {
-                        if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
-                            if (typeof this.props.dashGridOptions[target] !== 'function') {
-                                if (!(Object.keys(this.props.dashGridOptions[target]).includes('function'))) {
-                                    this.props.dashGridOptions[target] = (params) => {return ''}
-                                    console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
-                                }
-                            }
-                        }
-                        if (typeof this.props.dashGridOptions[target] !== 'function') {
-                            if (Object.keys(this.props.dashGridOptions[target]).includes('function')) {
-                                const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target]['function']))
-                                this.props.dashGridOptions[target] = (params) => this.parseParamFunction(params, newFunc)
-                            }
-                        }
-                    }
-                }
-//            }
-//            else if (varType == 'rowNode') { <---- unused currently
-//                if (target in this.props) {
-//                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
-//                        if (typeof this.props[target] !== 'function') {
-//                            if (!(Object.keys(this.props[target]).includes('function'))) {
-//                                this.props[target] = (rowNode) => {return ''}
-//                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
-//                            }
-//                        }
-//                    }
-//                    if (typeof this.props[target] !== 'function') {
-//                        if (Object.keys(this.props[target]).includes('function')) {
-//                            const newFunc = JSON.parse(JSON.stringify(this.props[target]['function']))
-//                            this.props[target] = (rowNode) => this.parseParamFunction(rowNode, newFunc)
-//                        }
-//                    }
-//                }
-//                if (target in this.props.dashGridOptions) {
-//                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
-//                        if (typeof this.props.dashGridOptions[target] !== 'function') {
-//                            if (!(Object.keys(this.props.dashGridOptions[target]).includes('function'))) {
-//                                this.props.dashGridOptions[target] = (rowNode) => {return ''}
-//                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
-//                            }
-//                        }
-//                    }
-//                    if (typeof this.props.dashGridOptions[target] !== 'function') {
-//                        if (Object.keys(this.props.dashGridOptions[target]).includes('function')) {
-//                            const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target]['function']))
-//                            this.props.dashGridOptions[target] = (rowNode) => this.parseParamFunction(rowNode, newFunc)
-//                        }
-//                    }
-//                }
-//            }
+            }
         }
 
         gridFunctions.map(replaceFunc)
