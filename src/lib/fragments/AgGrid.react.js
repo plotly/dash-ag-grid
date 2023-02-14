@@ -596,41 +596,29 @@ export default class DashAgGrid extends Component {
             ...restProps
         } = this.props;
 
-        const replaceFunc = (keyPair) => {
-            const target = Object.keys(keyPair)[0];
-            if (target in this.props) {
-                if (!dangerously_allow_code && expressWarn.includes(target)) {
-                    if (typeof this.props[target] !== 'function') {
-                        if (!(Object.keys(this.props[target]).includes('function'))) {
-                            this.props[target] = () => '';
-                            console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
-                        }
+        const replaceFunc = (target) => {
+            const shouldWarn = !dangerously_allow_code && expressWarn.includes(target);
+
+            const sanitize = (container) => {
+                const targetIn = container[target];
+                if (targetIn) {
+                    if(shouldWarn && (typeof targetIn === 'string')) {
+                        container[target] = () => '';
+                        console.error({
+                            prop: target,
+                            message: 'you are trying to use an unsafe prop without dangerously_allow_code'
+                        })
                     }
-                }
-                if (typeof this.props[target] !== 'function') {
-                    if ('function' in this.props[target]) {
+                    else if ((typeof targetIn === 'object') && ('function' in targetIn)) {
                         const newFunc = JSON.parse(JSON.stringify(this.props[target].function))
-                        this.props[target] = (params) => this.parseParamFunction(params, newFunc)
+                        container[target] = (params) => this.parseParamFunction(params, newFunc)
                     }
                 }
             }
-            if (this.props.dashGridOptions) {
-                if (target in this.props.dashGridOptions) {
-                    if (!dangerously_allow_code && expressWarn.includes(target)) {
-                        if (typeof this.props.dashGridOptions[target] !== 'function') {
-                            if (!('function' in this.props.dashGridOptions[target])) {
-                                this.props.dashGridOptions[target] = () =>  '';
-                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
-                            }
-                        }
-                    }
-                    if (typeof this.props.dashGridOptions[target] !== 'function') {
-                        if ('function' in this.props.dashGridOptions[target]) {
-                            const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target].function))
-                            this.props.dashGridOptions[target] = (params) => this.parseParamFunction(params, newFunc)
-                        }
-                    }
-                }
+
+            sanitize(this.props);
+            if (dashGridOptions) {
+                sanitize(dashGridOptions);
             }
         }
 
