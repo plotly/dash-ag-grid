@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
-import {omit} from 'ramda';
+import {omit, equals, isEmpty} from 'ramda';
 import {propTypes, defaultProps} from '../components/AgGrid.react';
-import {expressWarn, gridFunctions, columnFunctions} from '../utils/functionVars'
+import {expressWarn, gridFunctions, columnFunctions} from '../utils/functionVars';
+import debounce from '../utils/debounce';
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
 import RowMenuRenderer from '../renderers/rowMenuRenderer';
@@ -12,8 +13,6 @@ import {customFunctions} from '../renderers/customFunctions';
 
 import 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-
-import lodash from 'lodash';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -30,26 +29,29 @@ const d3 = {...d3Format, ...d3Time, ...d3TimeFormat, ...d3Array};
 // Rate-limit for resizing columns when table div is resized
 const RESIZE_DEBOUNCE_MS = 200;
 
+const XSSMESSAGE = 'you are trying to use a dangerous element that could lead to XSS';
+
 export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {...this.props.parentState}
-        this.state.components = {
-            rowMenu: this.generateRenderer(RowMenuRenderer),
-            markdown: this.generateRenderer(MarkdownRenderer),
-        }
+        const customComponents = window.dashAgGridComponentFunctions || {};
+        const _this = this;
+        Object.keys(customComponents).forEach(function(key) {
+            if (typeof customComponents[key] !== 'function') {
+                customComponents[key] = _this.generateRenderer(JSON.parse(JSON.stringify(customComponents[key])))
+            }
+        })
 
-        const customComponents = window.dashAgGridComponentFunctions
-        if (customComponents) {
-            Object.keys(customComponents).forEach(function(key, index) {
-                if (typeof customComponents[key] != 'function') {
-                    customComponents[key] = this.generateRenderer(JSON.parse(JSON.stringify(customComponents[key])))
-                }
-            })
+        this.state = {
+            ...this.props.parentState,
+            components: {
+                rowMenu: this.generateRenderer(RowMenuRenderer),
+                markdown: this.generateRenderer(MarkdownRenderer),
+                ...customComponents
+            }
+        };
 
-            this.state.components = Object.assign(this.state.components, {...customComponents})
-        }
 
         this.onGridReady = this.onGridReady.bind(this);
         this.onSelectionChanged = this.onSelectionChanged.bind(this);
@@ -74,7 +76,7 @@ export default class DashAgGrid extends Component {
         this.buildArray = this.buildArray.bind(this);
         this.fixCols = this.fixCols.bind(this);
 
-        //Additional Exposure
+        // Additional Exposure
         this.setUpCols = this.setUpCols.bind(this);
         this.selectAll = this.selectAll.bind(this);
         this.selectAllFiltered = this.selectAllFiltered.bind(this);
@@ -95,31 +97,29 @@ export default class DashAgGrid extends Component {
                 this.state.gridApi.deselectAll();
             } else {
                 this.state.gridApi.forEachNode((node) => {
-                    let isSelected = selection.some((i) => {
-                        // Return true if the node data is the same as i, false if it is different
-                        return lodash.isEqual(i, node.data);
-                    });
+                    const isSelected = selection.some(equals(node.data));
                     node.setSelected(isSelected);
                 });
             }
         }
     }
 
-    fixCols(columnDef, templateMessage) {
+    fixCols(columnDef) {
+        const {dangerously_allow_code} = this.props;
 
         const test = (target) => {
             if (target in columnDef) {
-                if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                if (!dangerously_allow_code && expressWarn.includes(target)) {
                     if (typeof columnDef[target] !== 'function') {
                         if (!(Object.keys(columnDef[target]).includes('function'))) {
-                            columnDef[target] = (params) => {return ''}
-                            console.error({field: columnDef['field'] || columnDef['headerName'], message: templateMessage})
+                            columnDef[target] = () => '';
+                            console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
                         }
                     }
                 }
                 if (typeof columnDef[target] !== 'function') {
                     if (Object.keys(columnDef[target]).includes('function')) {
-                        const newFunc = JSON.parse(JSON.stringify(columnDef[target]['function']))
+                        const newFunc = JSON.parse(JSON.stringify(columnDef[target].function))
                         columnDef[target] = (params) => this.parseParamFunction(params, newFunc)
                     }
                 }
@@ -127,79 +127,74 @@ export default class DashAgGrid extends Component {
         }
 
         if ("headerComponentParams" in columnDef) {
-            if ('template' in columnDef['headerComponentParams'] && !(this.state.dangerously_allow_code)) {
-                columnDef['headerComponentParams']['template'] = '<div></div>'
-                console.error({field: columnDef['field'], message: templateMessage})
+            if ('template' in columnDef.headerComponentParams && !dangerously_allow_code) {
+                columnDef.headerComponentParams.template = '<div></div>'
+                console.error({field: columnDef.field, message: XSSMESSAGE})
             }
         }
 
         columnFunctions.concat(expressWarn).map(test)
 
-        return columnDef
+        return columnDef;
     }
 
     setUpCols(cellStyle) {
-        const templateMessage = 'you are trying to use a dangerous element that could lead to XSS'
-        if (this.props.columnDefs) {
-            this.props.setProps(
-                {columnDefs: this.props.columnDefs.map((columnDef) => {
+        const {columnDefs, setProps} = this.props
+
+        const cleanOneCol = (col) => {
+            const colOut = this.fixCols(col);
+
+            if ('cellStyle' in colOut) {
+                return colOut;
+            }
+            return {
+                ...omit(['id'], colOut),
+                cellStyle: (params) => this.handleDynamicCellStyle({params, cellStyle}),
+            };
+        };
+
+        if (columnDefs) {
+            setProps({
+                columnDefs: columnDefs.map((columnDef) => {
+                    let colDefOut = columnDef;
                     if ('children' in columnDef) {
-                        columnDef['children'] = columnDef['children'].map((child) => {
-                                child = this.fixCols(child, templateMessage)
-
-                                if ('cellStyle' in child) {
-                                    return child
-                                }
-                                return {
-                                        ...omit(['id'], child),
-                                        cellStyle: (params) =>
-                                            this.handleDynamicCellStyle({params, cellStyle}),
-                                    }
-                            })
-                        }
-
-                    columnDef = this.fixCols(columnDef, templateMessage)
-
-                    if ('cellStyle' in columnDef) {
-                        return columnDef
+                        colDefOut = {
+                            ...columnDef,
+                            children: columnDef.children.map(cleanOneCol)
+                        };
                     }
-                    return {
-                            ...omit(['id'], columnDef),
-                            cellStyle: (params) =>
-                                this.handleDynamicCellStyle({params, cellStyle}),
-                        }
 
-                    })
-                }
-            )
+                    return cleanOneCol(colDefOut);
+                })
+            });
         }
     }
 
-    onFilterChanged(e) {
-        if (this.props.rowModelType == 'clientSide') {
-            const {setProps} = this.props;
-            let virtualRowData = [];
+    onFilterChanged() {
+        const {setProps, rowModelType} = this.props;
+        if (rowModelType === 'clientSide') {
+            const virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilter((node) => {
                 virtualRowData.push(node.data);
             });
 
             const filterModel = this.state.gridApi.getFilterModel();
-            this.setState({filterModel: filterModel});
-            setProps({virtualRowData: virtualRowData});
+            this.setState({filterModel});
+            setProps({virtualRowData});
         }
     }
 
     getRowData() {
-        let newRowData = [];
+        const newRowData = [];
         this.state.gridApi.forEachNode((node) => {
             newRowData.push(node.data);
         })
         return newRowData;
     }
 
-    onSortChanged(e) {
-        const {setProps, columnState} = this.props;
-        let virtualRowData = [];
+    onSortChanged() {
+        const {setProps} = this.props;
+        const virtualRowData = [];
         this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
             virtualRowData.push(node.data);
         });
@@ -210,18 +205,18 @@ export default class DashAgGrid extends Component {
         });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         if (JSON.stringify(nextProps) === JSON.stringify(this.props)) {
             return false;
         }
-        return true
+        return true;
     }
 
     componentDidMount() {
-        this.state.mounted = true
+        this.setState({mounted: true});
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         const {
             selectionChanged,
             getDetailResponse,
@@ -230,7 +225,6 @@ export default class DashAgGrid extends Component {
             setProps,
             cellStyle,
             dashGridOptions,
-            rowData,
             columnSize,
         } = this.props;
 
@@ -249,22 +243,22 @@ export default class DashAgGrid extends Component {
         }
         // Call the API to select rows unless the update was triggered by a selection made in the UI
         if (
-            !lodash.isEqual(selectionChanged, prevProps.selectionChanged) &&
+            !equals(selectionChanged, prevProps.selectionChanged) &&
             !this.selectionEventFired
         ) {
             this.setSelection(selectionChanged);
         }
 
-        if (JSON.stringify(cellStyle) != JSON.stringify(prevProps.cellStyle) ||
-         JSON.stringify(this.props.columnDefs) != JSON.stringify(prevProps.columnDefs) ||
-        prevProps.columnSize != columnSize) {
+        if (JSON.stringify(cellStyle) !== JSON.stringify(prevProps.cellStyle) ||
+         JSON.stringify(this.props.columnDefs) !== JSON.stringify(prevProps.columnDefs) ||
+        prevProps.columnSize !== columnSize) {
             this.props.setProps({columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
             this.setState({origColumnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
             this.setUpCols(cellStyle)
             this.updateColumnWidths()
         }
 
-        if (dashGridOptions != prevProps.dashGridOptions) {
+        if (dashGridOptions !== prevProps.dashGridOptions) {
             this.props.setProps(JSON.parse(JSON.stringify({...omit(['cellClassRules', 'rowClassRules'], this.props.dashGridOptions)})))
         }
 
@@ -273,7 +267,7 @@ export default class DashAgGrid extends Component {
 
     }
 
-    onRowDataUpdated({api, columnApi, context, type}) {
+    onRowDataUpdated() {
         // Handles preserving existing selections when rowData is updated in a callback
         const {selectionChanged} = this.props;
         const {openGroups, filterModel} = this.state;
@@ -293,13 +287,13 @@ export default class DashAgGrid extends Component {
                 }
             });
         }
-        if (!lodash.isEmpty(filterModel)) {
+        if (!isEmpty(filterModel)) {
             this.state.gridApi.setFilterModel(filterModel);
         }
     }
 
     onRowGroupOpened(e) {
-        let {openGroups} = this.state;
+        const {openGroups} = this.state;
 
         if (e.expanded) {
             // If the node was just expanded, add it to the list of open nodes
@@ -342,11 +336,11 @@ export default class DashAgGrid extends Component {
     }
 
     applyRowTransaction(data, gridApi = this.state.gridApi) {
-        if ('async' in data) {
-            if (data['async']) {gridApi.applyTransactionAsync(data)}
-            else {gridApi.applyTransaction(data)}
-            }
-            else {gridApi.applyTransactionAsync(data)}
+        if (data.async === false) {
+            gridApi.applyTransaction(data)
+        } else {
+            gridApi.applyTransactionAsync(data)
+        }
     }
 
     onGridReady(params) {
@@ -366,7 +360,7 @@ export default class DashAgGrid extends Component {
 
         if (this.state.rowTransaction) {
             this.state.rowTransaction.map((data) => this.applyRowTransaction(data, params.api))
-            this.state.rowTransaction = null;
+            this.setState({rowTransaction: null});
             this.props.setProps({rowData: this.getRowData()})
         }
 
@@ -390,12 +384,12 @@ export default class DashAgGrid extends Component {
         });
     }
 
-    onDisplayedColumnsChanged(e) {
-//        this.updateColumnWidths();
+    onDisplayedColumnsChanged() {
+        // this.updateColumnWidths();
     }
 
-    onGridSizeChanged(e) {
-//        this.updateColumnWidths();
+    onGridSizeChanged() {
+        // this.updateColumnWidths();
     }
 
     updateColumnWidths() {
@@ -468,8 +462,7 @@ export default class DashAgGrid extends Component {
     }
 
     generateRenderer(Renderer) {
-        const {setProps} = this.props;
-        const {dangerously_allow_code} = this.state;
+        const {setProps, dangerously_allow_code} = this.props;
 
         const setCellProps = (props) => {
             setProps({clickData: props.clickData, hoverData: props.hoverData});
@@ -527,12 +520,11 @@ export default class DashAgGrid extends Component {
     buildArray(arr1, arr2) {
         if (arr1) {
             if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
-                arr1.push(arr2)
+                return [...arr1, arr2];
             }
-        } else {
-            arr1 = [JSON.parse(JSON.stringify(arr2))]
+            return arr1;
         }
-        return arr1
+        return [JSON.parse(JSON.stringify(arr2))];
     }
 
     rowTransaction(data) {
@@ -540,7 +532,7 @@ export default class DashAgGrid extends Component {
             if (this.state.gridApi) {
                 if (this.state.rowTransaction) {
                     this.state.rowTransaction.map((data) => this.applyRowTransaction(data))
-                    this.state.rowTransaction = null;
+                    this.setState({rowTransaction: null});
                 }
                 this.applyRowTransaction(data)
                 this.props.setProps({
@@ -548,11 +540,11 @@ export default class DashAgGrid extends Component {
                     rowData: this.getRowData()
                 })
             } else {
-                if (this.state.rowTransaction) {
-                    this.state.rowTransaction = this.buildArray(this.state.rowTransaction, data)
-                } else {
-                    this.state.rowTransaction = [JSON.parse(JSON.stringify(data))]
-                }
+                this.setState({
+                    rowTransaction: this.state.rowTransaction ?
+                        this.buildArray(this.state.rowTransaction, data) :
+                        [JSON.parse(JSON.stringify(data))]
+                })
             }
         }
     }
@@ -598,60 +590,39 @@ export default class DashAgGrid extends Component {
             detailCellRendererParams,
             setProps,
             dangerously_allow_code,
+            cellClassRules,
+            rowClassRules,
+            dashGridOptions,
             ...restProps
         } = this.props;
 
-        const replaceFunc = (keyPair) => {
-            const target = Object.keys(keyPair)[0]
-            const varType = keyPair[target]
-            if (target in this.props) {
-                if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
-                    if (typeof this.props[target] !== 'function') {
-                        if (!(Object.keys(this.props[target]).includes('function'))) {
-                            this.props[target] = (params) => {return ''}
-                            console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
-                        }
+        const replaceFunc = (target) => {
+            const shouldWarn = !dangerously_allow_code && expressWarn.includes(target);
+
+            const sanitize = (container) => {
+                const targetIn = container[target];
+                if (targetIn) {
+                    if(shouldWarn && (typeof targetIn === 'string')) {
+                        container[target] = () => '';
+                        console.error({
+                            prop: target,
+                            message: 'you are trying to use an unsafe prop without dangerously_allow_code'
+                        })
                     }
-                }
-                if (typeof this.props[target] !== 'function') {
-                    if (Object.keys(this.props[target]).includes('function')) {
-                        const newFunc = JSON.parse(JSON.stringify(this.props[target]['function']))
-                        this.props[target] = (params) => this.parseParamFunction(params, newFunc)
+                    else if ((typeof targetIn === 'object') && ('function' in targetIn)) {
+                        const newFunc = JSON.parse(JSON.stringify(this.props[target].function))
+                        container[target] = (params) => this.parseParamFunction(params, newFunc)
                     }
                 }
             }
-            if (this.props.dashGridOptions) {
-                if (target in this.props.dashGridOptions) {
-                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
-                        if (typeof this.props.dashGridOptions[target] !== 'function') {
-                            if (!(Object.keys(this.props.dashGridOptions[target]).includes('function'))) {
-                                this.props.dashGridOptions[target] = (params) => {return ''}
-                                console.error({prop: target, message: 'you are trying to use an unsafe prop without dangerously_allow_code'})
-                            }
-                        }
-                    }
-                    if (typeof this.props.dashGridOptions[target] !== 'function') {
-                        if (Object.keys(this.props.dashGridOptions[target]).includes('function')) {
-                            const newFunc = JSON.parse(JSON.stringify(this.props.dashGridOptions[target]['function']))
-                            this.props.dashGridOptions[target] = (params) => this.parseParamFunction(params, newFunc)
-                        }
-                    }
-                }
+
+            sanitize(this.props);
+            if (dashGridOptions) {
+                sanitize(dashGridOptions);
             }
         }
 
         gridFunctions.map(replaceFunc)
-
-        //Disable cellClassRules and rowClassRules if dangerously_allow_code is disabled
-        let cellClassRules;
-        let rowClassRules;
-        if (!this.state.dangerously_allow_code) {
-            cellClassRules = null;
-            rowClassRules = null;
-        } else {
-            cellClassRules = this.props.cellClassRules;
-            rowClassRules = this.props.rowClassRules;
-        }
 
         let getRowId;
         if (this.props.getRowId) {
@@ -706,7 +677,7 @@ export default class DashAgGrid extends Component {
         }
 
         const callbackGetDetail = (params) => {
-            const {data, node} = params;
+            const {data} = params;
             this.getDetailParams = params;
             // Adding the current time in ms forces Dash to trigger a callback
             // when the same row is closed and re-opened.
@@ -752,17 +723,13 @@ export default class DashAgGrid extends Component {
                     onRowDataUpdated={this.onRowDataUpdated}
                     onRowGroupOpened={this.onRowGroupOpened}
                     onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}
-                    onGridSizeChanged={lodash.debounce(
-                        this.onGridSizeChanged,
-                        RESIZE_DEBOUNCE_MS
-                    )}
+                    onGridSizeChanged={debounce(this.onGridSizeChanged, RESIZE_DEBOUNCE_MS)}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
-                    cellClassRules={cellClassRules}
-                    rowClassRules={rowClassRules}
-                    {...omit(['cellClassRules', 'rowClassRules'], this.props.dashGridOptions)}
-                    {...omit(['theme', 'cellClassRules', 'rowClassRules', 'getRowId'], restProps)}
-
+                    cellClassRules={dangerously_allow_code ? cellClassRules : null}
+                    rowClassRules={dangerously_allow_code ? rowClassRules : null}
+                    {...omit(['cellClassRules', 'rowClassRules'], dashGridOptions)}
+                    {...omit(['theme', 'getRowId'], restProps)}
                 >
                 </AgGridReact>
             </div>
