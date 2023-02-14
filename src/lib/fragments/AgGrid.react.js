@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
-import {omit} from 'ramda';
+import {omit, equals, isEmpty} from 'ramda';
 import {propTypes, defaultProps} from '../components/AgGrid.react';
-import {expressWarn, gridFunctions, columnFunctions} from '../utils/functionVars'
+import {expressWarn, gridFunctions, columnFunctions} from '../utils/functionVars';
+import debounce from '../utils/debounce';
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
 import RowMenuRenderer from '../renderers/rowMenuRenderer';
@@ -12,8 +13,6 @@ import {customFunctions} from '../renderers/customFunctions';
 
 import 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-
-import lodash from 'lodash';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -98,10 +97,7 @@ export default class DashAgGrid extends Component {
                 this.state.gridApi.deselectAll();
             } else {
                 this.state.gridApi.forEachNode((node) => {
-                    const isSelected = selection.some((i) => {
-                        // Return true if the node data is the same as i, false if it is different
-                        return lodash.isEqual(i, node.data);
-                    });
+                    const isSelected = selection.some(equals(node.data));
                     node.setSelected(isSelected);
                 });
             }
@@ -247,7 +243,7 @@ export default class DashAgGrid extends Component {
         }
         // Call the API to select rows unless the update was triggered by a selection made in the UI
         if (
-            !lodash.isEqual(selectionChanged, prevProps.selectionChanged) &&
+            !equals(selectionChanged, prevProps.selectionChanged) &&
             !this.selectionEventFired
         ) {
             this.setSelection(selectionChanged);
@@ -291,7 +287,7 @@ export default class DashAgGrid extends Component {
                 }
             });
         }
-        if (!lodash.isEmpty(filterModel)) {
+        if (!isEmpty(filterModel)) {
             this.state.gridApi.setFilterModel(filterModel);
         }
     }
@@ -739,10 +735,7 @@ export default class DashAgGrid extends Component {
                     onRowDataUpdated={this.onRowDataUpdated}
                     onRowGroupOpened={this.onRowGroupOpened}
                     onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}
-                    onGridSizeChanged={lodash.debounce(
-                        this.onGridSizeChanged,
-                        RESIZE_DEBOUNCE_MS
-                    )}
+                    onGridSizeChanged={debounce(this.onGridSizeChanged, RESIZE_DEBOUNCE_MS)}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
                     cellClassRules={dangerously_allow_code ? cellClassRules : null}
