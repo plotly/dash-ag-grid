@@ -10,8 +10,8 @@ dagcomponentfuncs.stockLink = function (props) {
 
 dagcomponentfuncs.checkbox = function (props) {
     function checkedHandler() {
-        let checked = event.target.checked;
-        let colId = props.column.colId;
+        const checked = event.target.checked;
+        const colId = props.column.colId;
         props.node.setDataValue(colId, checked);
     }
     return React.createElement('input',

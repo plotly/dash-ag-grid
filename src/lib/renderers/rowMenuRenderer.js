@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from 'react';
+import PropTypes from 'prop-types';
 
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -55,3 +56,9 @@ export default function RowMenuRenderer(props) {
         </div>
     );
 }
+
+RowMenuRenderer.propTypes = {
+    setProps: PropTypes.func,
+    data: PropTypes.any,
+    value: PropTypes.any
+};

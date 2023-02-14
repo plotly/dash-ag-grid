@@ -1,4 +1,3 @@
-
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
 import React, {Component, lazy, Suspense} from 'react';
@@ -7,11 +6,7 @@ const RealAgGrid = lazy(LazyLoader.agGrid);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
 
 function getGrid(enable) {
-    if (enable) {
-        return RealAgGridEnterprise
-    } else {
-        return RealAgGrid
-    }
+    return enable ? RealAgGridEnterprise : RealAgGrid;
 }
 
 export default class DashAgGrid extends Component {
@@ -36,18 +31,17 @@ export default class DashAgGrid extends Component {
     buildArray(arr1, arr2) {
         if (arr1) {
             if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
-                arr1.push(arr2)
+                return [...arr1, arr2];
             }
-        } else {
-            arr1 = [JSON.parse(JSON.stringify(arr2))]
+            return arr1;
         }
-        return arr1
+        return [JSON.parse(JSON.stringify(arr2))];
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props.rowTransaction && !this.state.mounted) {
             if (nextProps.rowTransaction !== this.props.rowTransaction) {
-                this.state.rowTransaction = this.buildArray(this.state.rowTransaction, this.props.rowTransaction)
+                this.setState({rowTransaction: this.buildArray(this.state.rowTransaction, this.props.rowTransaction)});
             }
         }
     }
