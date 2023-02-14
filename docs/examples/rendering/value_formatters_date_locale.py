@@ -31,7 +31,7 @@ locale_fr_FR = """d3.timeFormatLocale{
 
 
 # function to create a date object from  a date string "YYYY-MM-DD"
-date_obj = f"({locale_fr_FR}).parse('%Y-%m-%d')(data.date)"
+date_obj = f"({locale_fr_FR}).parse('%Y-%m-%d')(params.data.data)"
 
 # d3.timeFormatLocale(definition)
 

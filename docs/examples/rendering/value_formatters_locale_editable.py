@@ -43,19 +43,19 @@ columnDefs = [
     {"field": "specifier", "headerName": "d3 specifier"},
     {
         "field": "Default",
-        "valueFormatter": {"function": "d3.format(data.specifier)(value)"},
+        "valueFormatter": {"function": "d3.format(params.data.specifier)(params.value)"},
     },
     {
         "field": "France",
-        "valueFormatter": {"function": f"{locale_fr_FR}.format(data.specifier)(value)"},
+        "valueFormatter": {"function": f"{locale_fr_FR}.format(params.data.specifier)(params.value)"},
     },
     {
         "field": "Japan",
-        "valueFormatter": {"function": f"{locale_ja_JP}.format(data.specifier)(value)"},
+        "valueFormatter": {"function": f"{locale_ja_JP}.format(params.data.specifier)(params.value)"},
     },
     {
         "field": "UK",
-        "valueFormatter": {"function": f"{locale_en_GB}.format(data.specifier)(value)"},
+        "valueFormatter": {"function": f"{locale_en_GB}.format(params.data.specifier)(params.value)"},
     },
 ]
 

@@ -78,7 +78,7 @@ locale_en_GB = """
 ```
 Then in can be used in the `valueFormatter` like this:
 ```
-"valueFormatter": {"function": f"{locale_en_GB}.format('$,.2f')(value)"},
+"valueFormatter": {"function": f"{locale_en_GB}.format('$,.2f')(params.value)"},
 ```"""
 )
 

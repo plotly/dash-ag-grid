@@ -11,7 +11,7 @@ rowData = [
 ]
 
 # function to create a date object from  a date string "YYYY-MM-DD"
-date_obj = "d3.timeParse('%Y-%m-%d')(data.date)"
+date_obj = "d3.timeParse('%Y-%m-%d')(params.data.data)"
 
 
 columnDefs = [
