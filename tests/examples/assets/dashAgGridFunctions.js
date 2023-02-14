@@ -5,4 +5,3 @@ dagfuncs.Round = function(v, a=2) {
 
 dagfuncs.toFixed = function(v, a=2) {
     return Number(v).toFixed(a)
-}
