@@ -29,6 +29,14 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - Add ability for custom parsing functions to be passed via the namespace `window.dashAgGridFunctions`
   - Allow for `null` to be passed to `columnSize`, to prevent the fit to width or autosize being the only options
 
+- [#28](https://github.com/plotly/dash-ag-grid/pull/28)
+  - allowed for other column prop functions to pass without disabling them if `dangerously_allow_code` is not passed
+  - copying over `columnDef` `dangerously_allow_code` to allow for the prop to be placed only on the grid level
+  - created a unified function parser to be easier to maintain
+  - brought the props to iterate through into a separate js `utils/functionVars.js` file
+  - switched to keeping `params` together instead of splitting into separate keys, to allow for easier transition to using AG Grid docs
+  - updated `test/test_add_remove_update_rows.py` to apply the new variable configuration
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.

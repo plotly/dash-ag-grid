@@ -70,13 +70,13 @@ columnDefs = [
     {
         "headerName": "Last Close Price",
         "field": "price",
-        "valueFormatter": {"function":"""Number(value).toFixed(2)"""},
+        "valueFormatter": {"function":"""Number(params.value).toFixed(2)"""},
         "editable":True
     },
     {
         "headerName": "Market Value",
-        "valueGetter": {"function":"Math.floor(data.price * data.quantity * 100) / 100"},
-        "valueFormatter": {"function":"""d3.format("($,.2f")(value)"""},
+        "valueGetter": {"function":"Math.floor(params.data.price * params.data.quantity * 100) / 100"},
+        "valueFormatter": {"function":"""d3.format("($,.2f")(params.value)"""},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
@@ -86,13 +86,13 @@ columnDefs = [
     },
     {
         "field":"testdate",
-        "valueFormatter": {"function":"""(d3.timeParse("%Y-%m-%d")(value))"""},
+        "valueFormatter": {"function":"""(d3.timeParse("%Y-%m-%d")(params.value))"""},
         "type":"date",
         "filter": "agDateColumnFilter"
     },
     {
         "headerName":"testing",
-        "valueGetter": {"function":"node.id"}
+        "valueGetter": {"function":"params.node.id"}
     }
 ]
 
@@ -118,11 +118,11 @@ table = dag.AgGrid(
     columnSize=None,
     defaultColDef=defaultColDef,
     rowSelection="single",
-    getRowId='data.ticker + "|" + data.company',
+    getRowId='params.data.ticker + "|" + params.data.company',
     dashGridOptions={'undoRedoCellEditing':True, 'undoRedoCellEditingLimit': 20},
     getRowStyle={
                 "styleConditions": [
-                    {"condition": "data.quantity > 50", "style": {"color": "orange"}},
+                    {"condition": "params.data.quantity > 50", "style": {"color": "orange"}},
                 ]
             },
     rowTransaction={'update':[{'ticker':'AAPL', 'company':'Apple', 'quantity':30, 'price':'154.50'}]}

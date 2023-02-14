@@ -193,9 +193,16 @@ DashAgGrid.propTypes = {
     deleteSelectedRows: PropTypes.bool,
 
     /**
-     * If true, the internal method rowTransaction() will be used
+     * If true, the internal method rowTransaction() will be used,
+     * if async provided as false, applyTransaction() will be called, else applyTransactionAsync()
      */
-    rowTransaction: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.object)),
+    rowTransaction: PropTypes.shape({
+        async: PropTypes.bool,
+        add: PropTypes.array,
+        update: PropTypes.array,
+        remove: PropTypes.array,
+        addIndex: PropTypes.number,
+    }),
 
     /**
     * This is required for change detection in rowData
