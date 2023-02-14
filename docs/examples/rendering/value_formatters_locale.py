@@ -42,19 +42,19 @@ locale_en_GB = """d3.formatLocale({
 columnDefs = [
     {
         "field": "Default",
-        "valueFormatter": {"function": "d3.format('$,.2f')(value)"},
+        "valueFormatter": {"function": "d3.format('$,.2f')(params.value)"},
     },
     {
         "field": "France",
-        "valueFormatter": {"function": f"{locale_fr_FR}.format('$,.2f')(value)"},
+        "valueFormatter": {"function": f"{locale_fr_FR}.format('$,.2f')(params.value)"},
     },
     {
         "field": "Japan",
-        "valueFormatter": {"function": f"{locale_ja_JP}.format('$,.2f')(value)"},
+        "valueFormatter": {"function": f"{locale_ja_JP}.format('$,.2f')(params.value)"},
     },
     {
         "field": "UK",
-        "valueFormatter": {"function": f"{locale_en_GB}.format('$,.2f')(value)"},
+        "valueFormatter": {"function": f"{locale_en_GB}.format('$,.2f')(params.value)"},
     },
 ]
 

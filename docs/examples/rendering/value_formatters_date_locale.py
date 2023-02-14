@@ -1,3 +1,9 @@
+"""
+
+This doesn't work yet
+"""
+
+
 from dash import Dash, dcc, html
 import dash_ag_grid as dag
 import datetime
@@ -10,18 +16,39 @@ rowData = [
     {"date": "2023-21-03"},
 ]
 
+# d3 datetime locales: https://cdn.jsdelivr.net/npm/d3-time-format@3.0.0/locale
+# d3.timeFormatLocale(definition)
+locale_fr_FR = """d3.timeFormatLocale{
+  "dateTime": "%A %e %B %Y à %X",
+  "date": "%d/%m/%Y",
+  "time": "%H:%M:%S",
+  "periods": ["AM", "PM"],
+  "days": ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
+  "shortDays": ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
+  "months": ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+  "shortMonths": ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."]
+}"""
+
+
 # function to create a date object from  a date string "YYYY-MM-DD"
-date_obj = "d3.timeParse('%Y-%m-%d')(params.data.data)"
+date_obj = f"({locale_fr_FR}).parse('%Y-%m-%d')(params.data.data)"
+
+# d3.timeFormatLocale(definition)
 
 
 columnDefs = [
     {
         "field": "date",
+        "valueFormatter": {
+            "function": f"{locale_fr_FR}.format('%B %e, %Y')({date_obj})"
+        },
     },
     {
         "headerName": "MM/DD/YYYY",
         "valueGetter": {"function": date_obj},
-        "valueFormatter": {"function": f"d3.timeFormat('%m/%d/%Y')({date_obj})"},
+        "valueFormatter": {
+            "function": f"{locale_fr_FR}.timeFormat('%m/%d/%Y')({date_obj})"
+        },
     },
     {
         "headerName": "Mon DD, YYYY",
@@ -36,7 +63,9 @@ columnDefs = [
     {
         "headerName": "Month d, YYYY",
         "valueGetter": {"function": date_obj},
-        "valueFormatter": {"function": f"d3.timeFormat('%B %e, %Y')({date_obj})"},
+        "valueFormatter": {
+            "function": f"{locale_fr_FR}.timeFormat('%B %e, %Y')({date_obj})"
+        },
     },
     {
         "headerName": "MM-DD-YY",
@@ -57,10 +86,7 @@ defaultColDef = {
 app = Dash(__name__)
 
 app.layout = html.Div(
-    [
-        dcc.Markdown("Date formatting example."),
-        dag.AgGrid(columnDefs=columnDefs, rowData=rowData, defaultColDef=defaultColDef),
-    ],
+    [dag.AgGrid(columnDefs=columnDefs, rowData=rowData, defaultColDef=defaultColDef)],
     style={"margin": 20},
 )
 

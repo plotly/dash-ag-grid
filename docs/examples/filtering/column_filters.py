@@ -19,12 +19,11 @@ columnDefs = [
     {"field": "age", "filter": "agNumberColumnFilter", "maxWidth": 100},
     {"field": "country"},
     {
-        "headerName": "date",
+        "headerName": "Date",
         "filter": "agDateColumnFilter",
-        "valueGetter": {"function": "d3.timeParse('%m/%d/%Y')(data.date)"},
-        "valueFormatter": {"function": "data.date"},
+        "valueGetter": {"function": "d3.timeParse('%d/%m/%Y')(params.data.date)"},
+        "valueFormatter": {"function": "params.data.date"},
     },
-
     {"field": "sport"},
     {"field": "total"},
 ]

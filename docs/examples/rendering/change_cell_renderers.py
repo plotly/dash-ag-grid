@@ -28,13 +28,13 @@ columnDefs = [
     },
     {
         "headerName": "Total",
-        "valueGetter": {"function": "Number(data.a) + Number(data.b) + Number(data.c)"},
+        "valueGetter": {"function": "Number(params.data.a) + Number(params.data.b) + Number(params.data.c)"},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
         "headerName": "Average",
         "valueGetter": {
-            "function": "Math.round((Number(data.a) + Number(data.b) + Number(data.c)) * 10 / 3) /10"
+            "function": "Math.round((Number(params.data.a) + Number(params.data.b) + Number(params.data.c)) * 10 / 3) /10"
         },
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
@@ -60,7 +60,7 @@ app.layout = html.Div(
             columnSize="sizeToFit",
             defaultColDef=defaultColDef,
             # setting a row ID is required when updating data in a callback
-            getRowId="data.index",
+            getRowId="params.data.index",
         ),
     ],
     style={"margin": 20},
