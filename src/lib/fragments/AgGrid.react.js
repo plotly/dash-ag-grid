@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
 import {omit, equals, isEmpty} from 'ramda';
-import {propTypes, defaultProps} from '../components/AgGrid.react';
+import {propTypes as _propTypes, defaultProps as _defaultProps} from '../components/AgGrid.react';
 import {expressWarn, gridFunctions, columnFunctions} from '../utils/functionVars';
 import debounce from '../utils/debounce';
 
@@ -737,5 +737,8 @@ export default class DashAgGrid extends Component {
     };
 }
 
-DashAgGrid.defaultProps = defaultProps;
-DashAgGrid.propTypes = {parentState: PropTypes.any, ...propTypes};
+DashAgGrid.defaultProps = _defaultProps;
+DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
+
+export const propTypes = DashAgGrid.propTypes;
+export const defaultProps = DashAgGrid.defaultProps;
