@@ -19,7 +19,6 @@ export default class DashAgGrid extends Component {
 
             openGroups: new Set(),
             filterModel: {},
-            dangerously_allow_code: this.props.dangerously_allow_code,
             origColumnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))
 
         };

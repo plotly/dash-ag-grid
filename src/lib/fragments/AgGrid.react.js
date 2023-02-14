@@ -109,9 +109,11 @@ export default class DashAgGrid extends Component {
     }
 
     fixCols(columnDef) {
+        const {dangerously_allow_code} = this.props;
+
         const test = (target) => {
             if (target in columnDef) {
-                if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                if (!dangerously_allow_code && expressWarn.includes(target)) {
                     if (typeof columnDef[target] !== 'function') {
                         if (!(Object.keys(columnDef[target]).includes('function'))) {
                             columnDef[target] = () => '';
@@ -129,7 +131,7 @@ export default class DashAgGrid extends Component {
         }
 
         if ("headerComponentParams" in columnDef) {
-            if ('template' in columnDef.headerComponentParams && !this.state.dangerously_allow_code) {
+            if ('template' in columnDef.headerComponentParams && !dangerously_allow_code) {
                 columnDef.headerComponentParams.template = '<div></div>'
                 console.error({field: columnDef.field, message: XSSMESSAGE})
             }
@@ -464,8 +466,7 @@ export default class DashAgGrid extends Component {
     }
 
     generateRenderer(Renderer) {
-        const {setProps} = this.props;
-        const {dangerously_allow_code} = this.state;
+        const {setProps, dangerously_allow_code} = this.props;
 
         const setCellProps = (props) => {
             setProps({clickData: props.clickData, hoverData: props.hoverData});
@@ -592,6 +593,9 @@ export default class DashAgGrid extends Component {
             csvExportParams,
             detailCellRendererParams,
             setProps,
+            dangerously_allow_code,
+            cellClassRules,
+            rowClassRules,
             dashGridOptions,
             ...restProps
         } = this.props;
@@ -599,7 +603,7 @@ export default class DashAgGrid extends Component {
         const replaceFunc = (keyPair) => {
             const target = Object.keys(keyPair)[0];
             if (target in this.props) {
-                if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                if (!dangerously_allow_code && expressWarn.includes(target)) {
                     if (typeof this.props[target] !== 'function') {
                         if (!(Object.keys(this.props[target]).includes('function'))) {
                             this.props[target] = () => '';
@@ -616,7 +620,7 @@ export default class DashAgGrid extends Component {
             }
             if (this.props.dashGridOptions) {
                 if (target in this.props.dashGridOptions) {
-                    if (!(this.state.dangerously_allow_code) && expressWarn.includes(target)) {
+                    if (!dangerously_allow_code && expressWarn.includes(target)) {
                         if (typeof this.props.dashGridOptions[target] !== 'function') {
                             if (!('function' in this.props.dashGridOptions[target])) {
                                 this.props.dashGridOptions[target] = () =>  '';
@@ -635,17 +639,6 @@ export default class DashAgGrid extends Component {
         }
 
         gridFunctions.map(replaceFunc)
-
-        // Disable cellClassRules and rowClassRules if dangerously_allow_code is disabled
-        let cellClassRules;
-        let rowClassRules;
-        if (!this.state.dangerously_allow_code) {
-            cellClassRules = null;
-            rowClassRules = null;
-        } else {
-            cellClassRules = this.props.cellClassRules;
-            rowClassRules = this.props.rowClassRules;
-        }
 
         let getRowId;
         if (this.props.getRowId) {
@@ -752,14 +745,10 @@ export default class DashAgGrid extends Component {
                     )}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
-                    cellClassRules={cellClassRules}
-                    rowClassRules={rowClassRules}
+                    cellClassRules={dangerously_allow_code ? cellClassRules : null}
+                    rowClassRules={dangerously_allow_code ? rowClassRules : null}
                     {...omit(['cellClassRules', 'rowClassRules'], dashGridOptions)}
-                    {...omit(
-                        ['theme', 'cellClassRules', 'rowClassRules', 'getRowId', 'dangerously_allow_code'],
-                        restProps
-                    )}
-
+                    {...omit(['theme', 'getRowId'], restProps)}
                 >
                 </AgGridReact>
             </div>
