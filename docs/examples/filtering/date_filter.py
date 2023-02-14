@@ -15,30 +15,32 @@ data = requests.get(
 
 # basic columns definition with column defaults
 columnDefs = [
-    {"field": "athlete"},
-    {"field": "age", "filter": "agNumberColumnFilter", "maxWidth": 100},
-    {"field": "country"},
+    {"field": "athlete", "filter": False},
+    {"field": "country", "filter": False},
     {
         "headerName": "Date",
         "filter": "agDateColumnFilter",
         "valueGetter": {"function": "d3.timeParse('%d/%m/%Y')(data.date)"},
         "valueFormatter": {"function": "data.date"},
+        "filterParams": {
+            "browserDatePicker": True,
+            "minValidYear": 2000,
+            "maxValidYear": 2021,
+        },
     },
-    {"field": "sport"},
-    {"field": "total"},
 ]
+
+defaultColDef = {
+    "flex": 1,
+    "minWidth": 150,
+    "filter": True,
+    "floatingFilter": True,
+}
 
 app.layout = html.Div(
     [
-        dcc.Markdown(
-            "This grid has a number filter on the 'Age' column, a date filter on the date and a text filter on the other columns"
-        ),
-        dag.AgGrid(
-            columnDefs=columnDefs,
-            rowData=data,
-            columnSize="sizeToFit",
-            defaultColDef={"resizable": True, "sortable": True, "filter": True},
-        ),
+        dcc.Markdown("Date Filter Example"),
+        dag.AgGrid(columnDefs=columnDefs, rowData=data, defaultColDef=defaultColDef),
     ],
     style={"margin": 20},
 )

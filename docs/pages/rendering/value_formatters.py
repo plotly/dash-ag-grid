@@ -157,9 +157,7 @@ layout = html.Div(
             "examples.rendering.value_formatters_locale_editable", make_layout=make_tabs
         ),
         make_md(text4),
-        example_app(
-            "examples.rendering.value_formatters_date", make_layout=make_tabs
-        ),
+        example_app("examples.rendering.value_formatters_date", make_layout=make_tabs),
         example_app(
             "examples.rendering.value_formatters_datetime", make_layout=make_tabs
         ),

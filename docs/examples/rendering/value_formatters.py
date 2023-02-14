@@ -6,8 +6,13 @@ app = Dash(__name__)
 
 
 columnDefs = [
-    {"headerName": "Description", "field": "description",  "minWidth": 300},
-    {"headerName": "d3.format", "field": "format", "minWidth": 300, "cellRenderer": "markdown"},
+    {"headerName": "Description", "field": "description", "minWidth": 300},
+    {
+        "headerName": "d3.format",
+        "field": "format",
+        "minWidth": 300,
+        "cellRenderer": "markdown",
+    },
     {"headerName": "Specifier", "field": "specifier", "minWidth": 10},
     {"headerName": "Value", "field": "value", "minWidth": 125},
     {
