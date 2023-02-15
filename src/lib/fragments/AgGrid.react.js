@@ -139,7 +139,7 @@ export default class DashAgGrid extends Component {
     }
 
     setUpCols(cellStyle) {
-        const {columnDefs, setProps} = this.props
+        const {columnDefs, setProps, defaultColDef} = this.props
 
         const cleanOneCol = (col) => {
             const colOut = this.fixCols(col);
@@ -167,6 +167,11 @@ export default class DashAgGrid extends Component {
                     return cleanOneCol(colDefOut);
                 })
             });
+        }
+        if (defaultColDef) {
+            setProps({
+                defaultColDef: cleanOneCol(defaultColDef)
+            })
         }
     }
 
