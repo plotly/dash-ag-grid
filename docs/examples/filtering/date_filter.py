@@ -20,8 +20,8 @@ columnDefs = [
     {
         "headerName": "Date",
         "filter": "agDateColumnFilter",
-        "valueGetter": {"function": "d3.timeParse('%d/%m/%Y')(params.data.data)"},
-        "valueFormatter": {"function": "params.data.data"},
+        "valueGetter": {"function": "d3.timeParse('%d/%m/%Y')(params.data.date)"},
+        "valueFormatter": {"function": "params.data.date"},
         "filterParams": {
             "browserDatePicker": True,
             "minValidYear": 2000,
