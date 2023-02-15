@@ -47,7 +47,7 @@ app.layout = html.Div(
 
 @app.callback(
     Output("selections-checkbox-output", "children"),
-    Input("selection-checkbox-grid", "selectionChanged"),
+    Input("selection-checkbox-grid", "selectedRows"),
 )
 def selected(selected):
     if selected:

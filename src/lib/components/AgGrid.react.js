@@ -69,7 +69,7 @@ DashAgGrid.defaultProps = {
     autoSizeAllColumnsSkipHeaders: false,
     enableEnterpriseModules: false,
     updateColumnState: false,
-    persisted_props: ['selectionChanged'],
+    persisted_props: ['selectedRows'],
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
     dangerously_allow_code: false,

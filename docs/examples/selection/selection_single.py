@@ -47,7 +47,7 @@ app.layout = html.Div(
 
 @app.callback(
     Output("selections-single-output", "children"),
-    Input("selection-single-grid", "selectionChanged"),
+    Input("selection-single-grid", "selectedRows"),
 )
 def selected(selected):
     if selected:

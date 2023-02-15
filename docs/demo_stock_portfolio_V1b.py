@@ -146,7 +146,7 @@ app.layout = dbc.Container(
 
 @app.callback(
     Output("candlestick", "figure"),
-    Input("portfolio-grid", "selectionChanged"),
+    Input("portfolio-grid", "selectedRows"),
 )
 def update_candlestick(selected_row):
     if selected_row is None:
