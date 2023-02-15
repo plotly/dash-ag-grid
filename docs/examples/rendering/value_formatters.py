@@ -18,7 +18,7 @@ columnDefs = [
     {
         "headerName": "Formatted Value",
         "field": "formatted",
-        "valueFormatter": {"function": "d3.format(params.data.specifier)(params.data.value)"},
+        "valueFormatter": {"function": "d3.format(params.data.specifier)(params.value)"},
         "minWidth": 150,
     },
 ]

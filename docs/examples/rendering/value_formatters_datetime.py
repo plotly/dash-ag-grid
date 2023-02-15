@@ -11,10 +11,10 @@ rowData = [
 ]
 
 # function to create a date object from  a date string "YYYY-MM-DD"
-date_obj = "d3.timeParse('%Y-%m-%dT%H:%M:%S')(params.data.data)"
+date_obj = "d3.timeParse('%Y-%m-%dT%H:%M:%S')(params.data.date)"
 
 # if the time is in utc:
-# date_obj = "d3.utcParse('%Y-%m-%dT%H:%M:%S')(params.data.data)"
+# date_obj = "d3.utcParse('%Y-%m-%dT%H:%M:%S')(params.data.date)"
 
 
 columnDefs = [
