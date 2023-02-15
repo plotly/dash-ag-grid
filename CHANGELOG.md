@@ -37,11 +37,21 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - switched to keeping `params` together instead of splitting into separate keys, to allow for easier transition to using AG Grid docs
   - updated `test/test_add_remove_update_rows.py` to apply the new variable configuration
 
+- [#39](https://github.com/plotly/dash-ag-grid/pull/39)
+  - Allowed for `defaultColDef` to be iterated through for functions
+  - Added `tooltipComponent` to be altered if it was list as a function object
+  - Added tests for `custom_components.py`, and made it so the stock data is pulled from a csv instead of live.
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
   - Update markdown renderer to use github markdown, and also have the ability to be passed a target for links, to avoid `dangerously_allow_html`
   - Update `requirements.txt` (Python dependencies for demos and docs) to allow the latest packages
+
+- [#39](https://github.com/plotly/dash-ag-grid/pull/39)
+  - Changing `selectionChanged` to `selectedRows` to make props align with AG Grid.
+  - Document adjustments for `selectionChanged` to `selectedRows`, also allowed for persistence in the `selectedRows`
+
 
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
