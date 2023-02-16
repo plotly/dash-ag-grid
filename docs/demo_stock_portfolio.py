@@ -114,15 +114,15 @@ defaultColDef = {
 cellStyle = {
     "styleConditions": [
         {
-            "condition": "value == 'buy'",
+            "condition": "params.value == 'buy'",
             "style": {"backgroundColor": "#196A4E", "color": "white"},
         },
         {
-            "condition": "value == 'sell'",
+            "condition": "params.value == 'sell'",
             "style": {"backgroundColor": "#800000", "color": "white"},
         },
         {
-            "condition": "colDef.headerName == 'Shares'",
+            "condition": "params.colDef.headerName == 'Shares'",
             "style": {"backgroundColor": "#444"},
         },
     ]
