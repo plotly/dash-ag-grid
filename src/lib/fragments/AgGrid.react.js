@@ -407,6 +407,14 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    evaluateFunction = (tempFunction, params) => {
+        const parsedCondition = esprima.parse(tempFunction).body[0]
+                    .expression;
+        const value = evaluate(parsedCondition, {params, d3, ...customFunctions, ...window.dashAgGridFunctions,
+        ...window.dashSharedVariables})
+        return value
+    }
+
     /**
      * @params AG-Grid Styles rules attribute.
      * See: https://www.ag-grid.com/react-grid/cell-styles/#cell-style-cell-class--cell-class-rules-params
@@ -417,24 +425,14 @@ export default class DashAgGrid extends Component {
         if (styleConditions && styleConditions.length > 0) {
             for (const styleCondition of styleConditions) {
                 const {condition, style} = styleCondition;
-                const parsedCondition = esprima.parse(condition).body[0]
-                    .expression;
 
-                if (evaluate(parsedCondition, {...params})) {
+                if (this.evaluateFunction(condition, params)) {
                     return style;
                 }
             }
         }
 
         return defaultStyle ? defaultStyle : null;
-    }
-
-    evaluateFunction = (tempFunction, params) => {
-        const parsedCondition = esprima.parse(tempFunction).body[0]
-                    .expression;
-        const value = evaluate(parsedCondition, {params, d3, ...customFunctions, ...window.dashAgGridFunctions,
-        ...window.dashSharedVariables})
-        return value
     }
 
     /**

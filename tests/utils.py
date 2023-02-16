@@ -112,3 +112,13 @@ class Grid:
             f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] button'
         )
         button.click()
+
+    def get_cell(self, row, col):
+        return self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"]'
+        )
+
+    def get_element(self, selector):
+        return self.dash_duo.find_element(
+            selector
+        )
