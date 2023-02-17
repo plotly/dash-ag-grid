@@ -20,7 +20,8 @@ def up_next(text):
 
 def make_md(text):
     return dcc.Markdown(
-        text, className="mx-5 px-3", dangerously_allow_html=True, link_target="_blank"
+        text, className="mx-5 px-3", dangerously_allow_html=True, link_target="_blank",
+        style={"maxWidth": 1000}
     )
 
 
