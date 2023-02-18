@@ -16,9 +16,17 @@ Value formatters allow you to format values for display. This is useful when dat
 Note that it does not change the data, only how it appears in the grid.
 
 
-`valueFormatter` (string | ValueFormatterFunc) A function or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering.
+- `valueFormatter` (string | ValueFormatterFunc) A function or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering.
 
-### Formatting Numbers
+You can supply your own custom function for displaying values, or you can use the functions defined in `d3-format` and the `d3-time-format` libraries.
+
+### Value Formatter vs Cell Renderer
+A cell renderer allows you to put whatever HTML you want into a cell. This sounds like value formatters and a cell renderers have cross purposes, so you may be wondering, when do you use each one and not the other?
+
+The answer is that value formatters are for text formatting and cell renderers are for when you want to include HTML markup and potentially functionality to the cell. So for example, if you want to put punctuation into a value, use a value formatter, but if you want to put buttons or HTML links use a cell renderer. It is possible to use a combination of both, in which case the result of the value formatter will be passed to the cell renderer.
+
+
+### Formatting Numbers with `d3-format`
 Dash AG Grid includes the d3-format library, so you have access to all [d3-format](https://github.com/d3/d3-format) functions to use with `valueFormatter`
 
 The basic syntax for the function is:
@@ -41,7 +49,25 @@ See also this site for more [d3-format examples](https://observablehq.com/@d3/d3
 text2 = (
     """
 ### Locales
-Locales adapt the behavior of d3-format to various languages and places. The default locale for `d3.format` is U.S. English, which sets:
+Locales adapt the behavior of d3-format to various languages and places. 
+
+The definition may include the following properties:
+
+- `decimal` - the decimal point (e.g., ".").
+- `thousands` - the group separator (e.g., `","`).
+- `grouping` - the array of group sizes (e.g., `[3]`), cycled as needed.
+- `currency` - the currency prefix and suffix (e.g., `["$", ""]`).
+- `numerals` - optional; an array of ten strings to replace the numerals `0-9`.
+- `percent` - optional; the percent sign (defaults to `"%"`).
+- `minus` - optional; the minus sign (defaults to `"−"`).
+- `nan` - optional; the not-a-number value (defaults `"NaN"`).
+
+Note that the `thousands` property is a misnomer, as the grouping definition allows groups other than thousands.
+
+
+
+
+The default locale for `d3.format` is U.S. English, which sets:
 
 ```
 {
@@ -52,17 +78,19 @@ Locales adapt the behavior of d3-format to various languages and places. The def
 }
 ```
 
-To render numbers in French, you could override these default marks by specifying instead a locale such as:
+To render currency numbers in French, you could override these default marks by specifying instead a locale such as:
 
 ```
 {
   "decimal": ",",
   "thousands": " ",
   "grouping": [3],
-  "currency": ["", "€"]
+  "currency": ["", "€"],
+  "nan": "",
 }
 ```
-The decimal separator becomes a comma, thousands are separated by a space, and the default currency mark, the euro symbol, appears after the number. (The actual locale for French is more complicated than that, as it also contains non-breaking spaces in accordance with French typography rules.)
+The decimal separator becomes a comma, thousands are separated by a space, and the default currency mark, the euro symbol, appears after the number.
+This example includes changing the default for not-a-number from `NaN` to `""`
 
 Locales are not loaded by default. Their definition can be fed to `d3.formatLocale`:
 
@@ -79,7 +107,16 @@ locale_en_GB = """
 Then in can be used in the `valueFormatter` like this:
 ```
 "valueFormatter": {"function": f"{locale_en_GB}.format('$,.2f')(params.value)"},
-```"""
+```
+
+  
+### Example Formatting with locale
+    
+In this example, each column is formatted with the specifier `'$,.2f'`  The  locale determines how the numbers will be displayed.
+Note that we also set a custom NaN value in the "France" column. In stead of displaying "NaN" it will be blank
+
+"""
+
 )
 
 text3 = """
@@ -91,9 +128,9 @@ In this table try changing the specifier and the values.
 
 
 text4 = """
-### Formatting Dates
+### Formatting Dates and Times with `d3-time-format`
 
-Dash AG Grid includes the d3-time-format library, so you have access to all [d3-format](https://github.com/d3/d3-time-format) functions to use with `valueFormatter`
+Dash AG Grid includes the d3-time-format library, so you have access to all [d3-time-format](https://github.com/d3/d3-time-format) functions to use with `valueFormatter`
 
 The basic syntax for formatting a date object is:
 ```
@@ -143,6 +180,7 @@ Here are the specifiers:
 - %Z - time zone offset, such as -0700, -07:00, -07, or Z.
 - %% - a literal percent sign (%).
 """
+
 
 layout = html.Div(
     [
