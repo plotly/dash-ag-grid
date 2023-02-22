@@ -2,6 +2,7 @@ import dash_ag_grid as dag
 from dash import Dash, html, dcc
 from . import utils
 import time
+from dash.testing.wait import until
 
 def test_cf001_cell_conditional_formatting(dash_duo):
     app = Dash(__name__)
@@ -58,11 +59,16 @@ def test_cf001_cell_conditional_formatting(dash_duo):
 
     ### testing components
     grid.get_cell(0,0).click()
+    until(lambda: 'color: orange' not in grid.get_cell(0, 0).get_attribute('style'), timeout=3)
     grid.get_cell(0, 0).send_keys('t')
     grid.get_cell(0, 1).click()
+    until(lambda: 'color: orange' in grid.get_cell(0, 0).get_attribute('style'), timeout=3)
+    until(lambda: 'color: orange' not in grid.get_cell(0, 1).get_attribute('style'), timeout=3)
     grid.get_cell(0, 1).send_keys('t')
     grid.get_cell(0,2).click()
+    until(lambda: 'color: orange' not in grid.get_cell(0, 2).get_attribute('style'), timeout=3)
+    until(lambda: 'color: orange' in grid.get_cell(0, 1).get_attribute('style'), timeout=3)
     grid.get_cell(0, 2).send_keys('t')
     grid.get_cell(0,0).click()
-    time.sleep(.1)
-    assert 'color: orange' in grid.get_cell(0,0).get_attribute('style')
+    until(lambda: 'color: orange' in grid.get_cell(0, 2).get_attribute('style'), timeout=3)
+    assert 'color: orange' in grid.get_cell(0, 0).get_attribute('style')
