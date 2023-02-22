@@ -13,9 +13,16 @@ export default function MarkdownRenderer(props) {
     // Convert <p> tags to simple <divs> using the components prop.
     const rehypePlugins = dangerously_allow_code ? [rehypeRaw] : []
 
+    if (dangerously_allow_code) {
+        var linkTarget;
+    } else {
+        var linkTarget=colDef.linkTarget || '_self'
+    }
+
+
     return (
         <ReactMarkdown
-            linkTarget={colDef.linkTarget || '_self'}
+            linkTarget={linkTarget}
             remarkPlugins={[[remarkGfm, {singleTilde: false}]]}
             components={{p: 'div',
                 a: ({ node: _, children, ...props}) => {
