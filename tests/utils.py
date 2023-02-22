@@ -102,11 +102,6 @@ class Grid:
         self.dash_duo.clear_input(filter_input)
         filter_input.send_keys(val)
 
-    def get_element_text(self, selector):
-        return self.dash_duo.find_element(
-            selector
-        ).get_attribute('innerText')
-
     def element_click_cell_button(self, row, col):
         button = self.dash_duo.find_element(
             f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] button'
@@ -116,9 +111,4 @@ class Grid:
     def get_cell(self, row, col):
         return self.dash_duo.find_element(
             f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"]'
-        )
-
-    def get_element(self, selector):
-        return self.dash_duo.find_element(
-            selector
         )

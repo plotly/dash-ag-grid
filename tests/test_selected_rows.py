@@ -72,14 +72,10 @@ def test_fi001_selected_rows(dash_duo):
     grid.wait_for_cell_text(0, 0, "Michael Phelps")
 
     grid.get_cell(0,0).click()
-    time.sleep(1)
-    assert grid.get_element('#selections-single-output').get_attribute('innerText') == "You selected athlete: Michael Phelps"
+    dash_duo.wait_for_text_to_equal('#selections-single-output', "You selected athlete: Michael Phelps")
     dash_duo.driver.refresh()
 
     grid.wait_for_cell_text(0, 0, "Michael Phelps")
-    assert grid.get_element('#selections-single-output').get_attribute(
-        'innerText') == "You selected athlete: Michael Phelps"
-    grid.get_element('#setSelection').click()
-    time.sleep(1)
-    assert grid.get_element('#selections-single-output').get_attribute(
-        'innerText') == "You selected athlete: Natalie Coughlin"
+    dash_duo.wait_for_text_to_equal('#selections-single-output', "You selected athlete: Michael Phelps")
+    dash_duo.find_element('#setSelection').click()
+    dash_duo.wait_for_text_to_equal('#selections-single-output', "You selected athlete: Natalie Coughlin")
