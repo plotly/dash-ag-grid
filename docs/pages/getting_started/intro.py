@@ -119,7 +119,7 @@ text_callbacks = """
 
 This is the sample app from the [webinar](https://www.youtube.com/watch?v=Ggekq7C5pz4?utm_source=Webinar%3A+AG+Grid+1%2F26%2F23&utm_medium=medium_article&utm_content=AnnouncingDashAGGrid).  See the app [live]((https://sales-demo.plotly.com/dash-ag-grid)), get the [code](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py) in GitHub
 
-This grid uses the `selectionChanged` prop to update the stock price figure, and the `cellValueChanged` prop in to update the
+This grid uses the `selectedRows` prop to update the stock price figure, and the `cellValueChanged` prop in to update the
  pie chart in callbacks. 
 """
 img_callbacks = "https://user-images.githubusercontent.com/72614349/215555251-6e4a3248-d789-449d-8036-7e84a43c1b63.gif"
