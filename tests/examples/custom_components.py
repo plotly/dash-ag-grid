@@ -1,6 +1,5 @@
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output, State, ctx
-import dash_bootstrap_components as dbc
 import pandas as pd
 import yfinance as yf
 import dash
@@ -8,7 +7,7 @@ import random
 import json
 import os
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY],
+app = Dash(__name__,
            meta_tags=[{'http-equiv': 'content-security-policy',
                        'content': "default-src 'self'; script-src 'self' 'unsafe-inline';"
                                   " style-src https://* 'self' 'unsafe-inline'; "
@@ -136,10 +135,7 @@ table = dag.AgGrid(
 
 header = html.Div("My Portfolio", className="h2 p-2 text-white bg-primary text-center")
 
-app.layout = dbc.Container(
-    [
-        header,
-        dbc.Row(dbc.Col(table, className="py-4")),
+app.layout = html.Div([table,
         html.Div(id='cellValueChanged')
     ],
 )
