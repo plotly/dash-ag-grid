@@ -14,17 +14,20 @@ df = pd.DataFrame(
 )
 
 # find locals at https://cdn.jsdelivr.net/npm/d3-format@1/locale/
+
+# "nan" is the not-a-number value (defaults `"NaN"`).  Here we change it to ""
 locale_fr_FR = """d3.formatLocale({
   "decimal": ",",
   "thousands": "\u00a0",
   "grouping": [3],
   "currency": ["", "\u00a0€"],
-  "percent": "\u202f%"
+  "percent": "\u202f%",
+  "nan": ""  
 })"""
 
 
 locale_ja_JP = """d3.formatLocale({
- "decimal": ".",
+  "decimal": ".",
   "thousands": ",",
   "grouping": [3],
   "currency": ["", "円"]
@@ -32,7 +35,7 @@ locale_ja_JP = """d3.formatLocale({
 
 
 locale_en_GB = """d3.formatLocale({
- "decimal": ".",
+  "decimal": ".",
   "thousands": ",",
   "grouping": [3],
   "currency": ["£", ""]
@@ -67,7 +70,7 @@ defaultColDef = {
 app.layout = html.Div(
     [
         dcc.Markdown(
-            "This grid demonstrates formatting numbers for different locales using d3-format."
+            "This grid demonstrates formatting numbers for different locales using d3-format with a specifier of `'$,.2f'`."
         ),
         dag.AgGrid(
             columnDefs=columnDefs,
