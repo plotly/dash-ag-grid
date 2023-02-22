@@ -31,12 +31,12 @@ def test_cc001_custom_components(dash_duo):
     def get_stock_data():
         return yf.download(tickers=list(equities.keys()), period="30d", interval="1h", group_by="ticker")
 
-    if os.path.exists('assets/stock_data.csv'):
-        stock_data = pd.read_csv('assets/stock_data.csv')
+    if os.path.exists('./tests/assets/stock_data.csv'):
+        stock_data = pd.read_csv('./tests/assets/stock_data.csv')
     else:
         stock_data = get_stock_data()
         stock_data = stock_data.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
-        stock_data.to_csv('assets/stock_data.csv')
+        stock_data.to_csv('./tests/assets/stock_data.csv')
 
 
     def last_close(ticker):
