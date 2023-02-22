@@ -60,7 +60,7 @@ def update_rowdata(*_):
     Input("transactions-remove", "n_clicks"),
     Input("transactions-update", "n_clicks"),
     Input("transactions-add", "n_clicks"),
-    State("transactions-grid", "selectionChanged"),
+    State("transactions-grid", "selectedRows"),
 )
 def update_rowdata(n1, n2, n3, selection):
 

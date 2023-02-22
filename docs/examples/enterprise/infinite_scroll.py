@@ -37,11 +37,11 @@ app.layout = html.Div(
 )
 
 
-@app.callback(Output("output2", "children"), Input("grid1", "selectionChanged"))
-def display_selected_car2(selectionChanged):
-    if selectionChanged:
+@app.callback(Output("output2", "children"), Input("grid1", "selectedRows"))
+def display_selected_car2(selectedRows):
+    if selectedRows:
         return [
-            f"You selected id {s['id']} and name {s['name']}" for s in selectionChanged
+            f"You selected id {s['id']} and name {s['name']}" for s in selectedRows
         ]
 
     return no_update

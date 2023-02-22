@@ -73,6 +73,7 @@ DashAgGrid.defaultProps = {
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
     dangerously_allow_code: false,
+    rowModelType: 'clientSide',
 };
 DashAgGrid.propTypes = {
     /********************************

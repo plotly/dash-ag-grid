@@ -34,7 +34,7 @@ app.layout = html.Div(
 @app.callback(
     Output("datatable-interactivity-container", "children"),
     Input("datatable-interactivity", "virtualRowData"),
-    Input("datatable-interactivity", "selectionChanged"),
+    Input("datatable-interactivity", "selectedRows"),
 )
 def update_graphs(rows, selected):
     dff = df if rows is None else pd.DataFrame(rows)
