@@ -8,7 +8,7 @@ import json
 import os
 import time
 
-def test_fi001_custom_components(dash_duo):
+def test_cc001_custom_components(dash_duo):
 
     app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY],
                meta_tags=[{'http-equiv': 'content-security-policy',
