@@ -49,7 +49,7 @@ app.layout = html.Div(
         ),
         html.Hr(),
         dcc.Markdown(
-            "Selections can also be set using a callbacks, as `selectionChanged` supports read and write:"
+            "Selections can also be set using a callbacks, as `selectedRows` supports read and write:"
         ),
         dcc.Checklist(
             options=[
@@ -76,10 +76,10 @@ app.layout = html.Div(
 
 @app.callback(
     Output("currentSelections", "children"),
-    Input("selectable-grid", "selectionChanged"),
+    Input("selectable-grid", "selectedRows"),
 )
-def display_selected_car2(selectionChanged):
-    if selectionChanged:
+def display_selected_car2(selectedRows):
+    if selectedRows:
         return "You selected " + ", ".join(
             [
                 "{} (model {} and price {})".format(
@@ -87,22 +87,22 @@ def display_selected_car2(selectionChanged):
                     s["model"],
                     s["price"],
                 )
-                for s in selectionChanged
+                for s in selectedRows
             ]
         )
 
 
 @app.callback(
     Output("selection-checklist", "value"),
-    Output("selectable-grid-callbacks", "selectionChanged"),
+    Output("selectable-grid-callbacks", "selectedRows"),
     Input("selection-checklist", "value"),
-    Input("selectable-grid-callbacks", "selectionChanged"),
+    Input("selectable-grid-callbacks", "selectedRows"),
 )
-def select_rows(values, selectionChanged):
+def select_rows(values, selectedRows):
     if ctx.triggered_id == "selection-checklist":
         return no_update, [i for i in rowData if i["make"] in values]
     if ctx.triggered_id == "selectable-grid-callbacks":
-        return [i["make"] for i in selectionChanged], no_update
+        return [i["make"] for i in selectedRows], no_update
 
     return no_update, no_update
 

@@ -48,7 +48,7 @@ app.layout = html.Div(
 @app.callback(
     Output("modal", "is_open"),
     Output("modal-content", "children"),
-    Input("selectable-grid-popup", "selectionChanged"),
+    Input("selectable-grid-popup", "selectedRows"),
     Input("close", "n_clicks"),
 )
 def open_modal(selection, _):
