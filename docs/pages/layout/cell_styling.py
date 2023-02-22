@@ -48,7 +48,7 @@ columnDefs = [
 ```
 cellStyle={
     "styleConditions": [
-        {"condition": "value == 72000", "style": {"color": "orange"}},       
+        {"condition": "params.value == 72000", "style": {"color": "orange"}},       
     ]
 }
 
@@ -79,15 +79,15 @@ If you are using cellStyle to highlight changing data, then please take note tha
 # unsafe, the red will stay after initially applied
 cellStyle={
     "styleConditions": [
-        {"condition": "value > 80", "style": {"color": "red"}},       
+        {"condition": "params.value > 80", "style": {"color": "red"}},       
     ]
 }
 
 # safe, to black will override the red when the condition is not true
 cellStyle={
     "styleConditions": [
-        {"condition": "value > 80", "style": {"color": "red"}},   
-        {"condition": "value <= 80", "style": {"color": "black"}},       
+        {"condition": "params.value > 80", "style": {"color": "red"}},   
+        {"condition": "params.value <= 80", "style": {"color": "black"}},       
     ]
 }
 

@@ -139,7 +139,7 @@ export default class DashAgGrid extends Component {
     }
 
     setUpCols(cellStyle) {
-        const {columnDefs, setProps} = this.props
+        const {columnDefs, setProps, defaultColDef} = this.props
 
         const cleanOneCol = (col) => {
             const colOut = this.fixCols(col);
@@ -167,6 +167,11 @@ export default class DashAgGrid extends Component {
                     return cleanOneCol(colDefOut);
                 })
             });
+        }
+        if (defaultColDef) {
+            setProps({
+                defaultColDef: cleanOneCol(defaultColDef)
+            })
         }
     }
 
@@ -218,7 +223,7 @@ export default class DashAgGrid extends Component {
 
     componentDidUpdate(prevProps) {
         const {
-            selectionChanged,
+            selectedRows,
             getDetailResponse,
             detailCellRendererParams,
             masterDetail,
@@ -243,10 +248,10 @@ export default class DashAgGrid extends Component {
         }
         // Call the API to select rows unless the update was triggered by a selection made in the UI
         if (
-            !equals(selectionChanged, prevProps.selectionChanged) &&
+            !equals(selectedRows, prevProps.selectedRows) &&
             !this.selectionEventFired
         ) {
-            this.setSelection(selectionChanged);
+            this.setSelection(selectedRows);
         }
 
         if (JSON.stringify(cellStyle) !== JSON.stringify(prevProps.cellStyle) ||
@@ -269,11 +274,11 @@ export default class DashAgGrid extends Component {
 
     onRowDataUpdated() {
         // Handles preserving existing selections when rowData is updated in a callback
-        const {selectionChanged} = this.props;
+        const {selectedRows} = this.props;
         const {openGroups, filterModel} = this.state;
 
         // Call the API to select rows
-        this.setSelection(selectionChanged);
+        this.setSelection(selectedRows);
         // When the rowData is updated, reopen any row groups if they previously existed in the table
         // Iterate through all nodes in the grid. Unfortunately there's no way to iterate through only nodes representing groups
         if (openGroups.size > 0) {
@@ -309,7 +314,7 @@ export default class DashAgGrid extends Component {
         // Flag that the selection event was fired
         this.selectionEventFired = true;
         const selectedRows = this.state.gridApi.getSelectedRows();
-        this.props.setProps({selectionChanged: selectedRows});
+        this.props.setProps({selectedRows});
     }
 
     isDatasourceLoadedForInfiniteScrolling() {
@@ -346,7 +351,7 @@ export default class DashAgGrid extends Component {
     onGridReady(params) {
         // Applying Infinite Row Model
         // see: https://www.ag-grid.com/javascript-grid/infinite-scrolling/
-        const {rowModelType, selectionChanged} = this.props;
+        const {rowModelType, selectedRows} = this.props;
         if (rowModelType === 'infinite') {
             params.api.setDatasource(this.getDatasource());
         }
@@ -365,7 +370,7 @@ export default class DashAgGrid extends Component {
         }
 
         // Handles applying selections when a selection was persisted by Dash
-        this.setSelection(selectionChanged);
+        this.setSelection(selectedRows);
         this.props.setProps({gridReady: true});
         // Hydrate virtualRowData
         this.onFilterChanged(true);
@@ -402,6 +407,14 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    evaluateFunction = (tempFunction, params) => {
+        const parsedCondition = esprima.parse(tempFunction).body[0]
+                    .expression;
+        const value = evaluate(parsedCondition, {params, d3, ...customFunctions, ...window.dashAgGridFunctions,
+        ...window.dashSharedVariables})
+        return value
+    }
+
     /**
      * @params AG-Grid Styles rules attribute.
      * See: https://www.ag-grid.com/react-grid/cell-styles/#cell-style-cell-class--cell-class-rules-params
@@ -412,24 +425,14 @@ export default class DashAgGrid extends Component {
         if (styleConditions && styleConditions.length > 0) {
             for (const styleCondition of styleConditions) {
                 const {condition, style} = styleCondition;
-                const parsedCondition = esprima.parse(condition).body[0]
-                    .expression;
 
-                if (evaluate(parsedCondition, {...params})) {
+                if (this.evaluateFunction(condition, params)) {
                     return style;
                 }
             }
         }
 
         return defaultStyle ? defaultStyle : null;
-    }
-
-    evaluateFunction = (tempFunction, params) => {
-        const parsedCondition = esprima.parse(tempFunction).body[0]
-                    .expression;
-        const value = evaluate(parsedCondition, {params, d3, ...customFunctions, ...window.dashAgGridFunctions,
-        ...window.dashSharedVariables})
-        return value
     }
 
     /**

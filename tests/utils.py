@@ -90,9 +90,25 @@ class Grid:
             expected
         )
 
+    def get_cell_html(self, row, col):
+        return self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"]'
+        ).get_attribute('innerHTML')
+
     def set_filter(self, col, val):
         filter_input = self.dash_duo.find_element(
             f'#{self.id} .ag-floating-filter[aria-colindex="{col + 1}"] input'
         )
         self.dash_duo.clear_input(filter_input)
         filter_input.send_keys(val)
+
+    def element_click_cell_button(self, row, col):
+        button = self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] button'
+        )
+        button.click()
+
+    def get_cell(self, row, col):
+        return self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"]'
+        )

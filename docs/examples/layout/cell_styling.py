@@ -69,13 +69,13 @@ grid_with_conditional_cell_styles = html.Div(
             ),
             cellStyle={
                 "styleConditions": [
-                    {"condition": "value == 72000", "style": {"color": "orange"}},
+                    {"condition": "params.value == 72000", "style": {"color": "orange"}},
                     {
-                        "condition": "value == 'Celica'",
+                        "condition": "params.value == 'Celica'",
                         "style": {"backgroundColor": "purple", "color": "white"},
                     },
                     {
-                        "condition": "colDef.headerName == 'Make'",
+                        "condition": "params.colDef.headerName == 'Make'",
                         "style": {"backgroundColor": "red", "color": "green"},
                     },
                 ]

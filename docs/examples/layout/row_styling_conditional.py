@@ -38,10 +38,10 @@ rowData = [
 getRowStyle = {
     "styleConditions": [
         {
-            "condition": "data.sickDays > 5 && data.sickDays <= 7",
+            "condition": "params.data.sickDays > 5 && params.data.sickDays <= 7",
             "style": {"backgroundColor": "sandybrown"},
         },
-        {"condition": "data.sickDays >= 8", "style": {"backgroundColor": "lightcoral"}},
+        {"condition": "params.data.sickDays >= 8", "style": {"backgroundColor": "lightcoral"}},
     ]
 }
 

@@ -34,10 +34,10 @@ text2 = """
 getRowStyle = {
     "styleConditions": [
         {
-            "condition": "data.sickDays > 5 && data.sickDays <= 7",
+            "condition": "params.data.sickDays > 5 && params.data.sickDays <= 7",
             "style": {"backgroundColor": "sandybrown"},
         },
-        {"condition": "data.sickDays >= 8", "style": {"backgroundColor": "lightcoral"}},
+        {"condition": "params.data.sickDays >= 8", "style": {"backgroundColor": "lightcoral"}},
     ]
 }
 ```
@@ -47,7 +47,7 @@ Here is how to use the row index to highlight alternating rows:
 getRowStyle = {
     "styleConditions": [
         {
-            "condition": "node.rowIndex % 2 === 0",
+            "condition": "params.node.rowIndex % 2 === 0",
             "style": {"backgroundColor": "lavenderblush"},
         },
     ]

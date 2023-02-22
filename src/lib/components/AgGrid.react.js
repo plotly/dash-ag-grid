@@ -69,7 +69,7 @@ DashAgGrid.defaultProps = {
     autoSizeAllColumnsSkipHeaders: false,
     enableEnterpriseModules: false,
     updateColumnState: false,
-    persisted_props: ['selectionChanged'],
+    persisted_props: ['selectedRows'],
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
     dangerously_allow_code: false,
@@ -1689,14 +1689,9 @@ DashAgGrid.propTypes = {
     rowDoubleClicked: PropTypes.any,
 
     /**
-     * Row is selected or deselected.
+     * The actively selected rows from the grid (may include filtered rows)
      */
-    rowSelected: PropTypes.any,
-
-    /**
-     * Row selection is changed. Use the grid API to get the new row selected.
-     */
-    selectionChanged: PropTypes.any,
+    selectedRows: PropTypes.arrayOf(PropTypes.object),
 
     /**
      * Cell is right clicked.
