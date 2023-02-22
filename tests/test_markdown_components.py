@@ -110,33 +110,25 @@ def test_mc001_markdown_components(dash_duo):
 
     dash_duo.start_server(app)
 
-    grid = utils.Grid(dash_duo, "not_dangerous")
+    safe_grid = utils.Grid(dash_duo, "not_dangerous")
+    dangerous_grid = utils.Grid(dash_duo, "dangerous")
 
-    grid.wait_for_cell_text(0, 0, "Toyota in italics")
-    assert grid.get_cell(0, 0).get_attribute(
-        'innerHTML') == '<div class="agGrid-Markdown"><div><em>Toyota</em> in italics</div></div>'
-    grid.wait_for_cell_text(1, 1, "Mondeo")
-    grid.wait_for_cell_text(2, 2, "Example")
-    assert grid.get_cell(2, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#" target="_blank">Example</a></div></div>'
-    grid.wait_for_cell_text(1, 2, '<a href="#" target="_blank">Link to new tab</a>')
-    assert grid.get_cell(2, 3).get_attribute('innerHTML') == '<div class="agGrid-Markdown">' \
-                                                             '<div><img src="https://www.ag-g' \
-                                                             'rid.com/example-assets/weather/rain.png" ' \
-                                                             'alt="alt text: rain"></div></div>'
+    for grid in [safe_grid, dangerous_grid]:
+        grid.wait_for_cell_text(0, 0, "Toyota in italics")
+        assert grid.get_cell(0, 0).get_attribute(
+            'innerHTML') == '<div class="agGrid-Markdown"><div><em>Toyota</em> in italics</div></div>'
+        grid.wait_for_cell_text(1, 1, "Mondeo")
+        grid.wait_for_cell_text(2, 2, "Example")
+        assert grid.get_cell(2, 3).get_attribute('innerHTML') == '<div class="agGrid-Markdown">' \
+                                                                      '<div><img src="https://www.ag-g' \
+                                                                      'rid.com/example-assets/weather/rain.png" ' \
+                                                                      'alt="alt text: rain"></div></div>'
 
-    grid = utils.Grid(dash_duo, "dangerous")
-
-    grid.wait_for_cell_text(0, 0, "Toyota in italics")
-    assert grid.get_cell(0, 0).get_attribute(
-        'innerHTML') == '<div class="agGrid-Markdown"><div><em>Toyota</em> in italics</div></div>'
-    grid.wait_for_cell_text(1, 1, "Mondeo")
-    grid.wait_for_cell_text(2, 2, "Example")
-    assert grid.get_cell(2, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#">Example</a></div></div>'
-    grid.wait_for_cell_text(1, 2, 'Link to new tab')
-    assert grid.get_cell(1, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#" target="_blank">Link to new tab</a></div></div>'
-    assert grid.get_cell(2, 3).get_attribute('innerHTML') == '<div class="agGrid-Markdown">' \
-                                                             '<div><img src="https://www.ag-g' \
-                                                             'rid.com/example-assets/weather/rain.png" ' \
-                                                             'alt="alt text: rain"></div></div>'
+    assert safe_grid.get_cell(2, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#" target="_blank">Example</a></div></div>'
+    safe_grid.wait_for_cell_text(1, 2, '<a href="#" target="_blank">Link to new tab</a>')
 
 
+
+    assert dangerous_grid.get_cell(2, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#">Example</a></div></div>'
+    dangerous_grid.wait_for_cell_text(1, 2, 'Link to new tab')
+    assert dangerous_grid.get_cell(1, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#" target="_blank">Link to new tab</a></div></div>'
