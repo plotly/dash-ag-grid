@@ -13,10 +13,9 @@ export default function MarkdownRenderer(props) {
     // Convert <p> tags to simple <divs> using the components prop.
     const rehypePlugins = dangerously_allow_code ? [rehypeRaw] : []
 
-    if (dangerously_allow_code) {
-        var linkTarget;
-    } else {
-        var linkTarget=colDef.linkTarget || '_self'
+    let linkTarget;
+    if (!dangerously_allow_code) {
+        linkTarget=colDef.linkTarget || '_self'
     }
 
 
