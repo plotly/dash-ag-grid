@@ -119,6 +119,10 @@ def test_mc001_markdown_components(dash_duo):
     grid.wait_for_cell_text(2, 2, "Example")
     assert grid.get_cell(2, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#" target="_blank">Example</a></div></div>'
     grid.wait_for_cell_text(1, 2, '<a href="#" target="_blank">Link to new tab</a>')
+    assert grid.get_cell(2, 3).get_attribute('innerHTML') == '<div class="agGrid-Markdown">' \
+                                                             '<div><img src="https://www.ag-g' \
+                                                             'rid.com/example-assets/weather/rain.png" ' \
+                                                             'alt="alt text: rain"></div></div>'
 
     grid = utils.Grid(dash_duo, "dangerous")
 
@@ -130,5 +134,9 @@ def test_mc001_markdown_components(dash_duo):
     assert grid.get_cell(2, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#">Example</a></div></div>'
     grid.wait_for_cell_text(1, 2, 'Link to new tab')
     assert grid.get_cell(1, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#" target="_blank">Link to new tab</a></div></div>'
+    assert grid.get_cell(2, 3).get_attribute('innerHTML') == '<div class="agGrid-Markdown">' \
+                                                             '<div><img src="https://www.ag-g' \
+                                                             'rid.com/example-assets/weather/rain.png" ' \
+                                                             'alt="alt text: rain"></div></div>'
 
 
