@@ -165,7 +165,6 @@ def test_cc001_custom_components(dash_duo):
     assert grid.get_cell_html(0,
                              7).strip() == """<div style="width: 100%; height: 100%; padding: 5px; display: flex; justify-content: center; align-items: center;"><select><option>buy</option><option>sell</option><option>hold</option></select></div>"""
     grid.element_click_cell_button(0,6)
-    time.sleep(1)
     assert dash_duo.wait_for_text_to_equal("#cellValueChanged", '{"rowIndex": 0, "nodeId": "0", "data": {"ticker": '
                                                                 '"AAPL", "company": "Apple", "price": 154.98500061035'
                                                                 '156, "volume": "Low", "binary": false, "buy": {"child'
