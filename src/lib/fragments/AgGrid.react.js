@@ -4,7 +4,7 @@ import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
 import {omit, equals, isEmpty} from 'ramda';
 import {propTypes as _propTypes, defaultProps as _defaultProps} from '../components/AgGrid.react';
-import {expressWarn, gridFunctions, columnFunctions} from '../utils/functionVars';
+import {expressWarn, gridFunctions, columnFunctions, replaceFunctions} from '../utils/functionVars';
 import debounce from '../utils/debounce';
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
@@ -121,6 +121,14 @@ export default class DashAgGrid extends Component {
                     if (Object.keys(columnDef[target]).includes('function')) {
                         const newFunc = JSON.parse(JSON.stringify(columnDef[target].function))
                         columnDef[target] = (params) => this.parseParamFunction(params, newFunc)
+                    }
+                }
+                if (replaceFunctions.includes(target)) {
+                    for (const [key, value] of Object.entries(columnDef[target])) {
+                        if (typeof value !== 'function') {
+                            const newFunc = JSON.parse(JSON.stringify(value))
+                            columnDef[target][key] = (params) => this.parseParamFunction(params, newFunc)
+                        }
                     }
                 }
             }
