@@ -3,7 +3,7 @@ from dash import Dash, html, dcc
 from . import utils
 import time
 
-def test_fi001_cell_conditional_formatting(dash_duo):
+def test_cf001_cell_conditional_formatting(dash_duo):
     app = Dash(__name__)
 
     columnDefs = [
