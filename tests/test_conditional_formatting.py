@@ -64,7 +64,7 @@ def test_cf001_conditional_formatting(dash_duo):
 
     grid.wait_for_cell_text(0, 0, "Toyota")
 
-    ### testing components
+    ### testing styles
     grid.get_cell(0,0).click()
     until(lambda: 'color: blue' in grid.get_row(0).get_attribute('style'), timeout=3)
     grid.get_cell(0, 0).send_keys('t')

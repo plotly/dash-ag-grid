@@ -115,5 +115,5 @@ class Grid:
 
     def get_row(self, row):
         return self.dash_duo.find_element(
-            f'#{self.id} .ag-row[row-index="{row}"]"]'
+            f'#{self.id} .ag-row[row-index="{row}"]'
         )
