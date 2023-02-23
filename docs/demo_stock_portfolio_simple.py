@@ -6,8 +6,6 @@ pip install dash-ag-grid==2.0.0a1
 """
 
 
-
-
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
@@ -91,7 +89,7 @@ defaultColDef = {
     "sortable": True,
     "editable": False,
     "floatingFilter": True,
-    "minWidth": 125
+    "minWidth": 125,
 }
 
 table = dag.AgGrid(

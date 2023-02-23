@@ -108,21 +108,21 @@ defaultColDef = {
     "sortable": True,
     "editable": False,
     "floatingFilter": True,
-    "minWidth": 125
+    "minWidth": 125,
 }
 
 cellStyle = {
     "styleConditions": [
         {
-            "condition": "params.value == 'buy'",
+            "condition": "value == 'buy'",
             "style": {"backgroundColor": "#196A4E", "color": "white"},
         },
         {
-            "condition": "params.value == 'sell'",
+            "condition": "value == 'sell'",
             "style": {"backgroundColor": "#800000", "color": "white"},
         },
         {
-            "condition": "params.colDef.headerName == 'Shares'",
+            "condition": "colDef.headerName == 'Shares'",
             "style": {"backgroundColor": "#444"},
         },
     ]

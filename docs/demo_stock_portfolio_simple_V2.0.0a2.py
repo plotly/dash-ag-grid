@@ -1,3 +1,13 @@
+"""
+This app is for Alpha version 2.0.0a2
+
+pip install dash-ag-grid==2.0.0a2
+
+"""
+
+
+
+
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
@@ -36,88 +46,51 @@ data = {
     "company": [name for name in equities.values()],
     "quantity": [75, 40, 100, 50, 40, 60, 20, 40],
     "price": [last_close(ticker) for ticker in equities],
-    "position": ["buy", "sell", "hold", "hold", "hold", "hold", "hold", "hold"],
-    "comments": ["Notes" for i in range(8)],
 }
 df = pd.DataFrame(data)
-
 
 columnDefs = [
     {
         "headerName": "Stock Ticker",
         "field": "ticker",
+        "filter": True,
     },
     {
         "headerName": "Company",
         "field": "company",
+        "filter": True,
     },
     {
         "headerName": "Shares",
         "field": "quantity",
-        "type": "rightAligned",
-        "filter": "agNumberColumnFilter",
         "editable": True,
+        "type": "rightAligned",
     },
     {
         "headerName": "Last Close Price",
         "field": "price",
         "type": "rightAligned",
-        "filter": "agNumberColumnFilter",
-        "valueFormatter": "Number(value).toFixed(2)",
+        "valueFormatter": {"function": "d3.format('$,.2f')(params.value)"},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
         "headerName": "Market Value",
         "type": "rightAligned",
-        "filter": "agNumberColumnFilter",
-        "valueGetter": "Number(data.price) * Number(data.quantity)",
-        "valueFormatter": "Number(value).toFixed(2)",
+        "valueGetter": {"function": "Number(params.data.price) * Number(params.data.quantity)"},
+        "valueFormatter": {"function": "d3.format('$,.2f')(params.value)"},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
-    },
-    {
-        "headerName": "Position",
-        "field": "position",
-        "editable": True,
-        "cellEditor": "agSelectCellEditor",
-        "cellEditorParams": {
-            "values": ["buy", "sell", "hold"],
-        },
-    },
-    {
-        "headerName": "Comments",
-        "field": "comments",
-        "editable": True,
-        "cellEditorPopup": True,
-        "cellEditor": "agLargeTextCellEditor",
     },
 ]
 
+
 defaultColDef = {
-    "filter": True,
+    "filter": "agNumberColumnFilter",
     "resizable": True,
     "sortable": True,
     "editable": False,
     "floatingFilter": True,
     "minWidth": 125,
 }
-
-cellStyle = {
-    "styleConditions": [
-        {
-            "condition": "params.value == 'buy'",
-            "style": {"backgroundColor": "#196A4E", "color": "white"},
-        },
-        {
-            "condition": "params.value == 'sell'",
-            "style": {"backgroundColor": "#800000", "color": "white"},
-        },
-        {
-            "condition": "params.colDef.headerName == 'Shares'",
-            "style": {"backgroundColor": "#444"},
-        },
-    ]
-}
-
 
 table = dag.AgGrid(
     id="portfolio-grid",
@@ -126,8 +99,6 @@ table = dag.AgGrid(
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
-    cellStyle=cellStyle,
-    dangerously_allow_code=True,
     dashGridOptions={"undoRedoCellEditing": True, "rowSelection": "single"},
 )
 
@@ -195,4 +166,4 @@ def update_portfolio_stats(_, data):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, port=8060)
+    app.run_server(debug=True)
