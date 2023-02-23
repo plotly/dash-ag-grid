@@ -20,7 +20,7 @@ def test_cr001_class_rules(dash_duo):
     ]
 
     columnDefs = [
-        {"headerName": "Make", "field": "make", "sortable": True, "cellClassRules": {"orange": "params.value == 'Ford'",
+        {"headerName": "Make", "field": "make", "cellClassRules": {"orange": "params.value == 'Ford'",
                                                                                      "red": "params.value == 'Porsche'",
                                                                                      "blue": "params.value == 'Toyota'"}},
         {"headerName": "Model", "field": "model"},
@@ -37,8 +37,6 @@ def test_cr001_class_rules(dash_duo):
                 columnDefs=columnDefs,
                 rowData=rowData,
                 defaultColDef={
-                    "sortable": True,
-                    "filter": True,
                     "editable": True,
                 },
                 rowClassRules={"orange": "params.data.make == 'Ford'",

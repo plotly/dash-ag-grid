@@ -126,8 +126,7 @@ export default class DashAgGrid extends Component {
                 if (replaceFunctions.includes(target)) {
                     for (const [key, value] of Object.entries(columnDef[target])) {
                         if (typeof value !== 'function') {
-                            const newFunc = JSON.parse(JSON.stringify(value))
-                            columnDef[target][key] = (params) => this.parseParamFunction(params, newFunc)
+                            columnDef[target][key] = (params) => this.parseParamFunction(params, value)
                         }
                     }
                 }
@@ -601,8 +600,6 @@ export default class DashAgGrid extends Component {
             detailCellRendererParams,
             setProps,
             dangerously_allow_code,
-            cellClassRules,
-            rowClassRules,
             dashGridOptions,
             ...restProps
         } = this.props;
@@ -620,9 +617,17 @@ export default class DashAgGrid extends Component {
                             message: 'you are trying to use an unsafe prop without dangerously_allow_code'
                         })
                     }
-                    else if ((typeof targetIn === 'object') && ('function' in targetIn)) {
-                        const newFunc = JSON.parse(JSON.stringify(this.props[target].function))
+                    else if ((typeof targetIn === 'object') && ('function' in targetIn)
+                    && !replaceFunctions.includes(target)) {
+                        const newFunc = JSON.parse(JSON.stringify(container[target]['function']))
                         container[target] = (params) => this.parseParamFunction(params, newFunc)
+                    }
+                    if (replaceFunctions.includes(target)) {
+                        for (const [key, value] of Object.entries(container[target])) {
+                            if (typeof value !== 'function') {
+                                container[target][key] = (params) => this.parseParamFunction(params, value)
+                            }
+                        }
                     }
                 }
             }
@@ -737,9 +742,7 @@ export default class DashAgGrid extends Component {
                     onGridSizeChanged={debounce(this.onGridSizeChanged, RESIZE_DEBOUNCE_MS)}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
-                    cellClassRules={dangerously_allow_code ? cellClassRules : null}
-                    rowClassRules={dangerously_allow_code ? rowClassRules : null}
-                    {...omit(['cellClassRules', 'rowClassRules'], dashGridOptions)}
+                    {...dashGridOptions}
                     {...omit(['theme', 'getRowId'], restProps)}
                 >
                 </AgGridReact>
