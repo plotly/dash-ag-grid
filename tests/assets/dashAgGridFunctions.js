@@ -26,3 +26,9 @@ dagfuncs.highlightEdits = function(params) {
     }
     return false;
 }
+
+dagfuncs.rowTest = function(params) {
+    if (params.data.make == 'Toyota') {
+        return 'testing'
+    }
+}

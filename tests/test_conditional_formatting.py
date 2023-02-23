@@ -4,7 +4,7 @@ from . import utils
 import time
 from dash.testing.wait import until
 
-def test_cf001_cell_conditional_formatting(dash_duo):
+def test_cf001_conditional_formatting(dash_duo):
     app = Dash(__name__)
 
     columnDefs = [
@@ -32,6 +32,12 @@ def test_cf001_cell_conditional_formatting(dash_duo):
             {"condition": "highlightEdits(params)", "style": {"color": "orange"}},
         ]}
 
+    getRowStyle= {
+        "styleConditions": [
+            {"condition": "params.data.make == 'Toyota'", "style": {"color": "blue"}}
+        ]
+    }
+
 
     app.layout = html.Div(
         [
@@ -44,6 +50,7 @@ def test_cf001_cell_conditional_formatting(dash_duo):
                 defaultColDef=defaultColDef,
                 columnSize="sizeToFit",
                 cellStyle=cellStyle,
+                getRowStyle=getRowStyle,
                 id="grid",
             ),
             html.Button(id='focus')
@@ -57,12 +64,13 @@ def test_cf001_cell_conditional_formatting(dash_duo):
 
     grid.wait_for_cell_text(0, 0, "Toyota")
 
-    ### testing components
+    ### testing styles
     grid.get_cell(0,0).click()
-    until(lambda: 'color: orange' not in grid.get_cell(0, 0).get_attribute('style'), timeout=3)
+    until(lambda: 'color: blue' in grid.get_row(0).get_attribute('style'), timeout=3)
     grid.get_cell(0, 0).send_keys('t')
     grid.get_cell(0, 1).click()
     until(lambda: 'color: orange' in grid.get_cell(0, 0).get_attribute('style'), timeout=3)
+    until(lambda: 'color: blue' not in grid.get_row(0).get_attribute('style'), timeout=3)
     until(lambda: 'color: orange' not in grid.get_cell(0, 1).get_attribute('style'), timeout=3)
     grid.get_cell(0, 1).send_keys('t')
     grid.get_cell(0,2).click()

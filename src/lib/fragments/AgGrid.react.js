@@ -4,7 +4,7 @@ import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
 import {omit, equals, isEmpty} from 'ramda';
 import {propTypes as _propTypes, defaultProps as _defaultProps} from '../components/AgGrid.react';
-import {expressWarn, gridFunctions, columnFunctions} from '../utils/functionVars';
+import {expressWarn, gridFunctions, columnFunctions, replaceFunctions} from '../utils/functionVars';
 import debounce from '../utils/debounce';
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
@@ -118,9 +118,16 @@ export default class DashAgGrid extends Component {
                     }
                 }
                 if (typeof columnDef[target] !== 'function') {
-                    if (Object.keys(columnDef[target]).includes('function')) {
+                    if (Object.keys(columnDef[target]).includes('function') && !replaceFunctions.includes(target)) {
                         const newFunc = JSON.parse(JSON.stringify(columnDef[target].function))
                         columnDef[target] = (params) => this.parseParamFunction(params, newFunc)
+                    }
+                }
+                if (replaceFunctions.includes(target)) {
+                    for (const [key, value] of Object.entries(columnDef[target])) {
+                        if (typeof value !== 'function') {
+                            columnDef[target][key] = (params) => this.parseParamFunction(params, value)
+                        }
                     }
                 }
             }
@@ -593,8 +600,6 @@ export default class DashAgGrid extends Component {
             detailCellRendererParams,
             setProps,
             dangerously_allow_code,
-            cellClassRules,
-            rowClassRules,
             dashGridOptions,
             ...restProps
         } = this.props;
@@ -612,9 +617,17 @@ export default class DashAgGrid extends Component {
                             message: 'you are trying to use an unsafe prop without dangerously_allow_code'
                         })
                     }
-                    else if ((typeof targetIn === 'object') && ('function' in targetIn)) {
-                        const newFunc = JSON.parse(JSON.stringify(this.props[target].function))
+                    else if ((typeof targetIn === 'object') && ('function' in targetIn)
+                    && !replaceFunctions.includes(target)) {
+                        const newFunc = JSON.parse(JSON.stringify(container[target]['function']))
                         container[target] = (params) => this.parseParamFunction(params, newFunc)
+                    }
+                    if (replaceFunctions.includes(target)) {
+                        for (const [key, value] of Object.entries(container[target])) {
+                            if (typeof value !== 'function') {
+                                container[target][key] = (params) => this.parseParamFunction(params, value)
+                            }
+                        }
                     }
                 }
             }
@@ -729,9 +742,7 @@ export default class DashAgGrid extends Component {
                     onGridSizeChanged={debounce(this.onGridSizeChanged, RESIZE_DEBOUNCE_MS)}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
-                    cellClassRules={dangerously_allow_code ? cellClassRules : null}
-                    rowClassRules={dangerously_allow_code ? rowClassRules : null}
-                    {...omit(['cellClassRules', 'rowClassRules'], dashGridOptions)}
+                    {...dashGridOptions}
                     {...omit(['theme', 'getRowId'], restProps)}
                 >
                 </AgGridReact>
