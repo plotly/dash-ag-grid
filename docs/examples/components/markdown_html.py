@@ -19,30 +19,6 @@ columnDefs = [
     {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
 ]
 
-
-columnDefs_allow_html = [
-    {
-        "headerName": "Make",
-        "field": "make",
-        "sortable": True,
-        "cellRenderer": "markdown",
-    },
-    {
-        "headerName": "Model",
-        "field": "model",
-        "cellRenderer": "markdown",
-        "dangerously_allow_code": True,
-    },
-    {
-        "headerName": "Link",
-        "field": "link",
-        "cellRenderer": "markdown",
-        "dangerously_allow_code": True,
-    },
-    {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
-]
-
-
 rowData = [
     {
         "make": "*Toyota* in italics",
@@ -92,7 +68,7 @@ raw_html_example2 = html.Div(
         dag.AgGrid(
             id="cell-renderer-table-3",
             columnSize="sizeToFit",
-            columnDefs=columnDefs_allow_html,
+            columnDefs=columnDefs,
             rowData=rowData,
             dangerously_allow_code=True,
         ),
