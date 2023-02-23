@@ -39,9 +39,9 @@ def test_cr001_class_rules(dash_duo):
                 defaultColDef={
                     "editable": True,
                 },
-                rowClassRules={"orange": "params.data.make == 'Ford'",
-                               "red": "params.data.make == 'Porsche'",
-                               "blue": "params.data.make == 'Toyota'"},
+                rowClassRules={"row-orange": "params.data.make == 'Ford'",
+                               "row-red": "params.data.make == 'Porsche'",
+                               "row-blue": "params.data.make == 'Toyota'"},
                 dashGridOptions={'getRowClass': {'function': "rowTest(params)"}}
             ),
         ]
@@ -55,22 +55,22 @@ def test_cr001_class_rules(dash_duo):
 
     ### testing class rules
     grid.get_cell(0,0).click()
-    until(lambda: 'blue' in grid.get_row(0).get_attribute('class'), timeout=3)
+    until(lambda: 'row-blue' in grid.get_row(0).get_attribute('class'), timeout=3)
     until(lambda: 'testing' in grid.get_row(0).get_attribute('class'), timeout=3)
     until(lambda: 'blue' in grid.get_cell(0, 0).get_attribute('class'), timeout=3)
     grid.get_cell(0, 0).send_keys('t')
     grid.get_cell(0, 1).click()
-    until(lambda: 'blue' not in grid.get_row(0).get_attribute('class'), timeout=3)
+    until(lambda: 'row-blue' not in grid.get_row(0).get_attribute('class'), timeout=3)
     until(lambda: 'blue' not in grid.get_cell(0, 0).get_attribute('class'), timeout=3)
 
-    until(lambda: 'orange' in grid.get_row(1).get_attribute('class'), timeout=3)
+    until(lambda: 'row-orange' in grid.get_row(1).get_attribute('class'), timeout=3)
     until(lambda: 'orange' in grid.get_cell(1, 0).get_attribute('class'), timeout=3)
     grid.get_cell(1, 0).send_keys('t')
     grid.get_cell(2, 0).click()
-    until(lambda: 'orange' not in grid.get_row(1).get_attribute('class'), timeout=3)
+    until(lambda: 'row-orange' not in grid.get_row(1).get_attribute('class'), timeout=3)
     until(lambda: 'orange' not in grid.get_cell(1, 0).get_attribute('class'), timeout=3)
 
-    until(lambda: 'red' in grid.get_row(2).get_attribute('class'), timeout=3)
+    until(lambda: 'row-red' in grid.get_row(2).get_attribute('class'), timeout=3)
     until(lambda: 'red' in grid.get_cell(2, 0).get_attribute('class'), timeout=3)
     grid.get_cell(2, 0).send_keys('t')
     grid.get_cell(1, 0).click()
