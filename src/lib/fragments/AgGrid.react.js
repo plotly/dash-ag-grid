@@ -118,7 +118,7 @@ export default class DashAgGrid extends Component {
                     }
                 }
                 if (typeof columnDef[target] !== 'function') {
-                    if (Object.keys(columnDef[target]).includes('function')) {
+                    if (Object.keys(columnDef[target]).includes('function') && !replaceFunctions.includes(target)) {
                         const newFunc = JSON.parse(JSON.stringify(columnDef[target].function))
                         columnDef[target] = (params) => this.parseParamFunction(params, newFunc)
                     }
