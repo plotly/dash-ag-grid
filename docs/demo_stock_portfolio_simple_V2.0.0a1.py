@@ -1,11 +1,9 @@
 """
-This app is for Alpha version 2.0.0a2
+This app is for Alpha version 2.0.0a1
 
-pip install dash-ag-grid==2.0.0a2
+pip install dash-ag-grid==2.0.0a1
 
 """
-
-
 
 
 import dash_ag_grid as dag
@@ -70,14 +68,16 @@ columnDefs = [
         "headerName": "Last Close Price",
         "field": "price",
         "type": "rightAligned",
-        "valueFormatter": {"function": "d3.format('$,.2f')(params.value)"},
+        "valueFormatter": "Number(value).toFixed(2)",
+        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
     {
         "headerName": "Market Value",
         "type": "rightAligned",
-        "valueGetter": {"function": "Number(params.data.price) * Number(params.data.quantity)"},
-        "valueFormatter": {"function": "d3.format('$,.2f')(params.value)"},
+        "valueGetter": "Number(data.price) * Number(data.quantity)",
+        "valueFormatter": "Number(value).toFixed(2)",
+        "dangerously_allow_html": True,
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
 ]
@@ -99,6 +99,7 @@ table = dag.AgGrid(
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
+    dangerously_allow_html=True,
     dashGridOptions={"undoRedoCellEditing": True, "rowSelection": "single"},
 )
 
@@ -117,7 +118,7 @@ app.layout = dbc.Container(
 
 @app.callback(
     Output("candlestick", "figure"),
-    Input("portfolio-grid", "selectedRows"),
+    Input("portfolio-grid", "selectionChanged"),
 )
 def update_candlestick(selected_row):
     if selected_row is None:
