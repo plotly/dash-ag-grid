@@ -24,7 +24,6 @@ df = pd.DataFrame({i: [x for x in range(12)] for i in flex_widths})
 grid = dag.AgGrid(
     rowData=df.to_dict("records"),
     columnDefs=[{"headerName": i, "field": i, "flex": flex_widths[i]} for i in df.columns],
-    columnSize="sizeToFit",
     defaultColDef={
         "resizable": True,
         "editable": True,
