@@ -19,7 +19,7 @@ We're working hard to get it ready for its initial v2.0.0 open-source release on
  2. See the live [stock portfolio demo app](https://sales-demo.plotly.com/dash-ag-grid) from the webinar hosted by Plotly.
  3. Get the code for the demo app in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)
  4. Learn more about [AG Grid](https://www.ag-grid.com/react-data-grid) in the upstream docs, including more information on community features and licensing for the enterprise version.
- 
+
 
 
 
@@ -68,7 +68,7 @@ In development mode, Python uses the files in this directory when you import the
 
 Create source and wheel distributions in the generated `dist/` folder, after emptying out any previous builds:
 ```
-rm -rf dist
+rm -rf dist build
 python setup.py sdist bdist_wheel
 ```
 See [PyPA](https://packaging.python.org/guides/distributing-packages-using-setuptools/#packaging-your-project)
