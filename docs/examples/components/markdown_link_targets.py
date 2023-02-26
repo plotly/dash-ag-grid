@@ -1,5 +1,5 @@
 """
-Working with raw html in Markdown component
+Working with link targets in Markdown component
 """
 import dash_ag_grid as dag
 import dash
@@ -15,9 +15,25 @@ columnDefs = [
         "cellRenderer": "markdown",
     },
     {"headerName": "Model", "field": "model", "cellRenderer": "markdown"},
-    {"headerName": "Link", "field": "link", "cellRenderer": "markdown"},
+    {"headerName": "Link", "field": "link", "cellRenderer": "markdown", "linkTarget":"_self"},
     {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
 ]
+
+
+
+columnDefs_target_blank = [
+    {
+        "headerName": "Make",
+        "field": "make",
+        "sortable": True,
+        "cellRenderer": "markdown",
+    },
+    {"headerName": "Model", "field": "model", "cellRenderer": "markdown"},
+    {"headerName": "Link", "field": "link", "cellRenderer": "markdown", "linkTarget":"_blank"},
+    {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
+]
+
+
 
 rowData = [
     {
@@ -47,13 +63,14 @@ rowData = [
 raw_html_example1 = html.Div(
     [
         dcc.Markdown(
-            "This grid has both Markdown and raw HTML. By default, raw HTML is not rendered."
+            "This grid has both Markdown and raw HTML. LinkTarget='self'"
         ),
         dag.AgGrid(
             id="cell-renderer-table-3",
             columnSize="sizeToFit",
             columnDefs=columnDefs,
             rowData=rowData,
+            dangerously_allow_code=True
         ),
         html.Hr(),
     ]
@@ -63,12 +80,12 @@ raw_html_example1 = html.Div(
 raw_html_example2 = html.Div(
     [
         dcc.Markdown(
-            "This grid has both Markdown and raw HTML. `dangerously_allow_code=True` so the links render"
+            "This grid has both Markdown and raw HTML. linkTarget='_blank'"
         ),
         dag.AgGrid(
             id="cell-renderer-table-3",
             columnSize="sizeToFit",
-            columnDefs=columnDefs,
+            columnDefs=columnDefs_target_blank,
             rowData=rowData,
             dangerously_allow_code=True,
         ),

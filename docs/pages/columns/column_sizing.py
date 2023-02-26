@@ -19,7 +19,7 @@ __All columns can be resized by dragging the top right portion of the column.__
 
 ## Enable Sizing
 
-Turn column resizing on for the grid by setting `'resizable'=True` for each column. To set resizing default  for all columns, set `'resizable'=True'` on the default column definition.
+Turn column resizing on for the grid by setting `'resizable'=True` for each column. To set resizing default  for all columns, set `'resizable'=True` on the default column definition.
 
 The snippet below allows all columns except Address to be resized by explicitly setting each column.
 
@@ -31,7 +31,7 @@ columnDefs = [
 ]
 ```
 
-The snippet below allows all columns except Address to be resized by setting resizable=true on the default column definition and then `'resizable'=False` on the Address column.
+The snippet below allows all columns except Address to be resized by setting `'resizable'=True` on the default column definition and then `'resizable'=False` on the Address column.
 
 ```
 defaultColDef = {
@@ -52,7 +52,7 @@ The `columnSize="sizeToFit"` prop makes the currently visible columns fit the sc
 If you don't want a particular column to be included in the auto resize, then set the column definition `"suppressSizeToFit"=True`. This is helpful if, for example, you want the first column to remain fixed width, but all other columns to fill the width of the table.
 
 The grid calculates new column widths while maintaining the ratio of the column default widths. So for example if Column A
- has a default size twice as wide as Column B, then after sizeToFit Column A will still be twice the size of Column B, assuming no Column min-width or max-width constraints are violated.
+ has a default size twice as wide as Column B, then after `sizeToFit` Column A will still be twice the size of Column B, assuming no Column min-width or max-width constraints are violated.
 
 Column default widths, rather than current widths, are used while calculating the new widths. This insures the result is deterministic and not depend on any Column resizing the user may have manually done.
 
@@ -80,7 +80,7 @@ Autosizing columns can also be done using the following column API methods. If `
 Column Groups are never considered when calculating the column widths.
 
 
-Example of how to make columns adjust to fit either the screen or their contents.
+The Example below shows how to make columns adjust to fit either the screen or their contents.
 """
 
 
@@ -106,6 +106,29 @@ When you resize a group, it will distribute the extra room to all columns in the
 
 """
 
+text3 = """
+### Column Flex
+It's often required that one or more columns fill the entire available space in the grid. For this scenario, it is possible to use the flex config. Some columns could be set with a regular width config, while other columns would have a flex config.
+
+Flex sizing works by dividing the remaining space in the grid among all flex columns in proportion to their flex value. For example, suppose the grid has a total width of 450px and it has three columns: the first with width: 150; the second with flex: 1; and third with flex: 2. The first column will be 150px wide, leaving 300px remaining. The column with flex: 2 has twice the size with flex: 1. So final sizes will be: 150px, 100px, 200px.
+
+> The flex config does not work with a width config in the same column. If you need to provide a minimum width for a column, you should use flex and the `minWidth` config. Flex will also take `maxWidth` into account.
+
+> If you manually resize a column with flex either via the API or by dragging the resize handle, flex will automatically be disabled for that column.
+
+#### Column Flex examples
+In the example below, note the following:
+- Column A is fixed size. You can resize it with the drag handle and the other two columns will adjust to fill the available space
+- Column B has flex: 2, `minWidth: 200` and `maxWidth: 350`, so it should be constrained to this max/min width.
+- Column C has flex: 1 so should be half the size of column B, unless column B is being constrained by its minWidth/maxWidth rules, in which case it should take up the remaining available space.
+"""
+
+
+
+text4 = """
+
+This example has flex in all columns.  Try changing the browser window size and note how the proportions of the columns are maintained.
+"""
 
 layout = html.Div(
     [
@@ -113,6 +136,10 @@ layout = html.Div(
         example_app("examples.columns.column_sizing1", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.columns.column_sizing2", make_layout=make_tabs),
+        make_md(text3),
+        example_app("examples.columns.column_sizing_flex2", make_layout=make_tabs),
+        make_md(text4),
+        example_app("examples.columns.column_sizing_flex1", make_layout=make_tabs),
         #  up_next("text"),
     ],
 )
