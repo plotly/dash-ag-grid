@@ -17,7 +17,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Add `className` prop for css customization native to ag-grid
   - Add `enable*` props for easier user / dash manipulation, for creating buttons
-  - Add overarching `dangerously_allow_html` prop to grid props only provided at render, to keep `columnDefs` from receiving possible updates to execute malicious JavaScript
+  - Add overarching `dangerously_allow_code` prop to grid props only provided at render, to keep `columnDefs` from receiving possible updates to execute malicious JavaScript (originally called `dangerously_allow_html` but renamed later)
   - Add `data_previous` and `data_previous_timestamp` props to allow easier change tracking in callbacks
   - Add `dashGridOptions` prop to allow for arbitrary use of AG Grid props not explicitly listed
   - Add `setRowId` prop to allow `rowData` change detection
@@ -42,10 +42,12 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - Added `tooltipComponent` to be altered if it was list as a function object
   - Added tests for `custom_components.py`, and made it so the stock data is pulled from a csv instead of live.
 
+- [#49](https://github.com/plotly/dash-ag-grid/pull/49) Safely handle more attributes when `dangerously_allow_code` is disabled: top-level attributes `rowClassRules`, `getRowStyle`, and `getRowClass`; and column attributes `cellClass`, `cellStyle`, and `cellClassRules`.
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
-  - Update markdown renderer to use github markdown, and also have the ability to be passed a target for links, to avoid `dangerously_allow_html`
+  - Update markdown renderer to use github markdown, and also have the ability to be passed a target for links, to avoid `dangerously_allow_code`
   - Update `requirements.txt` (Python dependencies for demos and docs) to allow the latest packages
 
 - [#39](https://github.com/plotly/dash-ag-grid/pull/39)
@@ -60,6 +62,8 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 - [#6](https://github.com/plotly/dash-ag-grid/pull/6) Fix props issue for `enableAddRows`
 - [#19](https://github.com/plotly/dash-ag-grid/pull/19) Fixed `cellClicked` as reported in [#17](https://github.com/plotly/dash-ag-grid/issues/17)
+- [#45](https://github.com/plotly/dash-ag-grid/pull/45) Fix [#44](https://github.com/plotly/dash-ag-grid/issues/44), markdown ignoring `target="_blank"` to open links in a new tab. Now if `dangerously_use_code` is `false`, markdown cells honor `columnDef.linkTarget`, but if `dangerously_use_code` is `true` you MUST use the HTML syntax `<a target="_blank">` to achieve this, markdown syntax `[text](url)` will ignore `columnDef.linkTarget`.
+- [#47](https://github.com/plotly/dash-ag-grid/pull/47) Fix `virtualRowData` by setting the default `rowModelType='clientSide'`
 
 ## [1.3.2] - 2023-01-13
 
