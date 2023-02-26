@@ -20,8 +20,8 @@ data = {
     "price": [154.99, 268.65, 100.47, 96.75],
     "volume": ["Low", "High", "Average", "High"],
     "binary": [False, True, False, False],
-    "buy": [{"children": "buy", "className": "btn btn-success"} for i in range(4)],
-    "sell": [{"children": "sell", "className": "btn btn-danger"} for i in range(4)],
+    "buy": [{"children": "buy", "className": "btn btn-success", "n_clicks":0} for i in range(4)],
+    "sell": [{"children": "sell", "className": "btn btn-danger", "n_clicks":0} for i in range(4)],
     "action": ["buy", "sell", "hold", "buy"],
 }
 df = pd.DataFrame(data)
@@ -74,13 +74,13 @@ defaultColDef = {
 
 
 table = dag.AgGrid(
-    id="portfolio-grid",
+    id="custom-components-grid",
     className="ag-theme-alpine-dark",
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
-    columnSize="autoSizeAll",
+    columnSize="sizeToFit",
     defaultColDef=defaultColDef,
-    tooltipShowDelay=500,
+    tooltipShowDelay=100,
 )
 
 
@@ -98,9 +98,9 @@ app.layout = html.Div(
 
 @app.callback(
     Output("cell-renderer-value-changed", "children"),
-    Input("portfolio-grid", "cellValueChanged"),
+    Input("custom-components-grid", "cellValueChanged"),
 )
-def showChange(n):
+def show_change(n):
     return json.dumps(n)
 
 

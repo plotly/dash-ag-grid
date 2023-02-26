@@ -45,7 +45,7 @@ table = dag.AgGrid(
 app = Dash(__name__)
 
 app.layout = html.Div(
-    [dcc.Markdown("Styling rows with cellRenderer"), table],
+    [dcc.Markdown("Adding links with cellRenderer"), table],
     style={"margin": 20},
 )
 

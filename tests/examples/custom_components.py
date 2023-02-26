@@ -6,14 +6,10 @@ import dash
 import random
 import json
 import os
+import dash_bootstrap_components as dbc
 
-app = Dash(__name__,
-           meta_tags=[{'http-equiv': 'content-security-policy',
-                       'content': "default-src 'self'; script-src 'self' 'unsafe-inline';"
-                                  " style-src https://* 'self' 'unsafe-inline'; "
-                                  "font-src data: https://* 'self' 'unsafe-inline';"
-                                  "img-src data: https://* 'self'"}],
-           )
+app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
+
 
 equities = {
     "AAPL": "Apple",
