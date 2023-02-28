@@ -1,12 +1,13 @@
 """
-Conditional formatting in AG-grid.
+AG-grid styling Cells.
 """
 
 import dash_ag_grid as dag
 import dash
 from dash import html, dcc
+import dash_bootstrap_components as dbc
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 columnDefs = [
     {"headerName": "Make", "field": "make"},
@@ -14,8 +15,19 @@ columnDefs = [
     {"headerName": "Price", "field": "price"},
 ]
 
-individualStyledColumnDefs = [
+cellStylColumnDefs = [
     {"headerName": "Make", "field": "make", "cellStyle": {"color": "purple"}},
+    {"headerName": "Model", "field": "model"},
+    {"headerName": "Price", "field": "price"},
+]
+
+cellClassRules = {
+    "bg-primary": "params.value == 'Toyota'",
+    "bg-secondary": "params.value == 'Ford'",
+    "bg-success": "params.value == 'Porsche'",
+}
+cellClassRulesColumnDefs = [
+    {"headerName": "Make", "field": "make", "cellClassRules": cellClassRules},
     {"headerName": "Model", "field": "model"},
     {"headerName": "Price", "field": "price"},
 ]
@@ -42,11 +54,11 @@ grid_with_default_cell_styles = html.Div(
     ]
 )
 
-grid_with_individual_cell_style = html.Div(
+grid_with_cell_style = html.Div(
     [
         html.H3(children="Grid with Individual Cell Style"),
         dag.AgGrid(
-            columnDefs=individualStyledColumnDefs,
+            columnDefs=cellStylColumnDefs,
             rowData=rowData,
             columnSize="sizeToFit",
             defaultColDef=dict(
@@ -86,12 +98,30 @@ grid_with_conditional_cell_styles = html.Div(
 )
 
 
+grid_with_cell_class_rules = html.Div(
+    [
+        html.H3(children="Grid with Cell Class Rules"),
+        dag.AgGrid(
+            columnDefs=cellClassRulesColumnDefs,
+            rowData=rowData,
+            columnSize="sizeToFit",
+            defaultColDef=dict(
+                resizable=True,
+            ),
+        ),
+        html.Hr(),
+    ]
+)
+
+
+
 app.layout = html.Div(
     [
         dcc.Markdown("Examples of cell styling using the AG-Grid Cell Style approach."),
         grid_with_default_cell_styles,
-        grid_with_individual_cell_style,
+        grid_with_cell_style,
         grid_with_conditional_cell_styles,
+        grid_with_cell_class_rules,
     ]
 )
 

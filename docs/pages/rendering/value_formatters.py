@@ -44,6 +44,16 @@ d3.format(",.2r")(4223);  # grouped thousands with two significant digits, "4,20
 ```
 
 See also this site for more [d3-format examples](https://observablehq.com/@d3/d3-format)
+
+### Example of Gapminder Data with number formatting
+
+Here is an example of formatting numbers in one of the Plotly sample datasets.
+
+"""
+
+text1b= """
+### Example of d3.format
+Here is an example of some of the ways to format numbers using d3.format function.
 """
 
 text2 = (
@@ -185,6 +195,8 @@ Here are the specifiers:
 layout = html.Div(
     [
         make_md(text1),
+        example_app("examples.rendering.value_formatters_gapminder", make_layout=make_tabs),
+        make_md(text1b),
         example_app("examples.rendering.value_formatters", make_layout=make_tabs),
         make_md(text2),
         example_app(
