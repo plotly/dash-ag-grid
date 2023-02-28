@@ -1,12 +1,13 @@
 """
-Row styling conditional
+Row Class Rules
 """
 
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc
+import dash_bootstrap_components as dbc
 
-app = Dash(__name__)
+app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 
 columnDefs = [
@@ -25,7 +26,7 @@ rowData = [
     {"employee": "Santiago Little", "sickDays": 1},
     {"employee": "Mary Clifton", "sickDays": 2},
     {"employee": "Norris Iniguez", "sickDays": 1},
-    {"employee": "Shellie Umland", "sickDays": 5},
+    {"employee": "Flavia Mccloskey", "sickDays": 5},
     {"employee": "Kristi Nawrocki", "sickDays": 2},
     {"employee": "Elliot Malo", "sickDays": 3},
     {"employee": "Paul Switzer", "sickDays": 11},
@@ -34,48 +35,33 @@ rowData = [
     {"employee": "Alena Wages", "sickDays": 5},
 ]
 
-
-getRowStyle1 = {
-    "styleConditions": [
-        {
-            "condition": "params.data.sickDays > 5 && params.data.sickDays <= 7",
-            "style": {"backgroundColor": "sandybrown"},
-        },
-        {"condition": "params.data.sickDays >= 8", "style": {"backgroundColor": "lightcoral"}},
-    ]
-}
-
-getRowStyle2 = {
-    "styleConditions": [
-        {
-            "condition": "params.node.rowIndex % 2 === 0",
-            "style": {"backgroundColor": "lavenderblush"},
-        },
-    ]
+rowClassRules={
+    "text-success fw-bold fs-4": "params.data.employee == 'Elvia Macko'",
+    "text-warning fw-bold fs-4": "['Flavia Mccloskey', 'Lilly Boaz'].includes(params.data.employee)"
 }
 
 
 app.layout = html.Div(
     [
         dcc.Markdown(
-            "This grid demonstrates conditional row formatting using the `getRowStyle` prop."
+            "This grid demonstrates conditional row formatting using the `rowClassRules` prop."
         ),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=rowData,
             columnSize="sizeToFit",
-            getRowStyle=getRowStyle1,
+            rowClassRules=rowClassRules,
         ),
 
         dcc.Markdown(
-            "This grid demonstrates formatting alternating rows using the `getRowStyle` prop. ",
+            "This grid demonstrates highlighting sick days >=5.  Try editing the sick days and note the background color is updated.",
             style={"marginTop": 50}
         ),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=rowData,
             columnSize="sizeToFit",
-            getRowStyle=getRowStyle2,
+            rowClassRules={"bg-danger": "params.data.sickDays >= 5"}
         ),
     ],
     style={"margin": 20},

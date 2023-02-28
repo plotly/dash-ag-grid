@@ -7,7 +7,7 @@ register_page(
     __name__,
     order=2,
     description=app_description,
-    title="Dash AG Grid Layout and Style",
+    title="Dash AG Grid Layout and Style - Row Styling",
 )
 
 text1 = """
@@ -15,8 +15,11 @@ text1 = """
 Row customisation can be achieved in the following ways:
 
 - `Row Style`: Providing a CSS style for all rows.
-- `Row Class`: Providing a CSS class for all rows.
 - `getRowStyle`: Conditional formatting of rows based on cell values.
+- `Row Class`: Providing a CSS class for all rows.
+- `Row Class Rules`: Providing rules for applying CSS classes.
+
+
 
 
 ### Styling all rows
@@ -28,7 +31,7 @@ text2 = """
  - `styleConditions` (list of dicts). Each dict has keys of "condition" and "style". The value of the "condition" key is a 
  JavaScript function that when True the value of the "style" key will be applied.
  
- In this example we use the data in the `sickDays` column.  For  example `"data.sickDays >= 8"` will apply a background color of "lightcoral".
+ In this example we use the data in the `sickDays` column.  For  example `"data.sickDays >= 8"` will apply a background color of "lightcoral" to the row.
 
 ```
 getRowStyle = {
@@ -63,7 +66,31 @@ The properties available are:
 - `context` Application context as set on gridOptions.context.
 """
 
-text3 = """
+text3="""
+### Row Class Rules
+
+You can define rules which can be applied to include certain CSS classes via the grid option `rowClassRules`. These rules are provided as a dict where the keys are class names and the values are expressions that if evaluated to true, the class gets used. 
+
+- `rowClassRules` - Rules which can be applied to include certain CSS classes.
+
+The following snippet shows `rowClassRules` that use functions and the value from the year column:
+
+```
+rowClassRules = {
+    # apply green to 2008
+    'bg-success': "params.data.year === 2008",
+
+    # apply primary 2004
+    'bg-primary': "params.data.year === 2004"
+
+    # apply red to 2000
+    'bg-danger': "params.data.year === 2000"
+}
+```
+
+"""
+
+text4 = """
 
 ### Refresh of Styles
 If you refresh a row, or a cell is updated due to editing, the `rowStyle`, `rowClass` and `rowClassRules` are all applied again. This has the following effect:
@@ -75,7 +102,9 @@ If you refresh a row, or a cell is updated due to editing, the `rowStyle`, `rowC
 """
 
 
-text4 = """
+
+
+text5 = """
 ### Highlighting Rows and Columns
 The grid can highlight both Rows and Columns as the mouse hovers over them.
 
@@ -93,9 +122,11 @@ layout = html.Div(
         make_md(text1),
         example_app("examples.layout.row_styling", make_layout=make_tabs),
         make_md(text2),
-        make_md(text3),
         example_app("examples.layout.row_styling_conditional", make_layout=make_tabs),
+        make_md(text3),
+        example_app("examples.layout.row_class_rules", make_layout=make_tabs),
         make_md(text4),
+        make_md(text5),
         example_app("examples.layout.row_styling_highlights", make_layout=make_tabs),
         # up_next("text"),
     ],
