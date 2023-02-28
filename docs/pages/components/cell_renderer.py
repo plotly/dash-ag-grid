@@ -31,9 +31,13 @@ A cell renderer allows you to put whatever HTML you want into a cell. This sound
 The answer is that value formatters are for text formatting and cell renderers are for when you want to include HTML markup and potentially functionality to the cell. So for example, if you want to put punctuation into a value, use a value formatter, but if you want to put buttons or HTML links use a cell renderer. It is possible to use a combination of both, in which case the result of the value formatter will be passed to the cell renderer.
 
 ### Markdown component vs Cell Renderer
-The <dccLink href='/components/markdown' children='Markdown' /> component is a .convenient and easy way to  format text. You can also use the markdown component to render
- raw HTML, however, this method is vulnerable [XSS attacks.](https://owasp.org/www-community/attacks/xss/).  The cell
- render is a safer way of using HTML, and it's not necessary to set the grid to `dangerously_allow_code=True`.
+The <dccLink href='/components/markdown' children='Markdown' /> component is a convenient and easy way to  format text. 
+For example, to create a heading, add number signs (#) in front of a word or phrase. You can do this safely without having
+having to use raw HTML. You can also use the markdown component to render raw HTML, however, this method is vulnerable [XSS attacks.](https://owasp.org/www-community/attacks/xss/).
+You can enable rendering raw HTML in the markdown component by setting the prop `dangerously_allow_code=True`.
+  
+Instead of rendering raw HTML in the markdown component, you can use the cell render.  The cell renderer is a safer way
+ of rendering HTML in Dash.  It is not necessary to set the grid to `dangerously_allow_code=True` when using the cell renderer.
  
  
 ### Provided Cell Renderers
@@ -44,7 +48,9 @@ The grid comes with some provided cell renderers out of the box. These cell rend
 
 ### Custom Cell Renderers
 
-Here are a few examples to get you started making your own custom components.  You can see what's available so far in [GitHub]().
+It is necessary to define the cell renderer function in the `dashAgGridComponentFunctions.js` file in the `assets` folder.
+Here are a few examples to get you started making your own custom components.  You can see what's available so far
+ in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/assets/dashAgGridComponentFunctions.js).
 We would like to build a library of components, so if you create a component, please consider sharing either on the
 Dash forum or open an issue in GitHub so we can add it to the collection.
 
