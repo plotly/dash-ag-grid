@@ -14,9 +14,8 @@ text1 = """
 # Row Styles
 Row customisation can be achieved in the following ways:
 
-- `Row Style`: Providing a CSS style for all rows.
-- `getRowStyle`: Conditional formatting of rows based on cell values.
-- `Row Class`: Providing a CSS class for all rows.
+- `Row Style`: Providing a CSS style for the rows.
+- `Row Class`: Providing a CSS class for the rows.
 - `Row Class Rules`: Providing rules for applying CSS classes.
 
 
@@ -97,7 +96,8 @@ If you refresh a row, or a cell is updated due to editing, the `rowStyle`, `rowC
 
  - `rowStyle`: All new styles are applied. If a new style is the same as an old style, the new style overwrites the old style.
  - `rowClass`: All new classes are applied. Old classes are not removed so be aware that classes will accumulate. If you want to remove old classes, then use `rowClassRules`.
- - `rowClassRules`: Note!  This not yet available in dash-ag-grid.
+ - `rowClassRules`: Rules that return True will have the class applied the second time. Rules that return False will have the class removed second time.
+
 
 """
 
