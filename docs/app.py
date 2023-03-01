@@ -66,6 +66,8 @@ def open_sidebar_category(path):
     """
     This opens the accordion sidebar category when navigating to it from the feature preview section.
     """
+    if path is None:
+        return dash.no_update
     if path == "/":
         return "/getting-started"
     # get the sidebar category (first segment of the path)
