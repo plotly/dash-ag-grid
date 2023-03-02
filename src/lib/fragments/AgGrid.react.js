@@ -240,6 +240,16 @@ export default class DashAgGrid extends Component {
             columnSize,
         } = this.props;
 
+        if (this.props.rowModelType === 'infinite' &&
+            this.props.clearInfiniteRows &&
+            this.props.clearInfiniteRows !== prevProps.clearInfiniteRows) {
+            // Clear rows by setting data source.
+            this.state.gridApi.setDatasource(this.getDatasource());
+            this.props.setProps({
+                clearInfiniteRows: false,
+            });
+        }
+
         if (this.isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = this.props.getRowsResponse;
             this.getRowsParams.successCallback(rowData, rowCount);

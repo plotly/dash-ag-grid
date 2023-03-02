@@ -364,6 +364,11 @@ DashAgGrid.propTypes = {
     }),
 
     /**
+     * Set to True to clear rows for grid in infinite row mode.
+     */
+    clearInfiniteRows: PropTypes.any,
+
+    /**
      * Request from Dash AgGrid when suppressCallback is disabled and a user opens a row with a detail grid
      */
     getDetailRequest: PropTypes.shape({
