@@ -134,7 +134,8 @@ export default class DashAgGrid extends Component {
             if ("headerComponentParams" in columnDef) {
                 if (target in columnDef['headerComponentParams']) {
                     if (!dangerously_allow_code && expressWarn.includes(target)) {
-                        if (typeof columnDef['headerComponentParams'][target] !== 'function') {
+                        if (typeof columnDef['headerComponentParams'][target] !== 'function' &&
+                         columnDef['headerComponentParams'][target] !== '') {
                             if (!(Object.keys(columnDef['headerComponentParams'][target]).includes('function'))) {
                                 columnDef['headerComponentParams'][target] = '';
                                 console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
@@ -159,7 +160,8 @@ export default class DashAgGrid extends Component {
             if ("headerGroupComponentParams" in columnDef) {
                 if (target in columnDef['headerGroupComponentParams']) {
                     if (!dangerously_allow_code && expressWarn.includes(target)) {
-                        if (typeof columnDef['headerGroupComponentParams'][target] !== 'function') {
+                        if (typeof columnDef['headerGroupComponentParams'][target] !== 'function' &&
+                        columnDef['headerGroupComponentParams'][target] !== '') {
                             if (!(Object.keys(columnDef['headerGroupComponentParams'][target]).includes('function'))) {
                                 columnDef['headerGroupComponentParams'][target] = '';
                                 console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
