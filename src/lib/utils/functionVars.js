@@ -131,6 +131,7 @@ export const columnFunctions = [
     //Columns: Rendering and Styling
     'cellStyle',
     'cellClass',
+    'cellClassRules',
     'tooltipComponent',
     'cellRendererSelector',
 

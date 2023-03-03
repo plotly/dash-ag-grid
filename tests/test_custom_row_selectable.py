@@ -7,7 +7,7 @@ import json
 import os
 import time
 
-def test_cr001_custom_row_selectable(dash_duo):
+def test_cr002_custom_row_selectable(dash_duo):
 
     app = Dash(__name__,
                meta_tags=[{'http-equiv': 'content-security-policy',
