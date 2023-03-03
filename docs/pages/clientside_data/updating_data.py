@@ -47,7 +47,7 @@ rowTransaction = {
 }
 ```
 
-### Example: Updating with rowTransaction and rowData
+### Example 1: Updating with `rowTransaction` and `rowData`
 
 The example updates data in different ways:
 
@@ -55,9 +55,24 @@ The example updates data in different ways:
 - Updated Selected, Remove Selected and Add Rows uses rowTransaction to only update certain data
 """
 
+
+text2 = """
+### Example 2:  Adding pre-selected rows
+
+In this example, note the following:
+- Row ids are set with `getRowId(params.data.id)`
+- The ids are generated from the n_clicks counter, so they are unique
+- The `"id"` column is hidden by setting `{"hide": True}` in the `columnDefs`
+- The new rows are automatically selected. 
+
+"""
+
+
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.clientside_data.rowTransaction", make_layout=make_tabs),
+        make_md(text2),
+        example_app("examples.clientside_data.rowTransaction2", make_layout=make_tabs),
     ],
 )

@@ -31,7 +31,6 @@ app.layout = html.Div(
             rowData=data,
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
-            dangerously_allow_code=True,
         ),
     ],
     style={"margin": 20},
