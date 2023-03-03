@@ -32,16 +32,15 @@ columnDefs = [
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Gapminder Data with formatting"),
+        dcc.Markdown("""Examples of the Plolty "Gapminder" dataset both with and without number formatting"""),
         dag.AgGrid(
             columnDefs=columnDefs,
-            defaultColDef="",
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
         ),
-        dcc.Markdown("Gapminder Data without formatting", style={"marginTop": 40}),
+        dcc.Markdown("Gapminder dataset without formatting", style={"marginTop": 40}),
         dag.AgGrid(
-            columnDefs=[{"field": i} for i in df.columns],
+            columnDefs=[{"field": i} for i in df.columns if i not in ["iso_alpha", "iso_num"]],
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
         ),

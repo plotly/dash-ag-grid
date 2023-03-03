@@ -9,18 +9,38 @@ df = pd.read_csv(
 
 app = Dash(__name__)
 
+columnDefs = [
+    {
+        "field": "country",
+        "checkboxSelection": True,
+        "headerCheckboxSelection": True,
+    },
+    {"headerName": "Continent", "field": "continent"},
+    {
+        "headerName": "Life Expectancy",
+        "field": "lifeExp",
+        "type": "rightAligned",
+        "valueFormatter": {"function": "d3.format('.1f')(params.value)"},
+    },
+    {
+        "headerName": "Population",
+        "field": "pop",
+        "type": "rightAligned",
+        "valueFormatter": {"function": "d3.format(',.0f')(params.value)"},
+    },
+    {
+        "headerName": "GDP per Capita",
+        "field": "gdpPercap",
+        "type": "rightAligned",
+        "valueFormatter": {"function": "d3.format('$,.1f')(params.value)"},
+    },
+]
+
 app.layout = html.Div(
     [
         dag.AgGrid(
             id="datatable-interactivity",
-            columnDefs=[
-                {
-                    "field": "country",
-                    "checkboxSelection": True,
-                    "headerCheckboxSelection": True,
-                }
-            ]
-            + [{"field": i} for i in df.columns if i != "country"],
+            columnDefs=columnDefs,
             rowData=df.to_dict("records"),
             rowSelection="multiple",
             columnSize="sizeToFit",
