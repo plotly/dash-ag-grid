@@ -10,7 +10,7 @@ from dash.testing.wait import until
 import time
 import requests
 
-def test_ca002_custom_aggFunc_functions(dash_duo):
+def test_ca001_custom_aggFunc_functions(dash_duo):
     app = dash.Dash(__name__)
 
     data = requests.get(
