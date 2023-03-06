@@ -130,6 +130,25 @@ export default class DashAgGrid extends Component {
                         }
                     }
                 }
+                for (var i in expressWarn) {
+                    var col = expressWarn[i]
+                    if (col in columnDef[target]) {
+                        if (!dangerously_allow_code) {
+                            if (typeof columnDef[target][col] !== 'function') {
+                                if (!(Object.keys(columnDef[target][col]).includes('function'))) {
+                                    columnDef[target][col] = () => '';
+                                    console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                                }
+                            }
+                        }
+                        if (typeof columnDef[target][col] !== 'function') {
+                            if (Object.keys(columnDef[target][col]).includes('function')) {
+                                const newFunc = JSON.parse(JSON.stringify(columnDef[target][col].function))
+                                columnDef[target][col] = (params) => this.parseParamFunction(params, newFunc)
+                            }
+                        }
+                    }
+                }
             }
             if ("headerComponentParams" in columnDef) {
                 if (target in columnDef['headerComponentParams']) {
@@ -184,14 +203,6 @@ export default class DashAgGrid extends Component {
                 }
             }
         }
-//
-//
-//        if ("headerComponentParams" in columnDef) {
-//            if ('template' in columnDef.headerComponentParams && !dangerously_allow_code) {
-//                columnDef.headerComponentParams.template = '<div></div>'
-//                console.error({field: columnDef.field, message: XSSMESSAGE})
-//            }
-//        }
 
         columnFunctions.concat(expressWarn).map(test)
 

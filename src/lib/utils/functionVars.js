@@ -108,6 +108,7 @@ export const columnFunctions = [
     'icons',
     'suppressNavigable',
     'suppressKeyboardEvent',
+    'filterParams',
 
     //Columns: Editing
     'editable',
@@ -120,6 +121,7 @@ export const columnFunctions = [
 
     //Columns: Filter
     'getQuickFilterText',
+
 
     //Columns: Headers
     'suppressHeaderKeyboardEvent',
