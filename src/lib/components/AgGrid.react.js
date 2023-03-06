@@ -1933,12 +1933,6 @@ DashAgGrid.propTypes = {
     dragStopped: PropTypes.any,
 
     /**
-     * The client has set new data into the grid using api.setRowData() or by changing
-     * the rowData bound property.
-     */
-    rowDataChanged: PropTypes.any,
-
-    /**
      * The client has updated data for the grid using api.applyTransaction(transaction)
      * or by changing the rowData bound property with immutableData=true.
      */

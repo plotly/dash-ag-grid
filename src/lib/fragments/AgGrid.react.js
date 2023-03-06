@@ -351,10 +351,6 @@ export default class DashAgGrid extends Component {
             this.updateColumnWidths()
         }
 
-        if (dashGridOptions !== prevProps.dashGridOptions) {
-            this.props.setProps(JSON.parse(JSON.stringify({...omit(['cellClassRules', 'rowClassRules'], this.props.dashGridOptions)})))
-        }
-
         // Reset selection event flag
         this.selectionEventFired = false;
 
@@ -640,15 +636,20 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    autoSizeAllColumns(skipHeader) {
+    autoSizeAllColumns(opts) {
         const allColumnIds = [];
         this.state.gridColumnApi.getColumnState().forEach((column) => {
           allColumnIds.push(column.colId);
         });
+        let skipHeaders = false;
+        if ('skipHeaders' in opts) {
+            if (opts.skipHeaders) {
+                skipHeaders = true;
+            }
+        }
         this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
         this.props.setProps({
             autoSizeAllColumns: false,
-            autoSizeAllColumnsSkipHeaders: false,
         });
     };
 
@@ -673,7 +674,6 @@ export default class DashAgGrid extends Component {
             selectAllFiltered,
             deselectAll,
             autoSizeAllColumns,
-            autoSizeAllColumnsSkipHeaders,
             deleteSelectedRows,
             rowTransaction,
             updateColumnState,
@@ -754,11 +754,7 @@ export default class DashAgGrid extends Component {
         }
 
         if (autoSizeAllColumns) {
-            this.autoSizeAllColumns(false);
-        }
-
-        if (autoSizeAllColumnsSkipHeaders) {
-            this.autoSizeAllColumns(true);
+            this.autoSizeAllColumns(autoSizeAllColumns);
         }
 
         if (updateColumnState) {
