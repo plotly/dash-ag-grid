@@ -59,6 +59,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - Changing `selectionChanged` to `selectedRows` to make props align with AG Grid.
   - Document adjustments for `selectionChanged` to `selectedRows`, also allowed for persistence in the `selectedRows`
 
+- [#70](https://github.com/plotly/dash-ag-grid/pull/70)
+  - Changing `clickData` to `cellRendererData` to more closely line up with what this does
+
 
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
