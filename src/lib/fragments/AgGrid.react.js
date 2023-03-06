@@ -37,10 +37,9 @@ export default class DashAgGrid extends Component {
 
         const customComponents = window.dashAgGridComponentFunctions || {};
         const _this = this;
+        let newComponents = {}
         Object.keys(customComponents).forEach(function(key) {
-            if (typeof customComponents[key] !== 'function') {
-                customComponents[key] = _this.generateRenderer(JSON.parse(JSON.stringify(customComponents[key])))
-            }
+            newComponents[key] = _this.generateRenderer(customComponents[key])
         })
 
         this.state = {
@@ -48,7 +47,7 @@ export default class DashAgGrid extends Component {
             components: {
                 rowMenu: this.generateRenderer(RowMenuRenderer),
                 markdown: this.generateRenderer(MarkdownRenderer),
-                ...customComponents
+                ...newComponents
             }
         };
 

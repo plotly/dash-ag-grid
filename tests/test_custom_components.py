@@ -62,7 +62,8 @@ def test_cc001_custom_components(dash_duo):
         "binary": [False for ticker in equities],
         "buy": [{"children":"buy", "className":"btn btn-success"} for i in equities],
         "sell": [{"children":"sell", "className":"btn btn-danger"} for i in equities],
-        "action": [actionOptions[i % 3] for i in range(len(equities))]
+        "action": [actionOptions[i % 3] for i in range(len(equities))],
+        "test": [{"className":"btn btn-warning"} for i in equities]
     }
     df = pd.DataFrame(data)
 
@@ -110,6 +111,10 @@ def test_cc001_custom_components(dash_duo):
             'cellEditorParams': {
                         'values': actionOptions,
                     }
+        },
+        {
+            "field": 'test',
+            "cellRenderer": "myCustomButton2"
         }
     ]
 
@@ -138,13 +143,19 @@ def test_cc001_custom_components(dash_duo):
     header = html.Div("My Portfolio", className="h2 p-2 text-white bg-primary text-center")
 
     app.layout = html.Div([table,
-            html.Div(id='cellValueChanged')
+            html.Div(id='cellValueChanged'),
+            html.Div(id='cellRendererData')
         ],
     )
 
     @app.callback(Output('cellValueChanged', 'children'), Input('portfolio-grid','cellValueChanged'), prevent_initial_call=True)
     def showChange(n):
         return json.dumps(n)
+
+    @app.callback(Output('cellRendererData', 'children'), Input('portfolio-grid', 'cellRendererData'),
+                  prevent_initial_call=True)
+    def showChange(n):
+        return n
 
     dash_duo.start_server(app)
 
@@ -170,5 +181,8 @@ def test_cc001_custom_components(dash_duo):
                                                                 '156, "volume": "Low", "binary": false, "buy": {"child'
                                                                 'ren": "buy", "className": "btn btn-success"}, "sell":'
                                                                 ' {"children": "sell", "className": "btn btn-danger", '
-                                                                '"n_clicks": null}, "action": "sell"}, "oldValue": "bu'
+                                                                '"n_clicks": null}, "action": "sell", "test": '
+                                                         '{"className": "btn btn-warning"}}, "oldValue": "bu'
                                                                 'y", "newValue": "sell", "colId": "action"}')
+    grid.element_click_cell_button(0, 8)
+    dash_duo.wait_for_text_to_equal("#cellRendererData", "updated")
