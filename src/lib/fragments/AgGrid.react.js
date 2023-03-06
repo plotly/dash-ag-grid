@@ -153,52 +153,52 @@ export default class DashAgGrid extends Component {
                 }
             }
             if ("headerComponentParams" in columnDef) {
-                if (target in columnDef['headerComponentParams']) {
+                if (target in columnDef.headerComponentParams) {
                     if (!dangerously_allow_code && expressWarn.includes(target)) {
-                        if (typeof columnDef['headerComponentParams'][target] !== 'function' &&
-                         columnDef['headerComponentParams'][target] !== '') {
-                            if (!(Object.keys(columnDef['headerComponentParams'][target]).includes('function'))) {
-                                columnDef['headerComponentParams'][target] = '';
+                        if (typeof columnDef.headerComponentParams[target] !== 'function' &&
+                         columnDef.headerComponentParams[target] !== '') {
+                            if (!(Object.keys(columnDef.headerComponentParams[target]).includes('function'))) {
+                                columnDef.headerComponentParams[target] = '';
                                 console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
                             }
                         }
                     }
-                    if (typeof columnDef['headerComponentParams'][target] !== 'function') {
-                        if (Object.keys(columnDef['headerComponentParams'][target]).includes('function') && !replaceFunctions.includes(target)) {
-                            const newFunc = JSON.parse(JSON.stringify(columnDef['headerComponentParams'][target].function))
-                            columnDef['headerComponentParams'][target] = (params) => this.parseParamFunction(params, newFunc)
+                    if (typeof columnDef.headerComponentParams[target] !== 'function') {
+                        if (Object.keys(columnDef.headerComponentParams[target]).includes('function') && !replaceFunctions.includes(target)) {
+                            const newFunc = JSON.parse(JSON.stringify(columnDef.headerComponentParams[target].function))
+                            columnDef.headerComponentParams[target] = (params) => this.parseParamFunction(params, newFunc)
                         }
                     }
                     if (replaceFunctions.includes(target)) {
-                        for (const [key, value] of Object.entries(columnDef['headerComponentParams'][target])) {
+                        for (const [key, value] of Object.entries(columnDef.headerComponentParams[target])) {
                             if (typeof value !== 'function') {
-                                columnDef['headerComponentParams'][target][key] = (params) => this.parseParamFunction(params, value)
+                                columnDef.headerComponentParams[target][key] = (params) => this.parseParamFunction(params, value)
                             }
                         }
                     }
                 }
             }
             if ("headerGroupComponentParams" in columnDef) {
-                if (target in columnDef['headerGroupComponentParams']) {
+                if (target in columnDef.headerGroupComponentParams) {
                     if (!dangerously_allow_code && expressWarn.includes(target)) {
-                        if (typeof columnDef['headerGroupComponentParams'][target] !== 'function' &&
-                        columnDef['headerGroupComponentParams'][target] !== '') {
-                            if (!(Object.keys(columnDef['headerGroupComponentParams'][target]).includes('function'))) {
-                                columnDef['headerGroupComponentParams'][target] = '';
+                        if (typeof columnDef.headerGroupComponentParams[target] !== 'function' &&
+                        columnDef.headerGroupComponentParams[target] !== '') {
+                            if (!(Object.keys(columnDef.headerGroupComponentParams[target]).includes('function'))) {
+                                columnDef.headerGroupComponentParams[target] = '';
                                 console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
                             }
                         }
                     }
-                    if (typeof columnDef['headerGroupComponentParams'][target] !== 'function') {
-                        if (Object.keys(columnDef['headerGroupComponentParams'][target]).includes('function') && !replaceFunctions.includes(target)) {
-                            const newFunc = JSON.parse(JSON.stringify(columnDef['headerGroupComponentParams'][target].function))
-                            columnDef['headerGroupComponentParams'][target] = (params) => this.parseParamFunction(params, newFunc)
+                    if (typeof columnDef.headerGroupComponentParams[target] !== 'function') {
+                        if (Object.keys(columnDef.headerGroupComponentParams[target]).includes('function') && !replaceFunctions.includes(target)) {
+                            const newFunc = JSON.parse(JSON.stringify(columnDef.headerGroupComponentParams[target].function))
+                            columnDef.headerGroupComponentParams[target] = (params) => this.parseParamFunction(params, newFunc)
                         }
                     }
                     if (replaceFunctions.includes(target)) {
-                        for (const [key, value] of Object.entries(columnDef['headerGroupComponentParams'][target])) {
+                        for (const [key, value] of Object.entries(columnDef.headerGroupComponentParams[target])) {
                             if (typeof value !== 'function') {
-                                columnDef['headerGroupComponentParams'][target][key] = (params) => this.parseParamFunction(params, value)
+                                columnDef.headerGroupComponentParams[target][key] = (params) => this.parseParamFunction(params, value)
                             }
                         }
                     }
@@ -236,7 +236,7 @@ export default class DashAgGrid extends Component {
         if (columnDefs) {
             setProps({
                 columnDefs: columnDefs.map((columnDef) => {
-                    let colDefOut = columnDef;
+                    const colDefOut = columnDef;
                     return cleanOneCol(colDefOut);
                 })
             });
@@ -250,7 +250,7 @@ export default class DashAgGrid extends Component {
             if ('detailGridOptions' in detailCellRendererParams) {
                 if ('columnDefs' in detailCellRendererParams.detailGridOptions) {
                     detailCellRendererParams.detailGridOptions.columnDefs = detailCellRendererParams.detailGridOptions.columnDefs.map((columnDef) => {
-                        let colDefOut = columnDef;
+                        const colDefOut = columnDef;
                         return cleanOneCol(colDefOut);
                     })
                     if ('defaultColDef' in detailCellRendererParams.detailGridOptions) {
@@ -346,7 +346,6 @@ export default class DashAgGrid extends Component {
          JSON.stringify(this.props.columnDefs) !== JSON.stringify(prevProps.columnDefs) ||
         prevProps.columnSize !== columnSize) {
             this.props.setProps({columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
-            this.setState({origColumnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
             this.setUpCols(cellStyle)
             this.updateColumnWidths()
         }
@@ -700,7 +699,7 @@ export default class DashAgGrid extends Component {
                     }
                     else if ((typeof targetIn === 'object') && ('function' in targetIn)
                     && !replaceFunctions.includes(target)) {
-                        const newFunc = JSON.parse(JSON.stringify(container[target]['function']))
+                        const newFunc = JSON.parse(JSON.stringify(container[target].function))
                         container[target] = (params) => this.parseParamFunction(params, newFunc)
                     }
                     if (replaceFunctions.includes(target)) {
