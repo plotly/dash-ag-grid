@@ -130,21 +130,23 @@ export default class DashAgGrid extends Component {
                         }
                     }
                 }
-                for (var i in expressWarn) {
-                    var col = expressWarn[i]
-                    if (Object.keys(columnDef[target]).includes(col)) {
-                        if (!dangerously_allow_code) {
-                            if (typeof columnDef[target][col] !== 'function') {
-                                if (!(Object.keys(columnDef[target][col]).includes('function'))) {
-                                    columnDef[target][col] = () => '';
-                                    console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                if (typeof columnDef[target] !== 'function') {
+                    for (var i in expressWarn) {
+                        var col = expressWarn[i]
+                        if (Object.keys(columnDef[target]).includes(col)) {
+                            if (!dangerously_allow_code) {
+                                if (typeof columnDef[target][col] !== 'function') {
+                                    if (!(Object.keys(columnDef[target][col]).includes('function'))) {
+                                        columnDef[target][col] = () => '';
+                                        console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                                    }
                                 }
                             }
-                        }
-                        if (typeof columnDef[target][col] !== 'function') {
-                            if (Object.keys(columnDef[target][col]).includes('function')) {
-                                const newFunc = JSON.parse(JSON.stringify(columnDef[target][col].function))
-                                columnDef[target][col] = (params) => this.parseParamFunction(params, newFunc)
+                            if (typeof columnDef[target][col] !== 'function') {
+                                if (Object.keys(columnDef[target][col]).includes('function')) {
+                                    const newFunc = JSON.parse(JSON.stringify(columnDef[target][col].function))
+                                    columnDef[target][col] = (params) => this.parseParamFunction(params, newFunc)
+                                }
                             }
                         }
                     }

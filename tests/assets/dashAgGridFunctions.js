@@ -65,3 +65,28 @@ dagfuncs.ratioFormatter = function (params) {
   if (!params.value || params.value === 0) return '';
   return '' + Math.round(params.value * 100) / 100;
 }
+
+
+dagfuncs.filterParams = {
+  filterOptions: [
+                'lessThan',
+                {
+                    displayKey: 'lessThanWithNulls',
+                    displayName: 'Less Than with Nulls',
+                    predicate: ([filterValue], cellValue) => cellValue == null || cellValue < filterValue,
+                },
+                'greaterThan',
+                {
+                    displayKey: 'greaterThanWithNulls',
+                    displayName: 'Greater Than with Nulls',
+                    predicate: ([filterValue], cellValue) => cellValue == null || cellValue > filterValue,
+                },
+                {
+                    displayKey: 'betweenExclusive',
+                    displayName: 'Between (Exclusive)',
+                    predicate: ([fv1, fv2], cellValue) => cellValue == null || fv1 < cellValue && fv2 > cellValue,
+                    numberOfInputs: 2,
+                }
+            ],
+  defaultOption: 'lessThanWithNulls',
+};
