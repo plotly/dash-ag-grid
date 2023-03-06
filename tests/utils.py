@@ -117,3 +117,8 @@ class Grid:
         return self.dash_duo.find_element(
             f'#{self.id} .ag-row[row-index="{row}"]'
         )
+
+    def get_cell_expandable(self, row, col):
+        return self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] .ag-group-contracted'
+        )

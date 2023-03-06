@@ -44,6 +44,11 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 - [#49](https://github.com/plotly/dash-ag-grid/pull/49) Safely handle more attributes when `dangerously_allow_code` is disabled: top-level attributes `rowClassRules`, `getRowStyle`, and `getRowClass`; and column attributes `cellClass`, `cellStyle`, and `cellClassRules`.
 
+- [#67](https://github.com/plotly/dash-ag-grid/pull/67) Function parsing recursvie columndefs
+  - adding more functions to be available for parsing
+  - allowed for recursively going through `columnDefs` -> `children` and master detail info
+  - added various tests for functionality
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
