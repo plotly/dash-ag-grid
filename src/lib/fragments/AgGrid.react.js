@@ -132,7 +132,7 @@ export default class DashAgGrid extends Component {
                 }
                 for (var i in expressWarn) {
                     var col = expressWarn[i]
-                    if (col in columnDef[target]) {
+                    if (Object.keys(columnDef[target]).includes(col)) {
                         if (!dangerously_allow_code) {
                             if (typeof columnDef[target][col] !== 'function') {
                                 if (!(Object.keys(columnDef[target][col]).includes('function'))) {
