@@ -385,12 +385,7 @@ DashAgGrid.propTypes = {
     /**
      * Special prop used by renderers.
      */
-    clickData: PropTypes.any,
-
-    /**
-     * Special prop used by renderers.
-     */
-    hoverData: PropTypes.any,
+    cellRendererData: PropTypes.any,
 
     /**
      * Serverside model data response object.

@@ -22,7 +22,7 @@ export default function RowMenuRenderer(props) {
 
             if (setProps && value) {
                 setProps({
-                    clickData: {value, data},
+                    cellRendererData: {value, data},
                 });
             }
             setAnchorEl(null);

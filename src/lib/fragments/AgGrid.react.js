@@ -556,7 +556,7 @@ export default class DashAgGrid extends Component {
         const {setProps, dangerously_allow_code} = this.props;
 
         const setCellProps = (props) => {
-            setProps({clickData: props.clickData, hoverData: props.hoverData});
+            setProps({cellRendererData: props.cellRendererData});
         };
 
         return (props) => (
