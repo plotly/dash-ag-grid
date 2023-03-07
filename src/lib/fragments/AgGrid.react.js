@@ -37,7 +37,7 @@ export default class DashAgGrid extends Component {
 
         const customComponents = window.dashAgGridComponentFunctions || {};
         const _this = this;
-        let newComponents = {}
+        const newComponents = {}
         Object.keys(customComponents).forEach(function(key) {
             newComponents[key] = _this.generateRenderer(customComponents[key])
         })
