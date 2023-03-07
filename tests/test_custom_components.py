@@ -152,12 +152,11 @@ def test_cc001_custom_components(dash_duo):
     def showChange(n):
         return json.dumps(n)
 
-    @app.callback(Output('cellRendererData', 'children'), Input('portfolio-grid', 'cellRendererData_timestamp'),
-                  State('portfolio-grid', 'cellRendererData'),
+    @app.callback(Output('cellRendererData', 'children'), Input('portfolio-grid', 'cellRendererData'),
                   prevent_initial_call=True)
-    def showChange(ts, d):
-        if ts:
-            return json.dumps(d)
+    def showChange(d):
+        if d:
+            return json.dumps(d['value'])
 
     dash_duo.start_server(app)
 

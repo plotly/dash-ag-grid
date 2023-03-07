@@ -61,11 +61,11 @@ def test_rm001_row_menu(dash_duo):
 
     @app.callback(
         Output("click-data", "children"),
-        Input("grid", "cellRendererData_timestamp"),
-        State("grid", "cellRendererData"),
+        Input("grid", "cellRendererData"),
     )
-    def show_click_data(ts, data):
-        if ts:
+    def show_click_data(data):
+        if data:
+            data = data["value"]
             return "You selected option {} from the row with make {}, model {}, and price {}.".format(
                 data["value"],
                 data["data"]["make"],

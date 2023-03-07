@@ -388,11 +388,6 @@ DashAgGrid.propTypes = {
     cellRendererData: PropTypes.any,
 
     /**
-     * Timestamp automatically applied to feedback from cell renderers.
-     */
-    cellRendererData_timestamp: PropTypes.any,
-
-    /**
      * Serverside model data response object.
      * See https://www.ag-grid.com/react-grid/server-side-model-datasource/
      */

@@ -551,14 +551,18 @@ export default class DashAgGrid extends Component {
     }
 
     generateRenderer(Renderer) {
-        const {setProps, dangerously_allow_code, cellRendererData} = this.props;
-
-        const setCellProps = (cellRendererData) => {
-            setProps({cellRendererData, cellRendererData_timestamp: Date.now()});
-        };
+        const {setProps, dangerously_allow_code} = this.props;
 
         return (props) => (
-            <Renderer setData={setCellProps} dangerously_allow_code={dangerously_allow_code} {...props}></Renderer>
+            <Renderer setData={(value) => {
+                setProps({cellRendererData: {
+                value,
+                colId: props.column.colId,
+                rowIndex: props.rowIndex,
+                rowId: props.node.id,
+                timestamp: Date.now()}
+                });
+            }} dangerously_allow_code={dangerously_allow_code} {...props}></Renderer>
         );
     }
 
