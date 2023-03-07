@@ -60,7 +60,7 @@ dagcomponentfuncs.checkbox = function (props) {
 
 dagcomponentfuncs.tags = function (props) {
 
-    const {setProps, data} = props;
+    const {setData, data} = props;
 
     if (props.value == "High") { newTag = React.createElement('div', {
         style: {"backgroundColor":"green", "borderRadius":"15px"},
@@ -84,7 +84,7 @@ dagcomponentfuncs.tags = function (props) {
 
 dagcomponentfuncs.myCustomButton = function (props) {
 
-    const {setProps, data} = props;
+    const {setData, data} = props;
 
     if (!props.value) {
         return React.createElement('button')
@@ -110,7 +110,31 @@ dagcomponentfuncs.myCustomButton = function (props) {
     }, props.value.children))
 }
 
-dagcomponentfuncs.myCustomTooltip = function (params) {
-    info = [React.createElement('div',{},params.data.ticker), React.createElement('div',{}, params.data.company),React.createElement('div',{}, params.data.price)]
+dagcomponentfuncs.myCustomTooltip = function (props) {
+    info = [React.createElement('div',{},props.data.ticker), React.createElement('div',{}, props.data.company),React.createElement('div',{}, props.data.price)]
     return React.createElement('div',{style: {"border":'2pt solid white', 'backgroundColor':'black'}}, info);
+}
+
+dagcomponentfuncs.myCustomButton2 = function (props) {
+
+    const {setData, data} = props;
+
+    if (!props.value) {
+        return React.createElement('button')
+    }
+
+    function onClick() {
+        setData({'data': 'updated'})
+    }
+
+    const id = JSON.stringify({'index': props.rowIndex, 'type':'customButton'})
+    return React.createElement('div',
+    {style: {'width':'100%','height':'100%', 'padding':'5px', 'display':'flex',
+     'justifyContent':'center', 'alignItems':'center'}},
+    React.createElement('button', {
+        onClick: onClick,
+        id: props.value.id,
+        className: props.value.className,
+
+    }, 'test cellRendererData'))
 }

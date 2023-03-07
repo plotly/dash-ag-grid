@@ -8,7 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 export default function RowMenuRenderer(props) {
     const [anchorEl, setAnchorEl] = useState(null);
-    const {setProps, data} = props;
+    const {setData, data} = props;
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -20,14 +20,12 @@ export default function RowMenuRenderer(props) {
                 target: {value},
             } = e;
 
-            if (setProps && value) {
-                setProps({
-                    clickData: {value, data},
-                });
+            if (setData && value) {
+                setData(value);
             }
             setAnchorEl(null);
         },
-        [setProps, data]
+        [setData, data]
     );
 
     return (
