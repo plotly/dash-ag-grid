@@ -130,13 +130,79 @@ export default class DashAgGrid extends Component {
                         }
                     }
                 }
+                if (typeof columnDef[target] !== 'function') {
+                    for (var i in expressWarn) {
+                        var col = expressWarn[i]
+                        if (Object.keys(columnDef[target]).includes(col)) {
+                            if (!dangerously_allow_code) {
+                                if (typeof columnDef[target][col] !== 'function') {
+                                    if (!(Object.keys(columnDef[target][col]).includes('function'))) {
+                                        columnDef[target][col] = () => '';
+                                        console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                                    }
+                                }
+                            }
+                            if (typeof columnDef[target][col] !== 'function') {
+                                if (Object.keys(columnDef[target][col]).includes('function')) {
+                                    const newFunc = JSON.parse(JSON.stringify(columnDef[target][col].function))
+                                    columnDef[target][col] = (params) => this.parseParamFunction(params, newFunc)
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        }
-
-        if ("headerComponentParams" in columnDef) {
-            if ('template' in columnDef.headerComponentParams && !dangerously_allow_code) {
-                columnDef.headerComponentParams.template = '<div></div>'
-                console.error({field: columnDef.field, message: XSSMESSAGE})
+            if ("headerComponentParams" in columnDef) {
+                if (target in columnDef.headerComponentParams) {
+                    if (!dangerously_allow_code && expressWarn.includes(target)) {
+                        if (typeof columnDef.headerComponentParams[target] !== 'function' &&
+                         columnDef.headerComponentParams[target] !== '') {
+                            if (!(Object.keys(columnDef.headerComponentParams[target]).includes('function'))) {
+                                columnDef.headerComponentParams[target] = '';
+                                console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                            }
+                        }
+                    }
+                    if (typeof columnDef.headerComponentParams[target] !== 'function') {
+                        if (Object.keys(columnDef.headerComponentParams[target]).includes('function') && !replaceFunctions.includes(target)) {
+                            const newFunc = JSON.parse(JSON.stringify(columnDef.headerComponentParams[target].function))
+                            columnDef.headerComponentParams[target] = (params) => this.parseParamFunction(params, newFunc)
+                        }
+                    }
+                    if (replaceFunctions.includes(target)) {
+                        for (const [key, value] of Object.entries(columnDef.headerComponentParams[target])) {
+                            if (typeof value !== 'function') {
+                                columnDef.headerComponentParams[target][key] = (params) => this.parseParamFunction(params, value)
+                            }
+                        }
+                    }
+                }
+            }
+            if ("headerGroupComponentParams" in columnDef) {
+                if (target in columnDef.headerGroupComponentParams) {
+                    if (!dangerously_allow_code && expressWarn.includes(target)) {
+                        if (typeof columnDef.headerGroupComponentParams[target] !== 'function' &&
+                        columnDef.headerGroupComponentParams[target] !== '') {
+                            if (!(Object.keys(columnDef.headerGroupComponentParams[target]).includes('function'))) {
+                                columnDef.headerGroupComponentParams[target] = '';
+                                console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                            }
+                        }
+                    }
+                    if (typeof columnDef.headerGroupComponentParams[target] !== 'function') {
+                        if (Object.keys(columnDef.headerGroupComponentParams[target]).includes('function') && !replaceFunctions.includes(target)) {
+                            const newFunc = JSON.parse(JSON.stringify(columnDef.headerGroupComponentParams[target].function))
+                            columnDef.headerGroupComponentParams[target] = (params) => this.parseParamFunction(params, newFunc)
+                        }
+                    }
+                    if (replaceFunctions.includes(target)) {
+                        for (const [key, value] of Object.entries(columnDef.headerGroupComponentParams[target])) {
+                            if (typeof value !== 'function') {
+                                columnDef.headerGroupComponentParams[target][key] = (params) => this.parseParamFunction(params, value)
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -146,14 +212,21 @@ export default class DashAgGrid extends Component {
     }
 
     setUpCols(cellStyle) {
-        const {columnDefs, setProps, defaultColDef} = this.props
+        const {columnDefs, setProps, defaultColDef, detailCellRendererParams} = this.props
 
         const cleanOneCol = (col) => {
-            const colOut = this.fixCols(col);
+            let colOut = this.fixCols(col);
+            if ('children' in colOut) {
+                colOut = {
+                    ...col,
+                    children: col.children.map(cleanOneCol)
+                };
+            }
 
             if ('cellStyle' in colOut) {
                 return colOut;
             }
+
             return {
                 ...omit(['id'], colOut),
                 cellStyle: (params) => this.handleDynamicCellStyle({params, cellStyle}),
@@ -163,14 +236,7 @@ export default class DashAgGrid extends Component {
         if (columnDefs) {
             setProps({
                 columnDefs: columnDefs.map((columnDef) => {
-                    let colDefOut = columnDef;
-                    if ('children' in columnDef) {
-                        colDefOut = {
-                            ...columnDef,
-                            children: columnDef.children.map(cleanOneCol)
-                        };
-                    }
-
+                    const colDefOut = columnDef;
                     return cleanOneCol(colDefOut);
                 })
             });
@@ -179,6 +245,21 @@ export default class DashAgGrid extends Component {
             setProps({
                 defaultColDef: cleanOneCol(defaultColDef)
             })
+        }
+        if (detailCellRendererParams) {
+            if ('detailGridOptions' in detailCellRendererParams) {
+                if ('columnDefs' in detailCellRendererParams.detailGridOptions) {
+                    detailCellRendererParams.detailGridOptions.columnDefs = detailCellRendererParams.detailGridOptions.columnDefs.map((columnDef) => {
+                        const colDefOut = columnDef;
+                        return cleanOneCol(colDefOut);
+                    })
+                    if ('defaultColDef' in detailCellRendererParams.detailGridOptions) {
+                        detailCellRendererParams.detailGridOptions.defaultColDef = cleanOneCol(detailCellRendererParams.detailGridOptions.defaultColDef)
+                    }
+                    setProps({detailCellRendererParams});
+                }
+            }
+
         }
     }
 
@@ -265,7 +346,6 @@ export default class DashAgGrid extends Component {
          JSON.stringify(this.props.columnDefs) !== JSON.stringify(prevProps.columnDefs) ||
         prevProps.columnSize !== columnSize) {
             this.props.setProps({columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
-            this.setState({origColumnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
             this.setUpCols(cellStyle)
             this.updateColumnWidths()
         }
@@ -619,7 +699,7 @@ export default class DashAgGrid extends Component {
                     }
                     else if ((typeof targetIn === 'object') && ('function' in targetIn)
                     && !replaceFunctions.includes(target)) {
-                        const newFunc = JSON.parse(JSON.stringify(container[target]['function']))
+                        const newFunc = JSON.parse(JSON.stringify(container[target].function))
                         container[target] = (params) => this.parseParamFunction(params, newFunc)
                     }
                     if (replaceFunctions.includes(target)) {

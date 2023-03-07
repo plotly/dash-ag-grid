@@ -4,7 +4,7 @@ import requests
 from . import utils
 import time
 
-def test_fi001_selected_rows(dash_duo):
+def test_sr001_selected_rows(dash_duo):
 
     app = Dash(__name__)
 
