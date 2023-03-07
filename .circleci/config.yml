@@ -23,6 +23,7 @@ jobs:
       - run:
           name: Build package
           command: |
+            . venv/bin/activate
             npm ci
             npm run build
       - run:
