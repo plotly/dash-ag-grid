@@ -19,11 +19,39 @@ To include checkbox selection for a column, set the attribute 'checkboxSelection
 
 """
 
+text2 = """
+
+### Specify Selectable Rows
+It is possible to specify which rows can be selected via the `isRowSelectable` function.
+
+- `isRowSelectable`  - Callback to be used to determine which rows are selectable. By default rows are selectable, so return false to make a row un-selectable.
+
+For instance if we only wanted to allow rows where the 'year' property is less than 2007, we could implement the following:
+
+```
+
+dag.AgGrid(    
+    rowSelection="multiple",
+    dashGridOptions = {'isRowSelectable': {"function": "params.data ? params.data.year < 2007 : false" }},
+)
+
+```
+
+### Example: Selectable Rows with Header Checkbox
+This example demonstrates the following:
+
+- The `isRowSelectable` function only allows selections on rows where the year < 2007.
+- The country column has `headerCheckboxSelection: True` and `checkboxSelection: True`, but only rows which are selectable will obtain a selectable checkbox. Similarly, the header checkbox will only select selectable rows.
+
+"""
+
 
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.selection.selection_checkbox", make_layout=make_tabs),
+        make_md(text2),
+        example_app("examples.selection.selectable_rows", make_layout=make_tabs),
         # up_next("text"),
     ],
 )
