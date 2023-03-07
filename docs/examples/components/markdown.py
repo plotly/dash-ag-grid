@@ -21,29 +21,30 @@ Note that here, images are loaded from a remote source. They can also be loaded 
     f"![image alt text]({app.get_asset_url('sun.png')})"
 as the cell value.
 """
+rain =  "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)"
+sun = "![alt text: sun](https://www.ag-grid.com/example-assets/weather/sun.png)"
+
 rowData = [
     {
         "make": "Toyota",
         "model": "Celica",
         "price": 35000,
         "link": "[Example](#)",
-        "image": "{0} {0} {0} {0} {0}".format(
-            "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)"
-        ),
+        "image": f"{rain} {rain} {rain} {rain} {rain}"
     },
     {
         "make": "Ford",
         "model": "Mondeo",
         "price": 32000,
         "link": "[Example](#)",
-        "image": "![alt text: sun](https://www.ag-grid.com/example-assets/weather/sun.png)",
+        "image": sun,
     },
     {
         "make": "Porsche",
         "model": "Boxter",
         "price": 72000,
         "link": "[Example](#)",
-        "image": "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)",
+        "image": rain
     },
 ]
 

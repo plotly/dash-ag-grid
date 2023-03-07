@@ -19,28 +19,27 @@ columnDefs = [
     {"headerName": "Image", "field": "image", "cellRenderer": "markdown"},
 ]
 
+rain =  "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)"
+sun = "![alt text: sun](https://www.ag-grid.com/example-assets/weather/sun.png)"
+
 rowData = [
     {
         "make": "*Toyota* in italics",
         "model": "`code snippet`",
         "link": "**[Bold link](#)**",
-        "image": "{0} {0} {0} {0} {0}".format(
-            "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)"
-        ),
+        "image": f"{rain} {rain} {rain} {rain} {rain}"
     },
     {
         "make": "**Ford** in bold",
         "model": "Mondeo",
         "link": '<a href="#" target="_blank">Link to new tab</a>',
-        "image": "{0} {0} {0} {0}".format(
-            "![alt text: sun](https://www.ag-grid.com/example-assets/weather/sun.png)"
-        ),
+        "image": f"{sun} {sun} {sun} {sun}"
     },
     {
         "make": "***Porsche*** in both",
         "model": "<b>Boxter</b> in HTML bold",
         "link": "[Example](#)",
-        "image": "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)",
+        "image": rain,
     },
 ]
 
