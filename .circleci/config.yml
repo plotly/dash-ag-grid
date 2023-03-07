@@ -23,9 +23,12 @@ jobs:
       - run:
           name: Build package
           command: |
-            . venv/bin/activate
             npm ci
             npm run build
+      - run:
+          name: Lint
+          command: |
+            npm run private::lint.eslint
       - run:
           name: Run tests
           command: |
