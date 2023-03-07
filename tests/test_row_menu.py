@@ -10,6 +10,7 @@ def test_rm001_row_menu(dash_duo):
             dag.AgGrid(
                 id="grid",
                 columnSize="sizeToFit",
+                getRowId='params.data.make',
                 columnDefs=[
                     {"headerName": "Make", "field": "make", "sortable": True},
                     {"headerName": "Model", "field": "model"},
@@ -65,12 +66,12 @@ def test_rm001_row_menu(dash_duo):
     )
     def show_click_data(data):
         if data:
-            data = data["value"]
-            return "You selected option {} from the row with make {}, model {}, and price {}.".format(
+            assert 'timestamp' in data
+            return "You selected option {} from the colId {}, rowIndex {}, rowId {}.".format(
                 data["value"],
-                data["data"]["make"],
-                data["data"]["model"],
-                data["data"]["price"],
+                data["colId"],
+                data["rowIndex"],
+                data["rowId"],
             )
         return "No menu item selected."
 
@@ -85,4 +86,4 @@ def test_rm001_row_menu(dash_duo):
     assert 'opacity: 1' in dash_duo.find_element('.MuiPopover-root .MuiMenu-paper').get_attribute('style')
     dash_duo.find_elements('.MuiPopover-root .MuiMenu-paper .MuiMenu-list .MuiListItem-button')[1].click()
     dash_duo.wait_for_text_to_equal('#click-data',
-                                    'You selected option 2 from the row with make Toyota, model Celica, and price 35000.')
+                                    'You selected option 2 from the colId menu, rowIndex 0, rowId Toyota.')

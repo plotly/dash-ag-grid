@@ -21,7 +21,7 @@ export default function RowMenuRenderer(props) {
             } = e;
 
             if (setData && value) {
-                setData({value, data});
+                setData(value);
             }
             setAnchorEl(null);
         },
