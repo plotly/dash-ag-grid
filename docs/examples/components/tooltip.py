@@ -63,9 +63,9 @@ This will register the myCustomTooltip function.
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
-dagcomponentfuncs.myCustomTooltip = function (params) {
+dagcomponentfuncs.myCustomTooltip = function (props) {
     info = [
-    React.createElement('h4',{},params.data.ticker), React.createElement('div',{}, params.data.company),React.createElement('div',{}, params.data.price)]
-    return React.createElement('div',{style: {"border":'2pt solid white', 'backgroundColor':params.color || "grey", "padding": 10}}, info);
+    React.createElement('h4',{},props.data.ticker), React.createElement('div',{}, props.data.company),React.createElement('div',{}, props.data.price)]
+    return React.createElement('div',{style: {"border":'2pt solid white', 'backgroundColor':props.color || "grey", "padding": 10}}, info);
 }
 """
