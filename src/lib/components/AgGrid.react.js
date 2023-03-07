@@ -385,7 +385,34 @@ DashAgGrid.propTypes = {
     /**
      * Special prop to allow feedback from cell renderer to the grid.
      */
-    cellRendererData: PropTypes.any,
+    cellRendererData: PropTypes.shape({
+
+        /**
+        * Value set from the function
+        */
+        value: PropTypes.any,
+
+        /**
+        * Column ID from where the event was fired
+        */
+        colId: PropTypes.string,
+
+        /**
+        * Row Index from the grid, this is associated with the row count
+        */
+        rowIndex: PropTypes.number,
+
+        /**
+        * Row Id from the grid, this could be a number automatically, or set via getRowId
+        */
+        rowId: PropTypes.any,
+
+        /**
+        * Timestamp of when the event was fired
+        */
+        timestamp: PropTypes.any,
+
+    }),
 
     /**
      * Serverside model data response object.
