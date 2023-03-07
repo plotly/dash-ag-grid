@@ -154,7 +154,7 @@ def make_side_nav():
                 always_open=True,
                 id="sidebar",
             ),
-            dbc.Alert("AG Grid Version 29.0.0", color="primary", className="small py-2")
+            dbc.Alert("AG Grid Version 29.1.0", color="primary", className="small py-2")
 
             # example of a category with hash tags
             # dbc.Accordion(
