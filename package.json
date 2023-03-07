@@ -30,9 +30,9 @@
     "dependencies": {
         "@material-ui/core": "^4.11.4",
         "@material-ui/icons": "^4.11.3",
-        "ag-grid-community": ">=29.0.0",
-        "ag-grid-enterprise": ">=29.0.0",
-        "ag-grid-react": ">=29.0.0",
+        "ag-grid-community": "^29.1.0",
+        "ag-grid-enterprise": "^29.1.0",
+        "ag-grid-react": "^29.1.0",
         "d3-format": "^3.1.0",
         "d3-array": "^3.2.2",
         "d3-time": "^3.1.0",
@@ -45,7 +45,7 @@
         "static-eval": "^2.1.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.20.12",
+        "@babel/core": "^7.21.0",
         "@babel/eslint-parser": "^7.19.1",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/preset-env": "^7.20.2",
@@ -54,8 +54,8 @@
         "babel-loader": "^9.1.2",
         "css-loader": "^6.7.3",
         "es-check": "^7.1.0",
-        "eslint": "^8.34.0",
-        "eslint-config-prettier": "^8.6.0",
+        "eslint": "^8.35.0",
+        "eslint-config-prettier": "^8.7.0",
         "eslint-plugin-import": "^2.27.5",
         "eslint-plugin-react": "^7.32.2",
         "npm-run-all": "^4.1.5",

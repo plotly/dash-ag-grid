@@ -21,11 +21,11 @@ export const replaceFunctions = ['cellClassRules', 'rowClassRules']
 * Functions from grid props https://www.ag-grid.com/react-data-grid/grid-options/
 **/
 export const gridFunctions = [
-    //Accessories
+    // Accessories
     'getMainMenuItems',
     'postProcessPopup',
 
-    //Clipboard
+    // Clipboard
     'processCellForClipboard',
     'processHeaderForClipboard',
     'processGroupHeaderForClipboard',
@@ -33,47 +33,47 @@ export const gridFunctions = [
     'sendToClipboard',
     'processDataFromClipboard',
 
-    //Filtering
+    // Filtering
     'isExternalFilterPresent',
     'doesExternalFilterPass',
 
-    //Integrated Charts
+    // Integrated Charts
     'getChartToolbarItems',
     'createChartContainer',
 
-    //Keyboard Navigation
+    // Keyboard Navigation
     'navigateToNextHeader',
     'tabToNextHeader',
     'navigateToNextCell',
     'tabToNextCell',
 
-    //Localisation
+    // Localisation
     'getLocaleText',
 
-    //Miscellaneous
+    // Miscellaneous
     'getDocument',
 
-    //Pagination
+    // Pagination
     'paginationNumberFormatter',
 
-    //Pivot and Aggregation
+    // Pivot and Aggregation
     'processPivotResultColDef',
     'processPivotResultColGroupDef',
     'aggFuncs',
     'getGroupRowAgg',
 
-    //Rendering
+    // Rendering
     'getBusinessKeyForNode',
     'processRowPostCreate',
 
-    //Row Drag and Drop
+    // Row Drag and Drop
     'rowDragText',
 
-    //Row Grouping
+    // Row Grouping
     'isGroupOpenByDefault',
     'initialGroupOrderComparator',
 
-    //RowModel: Server-Side
+    // RowModel: Server-Side
     'getChildCount',
     'getServerSideGroupLevelParams',
     'isServerSideGroupOpenByDefault',
@@ -81,14 +81,14 @@ export const gridFunctions = [
     'isServerSideGroup',
     'getServerSideGroupKey',
 
-    //Selection
+    // Selection
     'isRowSelectable',
     'fillOperation',
 
-    //Sorting
+    // Sorting
     'postSortRows',
 
-    //Styling
+    // Styling
     'getRowHeight',
     'getRowStyle',
     'getRowClass',
@@ -101,7 +101,7 @@ export const gridFunctions = [
 * Functions from columnDef props https://www.ag-grid.com/react-data-grid/column-properties/
 **/
 export const columnFunctions = [
-    //Columns
+    // Columns
     'keyCreator',
     'equals',
     'checkboxSelection',
@@ -110,65 +110,65 @@ export const columnFunctions = [
     'suppressKeyboardEvent',
     'filterParams',
 
-    //Columns: Editing
+    // Columns: Editing
     'editable',
     'cellEditor',
     'cellEditorSelector',
 
-    //Columns: Events
+    // Columns: Events
     'onCellDoubleClicked',
     'onCellContextMenu',
 
-    //Columns: Filter
+    // Columns: Filter
     'getQuickFilterText',
 
 
-    //Columns: Headers
+    // Columns: Headers
     'suppressHeaderKeyboardEvent',
     'headerCheckboxSelection',
 
-    //Columns: Pivoting
+    // Columns: Pivoting
     'pivotComparator',
 
-    //Columns: Rendering and Styling
+    // Columns: Rendering and Styling
     'cellStyle',
     'cellClass',
     'cellClassRules',
     'tooltipComponent',
     'cellRendererSelector',
 
-    //Columns: Row Dragging
+    // Columns: Row Dragging
     'rowDrag',
     'rowDragText',
     'dndSource',
     'dndSourceOnRowDrag',
 
-    //Columns: Row Grouping
+    // Columns: Row Grouping
     'aggFunc',
     'initialAggFunc',
 
-    //Columns: Sort
+    // Columns: Sort
     'comparator',
 
-    //Columns: Spanning
+    // Columns: Spanning
     'colSpan',
     'rowSpan',
 
-    //Columns: Tooltips
+    // Columns: Tooltips
     'tooltipValueGetter',
 
-    //Groups
+    // Groups
     'toolPanelClass',
 
-    //Groups: Header
+    // Groups: Header
     'headerClass',
 
-    //Header Component Parameters
+    // Header Component Parameters
     'showColumnMenu',
     'progressSort',
     'setSort',
 
-    //Header Group Component Parameters
+    // Header Group Component Parameters
     'setExpanded',
 ];
 
