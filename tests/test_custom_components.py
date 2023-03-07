@@ -1,5 +1,5 @@
 import dash_ag_grid as dag
-from dash import Dash, html, Input, Output
+from dash import Dash, html, Input, Output, State
 import pandas as pd
 import yfinance as yf
 from . import utils
@@ -152,10 +152,12 @@ def test_cc001_custom_components(dash_duo):
     def showChange(n):
         return json.dumps(n)
 
-    @app.callback(Output('cellRendererData', 'children'), Input('portfolio-grid', 'cellRendererData'),
+    @app.callback(Output('cellRendererData', 'children'), Input('portfolio-grid', 'cellRendererData_timestamp'),
+                  State('portfolio-grid', 'cellRendererData'),
                   prevent_initial_call=True)
-    def showChange(n):
-        return n
+    def showChange(ts, d):
+        if ts:
+            return json.dumps(d)
 
     dash_duo.start_server(app)
 
@@ -185,4 +187,4 @@ def test_cc001_custom_components(dash_duo):
                                                          '{"className": "btn btn-warning"}}, "oldValue": "bu'
                                                                 'y", "newValue": "sell", "colId": "action"}')
     grid.element_click_cell_button(0, 8)
-    dash_duo.wait_for_text_to_equal("#cellRendererData", "updated")
+    dash_duo.wait_for_text_to_equal("#cellRendererData", '{"data": "updated"}')

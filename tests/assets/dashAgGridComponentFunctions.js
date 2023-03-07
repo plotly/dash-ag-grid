@@ -60,7 +60,7 @@ dagcomponentfuncs.checkbox = function (props) {
 
 dagcomponentfuncs.tags = function (props) {
 
-    const {setProps, data} = props;
+    const {setData, data} = props;
 
     if (props.value == "High") { newTag = React.createElement('div', {
         style: {"backgroundColor":"green", "borderRadius":"15px"},
@@ -84,7 +84,7 @@ dagcomponentfuncs.tags = function (props) {
 
 dagcomponentfuncs.myCustomButton = function (props) {
 
-    const {setProps, data} = props;
+    const {setData, data} = props;
 
     if (!props.value) {
         return React.createElement('button')
@@ -117,14 +117,14 @@ dagcomponentfuncs.myCustomTooltip = function (params) {
 
 dagcomponentfuncs.myCustomButton2 = function (props) {
 
-    const {setProps, data} = props;
+    const {setData, data} = props;
 
     if (!props.value) {
         return React.createElement('button')
     }
 
     function onClick() {
-        setProps({cellRendererData: 'updated'})
+        setData({'data': 'updated'})
     }
 
     const id = JSON.stringify({'index': props.rowIndex, 'type':'customButton'})

@@ -383,9 +383,14 @@ DashAgGrid.propTypes = {
     getDetailResponse: PropTypes.any,
 
     /**
-     * Special prop used by renderers.
+     * Special prop to allow feedback from cell renderer to the grid.
      */
     cellRendererData: PropTypes.any,
+
+    /**
+     * Timestamp automatically applied to feedback from cell renderers.
+     */
+    cellRendererData_timestamp: PropTypes.any,
 
     /**
      * Serverside model data response object.
