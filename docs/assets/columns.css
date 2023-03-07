@@ -43,6 +43,14 @@
 .header3 .ag-header-group-cell-with-group {
   background-color: #00e7b1 !important;
 }
+
+/* Used in the row spanning example */
+.cell-span {
+  background-color: #00e5ff;
+}
+
+
+
 /*
 .wrapper {
   display: flex;

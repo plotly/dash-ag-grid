@@ -6,7 +6,7 @@ from utils.utils import app_description
 
 register_page(
     __name__,
-    order=1,
+    order=2,
     description=app_description,
     title="Dash AG Grid Rows",
 )
