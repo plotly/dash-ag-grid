@@ -110,8 +110,8 @@ dagcomponentfuncs.myCustomButton = function (props) {
     }, props.value.children))
 }
 
-dagcomponentfuncs.myCustomTooltip = function (params) {
-    info = [React.createElement('div',{},params.data.ticker), React.createElement('div',{}, params.data.company),React.createElement('div',{}, params.data.price)]
+dagcomponentfuncs.myCustomTooltip = function (props) {
+    info = [React.createElement('div',{},props.data.ticker), React.createElement('div',{}, props.data.company),React.createElement('div',{}, props.data.price)]
     return React.createElement('div',{style: {"border":'2pt solid white', 'backgroundColor':'black'}}, info);
 }
 
