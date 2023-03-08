@@ -49,7 +49,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - allowed for recursively going through `columnDefs` -> `children` and master detail info
   - added various tests for functionality
 
-- [#75](https://github.com/plotly/dash-ag-grid/pull/75) Adding logging function
+- [#76](https://github.com/plotly/dash-ag-grid/pull/76) Adding logging function
   - adding logging function available by default, available via `{"function": "log()"}`
 
 ### Updated
