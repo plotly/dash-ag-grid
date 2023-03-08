@@ -49,6 +49,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - allowed for recursively going through `columnDefs` -> `children` and master detail info
   - added various tests for functionality
 
+- [#75](https://github.com/plotly/dash-ag-grid/pull/75) Adding logging function
+  - adding logging function available by default, available via `{"function": "log()"}`
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
