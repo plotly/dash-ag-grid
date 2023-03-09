@@ -17,6 +17,7 @@ text1 = """
 
 To include checkbox selection for a column, set the attribute 'checkboxSelection' to true on the column definition. You can set this attribute on as many columns as you like, however it doesn't make sense to have it in more than one column in a table.
 
+### Example 1:  Multi-select rows with checkboxes
 """
 
 text2 = """
@@ -37,7 +38,7 @@ dag.AgGrid(
 
 ```
 
-### Example: Selectable Rows with Header Checkbox
+### Example 2: Selectable Rows with Header Checkbox
 This example demonstrates the following:
 
 - The `isRowSelectable` function only allows selections on rows where the year < 2007.
