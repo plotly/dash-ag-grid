@@ -50,36 +50,15 @@
 }
 
 
-
-/*
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+/* Used in Column Spanning example */
+.header-cell {
+  background-color: #a6e1ec;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+}
+.quarters-cell {
+  background-color: #5bc0de;
+  font-weight: bold;
 }
 
-.locked-col {
-  background: #ddd;
-}
-
-.suppress-movable-col {
-  background: #f5f5dc;
-}
-
-.legend-box {
-  border: 1px solid #aaa;
-  height: 15px;
-  width: 15px;
-  display: inline-block;
-  vertical-align: text-top;
-}
-
-.legend-bar {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 13px;
-  margin-bottom: 1rem;
-}
-
-#myGrid {
-  flex: 1 1 0px;
-}

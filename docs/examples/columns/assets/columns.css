@@ -43,6 +43,22 @@
 .header3 .ag-header-group-cell-with-group {
   background-color: #00e7b1 !important;
 }
+
+
+/* For Column Spanning example */
+.header-cell {
+  background-color: #a6e1ec;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+}
+.quarters-cell {
+  background-color: #5bc0de;
+  font-weight: bold;
+}
+
+
+
 /*
 .wrapper {
   display: flex;
