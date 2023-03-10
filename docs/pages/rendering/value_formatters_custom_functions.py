@@ -22,7 +22,7 @@ For more information on `valueFormatter` see:
 
 Rather than using `d3.format`, this example formats currency in different locales using [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat)
 
-The custom functions are registered in the `dashAgGridComponentFunctions.js` file in the `assets` folder.
+The custom functions are registered by adding them to the `dashAgGridFunctions` namespace.  This is added to the `dashAgGridFunctions.js` file in the `assets` folder.
 
 Here is an example:
 ```

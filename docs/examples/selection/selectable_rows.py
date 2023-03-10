@@ -1,7 +1,6 @@
 """
-Multiple Row Selection - without check boxes.  Use shift click or ctr click to select
+Multiple Row Selection - with selectable rows.
 """
-import dash
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output
@@ -16,9 +15,9 @@ data = requests.get(
 
 
 columnDefs = [
-    {"field": "athlete", "checkboxSelection": True, "headerCheckboxSelection": True},
+    {"field": "athlete"},
     {"field": "age", "maxWidth": 100},
-    {"field": "country"},
+    {"field": "country", "checkboxSelection": True, "headerCheckboxSelection": True},
     {"field": "year", "maxWidth": 120},
     {"field": "date", "minWidth": 150},
     {"field": "sport"},
@@ -27,7 +26,6 @@ columnDefs = [
     {"field": "bronze"},
     {"field": "total"},
 ]
-
 
 defaultColDef = {
     "flex": 1,
@@ -40,23 +38,28 @@ defaultColDef = {
 
 app.layout = html.Div(
     [
-        dcc.Markdown("This grid has multi-select rows with checkboxes."),
+        dcc.Markdown("Example:  Selectable Rows with Header Checkbox"),
         dag.AgGrid(
-            id="selection-checkbox-grid",
+            id="selectable-checkbox-grid",
             columnDefs=columnDefs,
             rowData=data,
             defaultColDef=defaultColDef,
             rowSelection="multiple",
+            dashGridOptions={
+                "isRowSelectable": {
+                    "function": "params.data ? params.data.year < 2007 : false"
+                }
+            },
         ),
-        html.Div(id="selections-checkbox-output"),
+        html.Div(id="selectable-checkbox-output"),
     ],
     style={"margin": 20},
 )
 
 
 @app.callback(
-    Output("selections-checkbox-output", "children"),
-    Input("selection-checkbox-grid", "selectedRows"),
+    Output("selectable-checkbox-output", "children"),
+    Input("selectable-checkbox-grid", "selectedRows"),
 )
 def selected(selected):
     if selected:
