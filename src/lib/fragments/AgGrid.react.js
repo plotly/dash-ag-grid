@@ -283,7 +283,7 @@ export default class DashAgGrid extends Component {
     }
 
     onSortChanged() {
-        const {setProps} = this.props;
+        const {setProps, rowModelType} = this.props;
         if (rowModelType === 'clientSide') {
             const virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
