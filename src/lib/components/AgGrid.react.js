@@ -309,12 +309,12 @@ DashAgGrid.propTypes = {
         /**
          * If sorting, what the sort model is
          */
-        sortModel: PropTypes.any,
+        sortModel: PropTypes.arrayOf(PropTypes.object),
 
         /**
          * If filtering, what the filter model is
          */
-        filterModel: PropTypes.any,
+        filterModel: PropTypes.object,
 
         /**
          * The grid context object
@@ -349,7 +349,7 @@ DashAgGrid.propTypes = {
     /**
      * RowData to populate the detail grid when callbacks are used to populate
      */
-    getDetailResponse: PropTypes.any,
+    getDetailResponse: PropTypes.arrayOf(PropTypes.object),
 
     /**
      * Special prop to allow feedback from cell renderer to the grid.
@@ -418,7 +418,7 @@ DashAgGrid.propTypes = {
     /**
      * The rowData in the grid after inline filters are applied.
      */
-    virtualRowData: PropTypes.any,
+    virtualRowData: PropTypes.arrayOf(PropTypes.object),
 
     /********************************
      * GRID PROPS
@@ -427,12 +427,12 @@ DashAgGrid.propTypes = {
     /**
      * Array of Column Definitions.
      */
-    columnDefs: PropTypes.any,
+    columnDefs: PropTypes.arrayOf(PropTypes.object),
 
     /**
      * A default column definition.
      */
-    defaultColDef: PropTypes.any,
+    defaultColDef: PropTypes.object,
 
     /**
      * Sets the Row Model type.
@@ -448,7 +448,7 @@ DashAgGrid.propTypes = {
     /**
      * (Client-Side Row Model only) Set the data to be displayed as rows in the grid.
      */
-    rowData: PropTypes.any,
+    rowData: PropTypes.arrayOf(PropTypes.object),
 
     /**
      * Used to enable Master Detail. See Enabling Master Detail.
@@ -480,17 +480,17 @@ DashAgGrid.propTypes = {
     /**
      * The style to give a particular row. See Row Style.
      */
-    rowStyle: PropTypes.any,
+    rowStyle: PropTypes.object,
 
     /**
      * The class to give a particular row. See Row Class.
      */
-    rowClass: PropTypes.any,
+    rowClass: PropTypes.string,
 
     /**
      * Rules which can be applied to include certain CSS classes. See Row Class Rules.
      */
-    rowClassRules: PropTypes.any,
+    rowClassRules: PropTypes.object,
 
     /**
      * If true, when you drag a column out of the grid (e.g. to the group zone) the column
@@ -506,7 +506,28 @@ DashAgGrid.propTypes = {
     /**
      * Cell is clicked.
      */
-    cellClicked: PropTypes.any,
+    cellClicked: PropTypes.shape({
+
+        /**
+        * value of the clicked cell
+        */
+        value: PropTypes.any,
+
+        /**
+        * column where the cell was clicked
+        */
+        colId: PropTypes.any,
+
+        /**
+        * rowIndex, typically a row number
+        */
+        rowIndex: PropTypes.number,
+
+        /**
+        * timestamp of last action
+        */
+        timestamp: PropTypes.any,
+    }),
 
     /**
      * The actively selected rows from the grid (may include filtered rows)
@@ -516,7 +537,37 @@ DashAgGrid.propTypes = {
     /**
      * Value has changed after editing.
      */
-    cellValueChanged: PropTypes.any,
+    cellValueChanged: PropTypes.shape({
+        /**
+        * rowIndex, typically a row number
+        */
+        rowIndex: PropTypes.number,
+
+        /**
+        * nodeId, typically a row number
+        */
+        nodeId: PropTypes.any,
+
+        /**
+        * data, data object from the row
+        */
+        data: PropTypes.object,
+
+        /**
+        * old value of the cell
+        */
+        oldValue: PropTypes.any,
+
+        /**
+        * new value of the cell
+        */
+        newValue: PropTypes.any,
+
+        /**
+        * column where the cell was changed
+        */
+        colId: PropTypes.any,
+    }),
 
     /**
      * Other ag-grid options

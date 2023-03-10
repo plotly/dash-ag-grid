@@ -284,15 +284,17 @@ export default class DashAgGrid extends Component {
 
     onSortChanged() {
         const {setProps} = this.props;
-        const virtualRowData = [];
-        this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
-            virtualRowData.push(node.data);
-        });
+        if (rowModelType === 'clientSide') {
+            const virtualRowData = [];
+            this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
+                virtualRowData.push(node.data);
+            });
 
-        setProps({
-            virtualRowData: virtualRowData,
-            columnState: this.state.gridColumnApi.getColumnState(),
-        });
+            setProps({
+                virtualRowData: virtualRowData,
+                columnState: this.state.gridColumnApi.getColumnState(),
+            });
+        }
     }
 
     shouldComponentUpdate(nextProps) {
