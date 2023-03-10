@@ -65,6 +65,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#70](https://github.com/plotly/dash-ag-grid/pull/70)
   - Changing `clickData` to `cellRendererData` to more closely line up with what this does
 
+- [#81](https://github.com/plotly/dash-ag-grid/pull/81)
+  - prop clean-up overhaul
+  - updating testing that broke due to props no longer being on the grid, but in dashGridOptions
+  - added testing for selection and sizing buttons
 
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
