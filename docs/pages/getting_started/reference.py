@@ -15,7 +15,7 @@ features such as:
 
 2. Applying conditional formatting with a dash helper function.
 
-3. The `dashGridOption` prop
+3. The `dashGridOptions` prop
 
 4. Props that trigger a callback in Dash
 
@@ -148,7 +148,7 @@ formatting in a dictionary -- similar to how it's done in the Dash DataTable.
 
 See the [Layout & Style](https://dashaggrid.pythonanywhere.com/layout/cell-styling) section for examples.
 
-### 3. The `dashGridOption` props
+### 3. The `dashGridOptions` props
 
 Typically in dash, each prop is defined separately in order to provide validation to ensure that the correct
  prop names and data types are used in the Dash app.  However with AG Grid there are hundreds of props and it's not possible to
