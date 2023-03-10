@@ -78,7 +78,6 @@ export default class DashAgGrid extends Component {
         // Additional Exposure
         this.setUpCols = this.setUpCols.bind(this);
         this.selectAll = this.selectAll.bind(this);
-        this.selectAllFiltered = this.selectAllFiltered.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
         this.autoSizeAllColumns = this.autoSizeAllColumns.bind(this);
         this.updateColumnState = this.updateColumnState.bind(this);
@@ -210,7 +209,7 @@ export default class DashAgGrid extends Component {
         return columnDef;
     }
 
-    setUpCols(cellStyle) {
+    setUpCols() {
         const {columnDefs, setProps, defaultColDef, detailCellRendererParams} = this.props
 
         const cleanOneCol = (col) => {
@@ -223,13 +222,12 @@ export default class DashAgGrid extends Component {
             }
 
             if ('cellStyle' in colOut) {
-                return colOut;
+                if (Object.keys(colOut.cellStyle).includes('styleConditions')) {
+                    const cellStyle = JSON.parse(JSON.stringify(colOut.cellStyle))
+                    colOut.cellStyle = (params) => this.handleDynamicCellStyle({params, cellStyle})
+                }
             }
-
-            return {
-                ...omit(['id'], colOut),
-                cellStyle: (params) => this.handleDynamicCellStyle({params, cellStyle}),
-            };
+            return colOut;
         };
 
         if (columnDefs) {
@@ -315,14 +313,13 @@ export default class DashAgGrid extends Component {
             detailCellRendererParams,
             masterDetail,
             setProps,
-            cellStyle,
-            dashGridOptions,
             columnSize,
         } = this.props;
 
         if (this.isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = this.props.getRowsResponse;
             this.getRowsParams.successCallback(rowData, rowCount);
+            setProps({getRowsResponse: null})
         }
 
         if (
@@ -341,11 +338,10 @@ export default class DashAgGrid extends Component {
             this.setSelection(selectedRows);
         }
 
-        if (JSON.stringify(cellStyle) !== JSON.stringify(prevProps.cellStyle) ||
-         JSON.stringify(this.props.columnDefs) !== JSON.stringify(prevProps.columnDefs) ||
+        if (JSON.stringify(this.props.columnDefs) !== JSON.stringify(prevProps.columnDefs) ||
         prevProps.columnSize !== columnSize) {
             this.props.setProps({columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
-            this.setUpCols(cellStyle)
+            this.setUpCols()
             this.updateColumnWidths()
         }
 
@@ -453,7 +449,6 @@ export default class DashAgGrid extends Component {
 
         // Handles applying selections when a selection was persisted by Dash
         this.setSelection(selectedRows);
-        this.props.setProps({gridReady: true});
         // Hydrate virtualRowData
         this.onFilterChanged(true);
 
@@ -576,17 +571,19 @@ export default class DashAgGrid extends Component {
         });
     }
 
-    selectAll() {
+    selectAll(opts) {
+        if (Object.keys(opts).includes('filtered')) {
+            if (opts.filtered) {
+                this.state.gridApi.selectAllFiltered()
+                this.props.setProps({
+                    selectAll: false,
+                });
+                return;
+            }
+        }
         this.state.gridApi.selectAll()
         this.props.setProps({
             selectAll: false,
-        });
-    }
-
-    selectAllFiltered() {
-        this.state.gridApi.selectAllFiltered()
-        this.props.setProps({
-            selectAllFiltered: false,
         });
     }
 
@@ -644,12 +641,12 @@ export default class DashAgGrid extends Component {
           allColumnIds.push(column.colId);
         });
         let skipHeaders = false;
-        if ('skipHeaders' in opts) {
+        if (Object.keys(opts).includes('skipHeaders')) {
             if (opts.skipHeaders) {
                 skipHeaders = true;
             }
         }
-        this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+        this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeaders);
         this.props.setProps({
             autoSizeAllColumns: false,
         });
@@ -665,7 +662,6 @@ export default class DashAgGrid extends Component {
     render() {
         const {
             id,
-            cellStyle,
             getRowStyle,
             style,
             theme,
@@ -673,7 +669,6 @@ export default class DashAgGrid extends Component {
             resetColumnState,
             exportDataAsCsv,
             selectAll,
-            selectAllFiltered,
             deselectAll,
             autoSizeAllColumns,
             deleteSelectedRows,
@@ -728,7 +723,7 @@ export default class DashAgGrid extends Component {
             getRowId = (params) => this.parseParamFunction(params, JSON.parse(JSON.stringify(this.props.getRowId)))
         }
 
-        this.setUpCols(cellStyle)
+        this.setUpCols()
 
         let newRowStyle;
         if (getRowStyle) {
@@ -744,11 +739,7 @@ export default class DashAgGrid extends Component {
         }
 
         if (selectAll) {
-            this.selectAll();
-        }
-
-        if (selectAllFiltered) {
-            this.selectAllFiltered();
+            this.selectAll(selectAll);
         }
 
         if (deselectAll) {
