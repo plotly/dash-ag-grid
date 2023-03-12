@@ -19,10 +19,12 @@ AG Grid is a fully-featured and highly customizable JavaScript data grid. The da
 add AG Grid to your Python Dash app. However if you want to take full advantage of _all_ the great features in AG Grid,
  it's necessary to write some functions in JavaScript. 
  
-You may be familiar with how to [Add JavaScript to your dash app](https://dash.plotly.com/external-resources) and how it's used in [clientside callbacks](https://dash.plotly.com/clientside-callbacks).  Here,
+You may be familiar with how to [Add JavaScript To Your Dash App](https://dash.plotly.com/external-resources) and how it's used in [Clientside Callbacks](https://dash.plotly.com/clientside-callbacks).  Here,
 we'll show how JavaScript functions are passed to AG Grid from Dash props. 
    
-> If you’re a Python programmer who is just getting started with JavaScript, see [JavaScript basics - Learn web development | MDN](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics)
+> If you’re a Python programmer who is just getting started with JavaScript, see
+ [MDM web docs - JavaScript basics](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics)
+ and for more detailed info on functions see [MDM web docs - JavaScript Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions)
 
 
 __Background__
@@ -33,10 +35,11 @@ Dash provides a framework that converts React components (written in JavaScript)
 Components in Dash are serialized as JSON. All of the props shared between the Python code and the React code ― numbers,
  strings, booleans, as well as arrays or objects containing numbers, strings, or booleans―must be serializable as JSON.
   Note that  _JavaScript functions are not valid input arguments._  However, in the AG Grid docs, you'll find that many 
-  props require a JavaScript function. So, how do you do that when JavaScript functions are not valid input arguments
+  props require a JavaScript function as input. So, how do you do that when JavaScript functions are not valid input arguments
    in Dash?  In dash-ag-grid we have included a way to securely execute the JavaScript functions passed to the grid from Dash.
 
-Here's an example from the AG Grid docs on [specifying selectable rows](https://www.ag-grid.com/react-data-grid/row-selection/#specify-selectable-rows)
+Here's an example from the AG Grid React docs on [specifying selectable rows](https://www.ag-grid.com/react-data-grid/row-selection/#specify-selectable-rows)
+This makes all the rows with the the year less than 2007 selectable:
 
 ```
 const isRowSelectable = rowNode => rowNode.data ? rowNode.data.year < 2007 : false;
@@ -44,36 +47,51 @@ const isRowSelectable = rowNode => rowNode.data ? rowNode.data.year < 2007 : fal
 <AgGridReact isRowSelectable={isRowSelectable}></AgGridReact>
 
 ```  
-This makes all the rows with the the year less than 2007 selectable.  Here's how you would do it in Dash:
+Here's how to do it in Dash:
+(See the full example in the dash-ag-grid docs [Selection checkbox section](https://dashaggrid.pythonanywhere.com/selection/selection-checkbox))
 
 ```
 dag.AgGrid(    
     dashGridOptions = {'isRowSelectable': {"function": "params.data ? params.data.year < 2007 : false" }},
 )
 ```
-See the full example in the dash-ag-grid docs [Selection checkbox section](https://dashaggrid.pythonanywhere.com/selection/selection-checkbox)
-   
+
+
+
+
+The function is passed to the dash prop as JSON like this:
+
+```
+{"function": "params.data ? params.data.year < 2007 : false" }
+```
+
+Under the covers, Dash will take the value of this dict and parse it into a JavaScript function with a model
+ of `(params) => function`.  It then passes this function to the AG Grid `isRowSelectable` prop.  
+ 
    
  
-
-
 __Writing Secure Dash Apps__
 
 Executing JavaScript functions passed as a prop can introduce security risks - similar to using
  the `exec()` function in Python.  To reduce the risk of remote code execution attacks, only functions included in the
-  `dashAgGridFunctions` namespace will be executed.  Certain JavaScript functions are automatically included in this
-  namespace, such as `Number()`, `Math()` and basic string methods such as `toUpperCase()`  You can include others by adding
-  them to `dashAgGridFunctions` namespace in a .js file in the assets folder.
-
+  `dashAgGridFunctions` namespace will be executed.  
 
 > 
 > In a browser environment, the `window` object is the global namespace.  Any JavaScript variable defined in the `window`
  object can be passed as a component property in Dash. Only functions included in the `window.dashAgGridFunctions` object
   will be  executed in dash-ag-grid. 
 
+
+We have already included certain JavaScript functions in the `dashAgGridFunctions` namespace, such as `Number()`, `Math()` and basic string
+ methods such as `toUpperCase()`.  For convenience, we have also  included the [d3-format](https://github.com/d3/d3-format) and [d3-time-format](https://github.com/d3/d3-time-format) 
+ libraries - making it easy to format numbers and dates.  See [Value Formatters with d3](https://dashaggrid.pythonanywhere.com/rendering/value-formatters-with-d3-format) for more details.
+ 
+ You can include other JavaScript functions by adding by them to  `dashAgGridFunctions` namespace in a .js file in the assets folder.
+
 __Adding simple JavaScript functions in-line__
 
-Some functions are already added to the namespace, and can be included in-line, like in this example:
+The functions included in the `dashAgGridFunctions` namespace can be used in-line as shown below.  The function in this example
+ prepends a dollar sign to each value in the "balance" column:
 
 ```
 columnDefs = [   
@@ -84,7 +102,6 @@ columnDefs = [
 ]
 ```
 
-This function is passed to the `valueFormatter` prop.  It will  prepend a dollar sign to each value in the "balance" column.
 For more examples see the [Value Formatters Intro Section](https://dashaggrid.pythonanywhere.com/rendering/value-formatters-intro)
 
 
@@ -94,7 +111,8 @@ __Adding functions to the `dashAgGridFunctions` namespace__
 For functions that are not already added to the namespace, or are longer than a single line, you can add them by 
 creating a `dashAgGridFunctions.js` file in the assets folder.   Learn more about [adding custom JavaScript](https://dash.plotly.com/external-resources) to your apps in the dash docs.
  
-Note that the functions must to be added to the `dashAgGridFunctions` namespace. Here is an example:
+Note that the functions must to be added to the `dashAgGridFunctions` namespace. Here is an example of defining a
+ function named `EUR` to format currency in the Germany locale `de-DE`.  This will format 1234.567 as 1.234,57 €
 ```
 var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};
 
@@ -105,7 +123,7 @@ dagfuncs.EUR = function(number) {
 ```
 
 
-Then use the `EUR` function you defined in the `columnDefs` like this:
+Here is an example of using this `EUR` function in Dash in the `columnDefs` ::
 ```
 columnDefs = [
      {"headerName": "Euro", "field": "Euros", "valueFormatter": {"function": "EUR(params.value)"}},
@@ -113,6 +131,7 @@ columnDefs = [
 ```
 You can find the full example in the [Value Formatters Custom Functions](https://dashaggrid.pythonanywhere.com/rendering/value-formatters-custom-functions) section.
 
+You can see all the functions we use in these docs in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/assets/dashAgGridFunctions.js)
 
 
 
