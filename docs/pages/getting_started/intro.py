@@ -93,6 +93,9 @@ text2 = """
  3. Get the code for the demo app in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)
  4. Learn more about [AG Grid](https://www.ag-grid.com/react-data-grid) in the upstream docs, including more information on community features and licensing for the enterprise version.
  
+ Note that the Medium article and the Video are based on the first alpha release 2.0.0a1.  Please be sure to see the updated
+ code for the [demo_stock_portfolio.py](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)) app.
+ 
 ### Contributing
 
 Feedback is welcome!  Please feel free to open an [issue]( https://github.com/plotly/dash-ag-grid/issues) on GitHub.
