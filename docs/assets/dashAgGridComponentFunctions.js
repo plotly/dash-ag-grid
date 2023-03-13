@@ -106,17 +106,16 @@ dagcomponentfuncs.myCustomButton = function (props) {
     }, props.value.children))
 }
 
-
 dagcomponentfuncs.customButton = function (props) {
+
+    const {setData, data} = props;
+
     if (!props.value) {
         return React.createElement('button')
     }
 
     function onClick() {
-        let colId = props.column.colId;
-        let newData = JSON.parse(JSON.stringify(props.node.data[colId]));
-        newData["n_clicks"]++
-        props.node.setDataValue(colId, newData);
+        setData()
     }
 
     const id = JSON.stringify({'index': props.rowIndex, 'type':'customButton'})

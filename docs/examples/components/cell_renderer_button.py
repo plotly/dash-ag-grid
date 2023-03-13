@@ -72,7 +72,7 @@ app.layout = html.Div(
 
 @app.callback(
     Output("custom-component-btn-value-changed", "children"),
-    Input("custom-component-btn-grid", "cellValueChanged"),
+    Input("custom-component-btn-grid", "cellRendererData"),
 )
 def showChange(n):
     return json.dumps(n)
@@ -91,15 +91,15 @@ This will register the customButton function used in the cellRenderer
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
 dagcomponentfuncs.customButton = function (props) {
+
+    const {setData, data} = props;
+
     if (!props.value) {
         return React.createElement('button')
     }
 
     function onClick() {
-        let colId = props.column.colId;
-        let newData = JSON.parse(JSON.stringify(props.node.data[colId]));
-        newData["n_clicks"]++
-        props.node.setDataValue(colId, newData);
+        setData()
     }
 
     const id = JSON.stringify({'index': props.rowIndex, 'type':'customButton'})
@@ -110,6 +110,7 @@ dagcomponentfuncs.customButton = function (props) {
         onClick: onClick,
         id: props.value.id,
         className: props.className,
+
     }, props.children))
 }
 
