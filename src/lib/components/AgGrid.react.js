@@ -524,6 +524,11 @@ DashAgGrid.propTypes = {
         rowIndex: PropTypes.number,
 
         /**
+        * Row Id from the grid, this could be a number automatically, or set via getRowId
+        */
+        rowId: PropTypes.any,
+
+        /**
         * timestamp of last action
         */
         timestamp: PropTypes.any,
@@ -544,9 +549,9 @@ DashAgGrid.propTypes = {
         rowIndex: PropTypes.number,
 
         /**
-        * nodeId, typically a row number
+        * Row Id from the grid, this could be a number automatically, or set via getRowId
         */
-        nodeId: PropTypes.any,
+        rowId: PropTypes.any,
 
         /**
         * data, data object from the row

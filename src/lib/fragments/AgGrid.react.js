@@ -456,15 +456,14 @@ export default class DashAgGrid extends Component {
 
     }
 
-    onCellClicked({value, column: {colId}, rowIndex}) {
+    onCellClicked({value, column: {colId}, rowIndex, node}) {
         const timestamp = Date.now()
-        this.props.setProps({cellClicked: {value, colId, rowIndex, timestamp}});
+        this.props.setProps({cellClicked: {value, colId, rowIndex, rowId: node.id, timestamp}});
     }
 
     onCellValueChanged({oldValue, newValue, column: {colId}, rowIndex, data, node}) {
-        const nodeId = JSON.parse(JSON.stringify(node.id))
         this.props.setProps({
-            cellValueChanged: {rowIndex, nodeId, data, oldValue, newValue, colId},
+            cellValueChanged: {rowIndex, rowId: node.id, data, oldValue, newValue, colId},
         });
     }
 
