@@ -73,18 +73,20 @@ Under the covers, Dash will take the value of this dict and parse it into a Java
 __Writing Secure Dash Apps__
 
 Executing JavaScript functions passed as a prop can introduce security risks - similar to using
- the `exec()` function in Python.  To reduce the risk of remote code execution attacks, only functions included in the
-  `dashAgGridFunctions` namespace will be executed.  
+ the `exec()` function in Python.  To reduce the risk of remote code execution attacks, only functions that are included
+ in the component's namespace or the `dashAgGridFunctions` namespace will be executed.  
 
 > 
 > In a browser environment, the `window` object is the global namespace.  Any JavaScript variable defined in the `window`
- object can be passed as a component property in Dash. Only functions included in the `window.dashAgGridFunctions` object
-  will be  executed in dash-ag-grid. 
+ object can be passed as a component property in Dash. Only functions included in the component's namespace  or those included in the
+  `dashAgGridFunctions namespace will be  executed in dash-ag-grid. 
 
 
-We have already included certain JavaScript functions in the `dashAgGridFunctions` namespace, such as `Number()`, `Math()` and basic string
- methods such as `toUpperCase()`.  For convenience, we have also  included the [d3-format](https://github.com/d3/d3-format) and [d3-time-format](https://github.com/d3/d3-time-format) 
- libraries - making it easy to format numbers and dates.  See [Value Formatters with d3](https://dashaggrid.pythonanywhere.com/rendering/value-formatters-with-d3-format) for more details.
+We include certain JavaScript functions in the the dash-ag-grid component's namespace such as
+ `Number()` and `Math()`.  For convenience, we have also  included the [d3-format](https://github.com/d3/d3-format)
+  and [d3-time-format](https://github.com/d3/d3-time-format)  libraries - making it easy to format numbers and dates.
+    See [Value Formatters with d3](https://dashaggrid.pythonanywhere.com/rendering/value-formatters-with-d3-format) for
+     more details.  This means you can use `Number()`, `Math()`, `d3` in-line in your dash app.
  
  You can include other JavaScript functions by adding by them to  `dashAgGridFunctions` namespace in a .js file in the assets folder.
 
