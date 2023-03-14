@@ -125,7 +125,7 @@ def make_side_by_side(code, show_app, notes, notes_first):
     )
 
 
-def make_app_first(code, show_app, show_code, notes, notes_first):
+def make_app_first(code, show_app, show_code, notes, notes_first, image):
     """
     This is an alternate layout for the "code and show"
     It displays the app on top and the code below.

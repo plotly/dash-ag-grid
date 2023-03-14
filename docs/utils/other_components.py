@@ -28,3 +28,11 @@ def make_md(text):
 enterprise_blurb = """
 > This feature requires the Enterprise version of AG Grid. See the [AG Grid website](https://www.ag-grid.com/license-pricing.php) for more information.
 """
+
+
+def make_feature_card(img, txt):
+    return dbc.Card(
+        [dbc.CardBody(dcc.Markdown(txt)), dbc.CardImg(src=img)],
+        className="shadow my-5 mx-5 px-3",
+        style={"maxWidth": 1000},
+    )
