@@ -72,7 +72,7 @@ app.layout = html.Div(
 
 @app.callback(
     Output("custom-component-btn-value-changed", "children"),
-    Input("custom-component-btn-grid", "cellValueChanged"),
+    Input("custom-component-btn-grid", "cellRendererData"),
 )
 def showChange(n):
     return json.dumps(n)
@@ -90,28 +90,42 @@ This will register the customButton function used in the cellRenderer
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
+
 dagcomponentfuncs.customButton = function (props) {
+    const {setData, data} = props;
+
     if (!props.value) {
-        return React.createElement('button')
+        return React.createElement('button');
     }
 
     function onClick() {
-        let colId = props.column.colId;
-        let newData = JSON.parse(JSON.stringify(props.node.data[colId]));
-        newData["n_clicks"]++
-        props.node.setDataValue(colId, newData);
+        setData();
     }
 
-    const id = JSON.stringify({'index': props.rowIndex, 'type':'customButton'})
-    return React.createElement('div',
-    {style: {'width':'100%','height':'100%', 'padding':'5px', 'display':'flex',
-     'justifyContent':'center', 'alignItems':'center'}},
-    React.createElement('button', {
-        onClick: onClick,
-        id: props.value.id,
-        className: props.className,
-    }, props.children))
-}
+    const id = JSON.stringify({index: props.rowIndex, type: 'customButton'});
+    return React.createElement(
+        'div',
+        {
+            style: {
+                width: '100%',
+                height: '100%',
+                padding: '5px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            },
+        },
+        React.createElement(
+            'button',
+            {
+                onClick: onClick,
+                id: props.value.id,
+                className: props.className,
+            },
+            props.children
+        )
+    );
+};
 
 
 """

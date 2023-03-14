@@ -1,7 +1,7 @@
 from dash import Dash, html, dcc, register_page
 import dash_bootstrap_components as dbc
 from utils.utils import app_description
-from utils.other_components import up_next, make_md
+from utils.other_components import up_next, make_md, make_feature_card
 
 register_page(
     __name__, order=0, description=app_description, title="Dash AG Grid", path="/"
@@ -14,13 +14,6 @@ ag_grid_docs = "https://www.ag-grid.com/react-data-grid/"
 ag_grid_docs_img = "https://user-images.githubusercontent.com/72614349/215338849-cb29d4e1-94b4-453a-84eb-5c8e05d3d742.png"
 dash_ag_grid_github = "https://github.com/plotly/dash-ag-grid"
 
-
-def make_feature_card(img, txt):
-    return dbc.Card(
-        [dbc.CardBody(dcc.Markdown(txt)), dbc.CardImg(src=img)],
-        className="shadow my-5 mx-5 px-3",
-        style={"maxWidth": 1050},
-    )
 
 
 medium_article_card = dbc.Card(
@@ -89,11 +82,12 @@ text2 = """
 `pip install dash-ag-grid==2.0.0a3`
 
  1. Read the [Medium article](https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers) or watch the [webinar](https://www.youtube.com/watch?v=Ggekq7C5pz4?utm_source=Webinar%3A+AG+Grid+1%2F26%2F23&utm_medium=medium_article&utm_content=AnnouncingDashAGGrids) introducing Dash AG Grid.
- 2. See the live [stock portfolio demo app](https://sales-demo.plotly.com/dash-ag-grid) from the webinar hosted by Plotly.
- 3. Get the code for the demo app in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)
- 4. Learn more about [AG Grid](https://www.ag-grid.com/react-data-grid) in the upstream docs, including more information on community features and licensing for the enterprise version.
+ 2. See the Plotly Video [Introducing Dash AG Grid](https://www.youtube.com/watch?v=dovf4FwtwPg)
+ 3. See the live [stock portfolio demo app](https://sales-demo.plotly.com/dash-ag-grid) from the webinar hosted by Plotly.
+ 4. Get the code for the demo app in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)
+ 5. Learn more about [AG Grid](https://www.ag-grid.com/react-data-grid) in the upstream docs, including more information on community features and licensing for the enterprise version.
  
- Note that the Medium article and the Video are based on the first alpha release 2.0.0a1.  Please be sure to see the updated
+Note that the webinar and Medium article are based on the first alpha release 2.0.0a1.  Please be sure to see the updated
  code for the [demo_stock_portfolio.py](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)) app.
  
 ### Contributing
