@@ -90,29 +90,42 @@ This will register the customButton function used in the cellRenderer
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
-dagcomponentfuncs.customButton = function (props) {
 
+dagcomponentfuncs.customButton = function (props) {
     const {setData, data} = props;
 
     if (!props.value) {
-        return React.createElement('button')
+        return React.createElement('button');
     }
 
     function onClick() {
-        setData()
+        setData();
     }
 
-    const id = JSON.stringify({'index': props.rowIndex, 'type':'customButton'})
-    return React.createElement('div',
-    {style: {'width':'100%','height':'100%', 'padding':'5px', 'display':'flex',
-     'justifyContent':'center', 'alignItems':'center'}},
-    React.createElement('button', {
-        onClick: onClick,
-        id: props.value.id,
-        className: props.className,
-
-    }, props.children))
-}
+    const id = JSON.stringify({index: props.rowIndex, type: 'customButton'});
+    return React.createElement(
+        'div',
+        {
+            style: {
+                width: '100%',
+                height: '100%',
+                padding: '5px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            },
+        },
+        React.createElement(
+            'button',
+            {
+                onClick: onClick,
+                id: props.value.id,
+                className: props.className,
+            },
+            props.children
+        )
+    );
+};
 
 
 """

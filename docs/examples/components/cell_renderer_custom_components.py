@@ -98,7 +98,7 @@ app.layout = html.Div(
 
 @app.callback(
     Output("cell-renderer-value-changed", "children"),
-    Input("custom-components-grid", "cellValueChanged"),
+    Input("custom-components-grid", "cellRendererData"),
 )
 def show_change(n):
     return json.dumps(n)
