@@ -151,7 +151,12 @@ DashAgGrid.propTypes = {
      * If true, the internal method selectAll() will be called
      * If object, then the object will be passed to selectAll()
      */
-    selectAll: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+    selectAll: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.exact({
+            filtered: PropTypes.bool
+        })
+    ]),
 
     /**
      * If true, the internal method deselectAll() will be called
