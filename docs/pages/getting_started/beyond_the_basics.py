@@ -78,9 +78,8 @@ Executing JavaScript functions passed as a prop can introduce security risks - s
 
 > 
 > In a browser environment, the `window` object is the global namespace.  Any JavaScript variable defined in the `window`
- object can be passed as a component property in Dash. Only functions included in the component's namespace  or those included in the
-  `dashAgGridFunctions namespace will be  executed in dash-ag-grid. 
-
+ object can be passed as a component property in Dash. Only functions included in the grid's namespace will be executed.
+ 
 
 We include certain JavaScript functions in the the dash-ag-grid component's namespace such as
  `Number()` and `Math()`.  For convenience, we have also  included the [d3-format](https://github.com/d3/d3-format)
@@ -88,12 +87,16 @@ We include certain JavaScript functions in the the dash-ag-grid component's name
     See [Value Formatters with d3](https://dashaggrid.pythonanywhere.com/rendering/value-formatters-with-d3-format) for
      more details.  This means you can use `Number()`, `Math()`, `d3` in-line in your dash app.
  
- You can include other JavaScript functions by adding by them to  `dashAgGridFunctions` namespace in a .js file in the assets folder.
+You can include other JavaScript functions by adding by them to  `dashAgGridFunctions` namespace in a .js file in the assets folder.
+The functions defined in the `window.dashAgGridFunctions` and `window.dashAgGridComponents` objects are added to the grid's namespace.
+These are the only functions that can be used with Dash props.
+ 
 
 __Adding simple JavaScript functions in-line__
 
-The functions included in the `dashAgGridFunctions` namespace can be used in-line as shown below.  The function in this example
- prepends a dollar sign to each value in the "balance" column:
+Simple functions like `+ - *` operators, string methods, and functions already included in the namespace such as
+ `Number()`,  `Math()` and `d3` can be used in-line without adding them to the `dashAgGridFunctions` namespace.  Here is
+  an example of a function to prepends a dollar sign to each value in the "balance" column:
 
 ```
 columnDefs = [   
