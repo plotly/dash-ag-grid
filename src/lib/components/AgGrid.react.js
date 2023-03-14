@@ -165,8 +165,9 @@ DashAgGrid.propTypes = {
     deselectAll: PropTypes.bool,
 
     /**
-     * If true, the internal method autoSizeAllColumns(false) will be called to not skip headers
-     * If object, then the object will be passed to autoSizeAllColumns
+     * Set to true to autosize all columns, considering both headers and data
+     * Or pass an object of options for how to autosize.
+     * Currently supports `skipHeaders`, set this true to only consider data when autosizing.
      */
     autoSizeAllColumns: PropTypes.oneOfType([
         PropTypes.bool,
