@@ -3,7 +3,7 @@ from utils.utils import app_description
 from utils.other_components import up_next, make_md
 
 register_page(
-    __name__, order=1, description=app_description, title="Dash AG Grid")
+    __name__, order=2, description=app_description, title="Dash AG Grid")
 
 text1 = """
 # Dash AG Grid Reference

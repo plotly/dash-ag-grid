@@ -10,10 +10,15 @@ dagcomponentfuncs.stockLink = function (props) {
 
 dagcomponentfuncs.customDropdown = function (props) {
 
+    const {setData, data} = props;
+
     function selectionHandler() {
+        // update data in the grid
         const newValue = event.target.value;
         const colId = props.column.colId;
         props.node.setDataValue(colId, newValue);
+        // update cellRendererData prop so it can be used to trigger a callback
+        setData(event.target.value)
     }
 
     const options = props.colDef.cellEditorParams.values.map((opt) => React.createElement('option', {}, opt))
