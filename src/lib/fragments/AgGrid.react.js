@@ -74,6 +74,7 @@ export default class DashAgGrid extends Component {
         this.parseParamFunction = this.parseParamFunction.bind(this);
         this.buildArray = this.buildArray.bind(this);
         this.fixCols = this.fixCols.bind(this);
+        this.onAsyncTransactionsFlushed = this.onAsyncTransactionsFlushed.bind(this);
 
         // Additional Exposure
         this.setUpCols = this.setUpCols.bind(this);
@@ -282,6 +283,19 @@ export default class DashAgGrid extends Component {
         return newRowData;
     }
 
+    syncRowData() {
+        const {rowData, setProps, rowModelType} = this.props
+        if (rowData) {
+            const virtualRowData = [];
+            if (rowModelType === 'clientSide') {
+                this.state.gridApi.forEachNodeAfterFilter((node) => {
+                    virtualRowData.push(node.data);
+                });
+            }
+            setProps({rowData: this.getRowData(), virtualRowData})
+        }
+    }
+
     onSortChanged() {
         const {setProps, rowModelType} = this.props;
         if (rowModelType === 'clientSide') {
@@ -354,8 +368,17 @@ export default class DashAgGrid extends Component {
 
     onRowDataUpdated() {
         // Handles preserving existing selections when rowData is updated in a callback
-        const {selectedRows} = this.props;
+        const {selectedRows, setProps, rowData, rowModelType} = this.props;
         const {openGroups, filterModel} = this.state;
+
+        if (rowData && rowModelType === 'clientSide' && this.state.gridApi) {
+            const virtualRowData = [];
+            this.state.gridApi.forEachNodeAfterFilter((node) => {
+                virtualRowData.push(node.data);
+            });
+
+            setProps({virtualRowData})
+        }
 
         // Call the API to select rows
         this.setSelection(selectedRows);
@@ -446,7 +469,7 @@ export default class DashAgGrid extends Component {
         if (this.state.rowTransaction) {
             this.state.rowTransaction.map((data) => this.applyRowTransaction(data, params.api))
             this.setState({rowTransaction: null});
-            this.props.setProps({rowData: this.getRowData()})
+            this.syncRowData();
         }
 
         // Handles applying selections when a selection was persisted by Dash
@@ -462,8 +485,15 @@ export default class DashAgGrid extends Component {
     }
 
     onCellValueChanged({oldValue, newValue, column: {colId}, rowIndex, data, node}) {
+        const virtualRowData = [];
+        if (this.props.rowModelType === 'clientSide' && this.state.gridApi) {
+            this.state.gridApi.forEachNodeAfterFilter((node) => {
+                virtualRowData.push(node.data);
+            });
+        }
         this.props.setProps({
             cellValueChanged: {rowIndex, rowId: node.id, data, oldValue, newValue, colId},
+            virtualRowData
         });
     }
 
@@ -634,6 +664,10 @@ export default class DashAgGrid extends Component {
                 })
             }
         }
+    }
+
+    onAsyncTransactionsFlushed() {
+        this.syncRowData();
     }
 
     autoSizeAllColumns(opts) {
@@ -810,6 +844,7 @@ export default class DashAgGrid extends Component {
                     onRowDataUpdated={this.onRowDataUpdated}
                     onRowGroupOpened={this.onRowGroupOpened}
                     onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}
+                    onAsyncTransactionsFlushed={this.onAsyncTransactionsFlushed}
                     onGridSizeChanged={debounce(this.onGridSizeChanged, RESIZE_DEBOUNCE_MS)}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
