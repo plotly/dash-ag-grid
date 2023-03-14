@@ -148,8 +148,9 @@ DashAgGrid.propTypes = {
     exportDataAsCsv: PropTypes.bool,
 
     /**
-     * If true, the internal method selectAll() will be called
-     * If object, then the object will be passed to selectAll()
+     * Set to true to cause all rows to be selected,
+     * Or pass an object of options for which rows to select.
+     * Currently supports `filtered`, set to true to only select filtered rows.
      */
     selectAll: PropTypes.oneOfType([
         PropTypes.bool,
