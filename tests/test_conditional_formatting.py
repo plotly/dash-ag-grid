@@ -26,18 +26,18 @@ def test_cf001_conditional_formatting(dash_duo):
         {"make": "Porsche", "model": "Boxter", "price": 72000},
     ]
 
-    defaultColDef = {"valueSetter":{"function":"addEdits(params)"}, "editable": True}
-
     cellStyle = {"styleConditions": [
-            {"condition": "highlightEdits(params)", "style": {"color": "orange"}},
-        ]}
+        {"condition": "highlightEdits(params)", "style": {"color": "orange"}},
+    ]}
+
+    defaultColDef = {"valueSetter":{"function":"addEdits(params)"}, "editable": True,
+                     "cellStyle": cellStyle}
 
     getRowStyle= {
         "styleConditions": [
             {"condition": "params.data.make == 'Toyota'", "style": {"color": "blue"}}
         ]
     }
-
 
     app.layout = html.Div(
         [
@@ -49,7 +49,6 @@ def test_cf001_conditional_formatting(dash_duo):
                 rowData=rowData,
                 defaultColDef=defaultColDef,
                 columnSize="sizeToFit",
-                cellStyle=cellStyle,
                 getRowStyle=getRowStyle,
                 id="grid",
             ),

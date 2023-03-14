@@ -22,8 +22,9 @@ def test_cr001_custom_row_selectable(dash_duo):
         id="grid",
         columnDefs=columnDefs,
         rowData=[{"ticker": "AAPL"}, {"ticker": "MSFT"}],
-        dashGridOptions={'isRowSelectable': {'function': 'params.data.ticker == "AAPL" ? true: false'}},
-        rowSelection="multiple"
+        dashGridOptions={'isRowSelectable': {'function': 'params.data.ticker == "AAPL" ? true: false'},
+                         'rowSelection': "multiple"},
+
     )
 
     app = Dash(__name__)
