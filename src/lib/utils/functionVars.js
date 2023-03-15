@@ -1,7 +1,7 @@
 /**
-* Dangerous elements that can be used to execute strings as JS code:
-* https://www.ag-grid.com/react-data-grid/cell-expressions/#column-definition-expressions
-**/
+ * Dangerous elements that can be used to execute strings as JS code:
+ * https://www.ag-grid.com/react-data-grid/cell-expressions/#column-definition-expressions
+ **/
 export const expressWarn = [
     'valueGetter',
     'valueFormatter',
@@ -13,13 +13,13 @@ export const expressWarn = [
 ];
 
 /**
-* These props will always be replaced because the values inside the objects can only be strings to be evaluated
-**/
-export const replaceFunctions = ['cellClassRules', 'rowClassRules']
+ * These props will always be replaced because the values inside the objects can only be strings to be evaluated
+ **/
+export const replaceFunctions = ['cellClassRules', 'rowClassRules'];
 
 /**
-* Functions from grid props https://www.ag-grid.com/react-data-grid/grid-options/
-**/
+ * Functions from grid props https://www.ag-grid.com/react-data-grid/grid-options/
+ **/
 export const gridFunctions = [
     // Accessories
     'getMainMenuItems',
@@ -94,12 +94,11 @@ export const gridFunctions = [
     'getRowClass',
     'rowClassRules',
     'isFullWidthRow',
-
- ];
+];
 
 /**
-* Functions from columnDef props https://www.ag-grid.com/react-data-grid/column-properties/
-**/
+ * Functions from columnDef props https://www.ag-grid.com/react-data-grid/column-properties/
+ **/
 export const columnFunctions = [
     // Columns
     'keyCreator',
@@ -121,7 +120,6 @@ export const columnFunctions = [
 
     // Columns: Filter
     'getQuickFilterText',
-
 
     // Columns: Headers
     'suppressHeaderKeyboardEvent',
@@ -171,4 +169,3 @@ export const columnFunctions = [
     // Header Group Component Parameters
     'setExpanded',
 ];
-

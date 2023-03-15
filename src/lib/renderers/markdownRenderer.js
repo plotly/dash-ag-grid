@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import rehypeRaw from 'rehype-raw';
-import remarkGfm from 'remark-gfm'
+import remarkGfm from 'remark-gfm';
 
 import ReactMarkdown from 'react-markdown';
 
@@ -11,28 +11,28 @@ export default function MarkdownRenderer(props) {
     // Markdown renderer with HTML rendering enabled.
     // rehypeRaw allows HTML rendering.
     // Convert <p> tags to simple <divs> using the components prop.
-    const rehypePlugins = dangerously_allow_code ? [rehypeRaw] : []
+    const rehypePlugins = dangerously_allow_code ? [rehypeRaw] : [];
 
     let linkTarget;
     if (!dangerously_allow_code) {
-        linkTarget=colDef.linkTarget || '_self'
+        linkTarget = colDef.linkTarget || '_self';
     }
-
 
     return (
         <ReactMarkdown
             linkTarget={linkTarget}
             remarkPlugins={[[remarkGfm, {singleTilde: false}]]}
-            components={{p: 'div',
-                a: ({ node: _, children, ...props}) => {
+            components={{
+                p: 'div',
+                a: ({node: _, children, ...props}) => {
                     const linkProps = props;
                     if (target === '_blank') {
                         linkProps.rel = 'noopener noreferrer';
                     }
-                    return <a {...linkProps}>{children}</a>
-                }
+                    return <a {...linkProps}>{children}</a>;
+                },
             }}
-            className='agGrid-Markdown'
+            className="agGrid-Markdown"
             rehypePlugins={rehypePlugins}
             children={String(value)}
         />
@@ -43,5 +43,5 @@ MarkdownRenderer.propTypes = {
     colDef: PropTypes.any,
     target: PropTypes.string,
     value: PropTypes.string,
-    dangerously_allow_code: PropTypes.bool
+    dangerously_allow_code: PropTypes.bool,
 };
