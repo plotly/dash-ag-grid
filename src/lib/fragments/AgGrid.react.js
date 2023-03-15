@@ -596,8 +596,8 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
-        this.updateColumnState();
         this.updateColumnWidths();
+        this.updateColumnState();
 
         if (this.state.rowTransaction) {
             this.state.rowTransaction.map((data) =>
