@@ -90,7 +90,11 @@ def test_sb001_sizing_buttons(dash_duo):
     grid.wait_for_cell_text(0, 0, "Michael Phelps")
 
     oldValue = ''
-    until(lambda: oldValue != dash_duo.find_element('#columnState').get_attribute('innerText'), timeout=3)
+    until(lambda: oldValue != dash_duo.find_element('#columnState').text, timeout=3)
+    oldValue = dash_duo.find_element('#columnState').text
+    for x in columnDefs:
+        assert x['field'] in oldValue
+    
     for x in ['autoSizeAllColumns', 'autoSizeAllColumnsSkipHeaders']:
         dash_duo.find_element(f'#{x}').click()
         dash_duo.find_element('#updateColumnState').click()
