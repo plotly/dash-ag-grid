@@ -36,7 +36,7 @@ def test_sr001_selected_rows(dash_duo):
                 rowData=data,
                 columnSize="sizeToFit",
                 defaultColDef={"resizable": True, "sortable": True, "filter": True},
-                rowSelection="single",
+                dashGridOptions={'rowSelection':"single"},
                 persistence=True,
                 persistence_type='session'
             ),

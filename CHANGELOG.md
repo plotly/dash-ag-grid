@@ -52,6 +52,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#76](https://github.com/plotly/dash-ag-grid/pull/76) Adding logging function
   - adding logging function available by default, available via `{"function": "log()"}`
 
+- [#81](https://github.com/plotly/dash-ag-grid/pull/81)
+  - added tests for `cellClicked` data
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
@@ -65,6 +68,13 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#70](https://github.com/plotly/dash-ag-grid/pull/70)
   - Changing `clickData` to `cellRendererData` to more closely line up with what this does
 
+- [#81](https://github.com/plotly/dash-ag-grid/pull/81)
+  - prop clean-up overhaul
+  - updating testing that broke due to props no longer being on the grid, but in dashGridOptions
+  - added testing for selection and sizing buttons
+  - removed `cellStyle` from the grid level, allowing more flexibility in customization, and alignment with AG grid
+  - allowed for functions, styleConditions and regular dictionaries to be passed to the `cellStyle` on all levels
+  - added `rowId` to `cellClicked` data
 
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
@@ -75,6 +85,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#19](https://github.com/plotly/dash-ag-grid/pull/19) Fixed `cellClicked` as reported in [#17](https://github.com/plotly/dash-ag-grid/issues/17)
 - [#45](https://github.com/plotly/dash-ag-grid/pull/45) Fix [#44](https://github.com/plotly/dash-ag-grid/issues/44), markdown ignoring `target="_blank"` to open links in a new tab. Now if `dangerously_use_code` is `false`, markdown cells honor `columnDef.linkTarget`, but if `dangerously_use_code` is `true` you MUST use the HTML syntax `<a target="_blank">` to achieve this, markdown syntax `[text](url)` will ignore `columnDef.linkTarget`.
 - [#47](https://github.com/plotly/dash-ag-grid/pull/47) Fix `virtualRowData` by setting the default `rowModelType='clientSide'`
+- [#81](https://github.com/plotly/dash-ag-grid/pull/81) Fixing syncing issue with `rowData`, `virtualRowData` when cell edits and async `rowTransactions` occur
 
 ## [1.3.2] - 2023-01-13
 

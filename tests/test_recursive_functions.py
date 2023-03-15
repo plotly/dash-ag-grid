@@ -4,14 +4,13 @@ Nested tables.
 
 import dash_ag_grid as dag
 import dash
-from dash import Input, Output, html, dcc
+from dash import Input, Output, html, dcc, Dash
 from . import utils
 from dash.testing.wait import until
 import time
 
 def test_rf001_recursive_functions(dash_duo):
-
-    app = dash.Dash(__name__)
+    app = Dash(__name__)
     masterColumnDefs = [
         {
             "headerName": "Country",
@@ -23,14 +22,14 @@ def test_rf001_recursive_functions(dash_duo):
     ]
 
     detailColumnDefs = [
-        {"headerName": "City", "field": "city", "valueFormatter": {"function":"1+2"}, 'cellStyle': {'color': 'red'}},
+        {"headerName": "City", "field": "city", "valueFormatter": {"function": "1+2"}, 'cellStyle': {'color': 'red'}},
         {"headerName": "Pop. (City proper)", "field": "population_city"},
         {"headerName": "Pop. (Metro area)", "field": "population_metro"},
-        {"headerName":"testFun", "children":[
-            {"headerName": "Pop. (Metro area)", "field": "population_metro", "valueFormatter": {"function":"1+2"}},
-            {"headerName":"testing", "children":[
-                    {"headerName": "So Much Fun", "field": "population_metro", "valueFormatter": {"function":"3+5"}},
-                ]}
+        {"headerName": "testFun", "children": [
+            {"headerName": "Pop. (Metro area)", "field": "population_metro", "valueFormatter": {"function": "1+2"}},
+            {"headerName": "testing", "children": [
+                {"headerName": "So Much Fun", "field": "population_metro", "valueFormatter": {"function": "3+5"}},
+            ]}
         ]}
     ]
 
@@ -107,12 +106,16 @@ def test_rf001_recursive_functions(dash_duo):
         },
     ]
 
+    cellStyle = {'styleConditions': [
+        {'condition': 'params.data.city=="Delhi"', 'style': {'color': 'orange'}}
+    ]}
 
     app.layout = html.Div(
         [
             dag.AgGrid(
                 id="grid",
                 columnDefs=masterColumnDefs,
+                defaultColDef={'cellStyle': cellStyle},
                 rowData=rowData,
                 columnSize="sizeToFit",
                 enableEnterpriseModules=True,
@@ -120,14 +123,14 @@ def test_rf001_recursive_functions(dash_duo):
                 detailCellRendererParams={
                     "detailGridOptions": {
                         "columnDefs": detailColumnDefs,
+                        "defaultColDef": {'cellStyle': cellStyle},
                     },
                     "detailColName": "cities",
                     "suppressCallback": True,
                 },
-                cellStyle={'styleConditions': [
-                    {'condition':'params.data.city=="Delhi"', 'style':{'color':'orange'}}
-                ]},
-                detailRowAutoHeight=True,
+                dashGridOptions={
+                    'detailRowAutoHeight': True
+                },
             )
         ]
     )

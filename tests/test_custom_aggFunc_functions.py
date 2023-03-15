@@ -53,12 +53,12 @@ def test_ca001_custom_aggFunc_functions(dash_duo):
             dag.AgGrid(
                 columnDefs=columnDefs,
                 rowData=data,
-                rowSelection="multiple",
                 defaultColDef=dict(
                     resizable=True,
+                    rowSelection="multiple",
+                    suppressAggFuncInHeader=True,
                 ),
                 id="grid",
-                suppressAggFuncInHeader=True,
                 enableEnterpriseModules=True,
             ),
         ]
