@@ -448,7 +448,7 @@ DashAgGrid.propTypes = {
 
     /**
      * Sets the Row Model type.
-     * Default Value: ['clientSide', 'infinite', 'viewport', 'serverSide']
+     * Default Value: 'clientSide'
      */
     rowModelType: PropTypes.oneOf([
         'clientSide',
