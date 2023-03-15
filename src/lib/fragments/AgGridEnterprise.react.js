@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { LicenseManager } from 'ag-grid-enterprise';
+import {LicenseManager} from 'ag-grid-enterprise';
 import DashAgGrid, {propTypes} from './AgGrid.react';
 
 export default class DashAgGridEnterprise extends Component {
@@ -8,7 +8,7 @@ export default class DashAgGridEnterprise extends Component {
         if (licenseKey) {
             LicenseManager.setLicenseKey(licenseKey);
         }
-        return (<DashAgGrid {...this.props}/>);
+        return <DashAgGrid {...this.props} />;
     }
 }
 

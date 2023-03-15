@@ -3,8 +3,16 @@ import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
 import {omit, equals, isEmpty} from 'ramda';
-import {propTypes as _propTypes, defaultProps as _defaultProps} from '../components/AgGrid.react';
-import {expressWarn, gridFunctions, columnFunctions, replaceFunctions} from '../utils/functionVars';
+import {
+    propTypes as _propTypes,
+    defaultProps as _defaultProps,
+} from '../components/AgGrid.react';
+import {
+    expressWarn,
+    gridFunctions,
+    columnFunctions,
+    replaceFunctions,
+} from '../utils/functionVars';
 import debounce from '../utils/debounce';
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
@@ -12,7 +20,7 @@ import RowMenuRenderer from '../renderers/rowMenuRenderer';
 import {customFunctions} from '../renderers/customFunctions';
 
 import 'ag-grid-community';
-import { AgGridReact } from 'ag-grid-react';
+import {AgGridReact} from 'ag-grid-react';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -20,16 +28,17 @@ import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 
 // d3 imports
-import * as d3Format from "d3-format"
-import * as d3Time from "d3-time"
-import * as d3TimeFormat from "d3-time-format"
-import * as d3Array from "d3-array"
+import * as d3Format from 'd3-format';
+import * as d3Time from 'd3-time';
+import * as d3TimeFormat from 'd3-time-format';
+import * as d3Array from 'd3-array';
 const d3 = {...d3Format, ...d3Time, ...d3TimeFormat, ...d3Array};
 
 // Rate-limit for resizing columns when table div is resized
 const RESIZE_DEBOUNCE_MS = 200;
 
-const XSSMESSAGE = 'you are trying to use a dangerous element that could lead to XSS';
+const XSSMESSAGE =
+    'you are trying to use a dangerous element that could lead to XSS';
 
 export default class DashAgGrid extends Component {
     constructor(props) {
@@ -37,20 +46,19 @@ export default class DashAgGrid extends Component {
 
         const customComponents = window.dashAgGridComponentFunctions || {};
         const _this = this;
-        const newComponents = {}
-        Object.keys(customComponents).forEach(function(key) {
-            newComponents[key] = _this.generateRenderer(customComponents[key])
-        })
+        const newComponents = {};
+        Object.keys(customComponents).forEach(function (key) {
+            newComponents[key] = _this.generateRenderer(customComponents[key]);
+        });
 
         this.state = {
             ...this.props.parentState,
             components: {
                 rowMenu: this.generateRenderer(RowMenuRenderer),
                 markdown: this.generateRenderer(MarkdownRenderer),
-                ...newComponents
-            }
+                ...newComponents,
+            },
         };
-
 
         this.onGridReady = this.onGridReady.bind(this);
         this.onSelectionChanged = this.onSelectionChanged.bind(this);
@@ -60,9 +68,8 @@ export default class DashAgGrid extends Component {
         this.onFilterChanged = this.onFilterChanged.bind(this);
         this.onSortChanged = this.onSortChanged.bind(this);
         this.onRowGroupOpened = this.onRowGroupOpened.bind(this);
-        this.onDisplayedColumnsChanged = this.onDisplayedColumnsChanged.bind(
-            this
-        );
+        this.onDisplayedColumnsChanged =
+            this.onDisplayedColumnsChanged.bind(this);
         this.onGridSizeChanged = this.onGridSizeChanged.bind(this);
         this.updateColumnWidths = this.updateColumnWidths.bind(this);
         this.handleDynamicCellStyle = this.handleDynamicCellStyle.bind(this);
@@ -74,7 +81,8 @@ export default class DashAgGrid extends Component {
         this.parseParamFunction = this.parseParamFunction.bind(this);
         this.buildArray = this.buildArray.bind(this);
         this.fixCols = this.fixCols.bind(this);
-        this.onAsyncTransactionsFlushed = this.onAsyncTransactionsFlushed.bind(this);
+        this.onAsyncTransactionsFlushed =
+            this.onAsyncTransactionsFlushed.bind(this);
 
         // Additional Exposure
         this.setUpCols = this.setUpCols.bind(this);
@@ -87,7 +95,6 @@ export default class DashAgGrid extends Component {
         this.getRowData = this.getRowData.bind(this);
 
         this.selectionEventFired = false;
-
     }
 
     setSelection(selection) {
@@ -110,122 +117,232 @@ export default class DashAgGrid extends Component {
             if (target in columnDef) {
                 if (!dangerously_allow_code && expressWarn.includes(target)) {
                     if (typeof columnDef[target] !== 'function') {
-                        if (!(Object.keys(columnDef[target]).includes('function'))) {
+                        if (
+                            !Object.keys(columnDef[target]).includes('function')
+                        ) {
                             columnDef[target] = () => '';
-                            console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                            console.error({
+                                field: columnDef.field || columnDef.headerName,
+                                message: XSSMESSAGE,
+                            });
                         }
                     }
                 }
                 if (typeof columnDef[target] !== 'function') {
-                    if (Object.keys(columnDef[target]).includes('function') && !replaceFunctions.includes(target)) {
-                        const newFunc = JSON.parse(JSON.stringify(columnDef[target].function))
-                        columnDef[target] = (params) => this.parseParamFunction(params, newFunc)
+                    if (
+                        Object.keys(columnDef[target]).includes('function') &&
+                        !replaceFunctions.includes(target)
+                    ) {
+                        const newFunc = JSON.parse(
+                            JSON.stringify(columnDef[target].function)
+                        );
+                        columnDef[target] = (params) =>
+                            this.parseParamFunction(params, newFunc);
                     }
                 }
                 if (replaceFunctions.includes(target)) {
-                    for (const [key, value] of Object.entries(columnDef[target])) {
+                    for (const [key, value] of Object.entries(
+                        columnDef[target]
+                    )) {
                         if (typeof value !== 'function') {
-                            columnDef[target][key] = (params) => this.parseParamFunction(params, value)
+                            columnDef[target][key] = (params) =>
+                                this.parseParamFunction(params, value);
                         }
                     }
                 }
                 if (typeof columnDef[target] !== 'function') {
                     for (var i in expressWarn) {
-                        var col = expressWarn[i]
+                        var col = expressWarn[i];
                         if (Object.keys(columnDef[target]).includes(col)) {
                             if (!dangerously_allow_code) {
-                                if (typeof columnDef[target][col] !== 'function') {
-                                    if (!(Object.keys(columnDef[target][col]).includes('function'))) {
+                                if (
+                                    typeof columnDef[target][col] !== 'function'
+                                ) {
+                                    if (
+                                        !Object.keys(
+                                            columnDef[target][col]
+                                        ).includes('function')
+                                    ) {
                                         columnDef[target][col] = () => '';
-                                        console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                                        console.error({
+                                            field:
+                                                columnDef.field ||
+                                                columnDef.headerName,
+                                            message: XSSMESSAGE,
+                                        });
                                     }
                                 }
                             }
                             if (typeof columnDef[target][col] !== 'function') {
-                                if (Object.keys(columnDef[target][col]).includes('function')) {
-                                    const newFunc = JSON.parse(JSON.stringify(columnDef[target][col].function))
-                                    columnDef[target][col] = (params) => this.parseParamFunction(params, newFunc)
+                                if (
+                                    Object.keys(
+                                        columnDef[target][col]
+                                    ).includes('function')
+                                ) {
+                                    const newFunc = JSON.parse(
+                                        JSON.stringify(
+                                            columnDef[target][col].function
+                                        )
+                                    );
+                                    columnDef[target][col] = (params) =>
+                                        this.parseParamFunction(
+                                            params,
+                                            newFunc
+                                        );
                                 }
                             }
                         }
                     }
                 }
             }
-            if ("headerComponentParams" in columnDef) {
+            if ('headerComponentParams' in columnDef) {
                 if (target in columnDef.headerComponentParams) {
-                    if (!dangerously_allow_code && expressWarn.includes(target)) {
-                        if (typeof columnDef.headerComponentParams[target] !== 'function' &&
-                         columnDef.headerComponentParams[target] !== '') {
-                            if (!(Object.keys(columnDef.headerComponentParams[target]).includes('function'))) {
+                    if (
+                        !dangerously_allow_code &&
+                        expressWarn.includes(target)
+                    ) {
+                        if (
+                            typeof columnDef.headerComponentParams[target] !==
+                                'function' &&
+                            columnDef.headerComponentParams[target] !== ''
+                        ) {
+                            if (
+                                !Object.keys(
+                                    columnDef.headerComponentParams[target]
+                                ).includes('function')
+                            ) {
                                 columnDef.headerComponentParams[target] = '';
-                                console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                                console.error({
+                                    field:
+                                        columnDef.field || columnDef.headerName,
+                                    message: XSSMESSAGE,
+                                });
                             }
                         }
                     }
-                    if (typeof columnDef.headerComponentParams[target] !== 'function') {
-                        if (Object.keys(columnDef.headerComponentParams[target]).includes('function') && !replaceFunctions.includes(target)) {
-                            const newFunc = JSON.parse(JSON.stringify(columnDef.headerComponentParams[target].function))
-                            columnDef.headerComponentParams[target] = (params) => this.parseParamFunction(params, newFunc)
+                    if (
+                        typeof columnDef.headerComponentParams[target] !==
+                        'function'
+                    ) {
+                        if (
+                            Object.keys(
+                                columnDef.headerComponentParams[target]
+                            ).includes('function') &&
+                            !replaceFunctions.includes(target)
+                        ) {
+                            const newFunc = JSON.parse(
+                                JSON.stringify(
+                                    columnDef.headerComponentParams[target]
+                                        .function
+                                )
+                            );
+                            columnDef.headerComponentParams[target] = (
+                                params
+                            ) => this.parseParamFunction(params, newFunc);
                         }
                     }
                     if (replaceFunctions.includes(target)) {
-                        for (const [key, value] of Object.entries(columnDef.headerComponentParams[target])) {
+                        for (const [key, value] of Object.entries(
+                            columnDef.headerComponentParams[target]
+                        )) {
                             if (typeof value !== 'function') {
-                                columnDef.headerComponentParams[target][key] = (params) => this.parseParamFunction(params, value)
+                                columnDef.headerComponentParams[target][key] = (
+                                    params
+                                ) => this.parseParamFunction(params, value);
                             }
                         }
                     }
                 }
             }
-            if ("headerGroupComponentParams" in columnDef) {
+            if ('headerGroupComponentParams' in columnDef) {
                 if (target in columnDef.headerGroupComponentParams) {
-                    if (!dangerously_allow_code && expressWarn.includes(target)) {
-                        if (typeof columnDef.headerGroupComponentParams[target] !== 'function' &&
-                        columnDef.headerGroupComponentParams[target] !== '') {
-                            if (!(Object.keys(columnDef.headerGroupComponentParams[target]).includes('function'))) {
-                                columnDef.headerGroupComponentParams[target] = '';
-                                console.error({field: columnDef.field || columnDef.headerName, message: XSSMESSAGE})
+                    if (
+                        !dangerously_allow_code &&
+                        expressWarn.includes(target)
+                    ) {
+                        if (
+                            typeof columnDef.headerGroupComponentParams[
+                                target
+                            ] !== 'function' &&
+                            columnDef.headerGroupComponentParams[target] !== ''
+                        ) {
+                            if (
+                                !Object.keys(
+                                    columnDef.headerGroupComponentParams[target]
+                                ).includes('function')
+                            ) {
+                                columnDef.headerGroupComponentParams[target] =
+                                    '';
+                                console.error({
+                                    field:
+                                        columnDef.field || columnDef.headerName,
+                                    message: XSSMESSAGE,
+                                });
                             }
                         }
                     }
-                    if (typeof columnDef.headerGroupComponentParams[target] !== 'function') {
-                        if (Object.keys(columnDef.headerGroupComponentParams[target]).includes('function') && !replaceFunctions.includes(target)) {
-                            const newFunc = JSON.parse(JSON.stringify(columnDef.headerGroupComponentParams[target].function))
-                            columnDef.headerGroupComponentParams[target] = (params) => this.parseParamFunction(params, newFunc)
+                    if (
+                        typeof columnDef.headerGroupComponentParams[target] !==
+                        'function'
+                    ) {
+                        if (
+                            Object.keys(
+                                columnDef.headerGroupComponentParams[target]
+                            ).includes('function') &&
+                            !replaceFunctions.includes(target)
+                        ) {
+                            const newFunc = JSON.parse(
+                                JSON.stringify(
+                                    columnDef.headerGroupComponentParams[target]
+                                        .function
+                                )
+                            );
+                            columnDef.headerGroupComponentParams[target] = (
+                                params
+                            ) => this.parseParamFunction(params, newFunc);
                         }
                     }
                     if (replaceFunctions.includes(target)) {
-                        for (const [key, value] of Object.entries(columnDef.headerGroupComponentParams[target])) {
+                        for (const [key, value] of Object.entries(
+                            columnDef.headerGroupComponentParams[target]
+                        )) {
                             if (typeof value !== 'function') {
-                                columnDef.headerGroupComponentParams[target][key] = (params) => this.parseParamFunction(params, value)
+                                columnDef.headerGroupComponentParams[target][
+                                    key
+                                ] = (params) =>
+                                    this.parseParamFunction(params, value);
                             }
                         }
                     }
                 }
             }
-        }
+        };
 
-        columnFunctions.concat(expressWarn).map(test)
+        columnFunctions.concat(expressWarn).map(test);
 
         return columnDef;
     }
 
     setUpCols() {
-        const {columnDefs, setProps, defaultColDef, detailCellRendererParams} = this.props
+        const {columnDefs, setProps, defaultColDef, detailCellRendererParams} =
+            this.props;
 
         const cleanOneCol = (col) => {
             let colOut = this.fixCols(col);
             if ('children' in colOut) {
                 colOut = {
                     ...col,
-                    children: col.children.map(cleanOneCol)
+                    children: col.children.map(cleanOneCol),
                 };
             }
 
             if ('cellStyle' in colOut) {
                 if (Object.keys(colOut.cellStyle).includes('styleConditions')) {
-                    const cellStyle = JSON.parse(JSON.stringify(colOut.cellStyle))
-                    colOut.cellStyle = (params) => this.handleDynamicCellStyle({params, cellStyle})
+                    const cellStyle = JSON.parse(
+                        JSON.stringify(colOut.cellStyle)
+                    );
+                    colOut.cellStyle = (params) =>
+                        this.handleDynamicCellStyle({params, cellStyle});
                 }
             }
             return colOut;
@@ -236,28 +353,39 @@ export default class DashAgGrid extends Component {
                 columnDefs: columnDefs.map((columnDef) => {
                     const colDefOut = columnDef;
                     return cleanOneCol(colDefOut);
-                })
+                }),
             });
         }
         if (defaultColDef) {
             setProps({
-                defaultColDef: cleanOneCol(defaultColDef)
-            })
+                defaultColDef: cleanOneCol(defaultColDef),
+            });
         }
         if (detailCellRendererParams) {
             if ('detailGridOptions' in detailCellRendererParams) {
-                if ('columnDefs' in detailCellRendererParams.detailGridOptions) {
-                    detailCellRendererParams.detailGridOptions.columnDefs = detailCellRendererParams.detailGridOptions.columnDefs.map((columnDef) => {
-                        const colDefOut = columnDef;
-                        return cleanOneCol(colDefOut);
-                    })
-                    if ('defaultColDef' in detailCellRendererParams.detailGridOptions) {
-                        detailCellRendererParams.detailGridOptions.defaultColDef = cleanOneCol(detailCellRendererParams.detailGridOptions.defaultColDef)
+                if (
+                    'columnDefs' in detailCellRendererParams.detailGridOptions
+                ) {
+                    detailCellRendererParams.detailGridOptions.columnDefs =
+                        detailCellRendererParams.detailGridOptions.columnDefs.map(
+                            (columnDef) => {
+                                const colDefOut = columnDef;
+                                return cleanOneCol(colDefOut);
+                            }
+                        );
+                    if (
+                        'defaultColDef' in
+                        detailCellRendererParams.detailGridOptions
+                    ) {
+                        detailCellRendererParams.detailGridOptions.defaultColDef =
+                            cleanOneCol(
+                                detailCellRendererParams.detailGridOptions
+                                    .defaultColDef
+                            );
                     }
                     setProps({detailCellRendererParams});
                 }
             }
-
         }
     }
 
@@ -279,12 +407,12 @@ export default class DashAgGrid extends Component {
         const newRowData = [];
         this.state.gridApi.forEachNode((node) => {
             newRowData.push(node.data);
-        })
+        });
         return newRowData;
     }
 
     syncRowData() {
-        const {rowData, setProps, rowModelType} = this.props
+        const {rowData, setProps, rowModelType} = this.props;
         if (rowData) {
             const virtualRowData = [];
             if (rowModelType === 'clientSide') {
@@ -292,7 +420,7 @@ export default class DashAgGrid extends Component {
                     virtualRowData.push(node.data);
                 });
             }
-            setProps({rowData: this.getRowData(), virtualRowData})
+            setProps({rowData: this.getRowData(), virtualRowData});
         }
     }
 
@@ -335,7 +463,7 @@ export default class DashAgGrid extends Component {
         if (this.isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = this.props.getRowsResponse;
             this.getRowsParams.successCallback(rowData, rowCount);
-            setProps({getRowsResponse: null})
+            setProps({getRowsResponse: null});
         }
 
         if (
@@ -354,16 +482,20 @@ export default class DashAgGrid extends Component {
             this.setSelection(selectedRows);
         }
 
-        if (JSON.stringify(this.props.columnDefs) !== JSON.stringify(prevProps.columnDefs) ||
-        prevProps.columnSize !== columnSize) {
-            this.props.setProps({columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs))})
-            this.setUpCols()
-            this.updateColumnWidths()
+        if (
+            JSON.stringify(this.props.columnDefs) !==
+                JSON.stringify(prevProps.columnDefs) ||
+            prevProps.columnSize !== columnSize
+        ) {
+            this.props.setProps({
+                columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs)),
+            });
+            this.setUpCols();
+            this.updateColumnWidths();
         }
 
         // Reset selection event flag
         this.selectionEventFired = false;
-
     }
 
     onRowDataUpdated() {
@@ -377,7 +509,7 @@ export default class DashAgGrid extends Component {
                 virtualRowData.push(node.data);
             });
 
-            setProps({virtualRowData})
+            setProps({virtualRowData});
         }
 
         // Call the API to select rows
@@ -445,9 +577,9 @@ export default class DashAgGrid extends Component {
 
     applyRowTransaction(data, gridApi = this.state.gridApi) {
         if (data.async === false) {
-            gridApi.applyTransaction(data)
+            gridApi.applyTransaction(data);
         } else {
-            gridApi.applyTransactionAsync(data)
+            gridApi.applyTransactionAsync(data);
         }
     }
 
@@ -464,10 +596,12 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
-        this.updateColumnWidths()
+        this.updateColumnWidths();
 
         if (this.state.rowTransaction) {
-            this.state.rowTransaction.map((data) => this.applyRowTransaction(data, params.api))
+            this.state.rowTransaction.map((data) =>
+                this.applyRowTransaction(data, params.api)
+            );
             this.setState({rowTransaction: null});
             this.syncRowData();
         }
@@ -476,15 +610,23 @@ export default class DashAgGrid extends Component {
         this.setSelection(selectedRows);
         // Hydrate virtualRowData
         this.onFilterChanged(true);
-
     }
 
     onCellClicked({value, column: {colId}, rowIndex, node}) {
-        const timestamp = Date.now()
-        this.props.setProps({cellClicked: {value, colId, rowIndex, rowId: node.id, timestamp}});
+        const timestamp = Date.now();
+        this.props.setProps({
+            cellClicked: {value, colId, rowIndex, rowId: node.id, timestamp},
+        });
     }
 
-    onCellValueChanged({oldValue, newValue, column: {colId}, rowIndex, data, node}) {
+    onCellValueChanged({
+        oldValue,
+        newValue,
+        column: {colId},
+        rowIndex,
+        data,
+        node,
+    }) {
         const virtualRowData = [];
         if (this.props.rowModelType === 'clientSide' && this.state.gridApi) {
             this.state.gridApi.forEachNodeAfterFilter((node) => {
@@ -492,8 +634,15 @@ export default class DashAgGrid extends Component {
             });
         }
         this.props.setProps({
-            cellValueChanged: {rowIndex, rowId: node.id, data, oldValue, newValue, colId},
-            virtualRowData
+            cellValueChanged: {
+                rowIndex,
+                rowId: node.id,
+                data,
+                oldValue,
+                newValue,
+                colId,
+            },
+            virtualRowData,
         });
     }
 
@@ -516,12 +665,16 @@ export default class DashAgGrid extends Component {
     }
 
     evaluateFunction = (tempFunction, params) => {
-        const parsedCondition = esprima.parse(tempFunction).body[0]
-                    .expression;
-        const value = evaluate(parsedCondition, {params, d3, ...customFunctions, ...window.dashAgGridFunctions,
-        ...window.dashSharedVariables})
-        return value
-    }
+        const parsedCondition = esprima.parse(tempFunction).body[0].expression;
+        const value = evaluate(parsedCondition, {
+            params,
+            d3,
+            ...customFunctions,
+            ...window.dashAgGridFunctions,
+            ...window.dashSharedVariables,
+        });
+        return value;
+    };
 
     /**
      * @params AG-Grid Styles rules attribute.
@@ -565,26 +718,32 @@ export default class DashAgGrid extends Component {
 
     parseParamFunction(params, tempFunction) {
         try {
-            return this.evaluateFunction(tempFunction, params)
+            return this.evaluateFunction(tempFunction, params);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
-        return ''
+        return '';
     }
 
     generateRenderer(Renderer) {
         const {setProps, dangerously_allow_code} = this.props;
 
         return (props) => (
-            <Renderer setData={(value) => {
-                setProps({cellRendererData: {
-                value,
-                colId: props.column.colId,
-                rowIndex: props.rowIndex,
-                rowId: props.node.id,
-                timestamp: Date.now()}
-                });
-            }} dangerously_allow_code={dangerously_allow_code} {...props}></Renderer>
+            <Renderer
+                setData={(value) => {
+                    setProps({
+                        cellRendererData: {
+                            value,
+                            colId: props.column.colId,
+                            rowIndex: props.rowIndex,
+                            rowId: props.node.id,
+                            timestamp: Date.now(),
+                        },
+                    });
+                }}
+                dangerously_allow_code={dangerously_allow_code}
+                {...props}
+            ></Renderer>
         );
     }
 
@@ -605,21 +764,21 @@ export default class DashAgGrid extends Component {
     selectAll(opts) {
         if (Object.keys(opts).includes('filtered')) {
             if (opts.filtered) {
-                this.state.gridApi.selectAllFiltered()
+                this.state.gridApi.selectAllFiltered();
                 this.props.setProps({
                     selectAll: false,
                 });
                 return;
             }
         }
-        this.state.gridApi.selectAll()
+        this.state.gridApi.selectAll();
         this.props.setProps({
             selectAll: false,
         });
     }
 
     deselectAll() {
-        this.state.gridApi.deselectAll()
+        this.state.gridApi.deselectAll();
         this.props.setProps({
             deselectAll: false,
         });
@@ -630,13 +789,17 @@ export default class DashAgGrid extends Component {
         this.state.gridApi.applyTransaction({remove: sel});
         this.props.setProps({
             deleteSelectedRows: false,
-            rowData: this.getRowData()
+            rowData: this.getRowData(),
         });
     }
 
     buildArray(arr1, arr2) {
         if (arr1) {
-            if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
+            if (
+                !JSON.parse(JSON.stringify(arr1)).includes(
+                    JSON.parse(JSON.stringify(arr2))
+                )
+            ) {
                 return [...arr1, arr2];
             }
             return arr1;
@@ -648,20 +811,22 @@ export default class DashAgGrid extends Component {
         if (this.state.mounted) {
             if (this.state.gridApi) {
                 if (this.state.rowTransaction) {
-                    this.state.rowTransaction.map((data) => this.applyRowTransaction(data))
+                    this.state.rowTransaction.map((data) =>
+                        this.applyRowTransaction(data)
+                    );
                     this.setState({rowTransaction: null});
                 }
-                this.applyRowTransaction(data)
+                this.applyRowTransaction(data);
                 this.props.setProps({
                     rowTransaction: null,
-                    rowData: this.getRowData()
-                })
+                    rowData: this.getRowData(),
+                });
             } else {
                 this.setState({
-                    rowTransaction: this.state.rowTransaction ?
-                        this.buildArray(this.state.rowTransaction, data) :
-                        [JSON.parse(JSON.stringify(data))]
-                })
+                    rowTransaction: this.state.rowTransaction
+                        ? this.buildArray(this.state.rowTransaction, data)
+                        : [JSON.parse(JSON.stringify(data))],
+                });
             }
         }
     }
@@ -673,7 +838,7 @@ export default class DashAgGrid extends Component {
     autoSizeAllColumns(opts) {
         const allColumnIds = [];
         this.state.gridColumnApi.getColumnState().forEach((column) => {
-          allColumnIds.push(column.colId);
+            allColumnIds.push(column.colId);
         });
         let skipHeaders = false;
         if (Object.keys(opts).includes('skipHeaders')) {
@@ -685,13 +850,15 @@ export default class DashAgGrid extends Component {
         this.props.setProps({
             autoSizeAllColumns: false,
         });
-    };
+    }
 
-    updateColumnState () {
+    updateColumnState() {
         this.props.setProps({
-            columnState: JSON.parse(JSON.stringify(this.state.gridColumnApi.getColumnState())),
-            updateColumnState: false
-        })
+            columnState: JSON.parse(
+                JSON.stringify(this.state.gridColumnApi.getColumnState())
+            ),
+            updateColumnState: false,
+        });
     }
 
     render() {
@@ -718,51 +885,66 @@ export default class DashAgGrid extends Component {
         } = this.props;
 
         const replaceFunc = (target) => {
-            const shouldWarn = !dangerously_allow_code && expressWarn.includes(target);
+            const shouldWarn =
+                !dangerously_allow_code && expressWarn.includes(target);
 
             const sanitize = (container) => {
                 const targetIn = container[target];
                 if (targetIn) {
-                    if(shouldWarn && (typeof targetIn === 'string')) {
+                    if (shouldWarn && typeof targetIn === 'string') {
                         container[target] = () => '';
                         console.error({
                             prop: target,
-                            message: 'you are trying to use an unsafe prop without dangerously_allow_code'
-                        })
-                    }
-                    else if ((typeof targetIn === 'object') && ('function' in targetIn)
-                    && !replaceFunctions.includes(target)) {
-                        const newFunc = JSON.parse(JSON.stringify(container[target].function))
-                        container[target] = (params) => this.parseParamFunction(params, newFunc)
+                            message:
+                                'you are trying to use an unsafe prop without dangerously_allow_code',
+                        });
+                    } else if (
+                        typeof targetIn === 'object' &&
+                        'function' in targetIn &&
+                        !replaceFunctions.includes(target)
+                    ) {
+                        const newFunc = JSON.parse(
+                            JSON.stringify(container[target].function)
+                        );
+                        container[target] = (params) =>
+                            this.parseParamFunction(params, newFunc);
                     }
                     if (replaceFunctions.includes(target)) {
-                        for (const [key, value] of Object.entries(container[target])) {
+                        for (const [key, value] of Object.entries(
+                            container[target]
+                        )) {
                             if (typeof value !== 'function') {
-                                container[target][key] = (params) => this.parseParamFunction(params, value)
+                                container[target][key] = (params) =>
+                                    this.parseParamFunction(params, value);
                             }
                         }
                     }
                 }
-            }
+            };
 
             sanitize(this.props);
             if (dashGridOptions) {
                 sanitize(dashGridOptions);
             }
-        }
+        };
 
-        gridFunctions.map(replaceFunc)
+        gridFunctions.map(replaceFunc);
 
         let getRowId;
         if (this.props.getRowId) {
-            getRowId = (params) => this.parseParamFunction(params, JSON.parse(JSON.stringify(this.props.getRowId)))
+            getRowId = (params) =>
+                this.parseParamFunction(
+                    params,
+                    JSON.parse(JSON.stringify(this.props.getRowId))
+                );
         }
 
-        this.setUpCols()
+        this.setUpCols();
 
         let newRowStyle;
         if (getRowStyle) {
-            newRowStyle = (params) => this.handleDynamicRowStyle({params, getRowStyle})
+            newRowStyle = (params) =>
+                this.handleDynamicRowStyle({params, getRowStyle});
         }
 
         if (resetColumnState) {
@@ -845,16 +1027,18 @@ export default class DashAgGrid extends Component {
                     onRowGroupOpened={this.onRowGroupOpened}
                     onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}
                     onAsyncTransactionsFlushed={this.onAsyncTransactionsFlushed}
-                    onGridSizeChanged={debounce(this.onGridSizeChanged, RESIZE_DEBOUNCE_MS)}
+                    onGridSizeChanged={debounce(
+                        this.onGridSizeChanged,
+                        RESIZE_DEBOUNCE_MS
+                    )}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
                     {...dashGridOptions}
                     {...omit(['theme', 'getRowId'], restProps)}
-                >
-                </AgGridReact>
+                ></AgGridReact>
             </div>
         );
-    };
+    }
 }
 
 DashAgGrid.defaultProps = _defaultProps;

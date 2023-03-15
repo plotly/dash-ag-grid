@@ -18,16 +18,18 @@ export default class DashAgGrid extends Component {
             columnApi: null,
             openGroups: new Set(),
             filterModel: {},
-
         };
 
         this.buildArray = this.buildArray.bind(this);
     }
 
-
     buildArray(arr1, arr2) {
         if (arr1) {
-            if (!(JSON.parse(JSON.stringify(arr1)).includes(JSON.parse(JSON.stringify(arr2))))) {
+            if (
+                !JSON.parse(JSON.stringify(arr1)).includes(
+                    JSON.parse(JSON.stringify(arr2))
+                )
+            ) {
                 return [...arr1, arr2];
             }
             return arr1;
@@ -38,15 +40,20 @@ export default class DashAgGrid extends Component {
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props.rowTransaction && !this.state.mounted) {
             if (nextProps.rowTransaction !== this.props.rowTransaction) {
-                this.setState({rowTransaction: this.buildArray(this.state.rowTransaction, this.props.rowTransaction)});
+                this.setState({
+                    rowTransaction: this.buildArray(
+                        this.state.rowTransaction,
+                        this.props.rowTransaction
+                    ),
+                });
             }
         }
     }
 
     render() {
-        const {enableEnterpriseModules} = this.props
+        const {enableEnterpriseModules} = this.props;
 
-        const RealComponent = getGrid(enableEnterpriseModules)
+        const RealComponent = getGrid(enableEnterpriseModules);
         return (
             <Suspense fallback={null}>
                 <RealComponent parentState={this.state} {...this.props} />
@@ -125,12 +132,11 @@ DashAgGrid.propTypes = {
      */
     persistence_type: PropTypes.oneOf(['local', 'session', 'memory']),
 
-
     /**
-    * Allow strings containing JavaScript code or HTML in certain props.
-    * If your app stores Dash layouts for later retrieval this is dangerous
-    * because it can lead to cross-site-scripting attacks.
-    */
+     * Allow strings containing JavaScript code or HTML in certain props.
+     * If your app stores Dash layouts for later retrieval this is dangerous
+     * because it can lead to cross-site-scripting attacks.
+     */
     dangerously_allow_code: PropTypes.bool,
 
     /********************************
@@ -155,8 +161,8 @@ DashAgGrid.propTypes = {
     selectAll: PropTypes.oneOfType([
         PropTypes.bool,
         PropTypes.exact({
-            filtered: PropTypes.bool
-        })
+            filtered: PropTypes.bool,
+        }),
     ]),
 
     /**
@@ -172,8 +178,8 @@ DashAgGrid.propTypes = {
     autoSizeAllColumns: PropTypes.oneOfType([
         PropTypes.bool,
         PropTypes.exact({
-            skipHeaders: PropTypes.bool
-        })
+            skipHeaders: PropTypes.bool,
+        }),
     ]),
 
     /**
@@ -199,8 +205,8 @@ DashAgGrid.propTypes = {
     }),
 
     /**
-    * This is required for change detection in rowData
-    */
+     * This is required for change detection in rowData
+     */
     getRowId: PropTypes.string,
 
     /**
@@ -367,32 +373,30 @@ DashAgGrid.propTypes = {
      * Special prop to allow feedback from cell renderer to the grid.
      */
     cellRendererData: PropTypes.shape({
-
         /**
-        * Value set from the function
-        */
+         * Value set from the function
+         */
         value: PropTypes.any,
 
         /**
-        * Column ID from where the event was fired
-        */
+         * Column ID from where the event was fired
+         */
         colId: PropTypes.string,
 
         /**
-        * Row Index from the grid, this is associated with the row count
-        */
+         * Row Index from the grid, this is associated with the row count
+         */
         rowIndex: PropTypes.number,
 
         /**
-        * Row Id from the grid, this could be a number automatically, or set via getRowId
-        */
+         * Row Id from the grid, this could be a number automatically, or set via getRowId
+         */
         rowId: PropTypes.any,
 
         /**
-        * Timestamp of when the event was fired
-        */
+         * Timestamp of when the event was fired
+         */
         timestamp: PropTypes.any,
-
     }),
 
     /**
@@ -519,30 +523,29 @@ DashAgGrid.propTypes = {
      * Cell is clicked.
      */
     cellClicked: PropTypes.shape({
-
         /**
-        * value of the clicked cell
-        */
+         * value of the clicked cell
+         */
         value: PropTypes.any,
 
         /**
-        * column where the cell was clicked
-        */
+         * column where the cell was clicked
+         */
         colId: PropTypes.any,
 
         /**
-        * rowIndex, typically a row number
-        */
+         * rowIndex, typically a row number
+         */
         rowIndex: PropTypes.number,
 
         /**
-        * Row Id from the grid, this could be a number automatically, or set via getRowId
-        */
+         * Row Id from the grid, this could be a number automatically, or set via getRowId
+         */
         rowId: PropTypes.any,
 
         /**
-        * timestamp of last action
-        */
+         * timestamp of last action
+         */
         timestamp: PropTypes.any,
     }),
 
@@ -556,33 +559,33 @@ DashAgGrid.propTypes = {
      */
     cellValueChanged: PropTypes.shape({
         /**
-        * rowIndex, typically a row number
-        */
+         * rowIndex, typically a row number
+         */
         rowIndex: PropTypes.number,
 
         /**
-        * Row Id from the grid, this could be a number automatically, or set via getRowId
-        */
+         * Row Id from the grid, this could be a number automatically, or set via getRowId
+         */
         rowId: PropTypes.any,
 
         /**
-        * data, data object from the row
-        */
+         * data, data object from the row
+         */
         data: PropTypes.object,
 
         /**
-        * old value of the cell
-        */
+         * old value of the cell
+         */
         oldValue: PropTypes.any,
 
         /**
-        * new value of the cell
-        */
+         * new value of the cell
+         */
         newValue: PropTypes.any,
 
         /**
-        * column where the cell was changed
-        */
+         * column where the cell was changed
+         */
         colId: PropTypes.any,
     }),
 

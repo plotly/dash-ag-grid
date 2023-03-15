@@ -58,5 +58,5 @@ export default function RowMenuRenderer(props) {
 RowMenuRenderer.propTypes = {
     setData: PropTypes.func,
     data: PropTypes.any,
-    value: PropTypes.any
+    value: PropTypes.any,
 };
