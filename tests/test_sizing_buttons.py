@@ -67,11 +67,12 @@ def test_sb001_sizing_buttons(dash_duo):
         Output("columnState", "children"),
         Input("grid", "columnState"),
         State("columnState", "children"),
+        State('updateColumnState', 'n_clicks')
     )
-    def selected(state, oldState):
+    def selected(state, oldState, n):
         if state:
             test = True
-            if oldState:
+            if oldState and n > 1:
                 oldState = json.loads(oldState)
                 for i in range(len(state)):
                     if i in [1, 6, 7, 8, 9]:
@@ -89,6 +90,7 @@ def test_sb001_sizing_buttons(dash_duo):
     grid.wait_for_cell_text(0, 0, "Michael Phelps")
 
     oldValue = ''
+    until(lambda: oldValue != dash_duo.find_element('#columnState').get_attribute('innerText'), timeout=3)
     for x in ['autoSizeAllColumns', 'autoSizeAllColumnsSkipHeaders']:
         dash_duo.find_element(f'#{x}').click()
         dash_duo.find_element('#updateColumnState').click()
