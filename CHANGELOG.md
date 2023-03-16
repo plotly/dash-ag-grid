@@ -55,6 +55,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#81](https://github.com/plotly/dash-ag-grid/pull/81)
   - added tests for `cellClicked` data
 
+- [#96](https://github.com/plotly/dash-ag-grid/pull/81)
+  - added support for `treeData`
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
@@ -88,6 +91,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#81](https://github.com/plotly/dash-ag-grid/pull/81) Fixing syncing issue with `rowData`, `virtualRowData` when cell edits and async `rowTransactions` occur
 - [#90](https://github.com/plotly/dash-ag-grid/pull/90) Fixing `columnState` to be populated once `gridReady`
 - [#92](https://github.com/plotly/dash-ag-grid/pull/92) Fixing `defaultStyle` when no `styleConditions` is in `cellStyle`
+- [#96](https://github.com/plotly/dash-ag-grid/pull/96) Fixed issue where nesting master detail data wouldnt work 
 
 ## [1.3.2] - 2023-01-13
 
