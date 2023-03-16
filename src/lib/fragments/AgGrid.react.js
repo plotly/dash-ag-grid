@@ -337,7 +337,10 @@ export default class DashAgGrid extends Component {
             }
 
             if ('cellStyle' in colOut) {
-                if (Object.keys(colOut.cellStyle).includes('styleConditions')) {
+                if (
+                    Object.keys(colOut.cellStyle).includes('styleConditions') ||
+                    Object.keys(colOut.cellStyle).includes('defaultStyle')
+                ) {
                     const cellStyle = JSON.parse(
                         JSON.stringify(colOut.cellStyle)
                     );
