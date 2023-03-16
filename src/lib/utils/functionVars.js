@@ -13,6 +13,21 @@ export const expressWarn = [
 ];
 
 /**
+ * Go down one level when a value is found in this list
+ **/
+export const additionalParse = [
+    'children',
+    'filterParams',
+    'cellRendererParams',
+    'detailGridOptions',
+    'detailCellRendererParams',
+    'columnDefs',
+    'defaultColDef',
+    'autoGroupColumnDef',
+    'defaultColGroupDef',
+];
+
+/**
  * These props will always be replaced because the values inside the objects can only be strings to be evaluated
  **/
 export const replaceFunctions = ['cellClassRules', 'rowClassRules'];

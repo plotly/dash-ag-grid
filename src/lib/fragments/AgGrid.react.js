@@ -12,6 +12,7 @@ import {
     gridFunctions,
     columnFunctions,
     replaceFunctions,
+    additionalParse,
 } from '../utils/functionVars';
 import debounce from '../utils/debounce';
 
@@ -323,17 +324,41 @@ export default class DashAgGrid extends Component {
         return columnDef;
     }
 
+    suppressGetDetail(colName) {
+        return (params) => {
+            params.successCallback(params.data[colName]);
+        };
+    }
+
+    callbackGetDetail = (params) => {
+        const {setProps} = this.props;
+        const {data} = params;
+        this.getDetailParams = params;
+        // Adding the current time in ms forces Dash to trigger a callback
+        // when the same row is closed and re-opened.
+        setProps({getDetailRequest: {data: data, requestTime: Date.now()}});
+    };
+
     setUpCols() {
         const {columnDefs, setProps, defaultColDef, detailCellRendererParams} =
             this.props;
 
         const cleanOneCol = (col) => {
-            let colOut = this.fixCols(col);
-            if ('children' in colOut) {
-                colOut = {
-                    ...col,
-                    children: col.children.map(cleanOneCol),
-                };
+            const colOut = this.fixCols(col);
+            additionalParse.map((key) => {
+                if (Object.keys(colOut).includes(key)) {
+                    if (Array.isArray(colOut[key])) {
+                        colOut[key] = col[key].map(cleanOneCol);
+                    } else if (typeof colOut[key] === 'object') {
+                        colOut[key] = cleanOneCol(col[key]);
+                    }
+                }
+            });
+
+            if ('suppressCallback' in colOut) {
+                colOut.getDetailRowData = colOut.suppressCallback
+                    ? this.suppressGetDetail(colOut.detailColName)
+                    : this.callbackGetDetail;
             }
 
             if ('cellStyle' in colOut) {
@@ -365,30 +390,9 @@ export default class DashAgGrid extends Component {
             });
         }
         if (detailCellRendererParams) {
-            if ('detailGridOptions' in detailCellRendererParams) {
-                if (
-                    'columnDefs' in detailCellRendererParams.detailGridOptions
-                ) {
-                    detailCellRendererParams.detailGridOptions.columnDefs =
-                        detailCellRendererParams.detailGridOptions.columnDefs.map(
-                            (columnDef) => {
-                                const colDefOut = columnDef;
-                                return cleanOneCol(colDefOut);
-                            }
-                        );
-                    if (
-                        'defaultColDef' in
-                        detailCellRendererParams.detailGridOptions
-                    ) {
-                        detailCellRendererParams.detailGridOptions.defaultColDef =
-                            cleanOneCol(
-                                detailCellRendererParams.detailGridOptions
-                                    .defaultColDef
-                            );
-                    }
-                    setProps({detailCellRendererParams});
-                }
-            }
+            setProps({
+                detailCellRendererParams: cleanOneCol(detailCellRendererParams),
+            });
         }
     }
 
@@ -882,7 +886,6 @@ export default class DashAgGrid extends Component {
             updateColumnState,
             csvExportParams,
             detailCellRendererParams,
-            setProps,
             dangerously_allow_code,
             dashGridOptions,
             ...restProps
@@ -983,33 +986,6 @@ export default class DashAgGrid extends Component {
             this.rowTransaction(rowTransaction);
         }
 
-        const callbackGetDetail = (params) => {
-            const {data} = params;
-            this.getDetailParams = params;
-            // Adding the current time in ms forces Dash to trigger a callback
-            // when the same row is closed and re-opened.
-            setProps({getDetailRequest: {data: data, requestTime: Date.now()}});
-        };
-
-        function suppressGetDetail(colName) {
-            return (params) => {
-                params.successCallback(params.data[colName]);
-            };
-        }
-
-        let newDetailCellRendererParams = null;
-        if (this.props.masterDetail) {
-            newDetailCellRendererParams = {
-                ...omit(
-                    ['detailColName', 'suppressCallback'],
-                    detailCellRendererParams
-                ),
-                getDetailRowData: detailCellRendererParams.suppressCallback
-                    ? suppressGetDetail(detailCellRendererParams.detailColName)
-                    : callbackGetDetail,
-            };
-        }
-
         return (
             <div
                 id={id}
@@ -1036,9 +1012,9 @@ export default class DashAgGrid extends Component {
                         RESIZE_DEBOUNCE_MS
                     )}
                     components={this.state.components}
-                    detailCellRendererParams={newDetailCellRendererParams}
+                    detailCellRendererParams={detailCellRendererParams}
                     {...dashGridOptions}
-                    {...omit(['theme', 'getRowId'], restProps)}
+                    {...omit(['getRowId', 'setProps'], restProps)}
                 ></AgGridReact>
             </div>
         );
