@@ -33,7 +33,7 @@ app.layout = html.Div(
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=data,
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple"},
             defaultColDef=dict(
                 resizable=True,
             ),

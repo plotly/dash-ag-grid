@@ -39,7 +39,7 @@ app.layout = html.Div(
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple"},
         ),
         dcc.Textarea(
             placeholder="paste area",

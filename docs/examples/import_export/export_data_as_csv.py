@@ -42,7 +42,7 @@ app.layout = html.Div(
 
 
 @app.callback(
-    Output("export-data-grid", "enableExportDataAsCsv"),
+    Output("export-data-grid", "exportDataAsCsv"),
     Input("csv-button", "n_clicks"),
 )
 def export_data_as_csv(n_clicks):

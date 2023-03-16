@@ -64,7 +64,6 @@ raw_html_example1 = html.Div(
             "This grid has both Markdown and raw HTML. LinkTarget='self'"
         ),
         dag.AgGrid(
-            id="cell-renderer-table-3",
             columnSize="sizeToFit",
             columnDefs=columnDefs,
             rowData=rowData,
@@ -81,7 +80,6 @@ raw_html_example2 = html.Div(
             "This grid has both Markdown and raw HTML. linkTarget='_blank'"
         ),
         dag.AgGrid(
-            id="cell-renderer-table-3",
             columnSize="sizeToFit",
             columnDefs=columnDefs_target_blank,
             rowData=rowData,

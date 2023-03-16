@@ -31,7 +31,7 @@ app.layout = html.Div(
             rowData=rowData,
             columnDefs=columnDefs,
             columnSize="sizeToFit",
-            rowSelection="single",
+            dashGridOptions={"rowSelection": "single"},
         ),
         dbc.Modal(
             [

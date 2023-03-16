@@ -32,7 +32,7 @@ app.layout = html.Div(
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=data,
-            rowHeight= 120,
+            dashGridOptions={"rowHeight": 120},
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
         ),

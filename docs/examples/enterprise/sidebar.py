@@ -106,6 +106,34 @@ columnDefs = [
     },
 ]
 
+sideBar={
+    "toolPanels": [
+        {
+            "id": "columns",
+            "labelDefault": "Columns",
+            "labelKey": "columns",
+            "iconKey": "columns",
+            "toolPanel": "agColumnsToolPanel",
+        },
+        {
+            "id": "filters",
+            "labelDefault": "Filters",
+            "labelKey": "filters",
+            "iconKey": "filter",
+            "toolPanel": "agFiltersToolPanel",
+        },
+        {
+            "id": "filters 2",
+            "labelKey": "filters",
+            "labelDefault": "More Filters",
+            "iconKey": "menu",
+            "toolPanel": "agFiltersToolPanel",
+        },
+    ],
+    "position": "left",
+    "defaultToolPanel": "filters",
+}
+
 app.layout = html.Div(
     [
         dcc.Markdown(
@@ -120,11 +148,10 @@ app.layout = html.Div(
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=data,
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple", "sideBar": True},
             defaultColDef=dict(
                 resizable=True,
             ),
-            sideBar=True,
             # Sidebar is an ag-grid Enterprise feature.
             # A license key should be provided if it is used.
             # License keys can be passed to the `licenseKey` argument of dag.AgGrid
@@ -144,37 +171,10 @@ app.layout = html.Div(
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=data,
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple", "sideBar": sideBar},
             defaultColDef=dict(
                 resizable=True,
             ),
-            sideBar={
-                "toolPanels": [
-                    {
-                        "id": "columns",
-                        "labelDefault": "Columns",
-                        "labelKey": "columns",
-                        "iconKey": "columns",
-                        "toolPanel": "agColumnsToolPanel",
-                    },
-                    {
-                        "id": "filters",
-                        "labelDefault": "Filters",
-                        "labelKey": "filters",
-                        "iconKey": "filter",
-                        "toolPanel": "agFiltersToolPanel",
-                    },
-                    {
-                        "id": "filters 2",
-                        "labelKey": "filters",
-                        "labelDefault": "More Filters",
-                        "iconKey": "menu",
-                        "toolPanel": "agFiltersToolPanel",
-                    },
-                ],
-                "position": "left",
-                "defaultToolPanel": "filters",
-            },
             # Sidebar is an ag-grid Enterprise feature.
             # A license key should be provided if it is used.
             # License keys can be passed to the `licenseKey` argument of dag.AgGrid

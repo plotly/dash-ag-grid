@@ -40,7 +40,7 @@ app.layout = html.Div(
             rowData=data,
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection":"multiple"},
         ),
     ],
     style={"margin": 20},

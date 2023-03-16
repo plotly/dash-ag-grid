@@ -43,7 +43,7 @@ app.layout = html.Div(
             id="selectable-grid-persistence",
             rowData=rowData,
             columnSize="sizeToFit",
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple"},
             persistence=True,
             columnDefs=columnDefs,
         ),

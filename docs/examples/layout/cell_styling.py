@@ -47,8 +47,8 @@ grid_with_default_cell_styles = html.Div(
             columnSize="sizeToFit",
             defaultColDef=dict(
                 resizable=True,
+                cellStyle={"defaultStyle": {"color": "blue"}},
             ),
-            cellStyle={"defaultStyle": {"color": "blue"}},
         ),
         html.Hr(),
     ]
@@ -78,20 +78,20 @@ grid_with_conditional_cell_styles = html.Div(
             columnSize="sizeToFit",
             defaultColDef=dict(
                 resizable=True,
-            ),
-            cellStyle={
-                "styleConditions": [
-                    {"condition": "params.value == 72000", "style": {"color": "orange"}},
-                    {
-                        "condition": "params.value == 'Celica'",
-                        "style": {"backgroundColor": "purple", "color": "white"},
-                    },
-                    {
-                        "condition": "params.colDef.headerName == 'Make'",
-                        "style": {"backgroundColor": "red", "color": "green"},
-                    },
-                ]
-            },
+                cellStyle={
+                    "styleConditions": [
+                        {"condition": "params.value == 72000", "style": {"color": "orange"}},
+                        {
+                            "condition": "params.value == 'Celica'",
+                            "style": {"backgroundColor": "purple", "color": "white"},
+                        },
+                        {
+                            "condition": "params.colDef.headerName == 'Make'",
+                            "style": {"backgroundColor": "red", "color": "green"},
+                        },
+                    ]
+                },
+            )
         ),
         html.Hr(),
     ]

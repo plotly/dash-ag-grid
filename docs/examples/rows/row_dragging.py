@@ -30,7 +30,7 @@ app.layout = html.Div(
             rowData=data,
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
-            rowDragManaged=True,
+            dashGridOptions={"rowDragManaged": True}
         ),
     ],
     style={"margin": 20},

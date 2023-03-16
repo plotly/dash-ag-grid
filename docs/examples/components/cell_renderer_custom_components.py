@@ -73,14 +73,14 @@ defaultColDef = {
 }
 
 
-table = dag.AgGrid(
+grid = dag.AgGrid(
     id="custom-components-grid",
     className="ag-theme-alpine-dark",
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
-    tooltipShowDelay=100,
+    dashGridOptions={"tooltipShowDelay": 100}
 )
 
 
@@ -89,7 +89,7 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 app.layout = html.Div(
     [
         dcc.Markdown("Example of cellRenderer with custom components"),
-        table,
+        grid,
         html.Div(id="cell-renderer-value-changed"),
     ],
     style={"margin": 20},

@@ -53,7 +53,7 @@ columnDefs = [
 
 defaultColDef = {
     # set the default column width
-    "width": 150,
+    "width": 100,
     # make every column editable
     "editable": True,
     # make every column use 'text' filter by default
@@ -75,10 +75,11 @@ app.layout = html.Div(
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=data,
-            columnSize="sizeToFit",
             defaultColDef=defaultColDef,
-            defaultColGroupDef=defaultColGroupDef,
-            columnTypes=columnTypes,
+            dashGridOptions={
+                'defaultColGroupDef' :defaultColGroupDef,
+                'columnTypes':columnTypes,
+            }
         ),
     ],
     style={"margin": 20},
@@ -86,4 +87,4 @@ app.layout = html.Div(
 
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=True)
