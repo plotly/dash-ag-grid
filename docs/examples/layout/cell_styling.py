@@ -47,7 +47,12 @@ grid_with_default_cell_styles = html.Div(
             columnSize="sizeToFit",
             defaultColDef=dict(
                 resizable=True,
-                cellStyle={"defaultStyle": {"color": "blue"}},
+                cellStyle={
+                    "styleConditions": [
+                        {"condition": "params.value == 72000", "style": {"color": "orange"}},
+                    ],
+                    "defaultStyle": {"color": "blue"}
+                },
             ),
         ),
         html.Hr(),
