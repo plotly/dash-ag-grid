@@ -42,7 +42,7 @@ app.layout = html.Div(
             id="datatable-interactivity",
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple"},
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
         ),

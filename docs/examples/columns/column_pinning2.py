@@ -1,5 +1,3 @@
-# TODO  add css
-
 
 """
 Pinning via Column Dragging

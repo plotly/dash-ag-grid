@@ -44,7 +44,6 @@ app.layout = html.Div(
     [
         dcc.Markdown("Demonstration auto header height."),
         dag.AgGrid(
-            # style={"width": "100%", "height": "100%"},
             columnDefs=columnDefs,
             rowData=data,
             defaultColDef=defaultColDef,

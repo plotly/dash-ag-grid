@@ -46,7 +46,7 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             rowData=data,
             defaultColDef=defaultColDef,
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection":"multiple"},
         ),
         html.Div(id="selections-checkbox-output"),
     ],

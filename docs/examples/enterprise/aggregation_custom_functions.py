@@ -53,15 +53,14 @@ app.layout = html.Div(
             "This is an example of how to calculate a ratio using values from multiple columns."
         ),
         dag.AgGrid(
+            enableEnterpriseModules=True,
             columnDefs=columnDefs,
             rowData=data,
-            rowSelection="multiple",
-            defaultColDef=dict(
-                resizable=True,
-            ),
-            id="grid",
-            suppressAggFuncInHeader=True,
-            enableEnterpriseModules=True,
+            defaultColDef={"resizable":True},
+            dashGridOptions={
+                "rowSelection": "multiple",
+                "suppressAggFuncInHeader": True,
+            }
         ),
     ]
 )

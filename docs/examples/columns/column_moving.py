@@ -1,4 +1,3 @@
-# TODO - requires the latest version
 
 """
 Column Moving
@@ -40,11 +39,10 @@ app.layout = html.Div(
     [
         dcc.Markdown("Demonstration of suppress movable and not allowing lock Pin"),
         dag.AgGrid(
-            id="my-grid",
             rowData=data,
             defaultColDef=defaultColDef,
             columnDefs=columnDefs,
-            suppressDragLeaveHidesColumns=True,
+            dashGridOptions={"suppressDragLeaveHidesColumns": True}
         ),
     ]
 )

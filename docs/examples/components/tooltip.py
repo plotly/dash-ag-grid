@@ -40,7 +40,7 @@ table = dag.AgGrid(
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
     defaultColDef={"editable": False,  "tooltipComponent": "myCustomTooltip"},
-    tooltipShowDelay=100,
+    dashGridOptions={"tooltipShowDelay": 100}
 )
 
 

@@ -42,7 +42,7 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             rowData=data,
             defaultColDef=defaultColDef,
-            tooltipShowDelay=500,
+            dashGridOptions={"tooltipShowDelay":500,}
         ),
     ]
 )
