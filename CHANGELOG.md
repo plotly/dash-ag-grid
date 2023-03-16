@@ -87,7 +87,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#47](https://github.com/plotly/dash-ag-grid/pull/47) Fix `virtualRowData` by setting the default `rowModelType='clientSide'`
 - [#81](https://github.com/plotly/dash-ag-grid/pull/81) Fixing syncing issue with `rowData`, `virtualRowData` when cell edits and async `rowTransactions` occur
 - [#90](https://github.com/plotly/dash-ag-grid/pull/90) Fixing `columnState` to be populated once `gridReady`
-
+- [#92](https://github.com/plotly/dash-ag-grid/pull/92) Fixing `defaultStyle` when no `styleConditions` is in `cellStyle`
 
 ## [1.3.2] - 2023-01-13
 
