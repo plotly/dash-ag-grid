@@ -27,7 +27,7 @@ app.layout = html.Div(
             "Switch between autosize and size to fit to see the columns respond. Columns can also be resized by dragging at their edge."
         ),
         dcc.RadioItems(
-            id="columnSizing",
+            id="column-size-radio",
             options=[
                 {"label": i, "value": j}
                 for i, j in [
@@ -38,19 +38,17 @@ app.layout = html.Div(
             value="autoSizeAll",
         ),
         dag.AgGrid(
-            id="input",
+            id="column-size-grid",
             columnDefs=columnDefs,
             rowData=rowData,
             columnSize="autoSizeAll",
-            defaultColDef=dict(
-                resizable=True,
-            ),
+            defaultColDef={"resizable":True}
         ),
     ]
 )
 
 
-@app.callback(Output("input", "columnSize"), Input("columnSizing", "value"))
+@app.callback(Output("column-size-grid", "columnSize"), Input("column-size-radio", "value"))
 def column_sizing(size_type):
     return size_type
 

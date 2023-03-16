@@ -38,8 +38,8 @@ app.layout = html.Div(
                 resizable=True,
             ),
             enableEnterpriseModules=True,
-            enableRangeSelection=True,
             licenseKey="LICENSE_KEY_HERE",
+            dashGridOptions={"enableRangeSelection":True}
         ),
     ],
 )

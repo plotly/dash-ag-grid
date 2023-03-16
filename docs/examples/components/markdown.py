@@ -48,7 +48,7 @@ rowData = [
     },
 ]
 
-declarative_api_example = html.Div(
+app.layout = html.Div(
     [
         dcc.Markdown(
             "Images, links, and other special cell values can be formatted in Markdown by specifying the `cellRenderer` property to be `'markdown'` in the column definition."
@@ -59,14 +59,7 @@ declarative_api_example = html.Div(
             columnDefs=columnDefs,
             rowData=rowData,
         ),
-        html.Hr(),
     ]
-)
-
-
-app.layout = html.Div(
-    declarative_api_example,
-    style={"flexWrap": "wrap"},
 )
 
 

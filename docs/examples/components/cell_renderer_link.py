@@ -32,20 +32,18 @@ columnDefs = [
 ]
 
 
-table = dag.AgGrid(
+grid = dag.AgGrid(
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
-    defaultColDef={
-        "editable": False,
-    },
+    defaultColDef={"editable": False},
 )
 
 
 app = Dash(__name__)
 
 app.layout = html.Div(
-    [dcc.Markdown("Adding links with cellRenderer"), table],
+    [dcc.Markdown("Adding links with cellRenderer"), grid],
     style={"margin": 20},
 )
 

@@ -49,7 +49,7 @@ defaultColDef = {
 }
 
 
-table = dag.AgGrid(
+grid = dag.AgGrid(
     id="custom-component-btn-grid",
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
@@ -63,7 +63,7 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 app.layout = html.Div(
     [
         dcc.Markdown("Example of cellRenderer with custom button component"),
-        table,
+        grid,
         html.Div(id="custom-component-btn-value-changed"),
     ],
     style={"margin": 20},

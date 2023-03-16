@@ -43,7 +43,7 @@ navbar = dbc.NavbarSimple(
         html.Div(
             [
                 html.Div("Alpha Release", className="small text-white pt-2"),
-                html.Div("2.0.0a3", className="text-white"),
+                html.Div("2.0.0a4", className="text-white"),
             ],
             className="vstack",
         ),

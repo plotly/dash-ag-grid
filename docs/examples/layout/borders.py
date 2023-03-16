@@ -34,7 +34,7 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             rowData=rowData,
             columnSize="sizeToFit",
-            rowSelection="single",
+            dashGridOptions={"rowSelection": "single"},
             defaultColDef={"sortable": True},
         ),
     ],

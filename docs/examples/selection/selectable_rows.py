@@ -44,8 +44,8 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             rowData=data,
             defaultColDef=defaultColDef,
-            rowSelection="multiple",
             dashGridOptions={
+                "rowSelection":"multiple",
                 "isRowSelectable": {
                     "function": "params.data ? params.data.year < 2007 : false"
                 }

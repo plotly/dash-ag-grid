@@ -19,16 +19,19 @@ app.layout = html.Div(
     [
         dag.AgGrid(
             id="grid1",
-            rowModelType="infinite",
-            rowSelection="multiple",
+
             columnSize="sizeToFit",
             columnDefs=[{"field": "id"}, {"field": "name"}],
             defaultColDef={"sortable": True},
             enableEnterpriseModules=True,
-            # The number of rows rendered outside the viewable area the grid renders.
-            rowBuffer=0,
-            # How many blocks to keep in the store. Default is no limit, so every requested block is kept.
-            maxBlocksInCache=1,
+            rowModelType="infinite",
+            dashGridOptions={
+                # The number of rows rendered outside the viewable area the grid renders.
+                "rowBuffer": 0,
+                # How many blocks to keep in the store. Default is no limit, so every requested block is kept.
+                "maxBlocksInCache": 1,
+                "rowSelection": "multiple",
+            }
         ),
         html.Div(id="output2"),
         html.Div(id="cell-output2"),

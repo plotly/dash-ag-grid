@@ -38,7 +38,7 @@ app.layout = html.Div(
             rowData=data,
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
-            rowSelection="single",
+            dashGridOptions={"rowSelection":"single"},
         ),
     ],
     style={"margin": 20},

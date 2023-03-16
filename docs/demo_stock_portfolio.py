@@ -100,15 +100,6 @@ columnDefs = [
     },
 ]
 
-defaultColDef = {
-    "filter": True,
-    "resizable": True,
-    "sortable": True,
-    "editable": False,
-    "floatingFilter": True,
-    "minWidth": 125,
-}
-
 cellStyle = {
     "styleConditions": [
         {
@@ -126,6 +117,16 @@ cellStyle = {
     ]
 }
 
+defaultColDef = {
+    "filter": True,
+    "resizable": True,
+    "sortable": True,
+    "editable": False,
+    "floatingFilter": True,
+    "minWidth": 125,
+    "cellStyle": cellStyle,
+}
+
 
 grid = dag.AgGrid(
     id="portfolio-grid",
@@ -134,7 +135,6 @@ grid = dag.AgGrid(
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
-    cellStyle=cellStyle,
     dashGridOptions={"undoRedoCellEditing": True, "rowSelection": "single"},
 )
 

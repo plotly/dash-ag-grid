@@ -135,7 +135,7 @@ To use Master/Detail view:
                     "detailColName": "cities",
                     "suppressCallback": True,
                 },
-                detailRowAutoHeight=True,
+                dashGridOptions={"detailRowAutoHeight": True}
             ),
             body=True,
         ),
@@ -160,7 +160,7 @@ To use Master/Detail view:
                     },
                     "suppressCallback": False,
                 },
-                detailRowAutoHeight=True,
+                dashGridOptions={"detailRowAutoHeight": True}
             ),
             body=True,
         ),

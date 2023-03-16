@@ -86,6 +86,8 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#45](https://github.com/plotly/dash-ag-grid/pull/45) Fix [#44](https://github.com/plotly/dash-ag-grid/issues/44), markdown ignoring `target="_blank"` to open links in a new tab. Now if `dangerously_use_code` is `false`, markdown cells honor `columnDef.linkTarget`, but if `dangerously_use_code` is `true` you MUST use the HTML syntax `<a target="_blank">` to achieve this, markdown syntax `[text](url)` will ignore `columnDef.linkTarget`.
 - [#47](https://github.com/plotly/dash-ag-grid/pull/47) Fix `virtualRowData` by setting the default `rowModelType='clientSide'`
 - [#81](https://github.com/plotly/dash-ag-grid/pull/81) Fixing syncing issue with `rowData`, `virtualRowData` when cell edits and async `rowTransactions` occur
+- [#90](https://github.com/plotly/dash-ag-grid/pull/90) Fixing `columnState` to be populated once `gridReady`
+- [#92](https://github.com/plotly/dash-ag-grid/pull/92) Fixing `defaultStyle` when no `styleConditions` is in `cellStyle`
 
 ## [1.3.2] - 2023-01-13
 

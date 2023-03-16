@@ -47,8 +47,10 @@ app.layout = html.Div(
             defaultColDef=defaultColDef,
             columnDefs=columnDefs,
             columnSize="sizeToFit",
-            groupHeaderHeight=75,
-            headerHeight=150,
+            dashGridOptions={
+                'groupHeaderHeight':75,
+                'headerHeight':150,
+            }
         ),
     ],
     className="header1",

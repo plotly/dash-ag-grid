@@ -31,7 +31,7 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             rowData=data,
             columnSize="sizeToFit",
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple"},
             getRowId="params.data.id",
         ),
         html.Div(id="transactions2"),
