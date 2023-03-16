@@ -94,6 +94,9 @@ export const gridFunctions = [
     'getRowClass',
     'rowClassRules',
     'isFullWidthRow',
+
+    // Enterprise Functions
+    'getDataPath',
 ];
 
 /**
