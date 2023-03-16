@@ -32,7 +32,7 @@ app.layout = html.Div(
             rowData=rowData,
             columnDefs=columnDefs,
             columnSize="sizeToFit",
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple"},
         ),
         dcc.Markdown(id="currentSelections"),
         html.Hr(),
@@ -62,7 +62,7 @@ app.layout = html.Div(
             id="selectable-grid-callbacks",
             rowData=rowData,
             columnSize="sizeToFit",
-            rowSelection="multiple",
+            dashGridOptions={"rowSelection": "multiple"},
             columnDefs=[
                 {"headerName": "Make", "field": "make"},
                 {"headerName": "Model", "field": "model"},
