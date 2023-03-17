@@ -90,3 +90,7 @@ dagfuncs.filterParams = {
             ],
   defaultOption: 'lessThanWithNulls',
 };
+
+dagfuncs.getDataPath = function (data) {
+    return data.orgHierarchy;
+}
