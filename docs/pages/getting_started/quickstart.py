@@ -18,6 +18,7 @@ Here's a quick preview of some basic AG Grid features:
 - Re-order the columns by dragging them to a different position
 - Resized the columns by dragging the top right portion of the column
 - Pin columns by dragging them to the edge until the pin icon appears
+- Use the text filter by clicking on the menu icon in each column
 - Click on a cell to demo triggering a Dash callback
 
 """
