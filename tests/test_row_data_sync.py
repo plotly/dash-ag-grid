@@ -2,8 +2,6 @@ import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output, no_update, ctx
 import json
 from . import utils
-import time
-from dash.testing.wait import until
 
 def test_rs001_rowdata_sync(dash_duo):
     app = Dash(__name__)

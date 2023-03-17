@@ -1,11 +1,10 @@
 import dash_ag_grid as dag
-from dash import Dash, html, Input, Output, State
+from dash import Dash, html, Input, Output
 import pandas as pd
 import yfinance as yf
 from . import utils
 import json
 import os
-import time
 
 def test_cc001_custom_components(dash_duo):
 

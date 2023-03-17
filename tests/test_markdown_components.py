@@ -3,7 +3,7 @@ Working with raw html in Markdown component
 """
 import dash_ag_grid as dag
 import dash
-from dash import Input, Output, html, dcc
+from dash import html, dcc
 from . import utils
 from dash.testing.wait import until
 

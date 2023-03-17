@@ -4,10 +4,9 @@ Nested tables.
 
 import dash_ag_grid as dag
 import dash
-from dash import Input, Output, html, dcc
+from dash import html, dcc
 from . import utils
 from dash.testing.wait import until
-import time
 import requests
 
 def test_ca001_custom_aggFunc_functions(dash_duo):

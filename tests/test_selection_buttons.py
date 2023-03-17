@@ -2,7 +2,6 @@ import dash_ag_grid as dag
 from dash import Dash, html, dcc, Output, Input, no_update, ctx
 import requests
 from . import utils
-import time
 
 def test_sb001_selection_buttons(dash_duo):
     app = Dash(__name__)

@@ -1,7 +1,6 @@
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output
 from . import utils
-import time
 from dash.testing.wait import until
 import json
 

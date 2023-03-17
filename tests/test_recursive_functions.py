@@ -3,11 +3,8 @@ Nested tables.
 """
 
 import dash_ag_grid as dag
-import dash
-from dash import Input, Output, html, dcc, Dash
+from dash import html, Dash
 from . import utils
-from dash.testing.wait import until
-import time
 
 def test_rf001_recursive_functions(dash_duo):
     app = Dash(__name__)
