@@ -22,7 +22,6 @@ app.layout = html.Div([grid, html.Div(id="quickstart-output")])
     Output("quickstart-output", "children"), Input("quickstart-grid", "cellClicked")
 )
 def display_cell_clicked_on(cell):
-    print(cell)
     if cell is None:
         return "Click on a cell"
     return f"clicked on cell value:  {cell['value']}, column:   {cell['colId']}, row index:   {cell['rowIndex']}"
