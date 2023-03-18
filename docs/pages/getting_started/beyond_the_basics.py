@@ -1,6 +1,8 @@
 from dash import Dash, html, dcc, register_page
+from utils.code_and_show import example_app, make_tabs
 from utils.utils import app_description
-from utils.other_components import up_next, make_md
+from utils.other_components import up_next, make_md, make_feature_card
+
 
 register_page(
     __name__, order=3, description=app_description, title="Dash AG Grid")
@@ -23,8 +25,8 @@ You may be familiar with how to [Add JavaScript To Your Dash App](https://dash.p
 we'll show how JavaScript functions are passed to AG Grid from Dash props. 
    
 > If you’re a Python programmer who is just getting started with JavaScript, see
- [MDM web docs - JavaScript basics](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics)
- and for more detailed info on functions see [MDM web docs - JavaScript Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions)
+ [MDM - JavaScript basics](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics)
+ and for more detailed info on functions see [MDM - JavaScript Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions)
 
 
 __Background__
@@ -74,22 +76,23 @@ __Writing Secure Dash Apps__
 
 Executing JavaScript functions passed as a prop can introduce security risks - similar to using
  the `exec()` function in Python.  To reduce the risk of remote code execution attacks, only functions that are included
- in the component's namespace or the `dashAgGridFunctions` namespace will be executed.  
+ in the component's namespace will be executed.  
 
-> 
-> In a browser environment, the `window` object is the global namespace.  Any JavaScript variable defined in the `window`
- object can be passed as a component property in Dash. Only functions included in the grid's namespace will be executed.
- 
+You can include JavaScript functions in the component's namespace by adding by them to  `dashAgGridFunctions` namespace in a .js file in the assets folder.
+The functions defined in the `window.dashAgGridFunctions` object are added to the grid's namespace.
+These are the only functions that will be executed when passed to the grid from Dash.
 
 We include certain JavaScript functions in the the dash-ag-grid component's namespace such as
  `Number()` and `Math()`.  For convenience, we have also  included the [d3-format](https://github.com/d3/d3-format)
   and [d3-time-format](https://github.com/d3/d3-time-format)  libraries - making it easy to format numbers and dates.
     See [Value Formatters with d3](https://dashaggrid.pythonanywhere.com/rendering/value-formatters-with-d3-format) for
-     more details.  This means you can use `Number()`, `Math()`, `d3` in-line in your dash app.
+     more details.  This means you can use `Number()`, `Math()`, `d3` in-line in your dash app without having to add
+      them to the .js file in the assets folder
  
-You can include other JavaScript functions by adding by them to  `dashAgGridFunctions` namespace in a .js file in the assets folder.
-The functions defined in the `window.dashAgGridFunctions` and `window.dashAgGridComponents` objects are added to the grid's namespace.
-These are the only functions that can be used with Dash props.
+> 
+> In a browser environment, the `window` object is the global namespace.  Any JavaScript variable defined in the `window`
+ object can be passed as a component property in Dash. Only functions included in the grid's namespace will be executed.
+ 
  
 
 __Adding simple JavaScript functions in-line__
@@ -150,16 +153,39 @@ In the above example, you can see `params.value` is used in the function.  The p
 
 ![aggrid-params](https://user-images.githubusercontent.com/72614349/223864592-08258816-023b-44b2-a5e8-6bb3786a4692.png)
 
-__Debugging JavaScript functions in dash-ag-grid__
+### Debugging JavaScript functions in dash-ag-grid
 
-As of V2.0.0a4, we have added a `log()` function.   Here's a [preview](https://github.com/plotly/dash-ag-grid/pull/76)
-More details coming soon.
+To make it easier to debug in-line JavaScript functions in your Dash app, you can use the `log()` function.  This calls the `console.log()`
+ method to log messages to the browser's console. The message may be one or more strings and/or JavaScript objects.
+
+#### Example:  Debugging
+This is the app from the <dccLink href='/rendering/value-formatters-intro' children='valueFormatters Intro' /> section.
+
+Instead of formatting the "quantity" column, we are going to log `params.value` and `params` to the console
+
+```
+columnDefs = [
+    {
+        "field": "quantity",
+      #  "valueFormatter": {"function": "d3.format(',.1f')(params.value)"},
+        "valueFormatter": {"function": "log('params.value:', params.value, 'All valueFormatter params:', params)"},
+    },
+]
+
+```
+
 
 """
+
+img = "https://user-images.githubusercontent.com/72614349/226123326-17434a85-2a6a-470f-9f6d-f188f5dd299b.png"
+
 
 layout = html.Div(
     [
         make_md(text1),
+        example_app("examples.getting_started.debugging_functions", make_layout=make_tabs),
+        make_feature_card(img,"")
+
     ],
 )
 

@@ -1,3 +1,13 @@
+
+"""
+Reminder - In dcc.Markdown, be sure to use dcc.Link when linking to other pages in the app
+
+`dcc.Markdown( "This is text <dccLink href='page1/news' children='Page 1' /> more text", dangerously_allow_html=True)`
+"""
+
+
+
+
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 

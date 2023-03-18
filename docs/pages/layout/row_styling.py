@@ -5,7 +5,7 @@ from utils.utils import app_description
 
 register_page(
     __name__,
-    order=2,
+    order=8,
     description=app_description,
     title="Dash AG Grid Layout and Style - Row Styling",
 )
