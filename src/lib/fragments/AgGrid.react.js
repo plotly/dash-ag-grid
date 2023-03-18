@@ -2,16 +2,21 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
-import {omit, equals, isEmpty} from 'ramda';
+import {equals, has, isEmpty, map, mapObjIndexed, omit} from 'ramda';
 import {
     propTypes as _propTypes,
     defaultProps as _defaultProps,
 } from '../components/AgGrid.react';
 import {
-    expressWarn,
-    gridFunctions,
-    columnFunctions,
-    replaceFunctions,
+    columnDangerousFunctions,
+    columnMaybeFunctions,
+    columnArrayNestedFunctions,
+    columnNestedFunctions,
+    gridMaybeFunctions,
+    gridOnlyFunctions,
+    gridColumnContainers,
+    gridNestedFunctions,
+    objOfFunctions,
 } from '../utils/functionVars';
 import debounce from '../utils/debounce';
 
@@ -37,28 +42,16 @@ const d3 = {...d3Format, ...d3Time, ...d3TimeFormat, ...d3Array};
 // Rate-limit for resizing columns when table div is resized
 const RESIZE_DEBOUNCE_MS = 200;
 
-const XSSMESSAGE =
-    'you are trying to use a dangerous element that could lead to XSS';
+const xssMessage = (context) => {
+    console.error(
+        context,
+        'Blocked a string that AG Grid would evaluate, to prevent XSS attacks. If you really want this, use dangerously_allow_code'
+    );
+};
 
 export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
-
-        const customComponents = window.dashAgGridComponentFunctions || {};
-        const _this = this;
-        const newComponents = {};
-        Object.keys(customComponents).forEach(function (key) {
-            newComponents[key] = _this.generateRenderer(customComponents[key]);
-        });
-
-        this.state = {
-            ...this.props.parentState,
-            components: {
-                rowMenu: this.generateRenderer(RowMenuRenderer),
-                markdown: this.generateRenderer(MarkdownRenderer),
-                ...newComponents,
-            },
-        };
 
         this.onGridReady = this.onGridReady.bind(this);
         this.onSelectionChanged = this.onSelectionChanged.bind(this);
@@ -72,20 +65,20 @@ export default class DashAgGrid extends Component {
             this.onDisplayedColumnsChanged.bind(this);
         this.onGridSizeChanged = this.onGridSizeChanged.bind(this);
         this.updateColumnWidths = this.updateColumnWidths.bind(this);
-        this.handleDynamicCellStyle = this.handleDynamicCellStyle.bind(this);
-        this.handleDynamicRowStyle = this.handleDynamicRowStyle.bind(this);
+        this.handleDynamicStyle = this.handleDynamicStyle.bind(this);
         this.generateRenderer = this.generateRenderer.bind(this);
         this.resetColumnState = this.resetColumnState.bind(this);
         this.exportDataAsCsv = this.exportDataAsCsv.bind(this);
         this.setSelection = this.setSelection.bind(this);
-        this.parseParamFunction = this.parseParamFunction.bind(this);
+        this.convertFunction = this.convertFunction.bind(this);
+        this.convertMaybeFunction = this.convertMaybeFunction.bind(this);
+        this.convertCol = this.convertCol.bind(this);
+        this.convertAllProps = this.convertAllProps.bind(this);
         this.buildArray = this.buildArray.bind(this);
-        this.fixCols = this.fixCols.bind(this);
         this.onAsyncTransactionsFlushed =
             this.onAsyncTransactionsFlushed.bind(this);
 
         // Additional Exposure
-        this.setUpCols = this.setUpCols.bind(this);
         this.selectAll = this.selectAll.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
         this.autoSizeAllColumns = this.autoSizeAllColumns.bind(this);
@@ -93,16 +86,35 @@ export default class DashAgGrid extends Component {
         this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
         this.rowTransaction = this.rowTransaction.bind(this);
         this.getRowData = this.getRowData.bind(this);
+        this.syncRowData = this.syncRowData.bind(this);
+        this.isDatasourceLoadedForInfiniteScrolling =
+            this.isDatasourceLoadedForInfiniteScrolling.bind(this);
+        this.getDatasource = this.getDatasource.bind(this);
+        this.applyRowTransaction = this.applyRowTransaction.bind(this);
+        this.parseFunction = this.parseFunction.bind(this);
+
+        const customComponents = window.dashAgGridComponentFunctions || {};
+        const newComponents = map(this.generateRenderer, customComponents);
+
+        this.state = {
+            ...this.props.parentState,
+            components: {
+                rowMenu: this.generateRenderer(RowMenuRenderer),
+                markdown: this.generateRenderer(MarkdownRenderer),
+                ...newComponents,
+            },
+        };
 
         this.selectionEventFired = false;
     }
 
     setSelection(selection) {
-        if (this.state.gridApi && selection) {
+        const {gridApi} = this.state;
+        if (gridApi && selection) {
             if (!selection.length) {
-                this.state.gridApi.deselectAll();
+                gridApi.deselectAll();
             } else {
-                this.state.gridApi.forEachNode((node) => {
+                gridApi.forEachNode((node) => {
                     const isSelected = selection.some(equals(node.data));
                     node.setSelected(isSelected);
                 });
@@ -110,286 +122,101 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    fixCols(columnDef) {
-        const {dangerously_allow_code} = this.props;
+    convertFunction(func) {
+        // TODO: do we want this? ie allow the form `{function: <string>}` even when
+        // we're expecting just a string?
+        if (has('function', func)) {
+            return this.convertFunction(func.function);
+        }
 
-        const test = (target) => {
-            if (target in columnDef) {
-                if (!dangerously_allow_code && expressWarn.includes(target)) {
-                    if (typeof columnDef[target] !== 'function') {
-                        if (
-                            !Object.keys(columnDef[target]).includes('function')
-                        ) {
-                            columnDef[target] = () => '';
-                            console.error({
-                                field: columnDef.field || columnDef.headerName,
-                                message: XSSMESSAGE,
-                            });
-                        }
-                    }
-                }
-                if (typeof columnDef[target] !== 'function') {
-                    if (
-                        Object.keys(columnDef[target]).includes('function') &&
-                        !replaceFunctions.includes(target)
-                    ) {
-                        const newFunc = JSON.parse(
-                            JSON.stringify(columnDef[target].function)
-                        );
-                        columnDef[target] = (params) =>
-                            this.parseParamFunction(params, newFunc);
-                    }
-                }
-                if (replaceFunctions.includes(target)) {
-                    for (const [key, value] of Object.entries(
-                        columnDef[target]
-                    )) {
-                        if (typeof value !== 'function') {
-                            columnDef[target][key] = (params) =>
-                                this.parseParamFunction(params, value);
-                        }
-                    }
-                }
-                if (typeof columnDef[target] !== 'function') {
-                    for (var i in expressWarn) {
-                        var col = expressWarn[i];
-                        if (Object.keys(columnDef[target]).includes(col)) {
-                            if (!dangerously_allow_code) {
-                                if (
-                                    typeof columnDef[target][col] !== 'function'
-                                ) {
-                                    if (
-                                        !Object.keys(
-                                            columnDef[target][col]
-                                        ).includes('function')
-                                    ) {
-                                        columnDef[target][col] = () => '';
-                                        console.error({
-                                            field:
-                                                columnDef.field ||
-                                                columnDef.headerName,
-                                            message: XSSMESSAGE,
-                                        });
-                                    }
-                                }
-                            }
-                            if (typeof columnDef[target][col] !== 'function') {
-                                if (
-                                    Object.keys(
-                                        columnDef[target][col]
-                                    ).includes('function')
-                                ) {
-                                    const newFunc = JSON.parse(
-                                        JSON.stringify(
-                                            columnDef[target][col].function
-                                        )
-                                    );
-                                    columnDef[target][col] = (params) =>
-                                        this.parseParamFunction(
-                                            params,
-                                            newFunc
-                                        );
-                                }
-                            }
-                        }
-                    }
-                }
+        try {
+            if (typeof func !== 'string') {
+                throw new Error('tried to parse non-string as function', func);
             }
-            if ('headerComponentParams' in columnDef) {
-                if (target in columnDef.headerComponentParams) {
-                    if (
-                        !dangerously_allow_code &&
-                        expressWarn.includes(target)
-                    ) {
-                        if (
-                            typeof columnDef.headerComponentParams[target] !==
-                                'function' &&
-                            columnDef.headerComponentParams[target] !== ''
-                        ) {
-                            if (
-                                !Object.keys(
-                                    columnDef.headerComponentParams[target]
-                                ).includes('function')
-                            ) {
-                                columnDef.headerComponentParams[target] = '';
-                                console.error({
-                                    field:
-                                        columnDef.field || columnDef.headerName,
-                                    message: XSSMESSAGE,
-                                });
-                            }
-                        }
-                    }
-                    if (
-                        typeof columnDef.headerComponentParams[target] !==
-                        'function'
-                    ) {
-                        if (
-                            Object.keys(
-                                columnDef.headerComponentParams[target]
-                            ).includes('function') &&
-                            !replaceFunctions.includes(target)
-                        ) {
-                            const newFunc = JSON.parse(
-                                JSON.stringify(
-                                    columnDef.headerComponentParams[target]
-                                        .function
-                                )
-                            );
-                            columnDef.headerComponentParams[target] = (
-                                params
-                            ) => this.parseParamFunction(params, newFunc);
-                        }
-                    }
-                    if (replaceFunctions.includes(target)) {
-                        for (const [key, value] of Object.entries(
-                            columnDef.headerComponentParams[target]
-                        )) {
-                            if (typeof value !== 'function') {
-                                columnDef.headerComponentParams[target][key] = (
-                                    params
-                                ) => this.parseParamFunction(params, value);
-                            }
-                        }
-                    }
-                }
-            }
-            if ('headerGroupComponentParams' in columnDef) {
-                if (target in columnDef.headerGroupComponentParams) {
-                    if (
-                        !dangerously_allow_code &&
-                        expressWarn.includes(target)
-                    ) {
-                        if (
-                            typeof columnDef.headerGroupComponentParams[
-                                target
-                            ] !== 'function' &&
-                            columnDef.headerGroupComponentParams[target] !== ''
-                        ) {
-                            if (
-                                !Object.keys(
-                                    columnDef.headerGroupComponentParams[target]
-                                ).includes('function')
-                            ) {
-                                columnDef.headerGroupComponentParams[target] =
-                                    '';
-                                console.error({
-                                    field:
-                                        columnDef.field || columnDef.headerName,
-                                    message: XSSMESSAGE,
-                                });
-                            }
-                        }
-                    }
-                    if (
-                        typeof columnDef.headerGroupComponentParams[target] !==
-                        'function'
-                    ) {
-                        if (
-                            Object.keys(
-                                columnDef.headerGroupComponentParams[target]
-                            ).includes('function') &&
-                            !replaceFunctions.includes(target)
-                        ) {
-                            const newFunc = JSON.parse(
-                                JSON.stringify(
-                                    columnDef.headerGroupComponentParams[target]
-                                        .function
-                                )
-                            );
-                            columnDef.headerGroupComponentParams[target] = (
-                                params
-                            ) => this.parseParamFunction(params, newFunc);
-                        }
-                    }
-                    if (replaceFunctions.includes(target)) {
-                        for (const [key, value] of Object.entries(
-                            columnDef.headerGroupComponentParams[target]
-                        )) {
-                            if (typeof value !== 'function') {
-                                columnDef.headerGroupComponentParams[target][
-                                    key
-                                ] = (params) =>
-                                    this.parseParamFunction(params, value);
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        columnFunctions.concat(expressWarn).map(test);
-
-        return columnDef;
+            return this.parseFunction(func);
+        } catch (err) {
+            console.log(err);
+        }
+        return '';
     }
 
-    setUpCols() {
-        const {columnDefs, setProps, defaultColDef, detailCellRendererParams} =
-            this.props;
-
-        const cleanOneCol = (col) => {
-            let colOut = this.fixCols(col);
-            if ('children' in colOut) {
-                colOut = {
-                    ...col,
-                    children: col.children.map(cleanOneCol),
-                };
-            }
-
-            if ('cellStyle' in colOut) {
-                if (
-                    Object.keys(colOut.cellStyle).includes('styleConditions') ||
-                    Object.keys(colOut.cellStyle).includes('defaultStyle')
-                ) {
-                    const cellStyle = JSON.parse(
-                        JSON.stringify(colOut.cellStyle)
-                    );
-                    colOut.cellStyle = (params) =>
-                        this.handleDynamicCellStyle({params, cellStyle});
-                }
-            }
-            return colOut;
-        };
-
-        if (columnDefs) {
-            setProps({
-                columnDefs: columnDefs.map((columnDef) => {
-                    const colDefOut = columnDef;
-                    return cleanOneCol(colDefOut);
-                }),
-            });
+    convertMaybeFunction(maybeFunc, stringsEvalContext) {
+        if (has('function', maybeFunc)) {
+            return this.convertFunction(maybeFunc.function);
         }
-        if (defaultColDef) {
-            setProps({
-                defaultColDef: cleanOneCol(defaultColDef),
-            });
+
+        if (
+            stringsEvalContext &&
+            typeof maybeFunc === 'string' &&
+            !this.props.dangerously_allow_code
+        ) {
+            xssMessage(stringsEvalContext);
+            return null;
         }
-        if (detailCellRendererParams) {
-            if ('detailGridOptions' in detailCellRendererParams) {
-                if (
-                    'columnDefs' in detailCellRendererParams.detailGridOptions
-                ) {
-                    detailCellRendererParams.detailGridOptions.columnDefs =
-                        detailCellRendererParams.detailGridOptions.columnDefs.map(
-                            (columnDef) => {
-                                const colDefOut = columnDef;
-                                return cleanOneCol(colDefOut);
-                            }
-                        );
-                    if (
-                        'defaultColDef' in
-                        detailCellRendererParams.detailGridOptions
-                    ) {
-                        detailCellRendererParams.detailGridOptions.defaultColDef =
-                            cleanOneCol(
-                                detailCellRendererParams.detailGridOptions
-                                    .defaultColDef
-                            );
-                    }
-                    setProps({detailCellRendererParams});
-                }
+        return maybeFunc;
+    }
+
+    convertCol(columnDef) {
+        const field = columnDef.field || columnDef.headerName;
+
+        return mapObjIndexed((value, target) => {
+            if (objOfFunctions[target]) {
+                return map(this.convertFunction, value);
             }
-        }
+            if (columnDangerousFunctions[target]) {
+                // the second argument tells convertMaybeFunction
+                // that a plain string is dangerous,
+                // and provides the context for error reporting
+                return this.convertMaybeFunction(value, {target, field});
+            }
+            if (columnMaybeFunctions[target]) {
+                return this.convertMaybeFunction(value);
+            }
+            if (columnNestedFunctions[target]) {
+                return this.convertCol(value);
+            }
+            if (columnArrayNestedFunctions[target]) {
+                return value.map(this.convertCol);
+            }
+            if (
+                target === 'cellStyle' &&
+                (has('styleConditions', value) || has('defaultStyle', value))
+            ) {
+                return this.handleDynamicStyle(value);
+            }
+            // not one of those categories - pass it straight through
+            return value;
+        }, columnDef);
+    }
+
+    convertAllProps(props) {
+        return mapObjIndexed((value, target) => {
+            if (target === 'columnDefs') {
+                return value.map(this.convertCol);
+            }
+            if (gridColumnContainers[target]) {
+                return this.convertCol(value);
+            }
+            if (gridNestedFunctions[target]) {
+                return this.convertAllProps(value);
+            }
+            if (target === 'getRowId') {
+                return this.convertFunction(value);
+            }
+            if (target === 'getRowStyle') {
+                return this.handleDynamicStyle(value);
+            }
+            if (objOfFunctions[target]) {
+                return map(this.convertFunction, value);
+            }
+            if (gridOnlyFunctions[target]) {
+                return this.convertFunction(value);
+            }
+            if (gridMaybeFunctions[target]) {
+                return this.convertMaybeFunction(value);
+            }
+            return value;
+        }, props);
     }
 
     onFilterChanged() {
@@ -490,10 +317,6 @@ export default class DashAgGrid extends Component {
                 JSON.stringify(prevProps.columnDefs) ||
             prevProps.columnSize !== columnSize
         ) {
-            this.props.setProps({
-                columnDefs: JSON.parse(JSON.stringify(this.props.columnDefs)),
-            });
-            this.setUpCols();
             this.updateColumnWidths();
         }
 
@@ -545,7 +368,7 @@ export default class DashAgGrid extends Component {
             // If it's collapsed, remove it from the list of open nodes
             openGroups.delete(e.node.key);
         }
-        this.setState({openGroups: openGroups});
+        this.setState({openGroups});
     }
 
     onSelectionChanged() {
@@ -668,65 +491,42 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    evaluateFunction = (tempFunction, params) => {
-        const parsedCondition = esprima.parse(tempFunction).body[0].expression;
-        const value = evaluate(parsedCondition, {
-            params,
+    parseFunction(funcString) {
+        const parsedCondition = esprima.parse(funcString).body[0].expression;
+        const context = {
             d3,
             ...customFunctions,
             ...window.dashAgGridFunctions,
             ...window.dashSharedVariables,
-        });
-        return value;
-    };
+        };
+        return (params) => evaluate(parsedCondition, {params, ...context});
+    }
 
     /**
      * @params AG-Grid Styles rules attribute.
-     * See: https://www.ag-grid.com/react-grid/cell-styles/#cell-style-cell-class--cell-class-rules-params
+     * Cells: https://www.ag-grid.com/react-grid/cell-styles/#cell-style-cell-class--cell-class-rules-params
+     * Rows: https://www.ag-grid.com/react-grid/row-styles/#row-style-row-class--row-class-rules-params
      */
-    handleDynamicCellStyle({params, cellStyle = {}}) {
+    handleDynamicStyle(cellStyle) {
         const {styleConditions, defaultStyle} = cellStyle;
+        const _defaultStyle = defaultStyle || null;
 
-        if (styleConditions && styleConditions.length > 0) {
-            for (const styleCondition of styleConditions) {
-                const {condition, style} = styleCondition;
-
-                if (this.evaluateFunction(condition, params)) {
-                    return style;
+        if (styleConditions && styleConditions.length) {
+            const tests = styleConditions.map(({condition, style}) => ({
+                test: this.parseFunction(condition),
+                style,
+            }));
+            return (params) => {
+                for (const {test, style} of tests) {
+                    if (test(params)) {
+                        return style;
+                    }
                 }
-            }
+                return _defaultStyle;
+            };
         }
 
-        return defaultStyle ? defaultStyle : null;
-    }
-
-    /**
-     * @params AG-Grid Styles rules attribute.
-     * See: https://www.ag-grid.com/react-grid/row-styles/#row-style-row-class--row-class-rules-params
-     */
-    handleDynamicRowStyle({params, getRowStyle = {}}) {
-        const {styleConditions, defaultStyle} = getRowStyle;
-
-        if (styleConditions && styleConditions.length > 0) {
-            for (const styleCondition of styleConditions) {
-                const {condition, style} = styleCondition;
-
-                if (this.evaluateFunction(condition, params)) {
-                    return style;
-                }
-            }
-        }
-
-        return defaultStyle ? defaultStyle : null;
-    }
-
-    parseParamFunction(params, tempFunction) {
-        try {
-            return this.evaluateFunction(tempFunction, params);
-        } catch (err) {
-            console.log(err);
-        }
-        return '';
+        return _defaultStyle;
     }
 
     generateRenderer(Renderer) {
@@ -766,16 +566,11 @@ export default class DashAgGrid extends Component {
     }
 
     selectAll(opts) {
-        if (Object.keys(opts).includes('filtered')) {
-            if (opts.filtered) {
-                this.state.gridApi.selectAllFiltered();
-                this.props.setProps({
-                    selectAll: false,
-                });
-                return;
-            }
+        if (opts?.filtered) {
+            this.state.gridApi.selectAllFiltered();
+        } else {
+            this.state.gridApi.selectAll();
         }
-        this.state.gridApi.selectAll();
         this.props.setProps({
             selectAll: false,
         });
@@ -799,11 +594,7 @@ export default class DashAgGrid extends Component {
 
     buildArray(arr1, arr2) {
         if (arr1) {
-            if (
-                !JSON.parse(JSON.stringify(arr1)).includes(
-                    JSON.parse(JSON.stringify(arr2))
-                )
-            ) {
+            if (!arr1.includes(arr2)) {
                 return [...arr1, arr2];
             }
             return arr1;
@@ -815,9 +606,7 @@ export default class DashAgGrid extends Component {
         if (this.state.mounted) {
             if (this.state.gridApi) {
                 if (this.state.rowTransaction) {
-                    this.state.rowTransaction.map((data) =>
-                        this.applyRowTransaction(data)
-                    );
+                    this.state.rowTransaction.forEach(this.applyRowTransaction);
                     this.setState({rowTransaction: null});
                 }
                 this.applyRowTransaction(data);
@@ -840,17 +629,10 @@ export default class DashAgGrid extends Component {
     }
 
     autoSizeAllColumns(opts) {
-        const allColumnIds = [];
-        this.state.gridColumnApi.getColumnState().forEach((column) => {
-            allColumnIds.push(column.colId);
-        });
-        let skipHeaders = false;
-        if (Object.keys(opts).includes('skipHeaders')) {
-            if (opts.skipHeaders) {
-                skipHeaders = true;
-            }
-        }
-        this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeaders);
+        const {getColumnState, autoSizeColumns} = this.state.gridColumnApi;
+        const allColumnIds = getColumnState().map((column) => column.colId);
+        const skipHeaders = Boolean(opts?.skipHeaders);
+        autoSizeColumns(allColumnIds, skipHeaders);
         this.props.setProps({
             autoSizeAllColumns: false,
         });
@@ -868,9 +650,7 @@ export default class DashAgGrid extends Component {
     render() {
         const {
             id,
-            getRowStyle,
             style,
-            theme,
             className,
             resetColumnState,
             exportDataAsCsv,
@@ -883,73 +663,16 @@ export default class DashAgGrid extends Component {
             csvExportParams,
             detailCellRendererParams,
             setProps,
+            // eslint-disable-next-line no-unused-vars
             dangerously_allow_code,
             dashGridOptions,
             ...restProps
         } = this.props;
 
-        const replaceFunc = (target) => {
-            const shouldWarn =
-                !dangerously_allow_code && expressWarn.includes(target);
-
-            const sanitize = (container) => {
-                const targetIn = container[target];
-                if (targetIn) {
-                    if (shouldWarn && typeof targetIn === 'string') {
-                        container[target] = () => '';
-                        console.error({
-                            prop: target,
-                            message:
-                                'you are trying to use an unsafe prop without dangerously_allow_code',
-                        });
-                    } else if (
-                        typeof targetIn === 'object' &&
-                        'function' in targetIn &&
-                        !replaceFunctions.includes(target)
-                    ) {
-                        const newFunc = JSON.parse(
-                            JSON.stringify(container[target].function)
-                        );
-                        container[target] = (params) =>
-                            this.parseParamFunction(params, newFunc);
-                    }
-                    if (replaceFunctions.includes(target)) {
-                        for (const [key, value] of Object.entries(
-                            container[target]
-                        )) {
-                            if (typeof value !== 'function') {
-                                container[target][key] = (params) =>
-                                    this.parseParamFunction(params, value);
-                            }
-                        }
-                    }
-                }
-            };
-
-            sanitize(this.props);
-            if (dashGridOptions) {
-                sanitize(dashGridOptions);
-            }
-        };
-
-        gridFunctions.map(replaceFunc);
-
-        let getRowId;
-        if (this.props.getRowId) {
-            getRowId = (params) =>
-                this.parseParamFunction(
-                    params,
-                    JSON.parse(JSON.stringify(this.props.getRowId))
-                );
-        }
-
-        this.setUpCols();
-
-        let newRowStyle;
-        if (getRowStyle) {
-            newRowStyle = (params) =>
-                this.handleDynamicRowStyle({params, getRowStyle});
-        }
+        const convertedProps = this.convertAllProps({
+            ...dashGridOptions,
+            ...restProps,
+        });
 
         if (resetColumnState) {
             this.resetColumnState();
@@ -1013,14 +736,12 @@ export default class DashAgGrid extends Component {
         return (
             <div
                 id={id}
-                className={theme ? 'ag-theme-' + theme : className}
+                className={className}
                 style={{
                     ...style,
                 }}
             >
                 <AgGridReact
-                    getRowId={getRowId}
-                    getRowStyle={newRowStyle}
                     onGridReady={this.onGridReady}
                     onSelectionChanged={this.onSelectionChanged}
                     onCellClicked={this.onCellClicked}
@@ -1037,8 +758,7 @@ export default class DashAgGrid extends Component {
                     )}
                     components={this.state.components}
                     detailCellRendererParams={newDetailCellRendererParams}
-                    {...dashGridOptions}
-                    {...omit(['theme', 'getRowId'], restProps)}
+                    {...convertedProps}
                 ></AgGridReact>
             </div>
         );
