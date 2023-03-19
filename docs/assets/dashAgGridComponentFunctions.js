@@ -1,18 +1,14 @@
-var dagcomponentfuncs = (window.dashAgGridComponentFunctions =
-    window.dashAgGridComponentFunctions || {});
+var dagcomponentfuncs = (window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {});
 
-dagcomponentfuncs.stockLink = function (props) {
+dagcomponentfuncs.StockLink = function (props) {
     return React.createElement(
         'a',
-        {
-            href: 'https://finance.yahoo.com/quote/' + props.value,
-            target: props.value,
-        },
+        {href: 'https://finance.yahoo.com/quote/' + props.value},
         props.value
     );
 };
 
-dagcomponentfuncs.customDropdown = function (props) {
+dagcomponentfuncs.Dropdown = function (props) {
     const {setData, data} = props;
 
     function selectionHandler() {
@@ -24,8 +20,8 @@ dagcomponentfuncs.customDropdown = function (props) {
         setData(event.target.value);
     }
 
-    const options = props.colDef.cellEditorParams.values.map((opt) =>
-        React.createElement('option', {}, opt)
+    const options = props.colDef.cellRendererParams.values.map((opt) =>
+        React.createElement('option', {value: opt}, opt)
     );
 
     return React.createElement(
@@ -51,7 +47,7 @@ dagcomponentfuncs.customDropdown = function (props) {
     );
 };
 
-dagcomponentfuncs.checkbox = function (props) {
+dagcomponentfuncs.Checkbox = function (props) {
     const {setData, data} = props;
     function onClick() {
         if (!('checked' in event.target)) {
@@ -91,7 +87,7 @@ dagcomponentfuncs.checkbox = function (props) {
     );
 };
 
-dagcomponentfuncs.tags = function (props) {
+dagcomponentfuncs.Tags = function (props) {
     if (props.value == 'High') {
         newTag = React.createElement(
             'div',
@@ -149,7 +145,7 @@ dagcomponentfuncs.tags = function (props) {
     );
 };
 
-dagcomponentfuncs.customButton = function (props) {
+dagcomponentfuncs.Button = function (props) {
     const {setData, data} = props;
 
     if (!props.value) {
@@ -160,7 +156,6 @@ dagcomponentfuncs.customButton = function (props) {
         setData();
     }
 
-    const id = JSON.stringify({index: props.rowIndex, type: 'customButton'});
     return React.createElement(
         'div',
         {
@@ -177,7 +172,6 @@ dagcomponentfuncs.customButton = function (props) {
             'button',
             {
                 onClick: onClick,
-                id: props.value.id,
                 className: props.className,
             },
             props.children
@@ -185,7 +179,7 @@ dagcomponentfuncs.customButton = function (props) {
     );
 };
 
-dagcomponentfuncs.myCustomButton = function (props) {
+dagcomponentfuncs.CustomButton = function (props) {
     const {setData, data} = props;
 
     if (!props.value) {
@@ -204,7 +198,6 @@ dagcomponentfuncs.myCustomButton = function (props) {
         setData({n_clicks: newData['n_clicks']});
     }
 
-    const id = JSON.stringify({index: props.rowIndex, type: 'customButton'});
     return React.createElement(
         'div',
         {
@@ -221,7 +214,6 @@ dagcomponentfuncs.myCustomButton = function (props) {
             'button',
             {
                 onClick: onClick,
-                id: props.value.id,
                 className: props.value.className,
             },
             props.value.children
@@ -229,7 +221,7 @@ dagcomponentfuncs.myCustomButton = function (props) {
     );
 };
 
-dagcomponentfuncs.myCustomTooltip = function (props) {
+dagcomponentfuncs.CustomTooltip = function (props) {
     info = [
         React.createElement('h4', {}, props.data.ticker),
         React.createElement('div', {}, props.data.company),

@@ -30,7 +30,7 @@ columnDefs = [
     {
         "headerName": "Stock Ticker",
         "field": "ticker",
-        "cellRenderer": "stockLink",
+        "cellRenderer": "StockLink",
         "tooltipField": "ticker",
     },
     {"headerName": "Company", "field": "company", "filter": True},
@@ -45,19 +45,19 @@ columnDefs = [
         "headerName": "Volume",
         "type": "rightAligned",
         "field": "volume",
-        "cellRenderer": "tags",
+        "cellRenderer": "Tags",
         "editable": True,
     },
     {
         "field": "binary",
-        "cellRenderer": "checkbox",
+        "cellRenderer": "Checkbox",
     },
-    {"field": "buy", "cellRenderer": "myCustomButton"},
-    {"field": "sell", "cellRenderer": "myCustomButton"},
+    {"field": "buy", "cellRenderer": "CustomButton"},
+    {"field": "sell", "cellRenderer": "CustomButton"},
     {
         "field": "action",
-        "cellRenderer": "customDropdown",
-        "cellEditorParams": {
+        "cellRenderer": "Dropdown",
+        "cellRendererParams": {
             "values": actionOptions,
         },
     },

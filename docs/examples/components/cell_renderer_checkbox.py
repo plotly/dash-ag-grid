@@ -17,7 +17,8 @@ data = {
     "ticker": ["AAPL", "MSFT", "AMZN", "GOOGL"],
     "company": ["Apple", "Microsoft", "Amazon", "Alphabet"],
     "price": [154.99, 268.65, 100.47, 96.75],
-    "buy": [{"n_clicks": 0} for i in range(4)],
+    "binary": [False, True, False, False],
+
 }
 df = pd.DataFrame(data)
 
@@ -35,9 +36,8 @@ columnDefs = [
         "editable": True,
     },
     {
-        "field": "buy",
-        "cellRenderer": "Button",
-        "cellRendererParams": {"className": "btn btn-success", "children": "Buy"},
+        "field": "binary",
+        "cellRenderer": "Checkbox",
     },
 ]
 
@@ -50,7 +50,7 @@ defaultColDef = {
 
 
 grid = dag.AgGrid(
-    id="custom-component-btn-grid",
+    id="custom-component-checkbox-grid",
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
     columnSize="autoSizeAll",
@@ -62,19 +62,20 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Example of cellRenderer with custom button component"),
+        dcc.Markdown("Example of cellRenderer with custom checkbox component"),
         grid,
-        html.Div(id="custom-component-btn-value-changed"),
+        html.Div(id="custom-component-checkbox-value-changed"),
+        html.Div(id="x")
     ],
     style={"margin": 20},
 )
 
 
 @app.callback(
-    Output("custom-component-btn-value-changed", "children"),
-    Input("custom-component-btn-grid", "cellRendererData"),
+    Output("custom-component-checkbox-value-changed", "children"),
+    Input("custom-component-checkbox-grid", "cellRendererData"),
 )
-def showChange(n):
+def show_change(n):
     return json.dumps(n)
 
 
@@ -85,22 +86,30 @@ if __name__ == "__main__":
 """
 Put the following in the dashAgGridComponentFunctions.js file in the assets folder
 
+
 ---------------
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
 
-dagcomponentfuncs.Button = function (props) {
+dagcomponentfuncs.Checkbox = function (props) {
     const {setData, data} = props;
-
-    if (!props.value) {
-        return React.createElement('button');
-    }
-
     function onClick() {
-        setData();
+        if (!('checked' in event.target)) {
+            const checked = !event.target.children[0].checked;
+            const colId = props.column.colId;
+            props.node.setDataValue(colId, checked);
+        }
     }
 
+    function checkedHandler() {
+        // update grid data
+        const checked = event.target.checked;
+        const colId = props.column.colId;
+        props.node.setDataValue(colId, checked);
+        // update cellRendererData prop so it can be used to trigger a callback
+        setData(checked);
+    }
     return React.createElement(
         'div',
         {
@@ -112,17 +121,15 @@ dagcomponentfuncs.Button = function (props) {
                 justifyContent: 'center',
                 alignItems: 'center',
             },
+            onClick: onClick,
         },
-        React.createElement(
-            'button',
-            {
-                onClick: onClick,                
-                className: props.className,
-            },
-            props.children
-        )
+        React.createElement('input', {
+            type: 'checkbox',
+            checked: props.value,
+            onChange: checkedHandler,
+            style: {cursor: 'pointer'},
+        })
     );
 };
-
 
 """
