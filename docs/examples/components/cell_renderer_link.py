@@ -18,7 +18,7 @@ columnDefs = [
         "headerName": "Stock Ticker",
         "field": "ticker",
         # stockLink function is defined in the dashAgGridComponentFunctions.js in assets folder
-        "cellRenderer": "stockLink",
+        "cellRenderer": "StockLink",
     },
     {
         "headerName": "Company",
@@ -53,17 +53,15 @@ if __name__ == "__main__":
 
 """
 Put the following in the dashAgGridComponentFunctions.js file in the assets folder
-This will register the stockLink function used in the cellRenderer
 
 -----------
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
-dagcomponentfuncs.stockLink = function (props) {
+dagcomponentfuncs.StockLink = function (props) {
     return React.createElement('a',
     {
-        href: 'https://finance.yahoo.com/quote/' + props.value,
-        target: props.value
+        href: 'https://finance.yahoo.com/quote/' + props.value    
     }, props.value)
 }
 """

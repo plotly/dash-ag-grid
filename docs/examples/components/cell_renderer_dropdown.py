@@ -12,12 +12,13 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 
 
-
+actionOptions = ["buy", "sell", "hold"]
 data = {
     "ticker": ["AAPL", "MSFT", "AMZN", "GOOGL"],
     "company": ["Apple", "Microsoft", "Amazon", "Alphabet"],
     "price": [154.99, 268.65, 100.47, 96.75],
-    "buy": [{"n_clicks": 0} for i in range(4)],
+    "action": ["buy", "sell", "hold", "buy"],
+
 }
 df = pd.DataFrame(data)
 
@@ -35,9 +36,11 @@ columnDefs = [
         "editable": True,
     },
     {
-        "field": "buy",
-        "cellRenderer": "Button",
-        "cellRendererParams": {"className": "btn btn-success", "children": "Buy"},
+        "field": "action",
+        "cellRenderer": "Dropdown",
+        "cellRendererParams": {
+            "values": ["buy", "sell", "hold"],
+        },
     },
 ]
 
@@ -49,8 +52,8 @@ defaultColDef = {
 }
 
 
-grid = dag.AgGrid(
-    id="custom-component-btn-grid",
+table = dag.AgGrid(
+    id="custom-component-dd-grid",
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
     columnSize="autoSizeAll",
@@ -63,16 +66,17 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 app.layout = html.Div(
     [
         dcc.Markdown("Example of cellRenderer with custom button component"),
-        grid,
-        html.Div(id="custom-component-btn-value-changed"),
+        table,
+        html.Div(id="custom-component-dd-value-changed"),
+        html.Div(id="x")
     ],
     style={"margin": 20},
 )
 
 
 @app.callback(
-    Output("custom-component-btn-value-changed", "children"),
-    Input("custom-component-btn-grid", "cellRendererData"),
+    Output("custom-component-dd-value-changed", "children"),
+    Input("custom-component-dd-grid", "cellRendererData"),
 )
 def showChange(n):
     return json.dumps(n)
@@ -84,22 +88,28 @@ if __name__ == "__main__":
 
 """
 Put the following in the dashAgGridComponentFunctions.js file in the assets folder
+This will register the customButton function used in the cellRenderer
 
 ---------------
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
 
-dagcomponentfuncs.Button = function (props) {
+dagcomponentfuncs.Dropdown = function (props) {
     const {setData, data} = props;
 
-    if (!props.value) {
-        return React.createElement('button');
+    function selectionHandler() {
+        // update data in the grid
+        const newValue = event.target.value;
+        const colId = props.column.colId;
+        props.node.setDataValue(colId, newValue);
+        // update cellRendererData prop so it can be used to trigger a callback
+        setData(event.target.value);
     }
 
-    function onClick() {
-        setData();
-    }
+    const options = props.colDef.cellEditorParams.values.map((opt) =>
+        React.createElement('option', {}, opt)
+    );
 
     return React.createElement(
         'div',
@@ -114,15 +124,14 @@ dagcomponentfuncs.Button = function (props) {
             },
         },
         React.createElement(
-            'button',
+            'select',
             {
-                onClick: onClick,                
-                className: props.className,
+                value: props.value,
+                onChange: selectionHandler,
             },
-            props.children
+            options
         )
     );
 };
-
 
 """
