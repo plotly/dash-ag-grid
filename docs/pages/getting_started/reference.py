@@ -35,7 +35,7 @@ These props can be used in Dash, they just need to be passed to the grid in a pr
 
 Here are a few examples of props unique to Dash, and you can find the rest in the reference section below:
 
- - `cellRendererData` This prop is used with custom components.  See the <dccLink href='/components/cell-renderer' children='Cell Styling' /> section for
+ - `cellRendererData` This prop is used with custom components.  See the <dccLink href='/components/cell-renderer' children='Components' /> section for
 more details.
 
 
