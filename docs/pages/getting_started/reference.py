@@ -9,25 +9,22 @@ register_page(
 text1 = """
 # Dash AG Grid Reference
 
-Typically in Dash, each prop is defined separately.  This makes it possible to ensure correct  prop names and data
- types are used in the Dash app.  However with AG Grid there are hundreds of props
-  and it's  not possible to do this efficiently.  
- 
-The props defined in dash-ag-grid can be found in the Dash AG Grid Reference section bellow.  These props are all
- unique to Dash in some way, for example, they are used to set defaults, or they can trigger a Dash callback. 
+AG Grid is highly customizable and has hundreds of props.  Only a subset of these props are defined in the dash-ag-grid
+ component. The props defined in dash-ag-grid can be found in the reference section below.  These props are all
+ unique to Dash in some way.  For example, they can trigger a Dash callback or they define component defaults. 
  
 For all other props, please see the AG Grid docs for the full [AG Grid API reference](https://www.ag-grid.com/react-data-grid/grid-api/).
-These props can still be used in Dash, they just need to be passed to the grid in a dict such as the `dashGridOptions` prop.
+These props can be used in Dash, they just need to be passed to the grid in a prop such as `dashGridOptions` or `columnDefs`.
 
 
 >
 >__Content__
 >
 > 1. Props unique to Dash
-2. Props that can trigger a Dash Callback
+2. Props that can trigger a Dash callback
 3. Prop Defaults
-4. Props that take JavaScript functions as inputs
-5. Dash AG Grid Reference
+4. JavaScript functions as props
+5. Dash AG Grid reference
 
 
 ` `  
@@ -36,19 +33,21 @@ These props can still be used in Dash, they just need to be passed to the grid i
 
 ### 1. Props unique to Dash
 
-Here are a couple examples of props unique to Dash, and you can find the rest in the Reference section:
+Here are a few examples of props unique to Dash, and you can find the rest in the reference section below:
 
- - `cellStyle`  
- 
-The `cellStyle` prop is an AG Grid prop, however it accepts a "dash-only" dict to make it easier to do conditional formatting
+ - `cellRendererData` This prop is used with custom components.  See the <dccLink href='/components/cell-renderer' children='Cell Styling' /> section for
+more details.
+
+
+ - `cellStyle`  This is an AG Grid prop, however it also accepts a "dash-only" dict to make it easier to do conditional formatting
 without writing JavaScript functions.  See the <dccLink href='/layout/cell-styling' children='Cell Styling' /> section for
 more details.
 
 
-- `dashGridOptions`  
+- `dashGridOptions`:
 
-We have added the `dashGridOptions` prop for use with any valid AG Grid Prop that's used on the grid level.  
-For example, to enable pagination on the grid, instead of doing it like this:
+Use the `dashGridOptions` prop for any valid AG Grid prop that's used on the grid level.  
+For example, `pagination` is not defined as a prop in dash-ag-grid.  To enable pagination, instead of doing it like this:
  ```
  # don't do it this way:
  dag.AgGrid(     
@@ -70,31 +69,32 @@ For example, to enable pagination on the grid, instead of doing it like this:
 ` `  
 
  
-### 2.Props that trigger Dash Callbacks
+### 2. Props that trigger callbacks
 
 The following props can be used to trigger a Dash Callback:
 ```
--  `autoSizeAllColumns` 
-- `cellClicked`
-- `cellValueChanged`
-- `cellRendererData`
-- `columnDefs`
-- `columnState`
-- `defaultColDef`
-- `deleteSelectedRows`
-- `deselectAll`
-- `exportDataAsCsv`
-- `getDetailRequest`
-- `getDetailResponse`
-- `getRowsRequest`
-- `getRowsResponse` 
-- `resetColumnState`
-- `rowData`
-- `rowTransaction`
-- `selectAll` 
-- `selectedRows`
-- `updateColumnState` 
-- `virtualRowData`
+- autoSizeAllColumns
+- cellClicked
+- cellValueChanged
+- cellRendererData
+- columnDefs
+- columnState
+- defaultColDef
+- deleteSelectedRows
+- deselectAll
+- exportDataAsCsv
+- getDetailRequest
+- getDetailResponse
+- getRowsRequest
+- getRowsResponse 
+- resetColumnState
+- rowData
+- rowTransaction
+- selectAll
+- selectedRows
+- updateColumnState 
+- virtualRowData
+
 ```
 
 
@@ -102,7 +102,7 @@ The following props can be used to trigger a Dash Callback:
 ` `  
 
 
-### 3. Default Props
+### 3. Props defaults
 
 ```
     style: {height: '400px', width: '100%'},
@@ -126,14 +126,14 @@ The following props can be used to trigger a Dash Callback:
 ` `  
 ` `  
 
-### 4 Props that take JavaScript functions as Inputs
+### 4. JavaScript functions as props
 
 For more information on using JavaScript functions with Dash see the <dccLink href='/getting-started/beyond-the-basics' children='Beyond The Basics' /> section.  
 
 - __Grid level props__  
 
 The following grid level props props will take functions as inputs.  If the prop does not exist in the Dash AG Grid
- Reference section  below, they can be used inside the `dashGridOptions` prop.
+ Reference section below, they can be used in the `dashGridOptions` prop.
  
 ```     
    // Accessories
@@ -214,7 +214,7 @@ The following grid level props props will take functions as inputs.  If the prop
 
 
 The following column level props will take functions as inputs.  If the prop does not exist in the Dash AG Grid Reference section
- below, they can be used inside the `columnDefs` or `defaultColDefs` props.
+ below, they can be used in the `columnDefs` or `defaultColDefs` props.
 
 ```
     'valueGetter',
@@ -294,7 +294,7 @@ The following column level props will take functions as inputs.  If the prop doe
 
     // Header Group Component Parameters
     'setExpanded',
-];
+
 ```
 
 
@@ -308,7 +308,7 @@ The following column level props will take functions as inputs.  If the prop doe
 layout = html.Div(
     [
         make_md(text1),
-        make_md("### 4. Dash AG Grid Reference"),
+        make_md("### 5. Dash AG Grid Reference"),
         ComponentReference("AgGrid", dag)
     ],
 )

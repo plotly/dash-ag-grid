@@ -11,7 +11,7 @@ text1 = """
 # Beyond The Basics
 
 This is a guide on using JavaScript functions with dash-ag-grid.  Note that it's not necessary to use any
- Javascript for most of the basic and advanced features in dash-ag-grid.  However, if you would like to add custom components
+ Javascript for most features in dash-ag-grid.  However, if you would like to add custom components
  to the grid or take customization to the next level, then this tutorial is for you.
 
 
