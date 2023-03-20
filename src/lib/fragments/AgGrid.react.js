@@ -159,7 +159,7 @@ export default class DashAgGrid extends Component {
 
     convertCol(columnDef) {
         if (typeof columnDef === 'function') {
-            return columnDef
+            return columnDef;
         }
         const field = columnDef.field || columnDef.headerName;
 
@@ -191,9 +191,8 @@ export default class DashAgGrid extends Component {
             if (columnNestedOrObjOfFunctions[target]) {
                 if (has('function', value)) {
                     return this.convertMaybeFunction(value);
-                } else {
-                    return value.map(this.convertCol);
                 }
+                return value.map(this.convertCol);
             }
             // not one of those categories - pass it straight through
             return value;

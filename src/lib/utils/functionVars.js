@@ -228,7 +228,7 @@ export const columnNestedFunctions = {
  **/
 export const columnNestedOrObjOfFunctions = {
     filterParams: 1,
-}
+};
 
 /**
  * Container arrays of objects inside columnDefs that may have functions
