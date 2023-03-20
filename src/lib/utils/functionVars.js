@@ -146,7 +146,6 @@ export const columnMaybeFunctions = {
     icons: 1,
     suppressNavigable: 1,
     suppressKeyboardEvent: 1,
-    // filterParams: 1, // nested, keep this separate
 
     // Columns: Editing
     editable: 1,
@@ -221,8 +220,15 @@ export const columnNestedFunctions = {
     cellRendererParams: 1,
     headerComponentParams: 1,
     headerGroupComponentParams: 1,
-    filterParams: 1,
 };
+
+/**
+ * Container objects inside columnDefs that may have other functions
+ * or may be functions themselves
+ **/
+export const columnNestedOrObjOfFunctions = {
+    filterParams: 1,
+}
 
 /**
  * Container arrays of objects inside columnDefs that may have functions

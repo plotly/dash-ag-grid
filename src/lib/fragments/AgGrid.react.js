@@ -17,6 +17,7 @@ import {
     gridColumnContainers,
     gridNestedFunctions,
     objOfFunctions,
+    columnNestedOrObjOfFunctions,
 } from '../utils/functionVars';
 import debounce from '../utils/debounce';
 
@@ -157,9 +158,18 @@ export default class DashAgGrid extends Component {
     }
 
     convertCol(columnDef) {
+        if (typeof columnDef === 'function') {
+            return columnDef
+        }
         const field = columnDef.field || columnDef.headerName;
 
         return mapObjIndexed((value, target) => {
+            if (
+                target === 'cellStyle' &&
+                (has('styleConditions', value) || has('defaultStyle', value))
+            ) {
+                return this.handleDynamicStyle(value);
+            }
             if (objOfFunctions[target]) {
                 return map(this.convertFunction, value);
             }
@@ -178,11 +188,12 @@ export default class DashAgGrid extends Component {
             if (columnArrayNestedFunctions[target]) {
                 return value.map(this.convertCol);
             }
-            if (
-                target === 'cellStyle' &&
-                (has('styleConditions', value) || has('defaultStyle', value))
-            ) {
-                return this.handleDynamicStyle(value);
+            if (columnNestedOrObjOfFunctions[target]) {
+                if (has('function', value)) {
+                    return this.convertMaybeFunction(value);
+                } else {
+                    return value.map(this.convertCol);
+                }
             }
             // not one of those categories - pass it straight through
             return value;
