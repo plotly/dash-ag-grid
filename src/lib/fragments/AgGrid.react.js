@@ -659,7 +659,9 @@ export default class DashAgGrid extends Component {
     }
 
     autoSizeAllColumns(opts) {
-        const allColumnIds = this.state.gridColumnApi.getColumnState().map((column) => column.colId);
+        const allColumnIds = this.state.gridColumnApi
+            .getColumnState()
+            .map((column) => column.colId);
         const skipHeaders = Boolean(opts?.skipHeaders);
         this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeaders);
         this.props.setProps({
