@@ -21,9 +21,6 @@ Dash AG Grid includes the d3-format library, so you have access to all [d3-forma
 
 The basic syntax for the d3 function is: `d3.format(specifier)(value)`  
 
-The specifier is based on the [Python's Format Specification](https://docs.python.org/3/library/string.html#format-specification-mini-language).
-
-
 For example:
 ```
 d3.format(".0%")(0.123);  # rounded percentage, "12%"
@@ -35,6 +32,10 @@ d3.format("#x")(48879);   # prefixed lowercase hexadecimal, "0xbeef"
 d3.format(",.2r")(4223);  # grouped thousands with two significant digits, "4,200"
 ```
 For more options, see [d3-format examples](https://observablehq.com/@d3/d3-format)
+
+If this looks familiar to you, it's because this JavaScript library is based on Python!  
+
+So `d3.format(".0%")(0.123)` is like `"{:.0%}".format(0.123)` in Python.  The specifiers are based on the [Python's Format Specification](https://docs.python.org/3/library/string.html#format-specification-mini-language).
 
 
 In dash-ag-grid, use the d3.format function in the column definitions like this:
@@ -153,12 +154,15 @@ The basic syntax for formatting a date object is:
 ```
 formatted_date_string = d3.timeFormat(specifier)(date object)
 ```
+`d3.timeFormat()` is like `strftime()` in Python.
 
 Note that even if your datetime data is an object on the server, when it's sent to the grid in the browser it's converted to a string. 
 In order to convert the string back to a date on the client, use a parser:
 ```
-date_obj= d2.timeParse(specifier)(date string)
+date_obj= d3.timeParse(specifier)(date string)
 ``` 
+`d3.timeParse()` is like `strptime()` in Python
+
 When the date is converted to a JavaScript date object, then the AG Grid date filter `agDateColumnFilter` will work out
  of the box, and no additional date filter comparator functions are required.
 
@@ -198,6 +202,22 @@ Here are the specifiers:
 - %% - a literal percent sign (%).
 """
 
+text5 = """
+### Example:  Formatting Dates for the Date Filter
+
+In the data for this example, the date is formatted as a string "yyyy-mm-dd".  In order for the date filter to work,
+it must be converted to a date object.  We use:
+
+```
+ "valueGetter": {"function": "d3.timeParse('%Y-%m-%d')(params.data.date)"}
+```
+To display in the grid, we format it like the date filter "mm/dd/yyyy"
+```
+"valueFormatter": {"function": "d3.timeFormat('%m/%d/%Y')(params.value)"},
+```
+
+"""
+
 
 layout = html.Div(
     [
@@ -219,6 +239,8 @@ layout = html.Div(
         example_app(
             "examples.rendering.value_formatters_datetime", make_layout=make_tabs
         ),
+        make_md(text5),
+        example_app("examples.rendering.value_formatters_date_filter", make_layout=make_tabs),
         # up_next("text"),
     ],
 )

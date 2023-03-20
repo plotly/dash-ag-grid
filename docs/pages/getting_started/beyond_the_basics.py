@@ -24,9 +24,9 @@ add AG Grid to your Python Dash app. However if you want to take full advantage 
 You may be familiar with how to [Add JavaScript To Your Dash App](https://dash.plotly.com/external-resources) and how it's used in [Clientside Callbacks](https://dash.plotly.com/clientside-callbacks).  Here,
 we'll show how JavaScript functions are passed to AG Grid from Dash props. 
    
-> If you’re a Python programmer who is just getting started with JavaScript, see
- [MDM - JavaScript basics](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics)
- and for more detailed info on functions see [MDM - JavaScript Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions)
+> If you’re a Python programmer who is just getting started with JavaScript, see:
+ - [MDM - JavaScript basics](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics)
+ - [MDM - JavaScript Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions)
 
 
 __Background__
@@ -75,19 +75,23 @@ Under the covers, Dash will take the value of this dict and parse it into a Java
 __Writing Secure Dash Apps__
 
 Executing JavaScript functions passed as a prop can introduce security risks - similar to using
- the `exec()` function in Python.  To reduce the risk of remote code execution attacks, only functions that are included
- in the component's namespace will be executed.  
+ the `exec()` function in Python.  To reduce the risk of remote code execution attacks, __only functions included
+ in the component's namespace will be executed.__  
 
 You can include JavaScript functions in the component's namespace by adding by them to  `dashAgGridFunctions` namespace in a .js file in the assets folder.
-The functions defined in the `window.dashAgGridFunctions` object are added to the grid's namespace.
-These are the only functions that will be executed when passed to the grid from Dash.
+The functions defined in the `window.dashAgGridFunctions` object are added to the grid's namespace.  (The same applies
+ when  creating <dccLink href='/components/cell-renderer' children='custom components' /> except you would use the
+  `dashAgGridComponentFunctions` namespace.) 
 
-We include certain JavaScript functions in the the dash-ag-grid component's namespace such as
- `Number()` and `Math()`.  For convenience, we have also  included the [d3-format](https://github.com/d3/d3-format)
-  and [d3-time-format](https://github.com/d3/d3-time-format)  libraries - making it easy to format numbers and dates.
+For convenience, we include a few JavaScript functions in the the dash-ag-grid component's namespace such as:
+- `Number()` and `Math()` 
+- [d3-format](https://github.com/d3/d3-format) and [d3-time-format](https://github.com/d3/d3-time-format)  libraries - making it easy to format numbers and dates.
     See [Value Formatters with d3](https://dashaggrid.pythonanywhere.com/rendering/value-formatters-with-d3-format) for
-     more details.  This means you can use `Number()`, `Math()`, `d3` in-line in your dash app without having to add
-      them to the .js file in the assets folder
+     more details. 
+- `log()` - This is a special Dash function for debugging in-line functions  - see more information below. 
+
+This means you can use `Number()`, `Math()`, `d3` and `log()` in-line in your dash app without having to add
+      them to a .js file in the assets folder.
  
 > 
 > In a browser environment, the `window` object is the global namespace.  Any JavaScript variable defined in the `window`
