@@ -24,19 +24,19 @@ Please see the [AG Grid documentation](https://www.ag-grid.com/react-data-grid/c
 
 
 Creating custom components is considered "beyond the basics" as it requires writing components in JavaScript or React. We've 
-provided a few simple examples here so you can see how to use custom React components with dash-ag-grid.  We hope that 
-even if you're not very experienced with React, you'll be able to modify these components for use in your own project. 
+provided a few simple examples so you can see how to use custom React components with dash-ag-grid.  We hope that 
+even if you're new to React, you'll be able to modify these examples for use in your own project. 
 
-See all the components used in these docs in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/assets/dashAgGridComponentFunctions.js).
+You'll find all the components used in these docs in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/assets/dashAgGridComponentFunctions.js).
 We would like to build a library of components, so if you create a component, please consider sharing either on the Dash
  forum or [open an issue](https://github.com/plotly/dash-ag-grid/issues) in GitHub so we can add it to the collection.
 
 
-If you are new to React or Javascript:
-- See the <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' />  section.
-- [Getting started with React](https://react.dev/learn)
-- See also [Creating an element without JSX](https://react.dev/reference/react/createElement#creating-an-element-without-jsx).
- React components used with the cellRenderer need to be written without JSX, because JSX code cannot be run  directly in the browser.   
+> If you are new to React or Javascript see:
+-  <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' />  section
+- [Getting started with React](https://react.dev/learn) tutorial
+- [Creating an element without JSX](https://react.dev/reference/react/createElement#creating-an-element-without-jsx).
+ React components used with the `cellRenderer` in Dash need to be written without JSX, since JSX code cannot be run  directly in the browser.
 
 
 
@@ -63,11 +63,10 @@ The grid comes with some provided cell renderers out of the box. These cell rend
 
 ## Custom Cell Renderers
 
-### Registering the component
+### Registering custom components
 
 In order to safely render custom components in Dash, they must be added to the dash-ag-grid namespace. See
- the <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' />  section for more background
-  information.
+ the <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' />  section for more information.
 
 Register the component by adding the component to a `.js` file in the `assets` folder. Add it to the `dashAgGridComponentFunctions` namespace like this:
 
@@ -84,7 +83,7 @@ dagcomponentfuncs.StockLink = function (props) {
 
 ```
 
-### Example 1:  Registering a custom component
+### Example 1:  Registering  custom components
 
 This example uses a simple function to create a link to Yahoo Finance based on the stock ticker in the cell.
 
@@ -92,8 +91,9 @@ This example uses a simple function to create a link to Yahoo Finance based on t
 
 text2 = """
 ### Triggering callbacks with custom components
-
-Use the Dash prop `cellRendererData` in a callback.  
+To use the custom components in a callback, the component must call the `setData()` function, which will update the
+ Dash prop `cellRendererData`.  You can then use the Dash prop `cellRendererData` as an input of a callback.  The 
+ `cellRendererData` dict contains information on which component triggered the callback, including arbitrary data sent from the component.
 
 `cellRendererData` (dict; optional): Special prop to allow feedback from cell renderer to the grid. `cellRendererData` is a dict with keys:
 
@@ -118,7 +118,7 @@ to see which button triggered the callback.
 Note the following:
  - `cellRendererData` prop is updated by calling `setData()` in the custom `Button` component
  - The button is styled with Bootstrap class names passed to the component in the `cellRendererParm` prop from the Dash app.
- - The `cellRendererData` prop contains information on which button was clicked. 
+ - The `cellRendererData` prop is used as an Input of a Dash callback, and it contains information on which button was clicked. 
  
 """
 
