@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
-import {equals, has, isEmpty, map, mapObjIndexed, omit} from 'ramda';
+import {equals, has, isEmpty, map, mapObjIndexed} from 'ramda';
 import {
     propTypes as _propTypes,
     defaultProps as _defaultProps,
@@ -157,6 +157,21 @@ export default class DashAgGrid extends Component {
         return maybeFunc;
     }
 
+    suppressGetDetail(colName) {
+        return (params) => {
+            params.successCallback(params.data[colName]);
+        };
+    }
+
+    callbackGetDetail = (params) => {
+        const {setProps} = this.props;
+        const {data} = params;
+        this.getDetailParams = params;
+        // Adding the current time in ms forces Dash to trigger a callback
+        // when the same row is closed and re-opened.
+        setProps({getDetailRequest: {data: data, requestTime: Date.now()}});
+    };
+
     convertCol(columnDef) {
         if (typeof columnDef === 'function') {
             return columnDef;
@@ -182,17 +197,17 @@ export default class DashAgGrid extends Component {
             if (columnMaybeFunctions[target]) {
                 return this.convertMaybeFunction(value);
             }
-            if (columnNestedFunctions[target]) {
-                return this.convertCol(value);
-            }
-            if (columnArrayNestedFunctions[target]) {
+            if (columnArrayNestedFunctions[target] && Array.isArray(value)) {
                 return value.map(this.convertCol);
+            }
+            if (columnNestedFunctions[target] && typeof value === 'object') {
+                return this.convertCol(value);
             }
             if (columnNestedOrObjOfFunctions[target]) {
                 if (has('function', value)) {
                     return this.convertMaybeFunction(value);
                 }
-                return value.map(this.convertCol);
+                return this.convertCol(value);
             }
             // not one of those categories - pass it straight through
             return value;
@@ -208,6 +223,11 @@ export default class DashAgGrid extends Component {
                 return this.convertCol(value);
             }
             if (gridNestedFunctions[target]) {
+                if ('suppressCallback' in value) {
+                    value.getDetailRowData = value.suppressCallback
+                        ? this.suppressGetDetail(value.detailColName)
+                        : this.callbackGetDetail;
+                }
                 return this.convertAllProps(value);
             }
             if (target === 'getRowId') {
@@ -639,10 +659,9 @@ export default class DashAgGrid extends Component {
     }
 
     autoSizeAllColumns(opts) {
-        const {getColumnState, autoSizeColumns} = this.state.gridColumnApi;
-        const allColumnIds = getColumnState().map((column) => column.colId);
+        const allColumnIds = this.state.gridColumnApi.getColumnState().map((column) => column.colId);
         const skipHeaders = Boolean(opts?.skipHeaders);
-        autoSizeColumns(allColumnIds, skipHeaders);
+        this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeaders);
         this.props.setProps({
             autoSizeAllColumns: false,
         });
@@ -671,8 +690,6 @@ export default class DashAgGrid extends Component {
             rowTransaction,
             updateColumnState,
             csvExportParams,
-            detailCellRendererParams,
-            setProps,
             // eslint-disable-next-line no-unused-vars
             dangerously_allow_code,
             dashGridOptions,
@@ -716,33 +733,6 @@ export default class DashAgGrid extends Component {
             this.rowTransaction(rowTransaction);
         }
 
-        const callbackGetDetail = (params) => {
-            const {data} = params;
-            this.getDetailParams = params;
-            // Adding the current time in ms forces Dash to trigger a callback
-            // when the same row is closed and re-opened.
-            setProps({getDetailRequest: {data: data, requestTime: Date.now()}});
-        };
-
-        function suppressGetDetail(colName) {
-            return (params) => {
-                params.successCallback(params.data[colName]);
-            };
-        }
-
-        let newDetailCellRendererParams = null;
-        if (this.props.masterDetail) {
-            newDetailCellRendererParams = {
-                ...omit(
-                    ['detailColName', 'suppressCallback'],
-                    detailCellRendererParams
-                ),
-                getDetailRowData: detailCellRendererParams.suppressCallback
-                    ? suppressGetDetail(detailCellRendererParams.detailColName)
-                    : callbackGetDetail,
-            };
-        }
-
         return (
             <div
                 id={id}
@@ -767,7 +757,6 @@ export default class DashAgGrid extends Component {
                         RESIZE_DEBOUNCE_MS
                     )}
                     components={this.state.components}
-                    detailCellRendererParams={newDetailCellRendererParams}
                     {...convertedProps}
                 ></AgGridReact>
             </div>

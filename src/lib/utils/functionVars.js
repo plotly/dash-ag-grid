@@ -113,6 +113,7 @@ export const gridMaybeFunctions = {
  **/
 export const gridOnlyFunctions = {
     getRowId: 1,
+    getDataPath: 1,
 };
 
 /**
