@@ -110,7 +110,7 @@ dagfuncs.DatePicker = class {
 
     // https://jqueryui.com/datepicker/
     $(this.eInput).datepicker({
-      dateFormat: 'dd/mm/yy',
+      dateFormat: 'yy-mm-dd',
       onSelect: () => {
         this.eInput.focus();
       },
