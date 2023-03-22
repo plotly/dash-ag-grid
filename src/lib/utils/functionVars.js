@@ -218,7 +218,6 @@ export const columnMaybeFunctions = {
  * inside them, listed in other categories
  **/
 export const columnNestedFunctions = {
-    cellRendererParams: 1,
     headerComponentParams: 1,
     headerGroupComponentParams: 1,
 };
@@ -229,6 +228,8 @@ export const columnNestedFunctions = {
  **/
 export const columnNestedOrObjOfFunctions = {
     filterParams: 1,
+    cellRendererParams: 1,
+    cellEditorParams: 1,
 };
 
 /**

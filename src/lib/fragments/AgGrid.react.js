@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
-import {equals, has, isEmpty, map, mapObjIndexed} from 'ramda';
+import {equals, has, isEmpty, map, mapObjIndexed, memoizeWith} from 'ramda';
 import {
     propTypes as _propTypes,
     defaultProps as _defaultProps,
@@ -74,6 +74,7 @@ export default class DashAgGrid extends Component {
         this.convertFunction = this.convertFunction.bind(this);
         this.convertMaybeFunction = this.convertMaybeFunction.bind(this);
         this.convertCol = this.convertCol.bind(this);
+        this.convertOne = this.convertOne.bind(this);
         this.convertAllProps = this.convertAllProps.bind(this);
         this.buildArray = this.buildArray.bind(this);
         this.onAsyncTransactionsFlushed =
@@ -214,39 +215,52 @@ export default class DashAgGrid extends Component {
         }, columnDef);
     }
 
-    convertAllProps(props) {
-        return mapObjIndexed((value, target) => {
+    convertOne = memoizeWith((Object || String, Object), (value, target) => {
+        if (value) {
+            const newValue = JSON.parse(value);
             if (target === 'columnDefs') {
-                return value.map(this.convertCol);
+                return newValue.map(this.convertCol);
             }
             if (gridColumnContainers[target]) {
-                return this.convertCol(value);
+                return this.convertCol(newValue);
             }
             if (gridNestedFunctions[target]) {
-                if ('suppressCallback' in value) {
-                    value.getDetailRowData = value.suppressCallback
-                        ? this.suppressGetDetail(value.detailColName)
+                if ('suppressCallback' in newValue) {
+                    newValue.getDetailRowData = newValue.suppressCallback
+                        ? this.suppressGetDetail(newValue.detailColName)
                         : this.callbackGetDetail;
                 }
-                return this.convertAllProps(value);
+                return this.convertAllProps(newValue);
             }
             if (target === 'getRowId') {
-                return this.convertFunction(value);
+                return this.convertFunction(newValue);
             }
             if (target === 'getRowStyle') {
-                return this.handleDynamicStyle(value);
+                return this.handleDynamicStyle(newValue);
             }
             if (objOfFunctions[target]) {
-                return map(this.convertFunction, value);
+                return map(this.convertFunction, newValue);
             }
             if (gridOnlyFunctions[target]) {
-                return this.convertFunction(value);
+                return this.convertFunction(newValue);
             }
             if (gridMaybeFunctions[target]) {
-                return this.convertMaybeFunction(value);
+                return this.convertMaybeFunction(newValue);
             }
-            return value;
-        }, props);
+
+            return newValue;
+        }
+        return null;
+    });
+
+    convertAllProps(props) {
+        return mapObjIndexed(
+            (value, target) =>
+                typeof value === 'function'
+                    ? value
+                    : this.convertOne(JSON.stringify(value), target),
+            props
+        );
     }
 
     onFilterChanged() {
@@ -280,7 +294,11 @@ export default class DashAgGrid extends Component {
                     virtualRowData.push(node.data);
                 });
             }
-            setProps({rowData: this.getRowData(), virtualRowData});
+            if (rowData !== this.getRowData()) {
+                setProps({rowData: this.getRowData(), virtualRowData});
+            } else {
+                setProps({virtualRowData});
+            }
         }
     }
 
@@ -297,13 +315,6 @@ export default class DashAgGrid extends Component {
                 columnState: this.state.gridColumnApi.getColumnState(),
             });
         }
-    }
-
-    shouldComponentUpdate(nextProps) {
-        if (JSON.stringify(nextProps) === JSON.stringify(this.props)) {
-            return false;
-        }
-        return true;
     }
 
     componentDidMount() {
@@ -501,6 +512,7 @@ export default class DashAgGrid extends Component {
             },
             virtualRowData,
         });
+        this.syncRowData();
     }
 
     onDisplayedColumnsChanged() {
@@ -521,16 +533,15 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    parseFunction(funcString) {
+    parseFunction = memoizeWith(String, (funcString) => {
         const parsedCondition = esprima.parse(funcString).body[0].expression;
         const context = {
             d3,
             ...customFunctions,
             ...window.dashAgGridFunctions,
-            ...window.dashSharedVariables,
         };
         return (params) => evaluate(parsedCondition, {params, ...context});
-    }
+    });
 
     /**
      * @params AG-Grid Styles rules attribute.
@@ -692,6 +703,7 @@ export default class DashAgGrid extends Component {
             rowTransaction,
             updateColumnState,
             csvExportParams,
+            rowData,
             // eslint-disable-next-line no-unused-vars
             dangerously_allow_code,
             dashGridOptions,
@@ -758,6 +770,7 @@ export default class DashAgGrid extends Component {
                         this.onGridSizeChanged,
                         RESIZE_DEBOUNCE_MS
                     )}
+                    rowData={rowData}
                     components={this.state.components}
                     {...convertedProps}
                 ></AgGridReact>
