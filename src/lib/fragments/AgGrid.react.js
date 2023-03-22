@@ -601,7 +601,7 @@ export default class DashAgGrid extends Component {
             ...customFunctions,
             ...window.dashAgGridFunctions,
         };
-        return evaluate(parsedCondition, {...context});
+        return evaluate(parsedCondition, context);
     });
 
     /**
