@@ -1,18 +1,17 @@
 """
 Single Row Selection - without check boxes.
 """
-import dash
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output
-import requests
+import pandas as pd
 
 app = Dash(__name__)
 
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 
 columnDefs = [
@@ -35,7 +34,7 @@ app.layout = html.Div(
         dag.AgGrid(
             id="selection-single-grid",
             columnDefs=columnDefs,
-            rowData=data,
+            rowData=df.to_dict("records"),
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
             dashGridOptions={"rowSelection":"single"},

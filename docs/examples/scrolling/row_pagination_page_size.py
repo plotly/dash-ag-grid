@@ -4,14 +4,14 @@ AG Grid pagination
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output, State
-import requests
+import pandas as pd
 
 app = Dash(__name__)
 
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 # basic columns definition with column defaults
 columnDefs = [
@@ -27,11 +27,11 @@ columnDefs = [
 app.layout = html.Div(
     [
         dcc.Markdown("Setting Page Size.  Enter number of rows"),
-        dcc.Input(id="input-page-size", type="number", min=1, max=len(data), value=10),
+        dcc.Input(id="input-page-size", type="number", min=1, max=len(df), value=10),
         dag.AgGrid(
             id="grid-page-size",
             columnDefs=columnDefs,
-            rowData=data,
+            rowData=df.to_dict("records"),
             columnSize="sizeToFit",
             defaultColDef={"resizable": True, "sortable": True, "filter": True},
             dashGridOptions={"pagination": True},

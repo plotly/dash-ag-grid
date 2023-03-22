@@ -1,15 +1,16 @@
 """
 AG Grid Filter Options
 """
-import requests
+
 import dash_ag_grid as dag
 from dash import Dash, html, dcc
+import pandas as pd
 
 app = Dash(__name__)
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 
 columnDefs = [
@@ -42,14 +43,14 @@ defaultColDef = {
 app.layout = html.Div(
     [
         dag.AgGrid(
-            rowData=data,
+            rowData=df.to_dict("records"),
             columnDefs=columnDefs,
             columnSize="sizeToFit",
             defaultColDef=defaultColDef,
         ),
         dcc.Markdown("Grid with Header styled on filter", style={"marginTop": 30}),
         dag.AgGrid(
-            rowData=data,
+            rowData=df.to_dict("records"),
             columnDefs=columnDefs,
             columnSize="sizeToFit",
             defaultColDef=defaultColDef,

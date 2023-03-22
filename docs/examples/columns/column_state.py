@@ -5,7 +5,7 @@ Column State - Resetting columns with a callback.
 import json
 import dash_ag_grid as dag
 import dash
-from dash import Input, Output, State, html, dcc, ctx
+from dash import Input, Output, html, dcc, ctx
 import dash_bootstrap_components as dbc
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
