@@ -123,7 +123,7 @@ author_card = dbc.Card(
     dcc.Markdown(
         """
         Prototype docs maintained by Dash community members  
-        [@AnnMarieW](https://community.plotly.com/u/AnnMarieW) & [@jinnyzor](https://community.plotly.com/u/jinnyzor)  
+        [@AnnMarieW](https://community.plotly.com/u/AnnMarieW/summary) & [@jinnyzor](https://community.plotly.com/u/jinnyzor/summary)  
         
         Plotly Dash AG Grid docs coming soon!
         """
