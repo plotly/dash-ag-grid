@@ -4,14 +4,14 @@ Simple column filters - number filter and text filter
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc
-import requests
+import pandas as pd
 
 app = Dash(__name__)
 
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 # basic columns definition with column defaults
 columnDefs = [
@@ -40,7 +40,7 @@ defaultColDef = {
 app.layout = html.Div(
     [
         dcc.Markdown("Date Filter Example"),
-        dag.AgGrid(columnDefs=columnDefs, rowData=data, defaultColDef=defaultColDef),
+        dag.AgGrid(columnDefs=columnDefs, rowData=df.to_dict("records"), defaultColDef=defaultColDef),
     ],
     style={"margin": 20},
 )

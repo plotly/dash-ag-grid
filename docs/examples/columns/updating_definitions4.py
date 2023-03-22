@@ -4,16 +4,18 @@ Updating Column Groups
 """
 
 
-import requests
+
 import dash_ag_grid as dag
 from dash import Dash, dcc, html, Input, Output, State, ctx
 import dash_bootstrap_components as dbc
+import pandas as pd
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 columnDefs1 = [
     {
@@ -93,7 +95,7 @@ app.layout = html.Div(
         dbc.Button("Second Column Set", id="column-group2-set-btn", n_clicks=0),
         dag.AgGrid(
             id="column-group-set",
-            rowData=data,
+            rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
             columnDefs=columnDefs1,
         ),

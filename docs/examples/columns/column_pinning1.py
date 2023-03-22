@@ -1,17 +1,19 @@
 """
 Example Column Pinning
 """
-import requests
+
 import dash
 import dash_ag_grid as dag
 from dash import dcc, html, Input, Output, ctx
 import dash_bootstrap_components as dbc
+import pandas as pd
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 columnDefs1 = [
     {
@@ -90,7 +92,7 @@ app.layout = html.Div(
         dag.AgGrid(
             id="column-pinning",
             columnDefs=columnDefs1,
-            rowData=data,
+            rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
         ),
     ]

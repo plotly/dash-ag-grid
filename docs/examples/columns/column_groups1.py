@@ -3,16 +3,18 @@ Column Groups
 """
 
 
-import requests
+
 import dash
 import dash_ag_grid as dag
 from dash import dcc, html
+import pandas as pd
 
 app = dash.Dash(__name__)
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 columnDefs = [
     {
@@ -70,7 +72,7 @@ app.layout = html.Div(
         dcc.Markdown("Demonstration column groups."),
         dag.AgGrid(
             columnDefs=columnDefs,
-            rowData=data,
+            rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
         ),
     ]

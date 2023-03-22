@@ -4,15 +4,16 @@ Column Headers formatting
 """
 
 
-import requests
+
 import dash_ag_grid as dag
 from dash import Dash, dcc, html
+import pandas as pd
 
 app = Dash(__name__)
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 column_names = [
     "athlete",
@@ -43,7 +44,7 @@ app.layout = html.Div(
         dcc.Markdown("Demonstration of formatting column headers"),
         dag.AgGrid(
             id="toggle-metals-columns",
-            rowData=data,
+            rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
             columnDefs=columnDefs,
             columnSize="sizeToFit",

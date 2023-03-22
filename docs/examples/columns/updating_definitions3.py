@@ -2,18 +2,20 @@
 Column Definition State Retrieval
 """
 
-import requests
+
 import json
 
 import dash_ag_grid as dag
 from dash import Dash, dcc, html, Input, Output
 import dash_bootstrap_components as dbc
+import pandas as pd
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 columnDefs1 = [
     {"field": "country"},
@@ -48,7 +50,7 @@ app.layout = html.Div(
         dbc.Button("Set Header Names", id="header-names-toggle-btn", n_clicks=0),
         dag.AgGrid(
             id="toggle-header-names",
-            rowData=data,
+            rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
             columnDefs=columnDefs1,
         ),

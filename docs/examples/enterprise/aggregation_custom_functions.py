@@ -7,14 +7,14 @@ https://www.ag-grid.com/react-data-grid/aggregation-custom-functions/#example-mu
 
 import dash
 from dash import html, dcc
-import requests
 import dash_ag_grid as dag
+import pandas as pd
 
 app = dash.Dash(__name__)
 
-data = requests.get(
-    r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-).json()
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
 columnDefs = [
     # Row group by country and by year is enabled.
@@ -55,7 +55,7 @@ app.layout = html.Div(
         dag.AgGrid(
             enableEnterpriseModules=True,
             columnDefs=columnDefs,
-            rowData=data,
+            rowData=df.to_dict("records"),
             defaultColDef={"resizable":True},
             dashGridOptions={
                 "rowSelection": "multiple",
