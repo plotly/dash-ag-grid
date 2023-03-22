@@ -71,6 +71,7 @@ export default class DashAgGrid extends Component {
         this.resetColumnState = this.resetColumnState.bind(this);
         this.exportDataAsCsv = this.exportDataAsCsv.bind(this);
         this.setSelection = this.setSelection.bind(this);
+        this.memoizeOne = this.memoizeOne.bind(this);
         this.convertFunction = this.convertFunction.bind(this);
         this.convertMaybeFunction = this.convertMaybeFunction.bind(this);
         this.convertCol = this.convertCol.bind(this);
@@ -97,6 +98,7 @@ export default class DashAgGrid extends Component {
 
         const customComponents = window.dashAgGridComponentFunctions || {};
         const newComponents = map(this.generateRenderer, customComponents);
+        this.convertedPropCache = {};
 
         this.state = {
             ...this.props.parentState,
@@ -122,6 +124,16 @@ export default class DashAgGrid extends Component {
                 });
             }
         }
+    }
+
+    memoizeOne(converter, obj, target) {
+        const cache = this.convertedPropCache[target];
+        if (cache && obj === cache[0]) {
+            return cache[1];
+        }
+        const result = converter(obj, target);
+        this.convertedPropCache[target] = [obj, result];
+        return result;
     }
 
     convertFunction(func) {
@@ -215,50 +227,46 @@ export default class DashAgGrid extends Component {
         }, columnDef);
     }
 
-    convertOne = memoizeWith((Object || String, Object), (value, target) => {
+    convertOne(value, target) {
         if (value) {
-            const newValue = JSON.parse(value);
             if (target === 'columnDefs') {
-                return newValue.map(this.convertCol);
+                return value.map(this.convertCol);
             }
             if (gridColumnContainers[target]) {
-                return this.convertCol(newValue);
+                return this.convertCol(value);
             }
             if (gridNestedFunctions[target]) {
-                if ('suppressCallback' in newValue) {
-                    newValue.getDetailRowData = newValue.suppressCallback
-                        ? this.suppressGetDetail(newValue.detailColName)
+                if ('suppressCallback' in value) {
+                    value.getDetailRowData = value.suppressCallback
+                        ? this.suppressGetDetail(value.detailColName)
                         : this.callbackGetDetail;
                 }
-                return this.convertAllProps(newValue);
+                return this.convertAllProps(value);
             }
             if (target === 'getRowId') {
-                return this.convertFunction(newValue);
+                return this.convertFunction(value);
             }
             if (target === 'getRowStyle') {
-                return this.handleDynamicStyle(newValue);
+                return this.handleDynamicStyle(value);
             }
             if (objOfFunctions[target]) {
-                return map(this.convertFunction, newValue);
+                return map(this.convertFunction, value);
             }
             if (gridOnlyFunctions[target]) {
-                return this.convertFunction(newValue);
+                return this.convertFunction(value);
             }
             if (gridMaybeFunctions[target]) {
-                return this.convertMaybeFunction(newValue);
+                return this.convertMaybeFunction(value);
             }
 
-            return newValue;
+            return value;
         }
-        return null;
-    });
+        return value;
+    }
 
     convertAllProps(props) {
         return mapObjIndexed(
-            (value, target) =>
-                typeof value === 'function'
-                    ? value
-                    : this.convertOne(JSON.stringify(value), target),
+            (value, target) => this.memoizeOne(this.convertOne, value, target),
             props
         );
     }
@@ -489,7 +497,7 @@ export default class DashAgGrid extends Component {
 
     onCellValueChanged({
         oldValue,
-        newValue,
+        value,
         column: {colId},
         rowIndex,
         data,
@@ -507,7 +515,7 @@ export default class DashAgGrid extends Component {
                 rowId: node.id,
                 data,
                 oldValue,
-                newValue,
+                value,
                 colId,
             },
             virtualRowData,
