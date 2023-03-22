@@ -3,7 +3,7 @@ This is a collection of nav components and headers
 
 """
 import dash
-from dash import html
+from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 
@@ -119,6 +119,19 @@ def make_sidebar_category_hash(page, title):
         title=title,
     )
 
+author_card = dbc.Card(
+    dcc.Markdown(
+        """
+        Prototype docs maintained by Dash community members  
+        [@AnnMarieW](https://community.plotly.com/u/AnnMarieW) & [@jinnyzor](https://community.plotly.com/u/jinnyzor)  
+        
+        Plotly Dash AG Grid docs coming soon!
+        """
+    ),
+    body=True,
+    className="small text-center bg-light me-2 mb-4"
+)
+
 
 def make_side_nav():
     return html.Div(
@@ -154,7 +167,8 @@ def make_side_nav():
                 always_open=True,
                 id="sidebar",
             ),
-            dbc.Alert("AG Grid Version 29.1.0", color="primary", className="small py-2")
+            dbc.Alert("AG Grid Version 29.1.0", color="primary", className="small py-2 me-2"),
+            author_card,
 
             # example of a category with hash tags
             # dbc.Accordion(
