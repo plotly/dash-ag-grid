@@ -10,9 +10,11 @@ import {
 import {
     columnDangerousFunctions,
     columnMaybeFunctions,
+    columnMaybeFunctionsNoParams,
     columnArrayNestedFunctions,
     columnNestedFunctions,
     gridMaybeFunctions,
+    gridMaybeFunctionsNoParams,
     gridOnlyFunctions,
     gridColumnContainers,
     gridNestedFunctions,
@@ -98,6 +100,7 @@ export default class DashAgGrid extends Component {
 
         const customComponents = window.dashAgGridComponentFunctions || {};
         const newComponents = map(this.generateRenderer, customComponents);
+
         this.convertedPropCache = {};
 
         this.state = {
@@ -154,9 +157,43 @@ export default class DashAgGrid extends Component {
         return '';
     }
 
+    convertFunctionNoParams(func) {
+        // TODO: do we want this? ie allow the form `{function: <string>}` even when
+        // we're expecting just a string?
+        if (has('function', func)) {
+            return this.convertFunctionNoParams(func.function);
+        }
+
+        try {
+            if (typeof func !== 'string') {
+                throw new Error('tried to parse non-string as function', func);
+            }
+            return this.parseFunctionNoParams(func);
+        } catch (err) {
+            console.log(err);
+        }
+        return '';
+    }
+
     convertMaybeFunction(maybeFunc, stringsEvalContext) {
         if (has('function', maybeFunc)) {
             return this.convertFunction(maybeFunc.function);
+        }
+
+        if (
+            stringsEvalContext &&
+            typeof maybeFunc === 'string' &&
+            !this.props.dangerously_allow_code
+        ) {
+            xssMessage(stringsEvalContext);
+            return null;
+        }
+        return maybeFunc;
+    }
+
+    convertMaybeFunctionNoParams(maybeFunc, stringsEvalContext) {
+        if (has('function', maybeFunc)) {
+            return this.convertFunctionNoParams(maybeFunc.function);
         }
 
         if (
@@ -210,6 +247,9 @@ export default class DashAgGrid extends Component {
             if (columnMaybeFunctions[target]) {
                 return this.convertMaybeFunction(value);
             }
+            if (columnMaybeFunctionsNoParams[target]) {
+                return this.convertMaybeFunctionNoParams(value);
+            }
             if (columnArrayNestedFunctions[target] && Array.isArray(value)) {
                 return value.map(this.convertCol);
             }
@@ -257,6 +297,9 @@ export default class DashAgGrid extends Component {
             }
             if (gridMaybeFunctions[target]) {
                 return this.convertMaybeFunction(value);
+            }
+            if (gridMaybeFunctionsNoParams[target]) {
+                return this.convertMaybeFunctionNoParams(value);
             }
 
             return value;
@@ -549,6 +592,16 @@ export default class DashAgGrid extends Component {
             ...window.dashAgGridFunctions,
         };
         return (params) => evaluate(parsedCondition, {params, ...context});
+    });
+
+    parseFunctionNoParams = memoizeWith(String, (funcString) => {
+        const parsedCondition = esprima.parse(funcString).body[0].expression;
+        const context = {
+            d3,
+            ...customFunctions,
+            ...window.dashAgGridFunctions,
+        };
+        return evaluate(parsedCondition, {...context});
     });
 
     /**

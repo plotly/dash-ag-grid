@@ -111,6 +111,15 @@ export const gridMaybeFunctions = {
  * functions, so we accept a string and eval it safely
  * https://www.ag-grid.com/react-data-grid/grid-options/
  **/
+export const gridMaybeFunctionsNoParams = {
+    frameworkComponents: 1,
+};
+
+/**
+ * Functions from top-level grid props. Props in this list can ONLY be
+ * functions, so we accept a string and eval it safely
+ * https://www.ag-grid.com/react-data-grid/grid-options/
+ **/
 export const gridOnlyFunctions = {
     getRowId: 1,
     getDataPath: 1,
@@ -139,6 +148,16 @@ export const gridNestedFunctions = {
  * in which case we require {function: <string>} and we will eval them safely
  * https://www.ag-grid.com/react-data-grid/column-properties/
  **/
+export const columnMaybeFunctionsNoParams = {
+    cellEditor: 1,
+};
+
+/**
+ * Possible functions from columnDef props
+ * Props in this list can be string constants (NOT eval'd by AG Grid) or functions,
+ * in which case we require {function: <string>} and we will eval them safely
+ * https://www.ag-grid.com/react-data-grid/column-properties/
+ **/
 export const columnMaybeFunctions = {
     // Columns
     keyCreator: 1,
@@ -150,7 +169,6 @@ export const columnMaybeFunctions = {
 
     // Columns: Editing
     editable: 1,
-    cellEditor: 1,
     cellEditorSelector: 1,
 
     // Columns: Events
