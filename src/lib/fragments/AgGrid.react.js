@@ -2,7 +2,16 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
-import {equals, has, isEmpty, map, mapObjIndexed, memoizeWith} from 'ramda';
+import {
+    equals,
+    has,
+    isEmpty,
+    map,
+    mapObjIndexed,
+    memoizeWith,
+    pick,
+    omit,
+} from 'ramda';
 import {
     propTypes as _propTypes,
     defaultProps as _defaultProps,
@@ -51,6 +60,25 @@ const xssMessage = (context) => {
         'Blocked a string that AG Grid would evaluate, to prevent XSS attacks. If you really want this, use dangerously_allow_code'
     );
 };
+
+const ignoreCache = ['rowData'];
+
+const deadEnd = [
+    'setProps',
+    'loading_state',
+    'enableEnterpriseModules',
+    'parentState',
+    'persisted_props',
+    'persistence_type',
+    'virtualRowData',
+    'cellValueChanged',
+    'cellClicked',
+    'getRowRequest',
+    'getRowResponse',
+    'getDetailRequest',
+    'getDetailResponse',
+    'dangerously_allow_code',
+];
 
 export default class DashAgGrid extends Component {
     constructor(props) {
@@ -764,16 +792,15 @@ export default class DashAgGrid extends Component {
             rowTransaction,
             updateColumnState,
             csvExportParams,
-            rowData,
-            // eslint-disable-next-line no-unused-vars
-            dangerously_allow_code,
             dashGridOptions,
             ...restProps
         } = this.props;
 
+        const passingProps = pick(ignoreCache, restProps);
+
         const convertedProps = this.convertAllProps({
-            ...dashGridOptions,
-            ...restProps,
+            ...omit([...ignoreCache, ...deadEnd], dashGridOptions),
+            ...omit([...ignoreCache, ...deadEnd], restProps),
         });
 
         if (resetColumnState) {
@@ -831,8 +858,8 @@ export default class DashAgGrid extends Component {
                         this.onGridSizeChanged,
                         RESIZE_DEBOUNCE_MS
                     )}
-                    rowData={rowData}
                     components={this.state.components}
+                    {...passingProps}
                     {...convertedProps}
                 ></AgGridReact>
             </div>
