@@ -335,9 +335,10 @@ export default class DashAgGrid extends Component {
                 virtualRowData.push(node.data);
             });
 
-            const filterModel = this.state.gridApi.getFilterModel();
-            setProps({virtualRowData, filterModel});
+            setProps({virtualRowData});
         }
+        const filterModel = this.state.gridApi.getFilterModel();
+        setProps({filterModel});
     }
 
     getRowData() {
