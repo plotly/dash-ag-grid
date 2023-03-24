@@ -1,13 +1,12 @@
 import dash_ag_grid as dag
-from dash import Dash, html, Input, Output, State
+from dash import Dash, html, Input, Output
 import pandas as pd
 import yfinance as yf
 from . import utils
 import json
 import os
-import time
 
-def test_cc001_custom_components(dash_duo):
+def test_cu001_custom_components(dash_duo):
 
     app = Dash(__name__,
                meta_tags=[{'http-equiv': 'content-security-policy',
@@ -184,6 +183,6 @@ def test_cc001_custom_components(dash_duo):
                                                                 ' {"children": "sell", "className": "btn btn-danger", '
                                                                 '"n_clicks": null}, "action": "sell", "test": '
                                                          '{"className": "btn btn-warning"}}, "oldValue": "bu'
-                                                                'y", "newValue": "sell", "colId": "action"}')
+                                                                'y", "value": "sell", "colId": "action"}')
     grid.element_click_cell_button(0, 8)
     dash_duo.wait_for_text_to_equal("#cellRendererData", '{"data": "updated"}')

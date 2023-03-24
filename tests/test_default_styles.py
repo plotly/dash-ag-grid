@@ -1,7 +1,6 @@
 import dash_ag_grid as dag
-from dash import Dash, html, dcc
+from dash import Dash, html
 from . import utils
-import time
 from dash.testing.wait import until
 
 def test_ds001_default_styles(dash_duo):

@@ -2,7 +2,6 @@ import dash_ag_grid as dag
 from dash import Dash, html, dcc, Output, Input, no_update
 import requests
 from . import utils
-import time
 
 def test_sr001_selected_rows(dash_duo):
 

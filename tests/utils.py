@@ -122,3 +122,13 @@ class Grid:
         return self.dash_duo.find_element(
             f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] .ag-group-contracted'
         )
+
+    def get_cell_collapsable(self, row, col):
+        return self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] .ag-group-expanded'
+        )
+
+    def get_cell_animation(self, row, col):
+        return self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] .ag-value-change-delta'
+        )

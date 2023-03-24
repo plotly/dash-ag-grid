@@ -22,7 +22,7 @@ def test_fi002_custom_filter(dash_duo):
             rowData=df.to_dict("records"),
             columnDefs=[
                 {"headerName": col.capitalize(), "field": col,
-                 'filterParams': {'function': 'filterParams'},
+                 'filterParams': {'function': 'filterParams()'},
                  'filter': 'agNumberColumnFilter'}
                 for col in default_display_cols
             ],

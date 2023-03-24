@@ -25,11 +25,7 @@ export default class DashAgGrid extends Component {
 
     buildArray(arr1, arr2) {
         if (arr1) {
-            if (
-                !JSON.parse(JSON.stringify(arr1)).includes(
-                    JSON.parse(JSON.stringify(arr2))
-                )
-            ) {
+            if (!arr1.includes(arr2)) {
                 return [...arr1, arr2];
             }
             return arr1;

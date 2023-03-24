@@ -1,11 +1,6 @@
 import dash_ag_grid as dag
-from dash import Dash, html, Input, Output
-import pandas as pd
-import yfinance as yf
+from dash import Dash, html
 from . import utils
-import json
-import os
-import time
 
 def test_cr001_custom_row_selectable(dash_duo):
     app = Dash(__name__)
