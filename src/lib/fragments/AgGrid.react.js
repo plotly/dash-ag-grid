@@ -336,7 +336,6 @@ export default class DashAgGrid extends Component {
             });
 
             const filterModel = this.state.gridApi.getFilterModel();
-            this.setState({filterModel});
             setProps({virtualRowData, filterModel});
         }
     }
@@ -431,8 +430,9 @@ export default class DashAgGrid extends Component {
 
     onRowDataUpdated() {
         // Handles preserving existing selections when rowData is updated in a callback
-        const {selectedRows, setProps, rowData, rowModelType} = this.props;
-        const {openGroups, filterModel} = this.state;
+        const {selectedRows, setProps, rowData, rowModelType, filterModel} =
+            this.props;
+        const {openGroups} = this.state;
 
         if (rowData && rowModelType === 'clientSide' && this.state.gridApi) {
             const virtualRowData = [];
@@ -527,6 +527,7 @@ export default class DashAgGrid extends Component {
             deselectAll,
             autoSizeAllColumns,
             deleteSelectedRows,
+            filterModel,
         } = this.props;
         if (rowModelType === 'infinite') {
             params.api.setDatasource(this.getDatasource());
@@ -538,6 +539,10 @@ export default class DashAgGrid extends Component {
         });
 
         this.updateColumnWidths();
+
+        if (!isEmpty(filterModel)) {
+            this.state.gridApi.setFilterModel(filterModel);
+        }
 
         if (resetColumnState) {
             this.resetColumnState();
@@ -836,6 +841,7 @@ export default class DashAgGrid extends Component {
             updateColumnState,
             csvExportParams,
             dashGridOptions,
+            filterModel,
             ...restProps
         } = this.props;
 
@@ -844,6 +850,12 @@ export default class DashAgGrid extends Component {
         const convertedProps = this.convertAllProps(
             omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
         );
+
+        if (filterModel) {
+            if (this.state.gridApi) {
+                this.state.gridApi.setFilterModel(filterModel);
+            }
+        }
 
         if (resetColumnState) {
             this.resetColumnState();

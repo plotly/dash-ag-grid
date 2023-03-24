@@ -74,6 +74,7 @@ DashAgGrid.defaultProps = {
     dangerously_allow_code: false,
     rowModelType: 'clientSide',
     dashGridOptions: {},
+    filterModel: {},
 };
 DashAgGrid.propTypes = {
     /********************************
@@ -348,7 +349,8 @@ DashAgGrid.propTypes = {
     }),
 
     /**
-     * If filtering client-side rowModel, what the filter model is (read-only)
+     * If filtering client-side rowModel, what the filter model is.
+     * Passing a model back to this prop will apply it to the grid.
      */
     filterModel: PropTypes.object,
 
