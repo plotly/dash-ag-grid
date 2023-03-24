@@ -527,6 +527,7 @@ export default class DashAgGrid extends Component {
             autoSizeAllColumns,
             deleteSelectedRows,
             filterModel,
+            setProps,
         } = this.props;
         if (rowModelType === 'infinite') {
             params.api.setDatasource(this.getDatasource());
@@ -544,28 +545,36 @@ export default class DashAgGrid extends Component {
         }
 
         if (resetColumnState) {
-            this.resetColumnState();
+            this.resetColumnState(false);
         }
 
         if (exportDataAsCsv) {
-            this.exportDataAsCsv(csvExportParams);
+            this.exportDataAsCsv(csvExportParams, false);
         }
 
         if (selectAll) {
-            this.selectAll(selectAll);
+            this.selectAll(selectAll, false);
         }
 
         if (deselectAll) {
-            this.deselectAll();
+            this.deselectAll(false);
         }
 
         if (autoSizeAllColumns) {
-            this.autoSizeAllColumns(autoSizeAllColumns);
+            this.autoSizeAllColumns(autoSizeAllColumns, false);
         }
 
         if (deleteSelectedRows) {
-            this.deleteSelectedRows();
+            this.deleteSelectedRows(false);
         }
+
+        setProps({
+            exportDataAsCsv: false,
+            selectAll: false,
+            deselectAll: false,
+            autoSizeAllColumns: false,
+            deleteSelectedRows: false,
+        });
 
         this.updateColumnState();
 
@@ -706,27 +715,31 @@ export default class DashAgGrid extends Component {
     }
 
     // Event actions that reset
-    exportDataAsCsv(csvExportParams) {
+    exportDataAsCsv(csvExportParams, reset = true) {
         if (!this.state.gridApi) {
             return;
         }
         this.state.gridApi.exportDataAsCsv(csvExportParams);
-        this.props.setProps({
-            exportDataAsCsv: false,
-        });
+        if (reset) {
+            this.props.setProps({
+                exportDataAsCsv: false,
+            });
+        }
     }
 
-    resetColumnState() {
+    resetColumnState(reset = true) {
         if (!this.state.gridApi) {
             return;
         }
         this.state.gridColumnApi.resetColumnState();
-        this.props.setProps({
-            resetColumnState: false,
-        });
+        if (reset) {
+            this.props.setProps({
+                resetColumnState: false,
+            });
+        }
     }
 
-    selectAll(opts) {
+    selectAll(opts, reset = true) {
         if (!this.state.gridApi) {
             return;
         }
@@ -735,34 +748,40 @@ export default class DashAgGrid extends Component {
         } else {
             this.state.gridApi.selectAll();
         }
-        this.props.setProps({
-            selectAll: false,
-        });
+        if (reset) {
+            this.props.setProps({
+                selectAll: false,
+            });
+        }
     }
 
-    deselectAll() {
+    deselectAll(reset = true) {
         if (!this.state.gridApi) {
             return;
         }
         this.state.gridApi.deselectAll();
-        this.props.setProps({
-            deselectAll: false,
-        });
+        if (reset) {
+            this.props.setProps({
+                deselectAll: false,
+            });
+        }
     }
 
-    deleteSelectedRows() {
+    deleteSelectedRows(reset = true) {
         if (!this.state.gridApi) {
             return;
         }
         const sel = this.state.gridApi.getSelectedRows();
         this.state.gridApi.applyTransaction({remove: sel});
-        this.props.setProps({
-            deleteSelectedRows: false,
-            rowData: this.getRowData(),
-        });
+        if (reset) {
+            this.props.setProps({
+                deleteSelectedRows: false,
+                rowData: this.getRowData(),
+            });
+        }
     }
 
-    autoSizeAllColumns(opts) {
+    autoSizeAllColumns(opts, reset = true) {
         if (!this.state.gridApi) {
             return;
         }
@@ -771,9 +790,11 @@ export default class DashAgGrid extends Component {
             .map((column) => column.colId);
         const skipHeaders = Boolean(opts?.skipHeaders);
         this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeaders);
-        this.props.setProps({
-            autoSizeAllColumns: false,
-        });
+        if (reset) {
+            this.props.setProps({
+                autoSizeAllColumns: false,
+            });
+        }
     }
     // end event actions
 
