@@ -329,16 +329,14 @@ export default class DashAgGrid extends Component {
 
     onFilterChanged() {
         const {setProps, rowModelType} = this.props;
+        const virtualRowData = [];
         if (rowModelType === 'clientSide') {
-            const virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilter((node) => {
                 virtualRowData.push(node.data);
             });
-
-            setProps({virtualRowData});
         }
         const filterModel = this.state.gridApi.getFilterModel();
-        setProps({filterModel});
+        setProps({virtualRowData, filterModel});
     }
 
     getRowData() {
@@ -854,7 +852,9 @@ export default class DashAgGrid extends Component {
 
         if (filterModel) {
             if (this.state.gridApi) {
-                this.state.gridApi.setFilterModel(filterModel);
+                if (this.state.gridApi.getFilterModel() !== filterModel) {
+                    this.state.gridApi.setFilterModel(filterModel);
+                }
             }
         }
 
