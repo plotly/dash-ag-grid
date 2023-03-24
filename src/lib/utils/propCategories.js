@@ -5,7 +5,7 @@
  * {function: <string>} and we'll eval & exec it safely.
  * https://www.ag-grid.com/react-data-grid/cell-expressions/#column-definition-expressions
  **/
-export const columnDangerousFunctions = {
+export const COLUMN_DANGEROUS_FUNCTIONS = {
     valueGetter: 1,
     valueFormatter: 1,
     valueParser: 1,
@@ -19,7 +19,7 @@ export const columnDangerousFunctions = {
  * Objects in either columns or top-level props with arbitrary keys
  * whose values can only be function strings, which we will eval safely
  **/
-export const objOfFunctions = {
+export const OBJ_OF_FUNCTIONS = {
     cellClassRules: 1,
     rowClassRules: 1,
 };
@@ -30,7 +30,7 @@ export const objOfFunctions = {
  * in which case we require {function: <string>} and we will eval them safely
  * https://www.ag-grid.com/react-data-grid/grid-options/
  **/
-export const gridMaybeFunctions = {
+export const GRID_MAYBE_FUNCTIONS = {
     // Accessories
     getMainMenuItems: 1,
     postProcessPopup: 1,
@@ -102,7 +102,6 @@ export const gridMaybeFunctions = {
     getRowHeight: 1,
     getRowStyle: 1,
     getRowClass: 1,
-    // rowClassRules: 1, // keep replaceFunctions separate
     isFullWidthRow: 1,
 };
 
@@ -111,7 +110,7 @@ export const gridMaybeFunctions = {
  * functions, so we accept a string and eval it safely
  * https://www.ag-grid.com/react-data-grid/grid-options/
  **/
-export const gridMaybeFunctionsNoParams = {
+export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
     frameworkComponents: 1,
 };
 
@@ -120,7 +119,7 @@ export const gridMaybeFunctionsNoParams = {
  * functions, so we accept a string and eval it safely
  * https://www.ag-grid.com/react-data-grid/grid-options/
  **/
-export const gridOnlyFunctions = {
+export const GRID_ONLY_FUNCTIONS = {
     getRowId: 1,
     getDataPath: 1,
 };
@@ -128,7 +127,7 @@ export const gridOnlyFunctions = {
 /**
  * Other top-level containers that look like a column def
  */
-export const gridColumnContainers = {
+export const GRID_COLUMN_CONTAINERS = {
     defaultColDef: 1,
     autoGroupColumnDef: 1,
     defaultColGroupDef: 1,
@@ -137,7 +136,7 @@ export const gridColumnContainers = {
 /**
  * Top-level containers that contain other functions or entire grids
  */
-export const gridNestedFunctions = {
+export const GRID_NESTED_FUNCTIONS = {
     detailCellRendererParams: 1,
     detailGridOptions: 1,
 };
@@ -148,7 +147,7 @@ export const gridNestedFunctions = {
  * in which case we require {function: <string>} and we will eval them safely
  * https://www.ag-grid.com/react-data-grid/column-properties/
  **/
-export const columnMaybeFunctionsNoParams = {
+export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
     cellEditor: 1,
 };
 
@@ -158,7 +157,7 @@ export const columnMaybeFunctionsNoParams = {
  * in which case we require {function: <string>} and we will eval them safely
  * https://www.ag-grid.com/react-data-grid/column-properties/
  **/
-export const columnMaybeFunctions = {
+export const COLUMN_MAYBE_FUNCTIONS = {
     // Columns
     keyCreator: 1,
     equals: 1,
@@ -188,7 +187,6 @@ export const columnMaybeFunctions = {
     // Columns: Rendering and Styling
     cellStyle: 1,
     cellClass: 1,
-    // cellClassRules: 1, // keep replaceFunctions separate
     tooltipComponent: 1,
     cellRendererSelector: 1,
 
@@ -235,7 +233,7 @@ export const columnMaybeFunctions = {
  * Container objects inside columnDefs that may have other functions
  * inside them, listed in other categories
  **/
-export const columnNestedFunctions = {
+export const COLUMN_NESTED_FUNCTIONS = {
     headerComponentParams: 1,
     headerGroupComponentParams: 1,
 };
@@ -244,7 +242,7 @@ export const columnNestedFunctions = {
  * Container objects inside columnDefs that may have other functions
  * or may be functions themselves
  **/
-export const columnNestedOrObjOfFunctions = {
+export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS = {
     filterParams: 1,
     cellRendererParams: 1,
     cellEditorParams: 1,
@@ -254,7 +252,34 @@ export const columnNestedOrObjOfFunctions = {
  * Container arrays of objects inside columnDefs that may have functions
  * inside them, listed in other categories
  */
-export const columnArrayNestedFunctions = {
+export const COLUMN_ARRAY_NESTED_FUNCTIONS = {
     children: 1,
     filterOptions: 1,
 };
+
+/**
+ * Props to pass straight from Dash to AG Grid with no caching or conversion
+ */
+export const PASSTHRU_PROPS = ['rowData'];
+
+/**
+ * Props to not send to AG Grid at all
+ * There are others too, that are already pulled out of `restProps`
+ * in the render() method, so they don't need to be listed here
+ */
+export const PROPS_NOT_FOR_AG_GRID = [
+    'setProps',
+    'loading_state',
+    'enableEnterpriseModules',
+    'parentState',
+    'persisted_props',
+    'persistence_type',
+    'virtualRowData',
+    'cellValueChanged',
+    'cellClicked',
+    'getRowRequest',
+    'getRowResponse',
+    'getDetailRequest',
+    'getDetailResponse',
+    'dangerously_allow_code',
+];

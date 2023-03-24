@@ -17,19 +17,21 @@ import {
     defaultProps as _defaultProps,
 } from '../components/AgGrid.react';
 import {
-    columnDangerousFunctions,
-    columnMaybeFunctions,
-    columnMaybeFunctionsNoParams,
-    columnArrayNestedFunctions,
-    columnNestedFunctions,
-    gridMaybeFunctions,
-    gridMaybeFunctionsNoParams,
-    gridOnlyFunctions,
-    gridColumnContainers,
-    gridNestedFunctions,
-    objOfFunctions,
-    columnNestedOrObjOfFunctions,
-} from '../utils/functionVars';
+    COLUMN_DANGEROUS_FUNCTIONS,
+    COLUMN_MAYBE_FUNCTIONS,
+    COLUMN_MAYBE_FUNCTIONS_NO_PARAMS,
+    COLUMN_ARRAY_NESTED_FUNCTIONS,
+    COLUMN_NESTED_FUNCTIONS,
+    GRID_MAYBE_FUNCTIONS,
+    GRID_MAYBE_FUNCTIONS_NO_PARAMS,
+    GRID_ONLY_FUNCTIONS,
+    GRID_COLUMN_CONTAINERS,
+    GRID_NESTED_FUNCTIONS,
+    OBJ_OF_FUNCTIONS,
+    COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS,
+    PASSTHRU_PROPS,
+    PROPS_NOT_FOR_AG_GRID,
+} from '../utils/propCategories';
 import debounce from '../utils/debounce';
 
 import MarkdownRenderer from '../renderers/markdownRenderer';
@@ -61,24 +63,7 @@ const xssMessage = (context) => {
     );
 };
 
-const ignoreCache = ['rowData'];
-
-const deadEnd = [
-    'setProps',
-    'loading_state',
-    'enableEnterpriseModules',
-    'parentState',
-    'persisted_props',
-    'persistence_type',
-    'virtualRowData',
-    'cellValueChanged',
-    'cellClicked',
-    'getRowRequest',
-    'getRowResponse',
-    'getDetailRequest',
-    'getDetailResponse',
-    'dangerously_allow_code',
-];
+const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
 
 export default class DashAgGrid extends Component {
     constructor(props) {
@@ -263,28 +248,28 @@ export default class DashAgGrid extends Component {
             ) {
                 return this.handleDynamicStyle(value);
             }
-            if (objOfFunctions[target]) {
+            if (OBJ_OF_FUNCTIONS[target]) {
                 return map(this.convertFunction, value);
             }
-            if (columnDangerousFunctions[target]) {
+            if (COLUMN_DANGEROUS_FUNCTIONS[target]) {
                 // the second argument tells convertMaybeFunction
                 // that a plain string is dangerous,
                 // and provides the context for error reporting
                 return this.convertMaybeFunction(value, {target, field});
             }
-            if (columnMaybeFunctions[target]) {
+            if (COLUMN_MAYBE_FUNCTIONS[target]) {
                 return this.convertMaybeFunction(value);
             }
-            if (columnMaybeFunctionsNoParams[target]) {
+            if (COLUMN_MAYBE_FUNCTIONS_NO_PARAMS[target]) {
                 return this.convertMaybeFunctionNoParams(value);
             }
-            if (columnArrayNestedFunctions[target] && Array.isArray(value)) {
+            if (COLUMN_ARRAY_NESTED_FUNCTIONS[target] && Array.isArray(value)) {
                 return value.map(this.convertCol);
             }
-            if (columnNestedFunctions[target] && typeof value === 'object') {
+            if (COLUMN_NESTED_FUNCTIONS[target] && typeof value === 'object') {
                 return this.convertCol(value);
             }
-            if (columnNestedOrObjOfFunctions[target]) {
+            if (COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS[target]) {
                 if (has('function', value)) {
                     return this.convertMaybeFunction(value);
                 }
@@ -300,10 +285,10 @@ export default class DashAgGrid extends Component {
             if (target === 'columnDefs') {
                 return value.map(this.convertCol);
             }
-            if (gridColumnContainers[target]) {
+            if (GRID_COLUMN_CONTAINERS[target]) {
                 return this.convertCol(value);
             }
-            if (gridNestedFunctions[target]) {
+            if (GRID_NESTED_FUNCTIONS[target]) {
                 if ('suppressCallback' in value) {
                     value.getDetailRowData = value.suppressCallback
                         ? this.suppressGetDetail(value.detailColName)
@@ -317,16 +302,16 @@ export default class DashAgGrid extends Component {
             if (target === 'getRowStyle') {
                 return this.handleDynamicStyle(value);
             }
-            if (objOfFunctions[target]) {
+            if (OBJ_OF_FUNCTIONS[target]) {
                 return map(this.convertFunction, value);
             }
-            if (gridOnlyFunctions[target]) {
+            if (GRID_ONLY_FUNCTIONS[target]) {
                 return this.convertFunction(value);
             }
-            if (gridMaybeFunctions[target]) {
+            if (GRID_MAYBE_FUNCTIONS[target]) {
                 return this.convertMaybeFunction(value);
             }
-            if (gridMaybeFunctionsNoParams[target]) {
+            if (GRID_MAYBE_FUNCTIONS_NO_PARAMS[target]) {
                 return this.convertMaybeFunctionNoParams(value);
             }
 
@@ -796,12 +781,11 @@ export default class DashAgGrid extends Component {
             ...restProps
         } = this.props;
 
-        const passingProps = pick(ignoreCache, restProps);
+        const passingProps = pick(PASSTHRU_PROPS, restProps);
 
-        const convertedProps = this.convertAllProps({
-            ...omit([...ignoreCache, ...deadEnd], dashGridOptions),
-            ...omit([...ignoreCache, ...deadEnd], restProps),
-        });
+        const convertedProps = this.convertAllProps(
+            omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
+        );
 
         if (resetColumnState) {
             this.resetColumnState();
@@ -836,13 +820,7 @@ export default class DashAgGrid extends Component {
         }
 
         return (
-            <div
-                id={id}
-                className={className}
-                style={{
-                    ...style,
-                }}
-            >
+            <div id={id} className={className} style={style}>
                 <AgGridReact
                     onGridReady={this.onGridReady}
                     onSelectionChanged={this.onSelectionChanged}
