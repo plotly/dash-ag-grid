@@ -37,7 +37,29 @@ defaultColDef = {'editable': True}
 
 """
 
-text2="""
+
+text2 = """
+
+### Conditional Editing
+To dynamically determine which cells are editable, a function can be supplied to the editable property on the Column Definition:
+
+```
+columnDefs = [
+    {
+        'field': 'athlete',
+        # conditionally enables editing for data for 2012
+         "editable": {"function": "params.data.year == 2012"},
+    }
+]
+```
+
+In the snippet above, Athlete cells will be editable on rows where the Year is 2012.
+
+"""
+
+
+
+text3 = """
 ### Triggering callback when cell values change
 
 If the grid is editable, you can trigger a callback by using the `cellValueChanged` prop in a callback `Input()`.
@@ -53,7 +75,12 @@ If the grid is editable, you can trigger a callback by using the `cellValueChang
 Try editing a cell of the grid to see the data included in the `cellValueChanged` prop
 """
 
-text3="""
+
+
+
+
+
+text4="""
 ### Using `rowData` in a Callback 
 
 When the grid is editable, the _state_ of the `rowData` is updated with user edits. Note that the  `rowData` prop cannot
@@ -92,8 +119,10 @@ layout = html.Div(
         make_md(text1),
         example_app("examples.editing.overview", make_layout=make_tabs),
         make_md(text2),
-        example_app("examples.editing.editing_callbacks", make_layout=make_tabs),
+        example_app("examples.editing.conditional_editing", make_layout=make_tabs),
         make_md(text3),
+        example_app("examples.editing.editing_callbacks", make_layout=make_tabs),
+        make_md(text4),
         example_app("examples.editing.editing_callbacks2", make_layout=make_tabs),
         # up_next("text"),
     ],
