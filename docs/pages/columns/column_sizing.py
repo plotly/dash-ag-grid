@@ -49,14 +49,9 @@ columnDefs = [
 
 The `columnSize="sizeToFit"` prop makes the currently visible columns fit the screen. The columns will scale (growing or shrinking) to fit the available width.
 
-If you don't want a particular column to be included in the auto resize, then set the column definition `"suppressSizeToFit"=True`. This is helpful if, for example, you want the first column to remain fixed width, but all other columns to fill the width of the table.
-
-The grid calculates new column widths while maintaining the ratio of the column default widths. So for example if Column A
- has a default size twice as wide as Column B, then after `sizeToFit` Column A will still be twice the size of Column B, assuming no Column min-width or max-width constraints are violated.
+If you don't want a particular column to be included in the auto resize, then set the width of that column in the column definition.
 
 Column default widths, rather than current widths, are used while calculating the new widths. This insures the result is deterministic and not depend on any Column resizing the user may have manually done.
-
-The function can receive a parameters object with minimum and maximum widths, either for all columns or for specific columns, to further restrain the columns resulting width from that function call. These widths will not exceed the column's defined minimum and maximum widths.
 
 ## Auto-Size Columns
 
