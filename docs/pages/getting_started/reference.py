@@ -4,7 +4,7 @@ from utils.other_components import up_next, make_md, ComponentReference
 import dash_ag_grid as dag
 
 register_page(
-    __name__, order=2, description=app_description, title="Dash AG Grid")
+    __name__, order=2, description=app_description, title="Dash AG Grid - Reference")
 
 text1 = """
 # Dash AG Grid Reference
