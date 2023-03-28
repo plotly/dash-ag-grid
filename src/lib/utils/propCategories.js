@@ -16,6 +16,18 @@ export const COLUMN_DANGEROUS_FUNCTIONS = {
 };
 
 /**
+ * Dangerous elements on the grid: If you pass a string,
+ * AG Grid will execute it as raw JS. We accept these strings if
+ * `dangerously_allow_code=true`, otherwise we require
+ * {function: <string>} and we'll eval & exec it safely.
+ * https://www.ag-grid.com/react-data-grid/cell-expressions/#column-definition-expressions
+ **/
+export const GRID_DANGEROUS_FUNCTIONS = {
+    overlayLoadingTemplate: 1,
+    overlayNoRowsTemplate: 1,
+};
+
+/**
  * Objects in either columns or top-level props with arbitrary keys
  * whose values can only be function strings, which we will eval safely
  **/

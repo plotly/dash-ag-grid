@@ -31,6 +31,7 @@ import {
     COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS,
     PASSTHRU_PROPS,
     PROPS_NOT_FOR_AG_GRID,
+    GRID_DANGEROUS_FUNCTIONS,
 } from '../utils/propCategories';
 import debounce from '../utils/debounce';
 
@@ -296,6 +297,9 @@ export default class DashAgGrid extends Component {
                 }
                 return this.convertAllProps(value);
             }
+            if (GRID_DANGEROUS_FUNCTIONS[target]) {
+                return this.convertMaybeFunctionNoParams(value, {prop: target});
+            }
             if (target === 'getRowId') {
                 return this.convertFunction(value);
             }
@@ -329,14 +333,17 @@ export default class DashAgGrid extends Component {
 
     onFilterChanged() {
         const {setProps, rowModelType} = this.props;
-        const virtualRowData = [];
+        const filterModel = this.state.gridApi.getFilterModel();
+        const propsToSet = {filterModel};
         if (rowModelType === 'clientSide') {
+            const virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilter((node) => {
                 virtualRowData.push(node.data);
             });
+            propsToSet.virtualRowData = virtualRowData;
         }
-        const filterModel = this.state.gridApi.getFilterModel();
-        setProps({virtualRowData, filterModel});
+
+        setProps({...propsToSet});
     }
 
     getRowData() {
@@ -529,6 +536,8 @@ export default class DashAgGrid extends Component {
             filterModel,
             setProps,
         } = this.props;
+
+        const propsToSet = {};
         if (rowModelType === 'infinite') {
             params.api.setDatasource(this.getDatasource());
         }
@@ -546,35 +555,39 @@ export default class DashAgGrid extends Component {
 
         if (resetColumnState) {
             this.resetColumnState(false);
+            propsToSet.resetColumnState = false;
         }
 
         if (exportDataAsCsv) {
             this.exportDataAsCsv(csvExportParams, false);
+            propsToSet.exportDataAsCsv = false;
         }
 
         if (selectAll) {
             this.selectAll(selectAll, false);
+            propsToSet.selectAll = false;
         }
 
         if (deselectAll) {
             this.deselectAll(false);
+            propsToSet.deselectAll = false;
         }
 
         if (autoSizeAllColumns) {
             this.autoSizeAllColumns(autoSizeAllColumns, false);
+            propsToSet.autoSizeAllColumns = false;
         }
 
         if (deleteSelectedRows) {
             this.deleteSelectedRows(false);
+            propsToSet.deleteSelectedRows = false;
         }
 
-        setProps({
-            exportDataAsCsv: false,
-            selectAll: false,
-            deselectAll: false,
-            autoSizeAllColumns: false,
-            deleteSelectedRows: false,
-        });
+        if (!isEmpty(propsToSet)) {
+            setProps({
+                ...propsToSet,
+            });
+        }
 
         this.updateColumnState();
 

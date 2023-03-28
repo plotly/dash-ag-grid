@@ -76,6 +76,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - allowed for functions, styleConditions and regular dictionaries to be passed to the `cellStyle` on all levels
   - added `rowId` to `cellClicked` data
 
+- [#111](https://github.com/plotly/dash-ag-grid/pull/111)
+  - fixing templates to only populate when `dangerously_allow_code=True`
+
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Fix issue where conditional formatting was not applied to nested columns
