@@ -18,7 +18,7 @@ text1 = """
 Overlay components allow you to add your own overlays to AG Grid. Use these when the provided overlays do not meet your requirements.
 
 
-### Custom Loading overlay
+### Custom Loading Overlay
 
 The example below demonstrates how to provide custom loading message to the grid. Notice the following:
 
@@ -28,11 +28,28 @@ The example below demonstrates how to provide custom loading message to the grid
 
 """
 
+text2 = """
+### Custom No Rows Overlay
+
+
+The example below demonstrates how to provide custom no rows message to the grid. Notice the following:
+
+- The Custom No Rows Component is defined in the `dashAgGridComponentFunctions.js` file in the `assets` folder.
+- The Custom No Rows Component is supplied by name via `noRowsOverlayComponent`.  
+- The Custom Tooltip Parameters (for text color and the message) are supplied using `noRowsOverlayComponentParams`.
+
+
+
+
+"""
+
 
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.components.overlay_loading", make_layout=make_tabs),
+        make_md(text2),
+        example_app("examples.components.overlay_norows", make_layout=make_tabs),
 
     ],
 )
