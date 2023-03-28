@@ -239,3 +239,21 @@ dagcomponentfuncs.CustomTooltip = function (props) {
         info
     );
 };
+
+
+
+
+dagcomponentfuncs.CustomLoadingOverlay = function (props) {
+    return React.createElement(
+        'div',
+        {
+            style: {
+                border: '1pt solid grey',
+                color: props.color || 'grey',
+                padding: 10,
+            },
+        },
+        React.createElement('div', {}, props.loadingMessage),
+    );
+};
+
