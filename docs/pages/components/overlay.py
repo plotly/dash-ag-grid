@@ -50,6 +50,5 @@ layout = html.Div(
         example_app("examples.components.overlay_loading", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.components.overlay_norows", make_layout=make_tabs),
-
     ],
 )
