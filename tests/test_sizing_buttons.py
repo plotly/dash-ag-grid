@@ -36,7 +36,8 @@ def test_sb001_sizing_buttons(dash_duo):
                 defaultColDef={"resizable": True, "sortable": True, "filter": True, "floatingFilter": True},
                 dashGridOptions={'rowSelection': "multiple"},
                 persistence=True,
-                persistence_type='session'
+                persistence_type='session',
+                autoSizeAllColumns={'skipHeaders': True}
             ),
             html.Button(id='autoSizeAllColumns', children='Auto Size All'),
             html.Button(id='autoSizeAllColumnsSkipHeaders', children='Auto Size All SkipHeaders'),
@@ -47,7 +48,8 @@ def test_sb001_sizing_buttons(dash_duo):
     )
 
     @app.callback(Output('grid', 'autoSizeAllColumns'),
-                  Input('autoSizeAllColumns', 'n_clicks'), Input('autoSizeAllColumnsSkipHeaders', 'n_clicks'))
+                  Input('autoSizeAllColumns', 'n_clicks'), Input('autoSizeAllColumnsSkipHeaders', 'n_clicks'),
+                  prevent_initial_call=True)
     def setSelection(n, n2):
         if n:
             if ctx.triggered_id == 'autoSizeAllColumns':
@@ -67,7 +69,8 @@ def test_sb001_sizing_buttons(dash_duo):
         Output("columnState", "children"),
         Input("grid", "columnState"),
         State("columnState", "children"),
-        State('updateColumnState', 'n_clicks')
+        State('updateColumnState', 'n_clicks'),
+
     )
     def selected(state, oldState, n):
         if state:
