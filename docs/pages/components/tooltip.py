@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=4,
     description=app_description,
-    title="Dash AG Grid Components - tooltip",
+    title="Dash AG Grid Components - Custom Tooltip",
 
 )
 
