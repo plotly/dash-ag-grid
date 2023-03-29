@@ -584,9 +584,7 @@ export default class DashAgGrid extends Component {
         }
 
         if (!isEmpty(propsToSet)) {
-            setProps({
-                ...propsToSet,
-            });
+            setProps(propsToSet);
         }
 
         this.updateColumnState();
