@@ -55,6 +55,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#81](https://github.com/plotly/dash-ag-grid/pull/81)
   - added tests for `cellClicked` data
 
+- [#111](https://github.com/plotly/dash-ag-grid/pull/111)
+  - added `filterModel` prop in order to capture the grid's active filters
+
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
@@ -75,7 +79,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - removed `cellStyle` from the grid level, allowing more flexibility in customization, and alignment with AG grid
   - allowed for functions, styleConditions and regular dictionaries to be passed to the `cellStyle` on all levels
   - added `rowId` to `cellClicked` data
-
+  
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Fix issue where conditional formatting was not applied to nested columns
@@ -88,6 +92,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#81](https://github.com/plotly/dash-ag-grid/pull/81) Fixing syncing issue with `rowData`, `virtualRowData` when cell edits and async `rowTransactions` occur
 - [#90](https://github.com/plotly/dash-ag-grid/pull/90) Fixing `columnState` to be populated once `gridReady`
 - [#92](https://github.com/plotly/dash-ag-grid/pull/92) Fixing `defaultStyle` when no `styleConditions` is in `cellStyle`
+
+- [#111](https://github.com/plotly/dash-ag-grid/pull/111)
+  - fixing templates to only populate when `dangerously_allow_code=True`
 
 ## [1.3.2] - 2023-01-13
 

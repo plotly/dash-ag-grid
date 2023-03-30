@@ -73,6 +73,8 @@ DashAgGrid.defaultProps = {
     suppressDragLeaveHidesColumns: true,
     dangerously_allow_code: false,
     rowModelType: 'clientSide',
+    dashGridOptions: {},
+    filterModel: {},
 };
 DashAgGrid.propTypes = {
     /********************************
@@ -345,6 +347,12 @@ DashAgGrid.propTypes = {
          */
         failCallback: PropTypes.func,
     }),
+
+    /**
+     * If filtering client-side rowModel, what the filter model is.
+     * Passing a model back to this prop will apply it to the grid.
+     */
+    filterModel: PropTypes.object,
 
     /**
      * Request from Dash AgGrid when suppressCallback is disabled and a user opens a row with a detail grid
