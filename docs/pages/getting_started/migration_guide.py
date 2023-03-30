@@ -61,7 +61,9 @@ __2.0.0a4__
   - if it's `cellStyle`, move it to the column definitions
   - if it's a valid AG Grid prop, include it in the `dashGridOptions` dict
   
+__2.0.0a5__
 
+- No breaking changes
 
 -----------------
 
