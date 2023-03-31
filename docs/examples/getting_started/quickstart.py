@@ -10,7 +10,7 @@ grid = dag.AgGrid(
     id="quickstart-grid",
     rowData=df.to_dict("records"),
     columnDefs=[{"field": i, "id": i} for i in df.columns],
-    defaultColDef={"resizable": True, "sortable": True, "filter": True},
+    defaultColDef={"resizable": True, "sortable": True, "filter": True, "minWidth":125},
     columnSize="sizeToFit",
     getRowId="params.data.State"
 )
