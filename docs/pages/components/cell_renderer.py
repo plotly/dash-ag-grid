@@ -178,7 +178,7 @@ function onClick() {
 }
 ```
 
-Here is the Dash callback that renders a fullsize image in a model when you click on the Thumbnail:
+Here is the Dash callback that renders a fullsize image in a modal component when you click on the Thumbnail:
 
 ```
 @app.callback(

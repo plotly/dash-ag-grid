@@ -27,9 +27,18 @@ Other components:
  - <dccLink href='/components/row-menu' children='Row Menu' />  To access menu options in a callback
  - <dccLink href='/rendering/animation-renderer' children='Cell change animation renderer' />
 
-You can also create custom components and cell renderers.
+Custom components:
+
+You can also create custom components and cell renderers.  For examples see:
+ - <dccLink href='/components/cell-renderer' children='Cell Renderers' />  for examples of several custom components`
+ - <dccLink href='/components/overlay' children='Overlay' />  for custom loading and no rows overlay components
+ - <dccLink href='/components/tooltip' children='Tooltip' /> for a custom Tooltip component.
+
+
 
 ### Markdown
+
+This component is included with dash-ag-grid.
 
 """
 

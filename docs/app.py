@@ -41,7 +41,7 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dcc.Location(id="url"),
-                dbc.Col(make_side_nav(), xs=5, md=3, xl=2),
+                dbc.Col(make_side_nav(), xs=5, md=4, xl=3, style={"maxWidth": 300},),
                 dbc.Col(
                     html.Div(
                         dash.page_container,
@@ -49,8 +49,8 @@ app.layout = dbc.Container(
                         style={"minWidth": 600},
                     ),
                     xs=7,
-                    md=9,
-                    xl=10,
+                    md=8,
+                    xl=9,
                     id="content",
                 ),
             ],
