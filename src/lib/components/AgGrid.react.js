@@ -181,7 +181,7 @@ DashAgGrid.propTypes = {
         }),
     ]),
 
-     /**
+    /**
      * If true, the internal method sizeColumnsToFit() will be called.
      */
     sizeColumnsToFit: PropTypes.bool,
