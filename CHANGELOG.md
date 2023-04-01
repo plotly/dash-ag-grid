@@ -57,6 +57,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 - [#111](https://github.com/plotly/dash-ag-grid/pull/111)
   - added `filterModel` prop in order to capture the grid's active filters
+  
+- [#124](https://github.com/plotly/dash-ag-grid/pull/124)
+  - added `sizeColumnsToFit` prop in order to resize the grid with a button after browser window size changes
 
 
 ### Updated
