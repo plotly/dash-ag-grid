@@ -66,6 +66,7 @@ DashAgGrid.defaultProps = {
     selectAll: false,
     deselectAll: false,
     autoSizeAllColumns: false,
+    sizeColumnsToFit: false,
     enableEnterpriseModules: false,
     updateColumnState: false,
     persisted_props: ['selectedRows'],
@@ -179,6 +180,11 @@ DashAgGrid.propTypes = {
             skipHeaders: PropTypes.bool,
         }),
     ]),
+
+     /**
+     * If true, the internal method sizeColumnsToFit() will be called.
+     */
+    sizeColumnsToFit: PropTypes.bool,
 
     /**
      * If true, the internal method updateColumnState() will be called

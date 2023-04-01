@@ -32,7 +32,7 @@ def test_sb001_sizing_buttons(dash_duo):
                 id="grid",
                 columnDefs=columnDefs,
                 rowData=data[:100],
-                columnSize="sizeToFit",
+                columnSize=None,
                 defaultColDef={"resizable": True, "sortable": True, "filter": True, "floatingFilter": True},
                 dashGridOptions={'rowSelection': "multiple"},
                 persistence=True,
@@ -41,6 +41,7 @@ def test_sb001_sizing_buttons(dash_duo):
             ),
             html.Button(id='autoSizeAllColumns', children='Auto Size All'),
             html.Button(id='autoSizeAllColumnsSkipHeaders', children='Auto Size All SkipHeaders'),
+            html.Button(id='sizeToFit', children="Size To Fit"),
             html.Button(id='updateColumnState', children='Update Column State'),
             html.Div(id="columnState"),
         ],
@@ -57,6 +58,14 @@ def test_sb001_sizing_buttons(dash_duo):
             else:
                 return {'skipHeaders': True}
         return no_update
+
+    @app.callback(
+        Output('grid', 'sizeColumnsToFit'),
+        Input("sizeToFit", "n_clicks"),
+    )
+    def update_size_to_fit(n):
+        if n:
+            return True
 
     @app.callback(Output('grid', 'updateColumnState'),
                   Input('updateColumnState', 'n_clicks'))
@@ -97,8 +106,7 @@ def test_sb001_sizing_buttons(dash_duo):
     oldValue = dash_duo.find_element('#columnState').text
     for x in columnDefs:
         assert x['field'] in oldValue
-    
-    for x in ['autoSizeAllColumns', 'autoSizeAllColumnsSkipHeaders']:
+    for x in ['autoSizeAllColumns','sizeToFit', 'autoSizeAllColumnsSkipHeaders']:
         dash_duo.find_element(f'#{x}').click()
         dash_duo.find_element('#updateColumnState').click()
         until(lambda: oldValue != dash_duo.find_element('#columnState').get_attribute('innerText'), timeout=3)

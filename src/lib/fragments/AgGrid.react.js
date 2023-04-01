@@ -101,6 +101,7 @@ export default class DashAgGrid extends Component {
         this.selectAll = this.selectAll.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
         this.autoSizeAllColumns = this.autoSizeAllColumns.bind(this);
+        this.sizeColumnsToFit = this.sizeColumnsToFit.bind(this);
         this.updateColumnState = this.updateColumnState.bind(this);
         this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
         this.rowTransaction = this.rowTransaction.bind(this);
@@ -532,6 +533,7 @@ export default class DashAgGrid extends Component {
             selectAll,
             deselectAll,
             autoSizeAllColumns,
+            sizeColumnsToFit,
             deleteSelectedRows,
             filterModel,
             setProps,
@@ -576,6 +578,11 @@ export default class DashAgGrid extends Component {
         if (autoSizeAllColumns) {
             this.autoSizeAllColumns(autoSizeAllColumns, false);
             propsToSet.autoSizeAllColumns = false;
+        }
+
+        if (sizeColumnsToFit) {
+            this.sizeColumnsToFit(false);
+            propsToSet.sizeColumnsToFit = false;
         }
 
         if (deleteSelectedRows) {
@@ -807,6 +814,18 @@ export default class DashAgGrid extends Component {
             });
         }
     }
+
+    sizeColumnsToFit(reset = true) {
+        if (!this.state.gridApi) {
+            return;
+        }
+        this.state.gridApi.sizeColumnsToFit();
+        if (reset) {
+            this.props.setProps({
+                sizeColumnsToFit: false,
+            });
+        }
+    }
     // end event actions
 
     updateColumnState() {
@@ -867,6 +886,7 @@ export default class DashAgGrid extends Component {
             selectAll,
             deselectAll,
             autoSizeAllColumns,
+            sizeColumnsToFit,
             deleteSelectedRows,
             rowTransaction,
             updateColumnState,
@@ -908,6 +928,10 @@ export default class DashAgGrid extends Component {
 
         if (autoSizeAllColumns) {
             this.autoSizeAllColumns(autoSizeAllColumns);
+        }
+
+        if (sizeColumnsToFit) {
+            this.sizeColumnsToFit(sizeColumnsToFit);
         }
 
         if (updateColumnState) {
