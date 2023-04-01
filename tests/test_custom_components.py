@@ -1,10 +1,7 @@
 import dash_ag_grid as dag
 from dash import Dash, html, Input, Output
-import pandas as pd
-import yfinance as yf
 from . import utils
 import json
-import os
 
 def test_cu001_custom_components(dash_duo):
 
@@ -16,55 +13,17 @@ def test_cu001_custom_components(dash_duo):
                                       "img-src data: https://* 'self'"}],
                )
 
-    equities = {
-        "AAPL": "Apple",
-        "MSFT": "Microsoft",
-        "AMZN": "Amazon",
-        "GOOGL": "Alphabet",
-        "TSLA": "Tesla",
-        "BRK-B": "Berkshire Hathaway",
-        "UNH": "United Health Group",
-        "JNJ": "Johnson & Johnson",
-    }
-
-    def get_stock_data():
-        return yf.download(tickers=list(equities.keys()), period="30d", interval="1h", group_by="ticker")
-
-    if os.path.exists('./tests/assets/stock_data.csv'):
-        stock_data = pd.read_csv('./tests/assets/stock_data.csv')
-    else:
-        stock_data = get_stock_data()
-        stock_data = stock_data.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
-        stock_data.to_csv('./tests/assets/stock_data.csv')
-
-
-    def last_close(ticker):
-        return stock_data[stock_data['Ticker'] == ticker]["Close"].iloc[-1]
-
-    def last_volume(ticker):
-        if stock_data[stock_data['Ticker'] == ticker]["Volume"].iloc[-1] >\
-                stock_data[stock_data['Ticker'] == ticker]["Volume"].mean():
-            return "High"
-        elif stock_data[stock_data['Ticker'] == ticker]["Volume"].iloc[-1] <\
-                stock_data[stock_data['Ticker'] == ticker]["Volume"].mean():
-            return "Low"
-        return "Average"
-
-    actionOptions = ['buy', 'sell', 'hold']
-
-
-    data = {
-        "ticker": [ticker for ticker in equities],
-        "company": [name for name in equities.values()],
-        "price": [last_close(ticker) for ticker in equities],
-        "volume": [last_volume(ticker) for ticker in equities],
-        "binary": [False for ticker in equities],
-        "buy": [{"children":"buy", "className":"btn btn-success"} for i in equities],
-        "sell": [{"children":"sell", "className":"btn btn-danger"} for i in equities],
-        "action": [actionOptions[i % 3] for i in range(len(equities))],
-        "test": [{"className":"btn btn-warning"} for i in equities]
-    }
-    df = pd.DataFrame(data)
+    data = [{
+        "ticker": "AAPL",
+        "company": "Apple",
+        "price": 154.98500061035156,
+        "volume": "Low",
+        "binary": False,
+        "buy": {"children":"buy", "className":"btn btn-success"},
+        "sell": {"children":"sell", "className":"btn btn-danger"},
+        "action": "buy",
+        "test": {"className":"btn btn-warning"}
+    }]
 
     columnDefs = [
         {
@@ -108,7 +67,7 @@ def test_cu001_custom_components(dash_duo):
             "field":"action",
             "cellRenderer": "customDropdown",
             'cellEditorParams': {
-                        'values': actionOptions,
+                        'values': ["buy", "sell", "hold"],
                     }
         },
         {
@@ -126,20 +85,15 @@ def test_cu001_custom_components(dash_duo):
         "tooltipComponent": "myCustomTooltip"
     }
 
-    df2 = df.copy()
-    df2 = df2.to_dict('records')
-    df2[0]['quantity'] = 30
 
     table = dag.AgGrid(
         id="portfolio-grid",
         className="ag-theme-alpine-dark",
         columnDefs=columnDefs,
-        rowData=df.to_dict("records"),
+        rowData=data,
         columnSize="sizeToFit",
         defaultColDef=defaultColDef,
     )
-
-    header = html.Div("My Portfolio", className="h2 p-2 text-white bg-primary text-center")
 
     app.layout = html.Div([table,
             html.Div(id='cellValueChanged'),
