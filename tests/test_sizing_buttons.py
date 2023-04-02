@@ -5,6 +5,7 @@ from . import utils
 import json
 from dash.testing.wait import until
 
+
 def test_sb001_sizing_buttons(dash_duo):
     app = Dash(__name__)
 
@@ -32,7 +33,7 @@ def test_sb001_sizing_buttons(dash_duo):
                 id="grid",
                 columnDefs=columnDefs,
                 rowData=data[:100],
-                columnSize=None,
+                columnSize="sizeToFit",
                 defaultColDef={"resizable": True, "sortable": True, "filter": True, "floatingFilter": True},
                 dashGridOptions={'rowSelection': "multiple"},
                 persistence=True,
@@ -41,7 +42,6 @@ def test_sb001_sizing_buttons(dash_duo):
             ),
             html.Button(id='autoSizeAllColumns', children='Auto Size All'),
             html.Button(id='autoSizeAllColumnsSkipHeaders', children='Auto Size All SkipHeaders'),
-            html.Button(id='sizeToFit', children="Size To Fit"),
             html.Button(id='updateColumnState', children='Update Column State'),
             html.Div(id="columnState"),
         ],
@@ -58,14 +58,6 @@ def test_sb001_sizing_buttons(dash_duo):
             else:
                 return {'skipHeaders': True}
         return no_update
-
-    @app.callback(
-        Output('grid', 'sizeColumnsToFit'),
-        Input("sizeToFit", "n_clicks"),
-    )
-    def update_size_to_fit(n):
-        if n:
-            return True
 
     @app.callback(Output('grid', 'updateColumnState'),
                   Input('updateColumnState', 'n_clicks'))
@@ -106,8 +98,43 @@ def test_sb001_sizing_buttons(dash_duo):
     oldValue = dash_duo.find_element('#columnState').text
     for x in columnDefs:
         assert x['field'] in oldValue
-    for x in ['autoSizeAllColumns','sizeToFit', 'autoSizeAllColumnsSkipHeaders']:
+
+    for x in ['autoSizeAllColumns', 'autoSizeAllColumnsSkipHeaders']:
         dash_duo.find_element(f'#{x}').click()
         dash_duo.find_element('#updateColumnState').click()
         until(lambda: oldValue != dash_duo.find_element('#columnState').get_attribute('innerText'), timeout=3)
         oldValue = dash_duo.find_element('#columnState').get_attribute('innerText')
+
+
+def test_sb002_sizeColumnsToFit_button(dash_duo):
+    app = Dash(__name__)
+
+    app.layout = html.Div([
+        html.Button("size-to-fit", id="btn"),
+        dag.AgGrid(
+            id="grid",
+            rowData=[{"A": "xxx"}],
+            columnSize="sizeToFit",
+            columnDefs=[{"field": "A"}],
+        )
+    ])
+
+    @app.callback(
+        Output("grid", "sizeColumnsToFit"),
+        Input("btn", "n_clicks"),
+    )
+    def update_grid(_):
+        return True
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(0, 0, "xxx")
+    width1 = grid.get_cell(0, 0).get_attribute('style')
+
+    dash_duo.driver.set_window_size(400, 800)
+    dash_duo.find_element('#btn').click()
+    width2 = grid.get_cell(0, 0).get_attribute('style')
+
+    until(lambda: width1 != width2, timeout=3)
+
