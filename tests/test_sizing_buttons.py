@@ -126,15 +126,18 @@ def test_sb002_sizeColumnsToFit_button(dash_duo):
     def update_grid(_):
         return True
 
+    dash_duo.driver.set_window_size(1000, 1000)
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
     grid.wait_for_cell_text(0, 0, "xxx")
-    width1 = grid.get_cell(0, 0).get_attribute('style')
 
-    dash_duo.driver.set_window_size(400, 800)
+    width1 = grid.get_cell(0, 0).get_attribute('style')
+    until(lambda: "938px" in width1, timeout=3)
+
+    dash_duo.driver.set_window_size(500, 500)
     dash_duo.find_element('#btn').click()
     width2 = grid.get_cell(0, 0).get_attribute('style')
+    until(lambda: "467px" in width2, timeout=3)
 
-    until(lambda: width1 != width2, timeout=3)
 
