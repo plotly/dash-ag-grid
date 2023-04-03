@@ -13,6 +13,16 @@ dark_hljs = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/s
 # stylesheet with the .dbc class
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 
+# for the custom datepicker example
+jquery_external_scripts=[
+        "https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+    ]
+jquery_external_stylesheets=[
+        "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+    ]
+
+
 app = Dash(
     __name__,
     use_pages=True,
@@ -22,8 +32,9 @@ app = Dash(
         dbc.icons.FONT_AWESOME,
         dbc_css,
         dark_hljs,
-    ],
+    ] + jquery_external_stylesheets,
     suppress_callback_exceptions=True,
+    external_scripts=jquery_external_scripts
 )
 
 

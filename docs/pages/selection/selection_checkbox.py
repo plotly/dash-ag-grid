@@ -48,12 +48,23 @@ This example demonstrates the following:
 """
 
 
+text3= """
+### Example 3: Preselected rows
+
+This example demonstrates preselecting rows.  
+
+
+"""
+
+
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.selection.selection_checkbox", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.selection.selectable_rows", make_layout=make_tabs),
+        make_md(text3),
+        example_app("examples.selection.selection_checkbox_preselected", make_layout=make_tabs),
         # up_next("text"),
     ],
 )

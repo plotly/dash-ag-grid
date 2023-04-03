@@ -1,6 +1,7 @@
 """
-Multiple Row Selection - with check boxes.
+Multiple Row Selection - with check boxes and preselected rows
 """
+
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output
@@ -12,7 +13,6 @@ app = Dash(__name__)
 df = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
 )
-
 
 columnDefs = [
     {"field": "athlete", "checkboxSelection": True, "headerCheckboxSelection": True},
@@ -41,21 +41,22 @@ app.layout = html.Div(
     [
         dcc.Markdown("This grid has multi-select rows with checkboxes."),
         dag.AgGrid(
-            id="selection-checkbox-grid",
+            id="preselect-checkbox-grid",
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
             dashGridOptions={"rowSelection":"multiple"},
+            selectedRows= df.head(4).to_dict("records")
         ),
-        html.Div(id="selections-checkbox-output"),
+        html.Div(id="preselect-checkbox-output"),
     ],
     style={"margin": 20},
 )
 
 
 @app.callback(
-    Output("selections-checkbox-output", "children"),
-    Input("selection-checkbox-grid", "selectedRows"),
+    Output("preselect-checkbox-output", "children"),
+    Input("preselect-checkbox-grid", "selectedRows"),
 )
 def selected(selected):
     if selected:
