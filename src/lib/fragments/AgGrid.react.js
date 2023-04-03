@@ -343,7 +343,7 @@ export default class DashAgGrid extends Component {
             propsToSet.virtualRowData = virtualRowData;
         }
 
-        setProps({...propsToSet});
+        setProps(propsToSet);
     }
 
     getRowData() {
@@ -465,7 +465,9 @@ export default class DashAgGrid extends Component {
             });
         }
         if (!isEmpty(filterModel)) {
-            this.state.gridApi.setFilterModel(filterModel);
+            if (this.state.gridApi) {
+                this.state.gridApi.setFilterModel(filterModel);
+            }
         }
     }
 
