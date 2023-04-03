@@ -49,18 +49,44 @@ const columnDefs = [
 """
 
 
-text2 = """
+text3 = """
 >
 > Cell Editing can also be performed via Cell Editor Components; please see:
 > - <dccLink href='/editing/provided-cell-editors' children='Provided cell editors' />  to see select (dropdown) editors, and lage text (textarea) editors
 >
 """
 
+
+
+text2 = """
+
+` `  
+` `  
+
+#### Datepicker Example
+
+The example below demonstrates how to use a custom date picker as a cell editor. The 'Date' column uses a Component
+ cell editor that allows you to pick a date using jQuery UI Datepicker.
+
+Notice the following:
+
+- the jQuery is included as external scripts and stylesheets in the app constructor.
+- The Custom function to use the DatePicker with AG Grid is defined is defined in the `dashAgGridFunctions.js` file in the `assets` folder.
+- The Custom DatePicker is supplied by name via `cellEditor`.  
+- Change the format of the date returned from the DatePicker in the DatePicker function.
+
+
+"""
+
+
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.editing.cell_editors", make_layout=make_tabs),
         make_md(text2),
+        example_app("examples.components.cell_editor_datepicker", make_layout=make_tabs),
+        make_md(text3),
+
         # up_next("text"),
     ],
 )
