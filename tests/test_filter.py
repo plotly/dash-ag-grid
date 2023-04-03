@@ -20,7 +20,8 @@ def test_fi001_floating_filter(dash_duo):
                 {"headerName": col.capitalize(), "field": col}
                 for col in default_display_cols
             ],
-            defaultColDef={"filter": True, "floatingFilter": True}
+            defaultColDef={"filter": True, "floatingFilter": True},
+            filterModel={"district_id": {"filterType": "text", "type": "contains", "filter": "12"}}
         ),
         html.Div(id='filterModel'),
         html.Button(id='resetFilters', n_clicks=0)
@@ -36,6 +37,7 @@ def test_fi001_floating_filter(dash_duo):
     @app.callback(
         Output("grid", "filterModel"),
         Input('resetFilters', 'n_clicks'),
+        prevent_initial_call=True
     )
     def updateFilterModel(n):
         return {}
@@ -43,6 +45,8 @@ def test_fi001_floating_filter(dash_duo):
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(0, 1, "112-DeLorimier")
+    dash_duo.find_element("#resetFilters").click()
 
     grid.wait_for_cell_text(0, 1, "101-Bois-de-Liesse")
     dash_duo.wait_for_text_to_equal("#filterModel", "{}")
