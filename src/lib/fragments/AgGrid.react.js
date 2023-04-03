@@ -438,35 +438,36 @@ export default class DashAgGrid extends Component {
         // Handles preserving existing selections when rowData is updated in a callback
         const {selectedRows, setProps, rowData, rowModelType, filterModel} =
             this.props;
-        const {openGroups} = this.state;
-
-        if (rowData && rowModelType === 'clientSide' && this.state.gridApi) {
-            const virtualRowData = [];
-            this.state.gridApi.forEachNodeAfterFilter((node) => {
-                virtualRowData.push(node.data);
-            });
-
-            setProps({virtualRowData});
-        }
+        const {openGroups, gridApi} = this.state;
 
         // Call the API to select rows
         this.setSelection(selectedRows);
-        // When the rowData is updated, reopen any row groups if they previously existed in the table
-        // Iterate through all nodes in the grid. Unfortunately there's no way to iterate through only nodes representing groups
-        if (openGroups.size > 0) {
-            this.state.gridApi.forEachNode((node) => {
-                // Check if it's a group row based on whether it has the __hasChildren prop
-                if (node.__hasChildren) {
-                    // If the key for the node (i.e. the group name) is the same as an
-                    if (openGroups.has(node.key)) {
-                        this.state.gridApi.setRowNodeExpanded(node, true);
+
+        if (gridApi) {
+            if (rowData && rowModelType === 'clientSide') {
+                const virtualRowData = [];
+                gridApi.forEachNodeAfterFilter((node) => {
+                    virtualRowData.push(node.data);
+                });
+
+                setProps({virtualRowData});
+            }
+
+            // When the rowData is updated, reopen any row groups if they previously existed in the table
+            // Iterate through all nodes in the grid. Unfortunately there's no way to iterate through only nodes representing groups
+            if (openGroups.size > 0) {
+                gridApi.forEachNode((node) => {
+                    // Check if it's a group row based on whether it has the __hasChildren prop
+                    if (node.__hasChildren) {
+                        // If the key for the node (i.e. the group name) is the same as an
+                        if (openGroups.has(node.key)) {
+                            gridApi.setRowNodeExpanded(node, true);
+                        }
                     }
-                }
-            });
-        }
-        if (!isEmpty(filterModel)) {
-            if (this.state.gridApi) {
-                this.state.gridApi.setFilterModel(filterModel);
+                });
+            }
+            if (!isEmpty(filterModel)) {
+                gridApi.setFilterModel(filterModel);
             }
         }
     }
