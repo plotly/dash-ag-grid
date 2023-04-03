@@ -109,15 +109,16 @@ def test_sb001_sizing_buttons(dash_duo):
 def test_sb002_sizeColumnsToFit_button(dash_duo):
     app = Dash(__name__)
 
-    app.layout = html.Div([
-        html.Button("size-to-fit", id="btn"),
-        dag.AgGrid(
-            id="grid",
-            rowData=[{"A": "xxx"}],
-            columnSize="sizeToFit",
-            columnDefs=[{"field": "A"}],
-        )
-    ])
+    grid = dag.AgGrid(
+        id="grid",
+        rowData=[{"A": "xxx"}],
+        columnSize="sizeToFit",
+        columnDefs=[{"field": "A"}],
+    )
+    btn = html.Button("size-to-fit", id="btn")
+    btn_size = html.Button("smaller", id="smaller")
+
+    app.layout = html.Div([btn, btn_size, grid], id="div", style={"width": 1000})
 
     @app.callback(
         Output("grid", "sizeColumnsToFit"),
@@ -126,18 +127,25 @@ def test_sb002_sizeColumnsToFit_button(dash_duo):
     def update_grid(_):
         return True
 
-    dash_duo.driver.set_window_size(1000, 1000)
+    @app.callback(
+        Output("div", "style"),
+        Input("smaller", "n_clicks"),
+        prevent_initial_call=True
+    )
+    def update_size(_):
+        return {"width": 500}
+
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
     grid.wait_for_cell_text(0, 0, "xxx")
 
     width1 = grid.get_cell(0, 0).get_attribute('style')
-    until(lambda: "938px" in width1, timeout=3)
+    until(lambda: "998px" in width1, timeout=3)
 
-    dash_duo.driver.set_window_size(500, 500)
+    dash_duo.find_element('#smaller').click()
     dash_duo.find_element('#btn').click()
     width2 = grid.get_cell(0, 0).get_attribute('style')
-    until(lambda: "467px" in width2, timeout=3)
+    until(lambda: "498px" in width2, timeout=3)
 
 
