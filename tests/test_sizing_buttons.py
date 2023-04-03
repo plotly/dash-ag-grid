@@ -42,7 +42,7 @@ def test_sb001_sizing_buttons(dash_duo):
             ),
             html.Button(id='autoSizeAllColumns', children='Auto Size All'),
             html.Button(id='autoSizeAllColumnsSkipHeaders', children='Auto Size All SkipHeaders'),
-            html.Button(id='updateColumnState', children='Update Column State'),
+            html.Button(id='updateColumnState', children='Update Column State', n_clicks=0),
             html.Div(id="columnState"),
         ],
         style={"margin": 20},

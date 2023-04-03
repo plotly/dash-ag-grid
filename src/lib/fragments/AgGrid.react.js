@@ -811,6 +811,9 @@ export default class DashAgGrid extends Component {
         if (reset) {
             this.props.setProps({
                 autoSizeAllColumns: false,
+                columnState: JSON.parse(
+                    JSON.stringify(this.state.gridColumnApi.getColumnState())
+                ),
             });
         }
     }
@@ -823,6 +826,9 @@ export default class DashAgGrid extends Component {
         if (reset) {
             this.props.setProps({
                 sizeColumnsToFit: false,
+                columnState: JSON.parse(
+                    JSON.stringify(this.state.gridColumnApi.getColumnState())
+                ),
             });
         }
     }
