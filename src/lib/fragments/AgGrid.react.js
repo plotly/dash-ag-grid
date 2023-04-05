@@ -645,7 +645,7 @@ export default class DashAgGrid extends Component {
     }
 
     updateColumnWidths() {
-        const {columnSize, columnSizeOptions} = this.props;
+        const {columnSize, columnSizeOptions, setProps} = this.props;
         const {gridApi, gridColumnApi} = this.state;
         if (gridApi || gridColumnApi) {
             const {
@@ -670,6 +670,9 @@ export default class DashAgGrid extends Component {
                     defaultMaxWidth,
                     columnLimits,
                 });
+            }
+            if (columnSize !== 'responsiveSizeToFit') {
+                setProps({columnSize: null});
             }
             this.updateColumnState();
         }
