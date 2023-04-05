@@ -548,8 +548,6 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
-        this.updateColumnWidths();
-
         if (!isEmpty(filterModel)) {
             this.state.gridApi.setFilterModel(filterModel);
         }
@@ -583,8 +581,6 @@ export default class DashAgGrid extends Component {
             setProps(propsToSet);
         }
 
-        this.updateColumnState();
-
         if (this.state.rowTransaction) {
             this.state.rowTransaction.map((data) =>
                 this.applyRowTransaction(data, params.api)
@@ -597,6 +593,8 @@ export default class DashAgGrid extends Component {
         this.setSelection(selectedRows);
         // Hydrate virtualRowData
         this.onFilterChanged(true);
+
+        this.updateColumnWidths();
     }
 
     onCellClicked({value, column: {colId}, rowIndex, node}) {
@@ -673,6 +671,7 @@ export default class DashAgGrid extends Component {
                     columnLimits,
                 });
             }
+            this.updateColumnState();
         }
     }
 

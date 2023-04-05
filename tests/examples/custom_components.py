@@ -129,7 +129,7 @@ table = dag.AgGrid(
     className="ag-theme-alpine-dark",
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
-    columnSize="autoSizeAll",
+    columnSize="autoSize",
     defaultColDef=defaultColDef,
 )
 
