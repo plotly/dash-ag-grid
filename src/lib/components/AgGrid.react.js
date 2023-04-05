@@ -65,7 +65,6 @@ DashAgGrid.defaultProps = {
     exportDataAsCsv: false,
     selectAll: false,
     deselectAll: false,
-    autoSizeAllColumns: false,
     enableEnterpriseModules: false,
     updateColumnState: false,
     persisted_props: ['selectedRows'],
@@ -167,18 +166,6 @@ DashAgGrid.propTypes = {
      * If true, the internal method deselectAll() will be called
      */
     deselectAll: PropTypes.bool,
-
-    /**
-     * Set to true to autosize all columns, considering both headers and data
-     * Or pass an object of options for how to autosize.
-     * Currently supports `skipHeaders`, set this true to only consider data when autosizing.
-     */
-    autoSizeAllColumns: PropTypes.oneOfType([
-        PropTypes.bool,
-        PropTypes.exact({
-            skipHeaders: PropTypes.bool,
-        }),
-    ]),
 
     /**
      * If true, the internal method updateColumnState() will be called
@@ -288,11 +275,25 @@ DashAgGrid.propTypes = {
     }),
 
     /**
-     * Size the columns autoSizeAll changes the column sizes to fit the column's content,
+     * Size the columns autoSize changes the column sizes to fit the column's content,
      * sizeToFit changes the column sizes to fit the width of the table
+     * responsiveSizeToFit changes the column sizes to fit the width of the table and also resizing upon grid or column changes
      * and null bypasses the altering of the column widths
      */
-    columnSize: PropTypes.oneOf(['sizeToFit', 'autoSizeAll', null]),
+    columnSize: PropTypes.oneOf([
+        'sizeToFit',
+        'autoSize',
+        'responsiveSizeToFit',
+        null,
+    ]),
+
+    /**
+     * column sizing options as derived by the columnSize choice,
+     * autoSize https://www.ag-grid.com/react-data-grid/column-sizing/#autosize-column-api,
+     * keys are provided, it is assumed that only these columns will be auto-sized,
+     * sizeToFit/responsiveSizeToFit https://www.ag-grid.com/react-data-grid/column-sizing/#size-columns-to-fit
+     */
+    columnSizeOptions: PropTypes.object,
 
     /**
      * Object used to perform the row styling. See AG-Grid Row Style.
