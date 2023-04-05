@@ -372,17 +372,17 @@ export default class DashAgGrid extends Component {
 
     onSortChanged() {
         const {setProps, rowModelType} = this.props;
+        const propsToSet = {};
         if (rowModelType === 'clientSide') {
             const virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
                 virtualRowData.push(node.data);
             });
 
-            setProps({
-                virtualRowData: virtualRowData,
-                columnState: this.state.gridColumnApi.getColumnState(),
-            });
+            propsToSet.virtualRowData = virtualRowData;
         }
+        propsToSet.columnState = this.state.gridColumnApi.getColumnState();
+        setProps(propsToSet);
     }
 
     componentDidMount() {
@@ -536,6 +536,7 @@ export default class DashAgGrid extends Component {
             deleteSelectedRows,
             filterModel,
             setProps,
+            columnState,
         } = this.props;
 
         const propsToSet = {};
@@ -550,6 +551,10 @@ export default class DashAgGrid extends Component {
 
         if (!isEmpty(filterModel)) {
             this.state.gridApi.setFilterModel(filterModel);
+        }
+
+        if (columnState) {
+            this.setColumnState();
         }
 
         if (resetColumnState) {
@@ -760,6 +765,15 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    setColumnState() {
+        if (!this.state.gridApi) {
+            return;
+        }
+        this.state.gridColumnApi.applyColumnState({
+            state: this.props.columnState,
+        });
+    }
+
     resetColumnState(reset = true) {
         if (!this.state.gridApi) {
             return;
@@ -769,6 +783,7 @@ export default class DashAgGrid extends Component {
             this.props.setProps({
                 resetColumnState: false,
             });
+            this.updateColumnState();
         }
     }
 
@@ -880,6 +895,7 @@ export default class DashAgGrid extends Component {
             dashGridOptions,
             filterModel,
             columnSize,
+            columnState,
             ...restProps
         } = this.props;
 
@@ -899,6 +915,10 @@ export default class DashAgGrid extends Component {
 
         if (columnSize) {
             this.updateColumnWidths();
+        }
+
+        if (columnState) {
+            this.setColumnState();
         }
 
         if (resetColumnState) {
