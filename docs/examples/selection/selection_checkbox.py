@@ -1,7 +1,6 @@
 """
-Multiple Row Selection - without check boxes.  Use shift click or ctr click to select
+Multiple Row Selection - with check boxes.
 """
-import dash
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output

@@ -13,6 +13,16 @@ dark_hljs = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/s
 # stylesheet with the .dbc class
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 
+# for the custom datepicker example
+jquery_external_scripts=[
+        "https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+    ]
+jquery_external_stylesheets=[
+        "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+    ]
+
+
 app = Dash(
     __name__,
     use_pages=True,
@@ -22,8 +32,9 @@ app = Dash(
         dbc.icons.FONT_AWESOME,
         dbc_css,
         dark_hljs,
-    ],
+    ] + jquery_external_stylesheets,
     suppress_callback_exceptions=True,
+    external_scripts=jquery_external_scripts
 )
 
 
@@ -41,7 +52,7 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dcc.Location(id="url"),
-                dbc.Col(make_side_nav(), xs=5, md=3, xl=2),
+                dbc.Col(make_side_nav(), xs=5, md=4, xl=3, style={"maxWidth": 300},),
                 dbc.Col(
                     html.Div(
                         dash.page_container,
@@ -49,8 +60,8 @@ app.layout = dbc.Container(
                         style={"minWidth": 600},
                     ),
                     xs=7,
-                    md=9,
-                    xl=10,
+                    md=8,
+                    xl=9,
                     id="content",
                 ),
             ],

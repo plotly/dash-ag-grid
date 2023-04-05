@@ -1,25 +1,15 @@
 """
-Example of custom tooltip
+Example of custom loading component
 """
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc
-import pandas as pd
 
-data = {
-    "ticker": ["AAPL", "MSFT", "AMZN", "GOOGL"],
-    "company": ["Apple", "Microsoft", "Amazon", "Alphabet"],
-    "price": [154.99, 268.65, 100.47, 96.75],
-}
-df = pd.DataFrame(data)
 
 columnDefs = [
     {
         "headerName": "Stock Ticker",
         "field": "ticker",
-        "tooltipField": 'ticker',
-        "tooltipComponentParams": { "color": '#d8f0d3' },
-
     },
     {
         "headerName": "Company",
@@ -29,24 +19,27 @@ columnDefs = [
         "headerName": "Last Close Price",
         "field": "price",
         "valueFormatter": {"function": """d3.format("($,.2f")(params.value)"""},
-        "editable": True,
     },
 ]
 
 
 grid = dag.AgGrid(
     columnDefs=columnDefs,
-    rowData=df.to_dict("records"),
     columnSize="sizeToFit",
-    defaultColDef={"editable": False,  "tooltipComponent": "CustomTooltip"},
-    dashGridOptions={"tooltipShowDelay": 100}
+    dashGridOptions={
+        "loadingOverlayComponent": "CustomLoadingOverlay",
+        "loadingOverlayComponentParams": {
+            "loadingMessage": "One moment please...",
+            "color": "red",
+        },
+    },
 )
 
 
 app = Dash(__name__)
 
 app.layout = html.Div(
-    [dcc.Markdown("Example of custom tooltip"), grid],
+    [dcc.Markdown("Example of custom loading overlay"), grid],
     style={"margin": 20},
 )
 
@@ -57,27 +50,22 @@ if __name__ == "__main__":
 """
 Put the following in the dashAgGridComponentFunctions.js file in the assets folder
 
+
 -----------
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
-
-dagcomponentfuncs.CustomTooltip = function (props) {
-    info = [
-        React.createElement('h4', {}, props.data.ticker),
-        React.createElement('div', {}, props.data.company),
-        React.createElement('div', {}, props.data.price),
-    ];
+dagcomponentfuncs.CustomLoadingOverlay = function (props) {
     return React.createElement(
         'div',
         {
             style: {
-                border: '2pt solid white',
-                backgroundColor: props.color || 'grey',
+                border: '1pt solid grey',
+                color: props.color || 'grey',
                 padding: 10,
             },
         },
-        info
+        React.createElement('div', {}, props.loadingMessage),
     );
 };
 

@@ -1,7 +1,7 @@
 """
-Multiple Row Selection - without check boxes.  Use shift click or ctr click to select
+Multiple Row Selection - with check boxes and preselected rows
 """
-import dash
+
 
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output
@@ -14,13 +14,12 @@ df = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
 )
 
-
 columnDefs = [
-    {"field": "athlete"},
-    {"field": "age"},
+    {"field": "athlete", "checkboxSelection": True, "headerCheckboxSelection": True},
+    {"field": "age", "maxWidth": 100},
     {"field": "country"},
-    {"field": "year"},
-    {"field": "date"},
+    {"field": "year", "maxWidth": 120},
+    {"field": "date", "minWidth": 150},
     {"field": "sport"},
     {"field": "gold"},
     {"field": "silver"},
@@ -28,26 +27,36 @@ columnDefs = [
     {"field": "total"},
 ]
 
+
+defaultColDef = {
+    "flex": 1,
+    "minWidth": 150,
+    "sortable": True,
+    "resizable": True,
+    "filter": True,
+}
+
+
 app.layout = html.Div(
     [
-        dcc.Markdown("This grid has multi-select rows.  Click to select rows"),
-        html.Div(id="selections-multiple-click-output"),
+        dcc.Markdown("This grid has multi-select rows with checkboxes."),
         dag.AgGrid(
-            id="selection-multiple-click-grid",
+            id="preselect-checkbox-grid",
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
-            columnSize="sizeToFit",
-            defaultColDef={"resizable": True, "sortable": True, "filter": True, "minWidth": 125,},
-            dashGridOptions={"rowSelection":"multiple", "rowMultiSelectWithClick": True},
+            defaultColDef=defaultColDef,
+            dashGridOptions={"rowSelection":"multiple"},
+            selectedRows= df.head(4).to_dict("records")
         ),
+        html.Div(id="preselect-checkbox-output"),
     ],
     style={"margin": 20},
 )
 
 
 @app.callback(
-    Output("selections-multiple-click-output", "children"),
-    Input("selection-multiple-click-grid", "selectedRows"),
+    Output("preselect-checkbox-output", "children"),
+    Input("preselect-checkbox-grid", "selectedRows"),
 )
 def selected(selected):
     if selected:

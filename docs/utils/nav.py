@@ -43,7 +43,16 @@ navbar = dbc.NavbarSimple(
         html.Div(
             [
                 html.Div("Alpha Release", className="small text-white pt-2"),
-                html.Div("2.0.0a4", className="text-white"),
+                html.Div([
+                    "2.0.0a5",
+                    html.A(
+                        html.I(className="bi bi-github ps-2 text-white"),
+                        href="https://github.com/plotly/dash-ag-grid",
+                        target="blank",
+                        title="GitHub"
+                    )
+                ], className="text-white"),
+
             ],
             className="vstack",
         ),
@@ -123,7 +132,7 @@ author_card = dbc.Card(
     dcc.Markdown(
         """
         Prototype docs maintained by Dash community members  
-        [@AnnMarieW](https://community.plotly.com/u/AnnMarieW) & [@jinnyzor](https://community.plotly.com/u/jinnyzor)  
+        [@AnnMarieW](https://community.plotly.com/u/AnnMarieW/summary) & [@jinnyzor](https://community.plotly.com/u/jinnyzor/summary)  
         
         Plotly Dash AG Grid docs coming soon!
         """

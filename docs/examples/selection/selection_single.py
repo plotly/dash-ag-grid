@@ -36,7 +36,7 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
-            defaultColDef={"resizable": True, "sortable": True, "filter": True},
+            defaultColDef={"resizable": True, "sortable": True, "filter": True, "minWidth": 125},
             dashGridOptions={"rowSelection":"single"},
         ),
     ],

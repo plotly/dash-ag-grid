@@ -6,7 +6,7 @@ from utils.utils import app_description
 
 register_page(
     __name__,
-    order=3,
+    order=2,
     description=app_description,
     title="Dash AG Grid Components - cell renderers",
 
@@ -83,6 +83,10 @@ dagcomponentfuncs.StockLink = function (props) {
 
 ```
 
+` `  
+` `  
+
+
 ### Example 1:  Registering  custom components
 
 This example uses a simple function to create a link to Yahoo Finance based on the stock ticker in the cell.
@@ -111,6 +115,10 @@ Update the `cellRendererData` prop in the custom component by calling the `setDa
 You may also include arbitrary data which will be included  the `value` key, for example:  `setData(<myData>)`
 
 
+` `  
+` `  
+
+
 ### Example 2: Triggering callbacks
 This example shows how to add buttons to cells in the grid.  Use the `cellRendererData` prop in the callback
 to see which button triggered the callback.
@@ -125,21 +133,74 @@ Note the following:
 
 
 text3 = """
+
+` `  
+` `  
+
 ### Example 3:  Including extra data in `cellRenderData`
 
 This example shows how to pass extra data from a custom component to Dash for use in a callback.  We pass the state of
- the checkbox to the `value` key of the `cellRendererData` prop.   We do this by calling the function `setData(checked);`
+ the checkbox to the `value` key of the `cellRendererData` prop.   We do this by calling the function `setData(checked) in the component;`
  
 Compare the data in the callback in this example to the Button example above.  You will see that the in the Button example,
 there is no `value` key in the `cellRendererData`.
 
 """
 
-
-
 text4 = """
 
-### Example 4:  More Custom Cell renderers
+` `  
+` `  
+
+### Example 4:  Custom Image Component
+
+This example is similar to Example 2 and 3. It shows how you can create other custom components.
+
+The `ImgThumbnail` custom component renders an `img` HTML tag and uses the cell value in the `scr` attribute. The CSS in the `style`
+makes the image responsive.  The size of the image is determined by the column width and row height of the grid.
+```
+React.createElement(
+    'img',
+    {        
+        src: props.value,
+        onClick: onClick,
+        style: {width: '100%', height: 'auto'},
+
+    },
+)
+```
+The `onClick` is a function that calls `setData(props.value)`.  This adds the cell value (the img URL) to 
+the `cellRendererData` prop, making it easy to use in a Dash callback.
+
+```
+function onClick() {
+    setData(props.value);
+}
+```
+
+Here is the Dash callback that renders a fullsize image in a modal component when you click on the Thumbnail:
+
+```
+@app.callback(
+    Output("custom-component-img-modal", "is_open"),
+    Output("custom-component-img-modal", "children"),
+    Input("custom-component-img-grid", "cellRendererData"),
+)
+def show_change(data):
+    if data:
+        return True, html.Img(src=data["value"])
+    return False, None
+```
+"""
+
+
+
+text5 = """
+
+` `  
+` `  
+
+### Example 5:  More Custom Cell renderers
 
 In this example we show several components:
 - The Stock Ticker column uses the `stockLink` function from Example 1 to create the links.  It also has a custom tooltip component.
@@ -163,6 +224,8 @@ layout = html.Div(
         make_md(text3),
         example_app("examples.components.cell_renderer_checkbox", make_layout=make_tabs),
         make_md(text4),
+        example_app("examples.components.cell_renderer_img", make_layout=make_tabs),
+        make_md(text5),
         example_app("examples.components.cell_renderer_custom_components", make_layout=make_tabs),
         #  up_next("text"),
     ],

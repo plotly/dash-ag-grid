@@ -8,7 +8,8 @@ register_page(
     __name__,
     order=3,
     description=app_description,
-    title="Dash AG Grid Selection",
+    title="Dash AG Grid - Row Selection",
+    name="Row selection multiple on click"
 )
 
 text1 = """

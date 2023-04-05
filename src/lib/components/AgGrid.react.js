@@ -516,7 +516,6 @@ DashAgGrid.propTypes = {
     /**
      * If true, when you drag a column out of the grid (e.g. to the group zone) the column
      * is not hidden.
-     * Default Value: false
      */
     suppressDragLeaveHidesColumns: PropTypes.bool,
 
