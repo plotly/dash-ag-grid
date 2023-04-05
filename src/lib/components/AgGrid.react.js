@@ -557,7 +557,10 @@ DashAgGrid.propTypes = {
     /**
      * The actively selected rows from the grid (may include filtered rows)
      */
-    selectedRows: PropTypes.arrayOf(PropTypes.object),
+    selectedRows: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.object),
+        PropTypes.object,
+    ]),
 
     /**
      * Value has changed after editing.

@@ -11,6 +11,7 @@ import {
     memoizeWith,
     pick,
     omit,
+    includes,
 } from 'ramda';
 import {
     propTypes as _propTypes,
@@ -123,6 +124,7 @@ export default class DashAgGrid extends Component {
                 markdown: this.generateRenderer(MarkdownRenderer),
                 ...newComponents,
             },
+            pauseSelections: false,
         };
 
         this.selectionEventFired = false;
@@ -130,15 +132,56 @@ export default class DashAgGrid extends Component {
 
     setSelection(selection) {
         const {gridApi} = this.state;
+        const {getRowId} = this.props;
         if (gridApi && selection) {
-            if (!selection.length) {
+            this.setState({pauseSelections: true});
+            if (Object.keys(selection).includes('function')) {
+                // keeps grid from rendering display unnecessarily
                 gridApi.deselectAll();
-            } else {
+                const parsedCondition = esprima.parse(selection.function)
+                    .body[0].expression;
+                const context = {
+                    d3,
+                    ...customFunctions,
+                    ...window.dashAgGridFunctions,
+                };
+                const test = function (node) {
+                    node.setSelected(
+                        evaluate(parsedCondition, {node, ...context})
+                    );
+                };
+                gridApi.forEachNode(test);
+            } else if (Object.keys(selection).includes('ids')) {
+                // keeps grid from rendering display unnecessarily
+                gridApi.deselectAll();
                 gridApi.forEachNode((node) => {
-                    const isSelected = selection.some(equals(node.data));
-                    node.setSelected(isSelected);
+                    node.setSelected(selection.ids[node.id] ? true : false);
                 });
+            } else {
+                if (!selection.length) {
+                    gridApi.deselectAll();
+                } else {
+                    // keeps grid from rendering display unnecessarily
+                    gridApi.deselectAll();
+                    if (getRowId) {
+                        const parsedCondition = esprima.parse(
+                            getRowId.replaceAll('params.data.', '')
+                        ).body[0].expression;
+                        const mapId = {};
+                        selection.map((params) => {
+                            mapId[evaluate(parsedCondition, params)] = true;
+                        });
+                        gridApi.forEachNode((node) => {
+                            node.setSelected(mapId[node.id]);
+                        });
+                    } else {
+                        gridApi.forEachNode((node) => {
+                            node.setSelected(includes(node.data, selection));
+                        });
+                    }
+                }
             }
+            this.setState({pauseSelections: false});
         }
     }
 
@@ -439,10 +482,10 @@ export default class DashAgGrid extends Component {
             this.props;
         const {openGroups, gridApi} = this.state;
 
-        // Call the API to select rows
-        this.setSelection(selectedRows);
-
         if (gridApi) {
+            // Call the API to select rows
+            this.setSelection(selectedRows);
+
             if (rowData && rowModelType === 'clientSide') {
                 const virtualRowData = [];
                 gridApi.forEachNodeAfterFilter((node) => {
@@ -485,10 +528,12 @@ export default class DashAgGrid extends Component {
     }
 
     onSelectionChanged() {
-        // Flag that the selection event was fired
-        this.selectionEventFired = true;
-        const selectedRows = this.state.gridApi.getSelectedRows();
-        this.props.setProps({selectedRows});
+        if (!this.state.pauseSelections) {
+            // Flag that the selection event was fired
+            this.selectionEventFired = true;
+            const selectedRows = this.state.gridApi.getSelectedRows();
+            this.props.setProps({selectedRows});
+        }
     }
 
     isDatasourceLoadedForInfiniteScrolling() {
