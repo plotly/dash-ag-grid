@@ -200,3 +200,9 @@ dagfuncs.DatePicker = class {
   }
 
 }
+
+
+// used in the tree data example
+dagfuncs.getDataPath = function (data) {
+    return data.orgHierarchy;
+}

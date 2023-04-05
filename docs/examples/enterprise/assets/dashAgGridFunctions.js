@@ -35,3 +35,9 @@ dagfuncs.ratioFormatter = function (params) {
   if (!params.value || params.value === 0) return '';
   return '' + Math.round(params.value * 100) / 100;
 }
+
+
+// used in the tree data example
+dagfuncs.getDataPath = function (data) {
+    return data.orgHierarchy;
+}
