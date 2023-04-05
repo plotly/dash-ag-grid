@@ -344,7 +344,7 @@ def test_sb004_sizing_buttons(dash_duo):
                   prevent_initial_call=True)
     def setSelection(n):
         if n:
-            return 'responsiveSizeToFit', {'defaultMinWidth': 100}
+            return 'responsiveSizeToFit', {'defaultMinWidth': 50}
         return no_update, no_update
 
     @app.callback(
