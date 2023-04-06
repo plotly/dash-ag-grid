@@ -206,3 +206,19 @@ dagfuncs.DatePicker = class {
 dagfuncs.getDataPath = function (data) {
     return data.orgHierarchy;
 }
+
+
+
+// used in cell editors dynamic options example
+dagfuncs.dynamicOptions = function(params) {
+    const selectedCountry = params.data.country;
+    if (selectedCountry === 'United States') {
+        return {
+            values: ['Boston', 'Chicago', 'San Francisco'],
+        };
+    } else {
+        return {
+            values: ['Montreal', 'Vancouver', 'Calgary']
+        };
+    }
+}
