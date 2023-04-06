@@ -58,7 +58,7 @@ Parameters for cell editors can be dynamic to allow different selections based o
  example, you might have a 'City' column that has values based on the 'Country' column. To do this, provide
   a function that returns parameters for the property `cellEditorParams`.
  
-This function is defined in the `dashAgGridFunctions.js file in the `assets` folder: 
+This function is defined in the `dashAgGridFunctions.js` file in the `assets` folder: 
 ```
 
 var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};
