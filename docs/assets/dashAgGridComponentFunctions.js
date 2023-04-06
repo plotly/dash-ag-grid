@@ -305,3 +305,24 @@ dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
     );
 };
 
+
+
+// Used in the conditional rendering example
+dagcomponentfuncs.MoodRenderer = function (props) {
+    const imgForMood = 'https://www.ag-grid.com/example-assets/smileys/' + (props.value === 'Happy' ? 'happy.png' : 'sad.png')
+
+    return React.createElement(
+        'img',
+        {src: imgForMood, width: "20px"},
+    );
+}
+
+dagcomponentfuncs.GenderRenderer = function (props) {
+    const image = props.value === 'Male' ? 'male.png' : 'female.png';
+    const imageSource = `https://www.ag-grid.com/example-assets/genders/${image}`;
+    return React.createElement(
+        'img',
+        {src: imageSource, width: "20px"},
+    );
+}
+

@@ -4,7 +4,7 @@ from utils.utils import app_description
 from utils.other_components import up_next, make_md, make_feature_card
 
 register_page(
-    __name__, order=8, description=app_description, title="Dash AG Grid - Range Selection"
+    __name__, order=8, description=app_description, title="Dash AG Grid - Text Selection"
 )
 
 
