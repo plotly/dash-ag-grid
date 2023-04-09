@@ -24,7 +24,7 @@ rowData = [
 app.layout = html.Div(
     [
         dcc.Markdown(
-             "The `filterModel` prop can be used to update and read from the current filters applied in the AgGrid UI. Filters can also be peristed using `persistence`."
+             "Use the 'Update Filter' button to set the `filterModel` "
          ),
         html.Button("Update Filter", id="filter-model-btn", n_clicks=0),
         dag.AgGrid(
