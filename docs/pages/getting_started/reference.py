@@ -83,6 +83,7 @@ The following props can be used to trigger a Dash Callback:
 - deleteSelectedRows
 - deselectAll
 - exportDataAsCsv
+- filterModel
 - getDetailRequest
 - getDetailResponse
 - getRowsRequest
