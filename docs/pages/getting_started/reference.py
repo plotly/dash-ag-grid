@@ -83,6 +83,7 @@ The following props can be used to trigger a Dash Callback:
 - deleteSelectedRows
 - deselectAll
 - exportDataAsCsv
+- filterModel
 - getDetailRequest
 - getDetailResponse
 - getRowsRequest
@@ -208,7 +209,20 @@ The following grid level props props will take functions as inputs.  If the prop
     'getRowStyle',
     'getRowClass',
     'rowClassRules',
+    'cellClassRules,
     'isFullWidthRow',
+    
+    // templates
+    'overlayLoadingTemplate',
+    'overlayNoRowsTemplate',
+    
+    // other
+    'frameworkComponents',
+    'getRowId',
+    'getDataPath',
+    'detailCellRendererParams',
+    'detailGridOptions',
+    
 ```
 - __Column Level Prop__  
 
@@ -224,6 +238,8 @@ The following column level props will take functions as inputs.  If the prop doe
     'filterValueGetter',
     'headerValueGetter',
     'template',
+    'cellClassRules',
+    'rowClassRules',
 
 
      // Columns
@@ -291,9 +307,23 @@ The following column level props will take functions as inputs.  If the prop doe
     'showColumnMenu',
     'progressSort',
     'setSort',
+    'headerComponentParams',    
+    
 
     // Header Group Component Parameters
     'setExpanded',
+    'headerGroupComponentsParams',
+    
+    // In filterParams or filterParams.filterOptions[]
+    'filterPlaceholder',
+    'predicate',
+    'filterParams',
+    'filterOptions',
+    
+    // other params
+    'cellRendererParams',
+    'cellEditorParams',
+    'children',
 
 ```
 
