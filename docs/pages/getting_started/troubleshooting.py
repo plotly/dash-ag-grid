@@ -132,11 +132,62 @@ Double check the spelling of the prop and make sure it's in the correct Dash con
 ` `  
 ` `  
 
+### 4.  The grid is gone!
 
-### 4. Debugging custom functions with `log()` 
+Does the grid look like this?
+
+![no_grid](https://user-images.githubusercontent.com/72614349/230976812-6025617c-bf3d-47d3-9b95-686288feb73f.png)
+
+Solution:  
+The grid must always have a theme class set on its container, whether this is a provided theme or your own. The default
+ is `className="ag-theme-alpine"`.  If you set the grid's `className` prop to something else, be sure to include the theme.
+ 
+
+For more information see the <dccLink href="/layout/themes" children="Themes" /> section of the docs.
+```
+# Wrong way:
+dag.AgGrid(
+    className="m-4",
+    # other props
+)
+
+
+# Correct way:
+dag.AgGrid(
+    className="ag-theme-alpine m-4",
+    # other props
+)
+
+# Another Correct way:
+html.Div(
+    dag.AgGrid(...),
+    className="m-4",
+)
+
+```
+
+
+` `  
+` `  
+
+### 5. Debugging custom functions with `log()` 
 
 Please see the  <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' /> section for information
 on debugging functions with `log()`
+
+
+
+` `  
+` ` 
+### 6. Other
+
+For other issues:
+  - Search the [Dash Community Forum](https://community.plotly.com/)
+  - Check for dash-ag-grid GitHub [issues](https://github.com/plotly/dash-ag-grid/issues)
+  - Check [Ag Grid issues](https://www.ag-grid.com/pipeline/)
+
+If you can't find the answer, please post a question on the Dash community forum and include a complete minimal example with
+ sample data that replicates the issue.
 
 
 """
@@ -146,5 +197,6 @@ layout = html.Div(
         make_md(text1),
     ],
 )
+
 
 
