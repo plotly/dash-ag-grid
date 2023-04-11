@@ -129,7 +129,7 @@ cellStyle = {
 }
 
 
-table = dag.AgGrid(
+grid = dag.AgGrid(
     id="portfolio-grid",
     className="ag-theme-alpine-dark",
     columnDefs=columnDefs,
@@ -149,7 +149,7 @@ app.layout = dbc.Container(
     [
         header,
         dbc.Row([dbc.Col(candlestick), dbc.Col(pie)]),
-        dbc.Row(dbc.Col(table, className="py-4")),
+        dbc.Row(dbc.Col(grid, className="py-4")),
     ],
 )
 
