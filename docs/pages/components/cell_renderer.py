@@ -275,7 +275,7 @@ text8= """
 ### Example 8:  My Portfolio Demo
 
 Here is another example app with custom components- this is just an image since it includes live stock data, and the theme is not compatible
-with the rest of the docs.  Please see the code in [Github]()
+with the rest of the docs.  Please see the code in [Github](https://github.com/plotly/dash-ag-grid/tree/dev/more_examples/demo_stock_portfolio_dmc)
 
 """
 
