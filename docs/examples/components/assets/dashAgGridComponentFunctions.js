@@ -1,5 +1,7 @@
-var dagcomponentfuncs = (window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {});
+var dagcomponentfuncs = (window.dashAgGridComponentFunctions =
+    window.dashAgGridComponentFunctions || {});
 
+// Simple component to create a custom link
 dagcomponentfuncs.StockLink = function (props) {
     return React.createElement(
         'a',
@@ -8,6 +10,7 @@ dagcomponentfuncs.StockLink = function (props) {
     );
 };
 
+// Custom  HTML select component
 dagcomponentfuncs.Dropdown = function (props) {
     const {setData, data} = props;
 
@@ -23,7 +26,6 @@ dagcomponentfuncs.Dropdown = function (props) {
     const options = props.colDef.cellRendererParams.values.map((opt) =>
         React.createElement('option', {value: opt}, opt)
     );
-
     return React.createElement(
         'div',
         {
@@ -47,6 +49,7 @@ dagcomponentfuncs.Dropdown = function (props) {
     );
 };
 
+// custom component to display boolean data as a checkbox
 dagcomponentfuncs.Checkbox = function (props) {
     const {setData, data} = props;
     function onClick() {
@@ -56,7 +59,6 @@ dagcomponentfuncs.Checkbox = function (props) {
             props.node.setDataValue(colId, checked);
         }
     }
-
     function checkedHandler() {
         // update grid data
         const checked = event.target.checked;
@@ -87,6 +89,7 @@ dagcomponentfuncs.Checkbox = function (props) {
     );
 };
 
+// custom component for displaying content different colored tags based on the cell value
 dagcomponentfuncs.Tags = function (props) {
     if (props.value == 'High') {
         newTag = React.createElement(
@@ -128,7 +131,6 @@ dagcomponentfuncs.Tags = function (props) {
             props.value
         );
     }
-
     return React.createElement(
         'div',
         {
@@ -145,8 +147,7 @@ dagcomponentfuncs.Tags = function (props) {
     );
 };
 
-
-
+// custom html img component to display an image thumbnail in the grid
 dagcomponentfuncs.ImgThumbnail = function (props) {
     const {setData, data} = props;
 
@@ -164,18 +165,15 @@ dagcomponentfuncs.ImgThumbnail = function (props) {
                 alignItems: 'center',
             },
         },
-        React.createElement(
-            'img',
-            {
-                onClick: onClick,
-                style: {width: '100%', height: 'auto'},
-                src: props.value,
-            },
-        )
+        React.createElement('img', {
+            onClick: onClick,
+            style: {width: '100%', height: 'auto'},
+            src: props.value,
+        })
     );
 };
 
-
+// Custom html.Button
 dagcomponentfuncs.Button = function (props) {
     const {setData, data} = props;
 
@@ -210,6 +208,7 @@ dagcomponentfuncs.Button = function (props) {
     );
 };
 
+// Custom button that when clicked updates other columns in the grid
 dagcomponentfuncs.CustomButton = function (props) {
     const {setData, data} = props;
 
@@ -252,6 +251,7 @@ dagcomponentfuncs.CustomButton = function (props) {
     );
 };
 
+// Custom Tootlip component
 dagcomponentfuncs.CustomTooltip = function (props) {
     info = [
         React.createElement('h4', {}, props.data.ticker),
@@ -271,7 +271,7 @@ dagcomponentfuncs.CustomTooltip = function (props) {
     );
 };
 
-
+// Custom Loading Overlay
 dagcomponentfuncs.CustomLoadingOverlay = function (props) {
     return React.createElement(
         'div',
@@ -282,13 +282,11 @@ dagcomponentfuncs.CustomLoadingOverlay = function (props) {
                 padding: 10,
             },
         },
-        React.createElement('div', {}, props.loadingMessage),
+        React.createElement('div', {}, props.loadingMessage)
     );
 };
 
-
-
-
+// Custom overlay for No Rows
 dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
     return React.createElement(
         'div',
@@ -297,30 +295,88 @@ dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
                 border: '1pt solid grey',
                 color: 'grey',
                 padding: 10,
-                fontSize: props.fontSize
+                fontSize: props.fontSize,
             },
         },
-        React.createElement('div', {}, props.message),
+        React.createElement('div', {}, props.message)
     );
 };
 
-
 // Used in the conditional rendering example
 dagcomponentfuncs.MoodRenderer = function (props) {
-    const imgForMood = 'https://www.ag-grid.com/example-assets/smileys/' + (props.value === 'Happy' ? 'happy.png' : 'sad.png')
+    const imgForMood =
+        'https://www.ag-grid.com/example-assets/smileys/' +
+        (props.value === 'Happy' ? 'happy.png' : 'sad.png');
 
-    return React.createElement(
-        'img',
-        {src: imgForMood, width: "20px"},
-    );
-}
+    return React.createElement('img', {src: imgForMood, width: '20px'});
+};
 
 dagcomponentfuncs.GenderRenderer = function (props) {
     const image = props.value === 'Male' ? 'male.png' : 'female.png';
     const imageSource = `https://www.ag-grid.com/example-assets/genders/${image}`;
-    return React.createElement(
-        'img',
-        {src: imageSource, width: "20px"},
-    );
-}
+    return React.createElement('img', {src: imageSource, width: '20px'});
+};
 
+// use for adding a dcc.Graph to the grid with clickData available in a callback
+dagcomponentfuncs.DCC_GraphClickData = function (props) {
+    const {setData} = props;
+    function setProps() {
+        const graphProps = arguments[0];
+        if (graphProps['clickData']) {
+            setData(graphProps);
+        }
+    }
+    return React.createElement(window.dash_core_components.Graph, {
+        figure: props.value,
+        setProps,
+        style: {height: '100%'},
+        config: {displayModeBar: false},
+    });
+};
+
+// use for displaying sparklines made with dcc.Graph.  Note - the figure has no no user interaction
+dagcomponentfuncs.DCC_Graph = function (props) {
+    return React.createElement(window.dash_core_components.Graph, {
+        figure: props.value,
+        style: {height: '100%'},
+        config: {displayModeBar: false},
+    });
+};
+
+// use for making dmc.Button with DashIconify icons
+dagcomponentfuncs.DMC_Button = function (props) {
+    const {setData, data} = props;
+
+    function onClick() {
+        setData();
+    }
+    let leftIcon, rightIcon;
+    if (props.leftIcon) {
+        leftIcon = React.createElement(window.dash_iconify.DashIconify, {
+            icon: props.leftIcon,
+        });
+    }
+    if (props.rightIcon) {
+        rightIcon = React.createElement(window.dash_iconify.DashIconify, {
+            icon: props.rightIcon,
+        });
+    }
+    return React.createElement(
+        window.dash_mantine_components.Button,
+        {
+            onClick,
+            variant: props.variant,
+            color: props.color,
+            leftIcon,
+            rightIcon,
+            radius: props.radius,
+            style: {
+                margin: props.margin,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            },
+        },
+        props.value
+    );
+};

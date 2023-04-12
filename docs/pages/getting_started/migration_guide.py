@@ -7,7 +7,7 @@ register_page(
     __name__, order=6, description=app_description, title="Dash AG Grid Migration Guide")
 
 text1 = """
-# Dash AG Grid Migration Guide
+# Migration Guide
 
 -----------
 Dash AG Grid will continue to evolve through a series of alpha releases until it's ready for the 2.0.0 production release.

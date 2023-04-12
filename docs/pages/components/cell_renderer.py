@@ -1,6 +1,6 @@
 from dash import html, register_page
 from utils.code_and_show import example_app, make_tabs
-from utils.other_components import up_next, make_md
+from utils.other_components import up_next, make_md, make_feature_card
 from utils.utils import app_description
 
 
@@ -194,13 +194,65 @@ def show_change(data):
 """
 
 
-
 text5 = """
 
 ` `  
 ` `  
 
-### Example 5:  More Custom Cell renderers
+### Example 5:  Custom `dcc.Graph` component
+
+It's possible to make custom components for use with the cellRenderer using any of the component modules you have
+ imported in your Dash app.  In this example we will show how to make a custom component using dcc.Graph.
+
+Since we have imported dash_core_components in our app, we can access the dcc.Graph component like this:
+```
+window.dash_core_components.Graph
+```
+So now we can make a component with `React.createElement` with `window.dash_core_components.Graph`  instead of
+ regular HTML elements like we made in previous examples.  
+ 
+Here is a simple custom  `DCC_Graph` component. This will render a figure in a dcc.Graph component in a cell in the grid.
+
+
+```
+dagcomponentfuncs.DCC_Graph = function (props) {
+    return React.createElement(window.dash_core_components.Graph, {
+        figure: props.value,
+        setProps,
+        style: {height: '100%'},
+        config: {displayModeBar: false},
+    });
+};
+
+In the example below note the following:
+ - The custom component is named DCC_GraphClickData and is  defined in the `dashAgGridComponentFunctions.js` file in the assets folder
+ - `cellRendererData` prop is updated by calling `setData()` with the clickData in the figure.
+ - the figure is defined in the "graph" column of the dataframe. 
+
+"""
+
+text6 = """
+
+` `  
+` `  
+
+### Example 6:  Dash Mantine Components Button with DashIconify icons.
+
+This example is similar to Example 5, but uses the Dash Mantine Components and DashIconify.
+
+In this example, note the following:
+- The button is defined as `DMC_Button` in the `dashAgGridComponentFunctions.js file in the assets folder. 
+- All three buttons use the same component, and are customized for the color, icons, etc buy passing props to the component using the
+ `cellRendererParams` prop.
+
+"""
+
+text7 = """
+
+` `  
+` `  
+
+### Example 7:  More Custom Cell renderers
 
 In this example we show several components:
 - The Stock Ticker column uses the `stockLink` function from Example 1 to create the links.  It also has a custom tooltip component.
@@ -214,6 +266,18 @@ updates the value in the Action column.
 
 """
 
+img8="https://user-images.githubusercontent.com/72614349/231599764-fc0a54ce-9957-4f2c-a2d6-a8254b5588f9.png"
+
+text8= """
+` `  
+` `  
+
+### Example 8:  My Portfolio Demo
+
+Here is another example app with custom components- this is just an image since it includes live stock data, and the theme is not compatible
+with the rest of the docs.  Please see the code in [Github]()
+
+"""
 
 layout = html.Div(
     [
@@ -226,7 +290,14 @@ layout = html.Div(
         make_md(text4),
         example_app("examples.components.cell_renderer_img", make_layout=make_tabs),
         make_md(text5),
+        example_app("examples.components.cell_renderer_graph", make_layout=make_tabs),
+        make_md(text6),
+        example_app("examples.components.cell_renderer_dmc_button", make_layout=make_tabs),
+        make_md(text7),
         example_app("examples.components.cell_renderer_custom_components", make_layout=make_tabs),
+        make_md(text8),
+        make_feature_card(img8, "")
+
         #  up_next("text"),
     ],
 )

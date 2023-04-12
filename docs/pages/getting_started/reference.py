@@ -7,7 +7,7 @@ register_page(
     __name__, order=2, description=app_description, title="Dash AG Grid - Reference")
 
 text1 = """
-# Dash AG Grid Reference
+# Reference
 
 AG Grid is highly customizable and has hundreds of props.  Only a subset of these props are defined in the dash-ag-grid
  component. The props defined in dash-ag-grid can be found in the reference section below.  These props are all
