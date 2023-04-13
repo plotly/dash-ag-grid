@@ -125,7 +125,7 @@ to see which button triggered the callback.
 
 Note the following:
  - `cellRendererData` prop is updated by calling `setData()` in the custom `Button` component
- - The button is styled with Bootstrap class names passed to the component in the `cellRendererParm` prop from the Dash app.
+ - The button is styled with Bootstrap class names passed to the component in the `cellRendererParams` prop from the Dash app.
  - The `cellRendererData` prop is used as an Input of a Dash callback, and it contains information on which button was clicked. 
  
 """
@@ -140,7 +140,7 @@ text3 = """
 ### Example 3:  Including extra data in `cellRenderData`
 
 This example shows how to pass extra data from a custom component to Dash for use in a callback.  We pass the state of
- the checkbox to the `value` key of the `cellRendererData` prop.   We do this by calling the function `setData(checked) in the component;`
+ the checkbox to the `value` key of the `cellRendererData` prop.   We do this by calling the function `setData(checked)` in the component.
  
 Compare the data in the callback in this example to the Button example above.  You will see that the in the Button example,
 there is no `value` key in the `cellRendererData`.
@@ -201,17 +201,17 @@ text5 = """
 
 ### Example 5:  Custom `dcc.Graph` component
 
-It's possible to make custom components for use with the cellRenderer using any of the component modules you have
- imported in your Dash app.  In this example we will show how to make a custom component using dcc.Graph.
+It's possible to make custom components for use with the `cellRenderer` using any of the component modules you have
+ imported in your Dash app.  In this example we will show how to make a custom component using `dcc.Graph`.
 
-Since we have imported dash_core_components in our app, we can access the dcc.Graph component like this:
+Since we have imported `dash_core_components` in our app, we can access the `dcc.Graph` component like this:
 ```
 window.dash_core_components.Graph
 ```
 So now we can make a component with `React.createElement` with `window.dash_core_components.Graph`  instead of
  regular HTML elements like we made in previous examples.  
  
-Here is a simple custom  `DCC_Graph` component. This will render a figure in a dcc.Graph component in a cell in the grid.
+Here is a simple custom  `DCC_Graph` component. This will render a figure in a `dcc.Graph` component in a cell in the grid.
 
 
 ```
@@ -223,6 +223,7 @@ dagcomponentfuncs.DCC_Graph = function (props) {
         config: {displayModeBar: false},
     });
 };
+```
 
 In the example below note the following:
  - The custom component is named DCC_GraphClickData and is  defined in the `dashAgGridComponentFunctions.js` file in the assets folder
@@ -274,8 +275,8 @@ text8= """
 
 ### Example 8:  My Portfolio Demo
 
-Here is another example app with custom components- this is just an image since it includes live stock data, and the theme is not compatible
-with the rest of the docs.  Please see the code in [Github](https://github.com/plotly/dash-ag-grid/tree/dev/more_examples/demo_stock_portfolio_dmc)
+Here is another example app with custom components- this one is made with dash-mantine-components.   
+This is just an image since it includes live stock data.  Please see the code in [Github](https://github.com/plotly/dash-ag-grid/tree/dev/more_examples/demo_stock_portfolio_dmc)
 
 """
 
