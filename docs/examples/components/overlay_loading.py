@@ -65,7 +65,7 @@ dagcomponentfuncs.CustomLoadingOverlay = function (props) {
                 padding: 10,
             },
         },
-        React.createElement('div', {}, props.loadingMessage),
+        props.loadingMessage
     );
 };
 
