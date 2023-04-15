@@ -10,6 +10,40 @@ dagcomponentfuncs.StockLink = function (props) {
     );
 };
 
+// Simple html.Button
+dagcomponentfuncs.Button = function (props) {
+    const {setData, data} = props;
+
+    function onClick() {
+        setData();
+    }
+    return React.createElement(
+        'button',
+        {
+            onClick: onClick,
+            className: props.className,
+        },
+        props.value
+    );
+};
+
+// Simple dbc.Button
+dagcomponentfuncs.DBC_Button_Simple = function (props) {
+    const {setData, data} = props;
+
+    function onClick() {
+        setData();
+    }
+    return React.createElement(
+        window.dash_bootstrap_components.Button,
+        {
+            onClick: onClick,
+            color: props.color,
+        },
+        props.value
+    );
+};
+
 // Custom  HTML select component
 dagcomponentfuncs.Dropdown = function (props) {
     const {setData, data} = props;
@@ -27,25 +61,13 @@ dagcomponentfuncs.Dropdown = function (props) {
         React.createElement('option', {value: opt}, opt)
     );
     return React.createElement(
-        'div',
+        'select',
         {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
+            value: props.value,
+            onChange: selectionHandler,
+            style: {padding: 10},
         },
-        React.createElement(
-            'select',
-            {
-                value: props.value,
-                onChange: selectionHandler,
-            },
-            options
-        )
+        options
     );
 };
 
@@ -69,17 +91,7 @@ dagcomponentfuncs.Checkbox = function (props) {
     }
     return React.createElement(
         'div',
-        {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
-            onClick: onClick,
-        },
+        {onClick: onClick},
         React.createElement('input', {
             type: 'checkbox',
             checked: props.value,
@@ -89,47 +101,14 @@ dagcomponentfuncs.Checkbox = function (props) {
     );
 };
 
-// custom component for displaying content different colored tags based on the cell value
+//custom component for displaying content different colored tags based on the cell value
 dagcomponentfuncs.Tags = function (props) {
     if (props.value == 'High') {
-        newTag = React.createElement(
-            'div',
-            {
-                style: {
-                    backgroundColor: '#d8f0d3',
-                    borderRadius: '15px',
-                    padding: '5px',
-                    color: 'black',
-                },
-            },
-            props.value
-        );
+        backgroundColor = '#d8f0d3';
     } else if (props.value == 'Low') {
-        newTag = React.createElement(
-            'div',
-            {
-                style: {
-                    backgroundColor: '#f5cccc',
-                    borderRadius: '15px',
-                    padding: '5px',
-                    color: 'black',
-                },
-            },
-            props.value
-        );
+        backgroundColor = '#f5cccc';
     } else {
-        newTag = React.createElement(
-            'div',
-            {
-                style: {
-                    backgroundColor: '#fffec8',
-                    borderRadius: '15px',
-                    padding: '5px',
-                    color: 'black',
-                },
-            },
-            props.value
-        );
+        backgroundColor = '#fffec8';
     }
     return React.createElement(
         'div',
@@ -143,7 +122,18 @@ dagcomponentfuncs.Tags = function (props) {
                 alignItems: 'center',
             },
         },
-        newTag
+        React.createElement(
+            'div',
+            {
+                style: {
+                    backgroundColor: backgroundColor,
+                    borderRadius: '15px',
+                    padding: '5px',
+                    color: 'black',
+                },
+            },
+            props.value
+        )
     );
 };
 
@@ -173,49 +163,9 @@ dagcomponentfuncs.ImgThumbnail = function (props) {
     );
 };
 
-// Custom html.Button
-dagcomponentfuncs.Button = function (props) {
-    const {setData, data} = props;
-
-    if (!props.value) {
-        return React.createElement('button');
-    }
-
-    function onClick() {
-        setData();
-    }
-
-    return React.createElement(
-        'div',
-        {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
-        },
-        React.createElement(
-            'button',
-            {
-                onClick: onClick,
-                className: props.className,
-            },
-            props.children
-        )
-    );
-};
-
 // Custom button that when clicked updates other columns in the grid
 dagcomponentfuncs.CustomButton = function (props) {
     const {setData, data} = props;
-
-    if (!props.value) {
-        return React.createElement('button');
-    }
-
     function onClick() {
         // update data in the grid
         let colId = props.column.colId;
@@ -227,27 +177,13 @@ dagcomponentfuncs.CustomButton = function (props) {
         // update cellRendererData prop so it can be used to trigger a callback - include n_clicks
         setData({n_clicks: newData['n_clicks']});
     }
-
     return React.createElement(
-        'div',
+        'button',
         {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
+            onClick: onClick,
+            className: props.value.className,
         },
-        React.createElement(
-            'button',
-            {
-                onClick: onClick,
-                className: props.value.className,
-            },
-            props.value.children
-        )
+        props.value.children
     );
 };
 
@@ -268,37 +204,6 @@ dagcomponentfuncs.CustomTooltip = function (props) {
             },
         },
         info
-    );
-};
-
-// Custom Loading Overlay
-dagcomponentfuncs.CustomLoadingOverlay = function (props) {
-    return React.createElement(
-        'div',
-        {
-            style: {
-                border: '1pt solid grey',
-                color: props.color || 'grey',
-                padding: 10,
-            },
-        },
-        React.createElement('div', {}, props.loadingMessage)
-    );
-};
-
-// Custom overlay for No Rows
-dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
-    return React.createElement(
-        'div',
-        {
-            style: {
-                border: '1pt solid grey',
-                color: 'grey',
-                padding: 10,
-                fontSize: props.fontSize,
-            },
-        },
-        React.createElement('div', {}, props.message)
     );
 };
 
@@ -343,6 +248,51 @@ dagcomponentfuncs.DCC_Graph = function (props) {
     });
 };
 
+// use for making dbc.Button with FontAwesome or Bootstrap icons
+dagcomponentfuncs.DBC_Button = function (props) {
+    const {setData, data} = props;
+
+    function onClick() {
+        setData();
+    }
+    let leftIcon, rightIcon;
+    if (props.leftIcon) {
+        leftIcon = React.createElement('i', {
+            className: props.leftIcon,
+        });
+    }
+    if (props.rightIcon) {
+        rightIcon = React.createElement('i', {
+            className: props.rightIcon,
+        });
+    }
+    return React.createElement(
+        window.dash_bootstrap_components.Button,
+        {
+            onClick,
+            color: props.color,
+            disabled: props.disabled,
+            download: props.download,
+            external_link: props.external_link,
+            href: props.href,
+            outline: props.outline,
+            size: props.size,
+            style: {
+                margin: props.margin,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            },
+            target: props.target,
+            title: props.title,
+            type: props.type,
+        },
+        leftIcon,
+        props.value,
+        rightIcon
+    );
+};
+
 // use for making dmc.Button with DashIconify icons
 dagcomponentfuncs.DMC_Button = function (props) {
     const {setData, data} = props;
@@ -378,5 +328,36 @@ dagcomponentfuncs.DMC_Button = function (props) {
             },
         },
         props.value
+    );
+};
+
+// Custom Loading Overlay
+dagcomponentfuncs.CustomLoadingOverlay = function (props) {
+    return React.createElement(
+        'div',
+        {
+            style: {
+                border: '1pt solid grey',
+                color: props.color || 'grey',
+                padding: 10,
+            },
+        },
+        props.loadingMessage
+    );
+};
+
+// Custom overlay for No Rows
+dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
+    return React.createElement(
+        'div',
+        {
+            style: {
+                border: '1pt solid grey',
+                color: 'grey',
+                padding: 10,
+                fontSize: props.fontSize,
+            },
+        },
+        props.message
     );
 };

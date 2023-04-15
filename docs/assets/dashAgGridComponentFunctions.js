@@ -1,5 +1,7 @@
-var dagcomponentfuncs = (window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {});
+var dagcomponentfuncs = (window.dashAgGridComponentFunctions =
+    window.dashAgGridComponentFunctions || {});
 
+// Simple component to create a custom link
 dagcomponentfuncs.StockLink = function (props) {
     return React.createElement(
         'a',
@@ -8,6 +10,41 @@ dagcomponentfuncs.StockLink = function (props) {
     );
 };
 
+// Simple html.Button
+dagcomponentfuncs.Button = function (props) {
+    const {setData, data} = props;
+
+    function onClick() {
+        setData();
+    }
+    return React.createElement(
+        'button',
+        {
+            onClick: onClick,
+            className: props.className,
+        },
+        props.value
+    );
+};
+
+// Simple dbc.Button
+dagcomponentfuncs.DBC_Button_Simple = function (props) {
+    const {setData, data} = props;
+
+    function onClick() {
+        setData();
+    }
+    return React.createElement(
+        window.dash_bootstrap_components.Button,
+        {
+            onClick: onClick,
+            color: props.color,
+        },
+        props.value
+    );
+};
+
+// Custom  HTML select component
 dagcomponentfuncs.Dropdown = function (props) {
     const {setData, data} = props;
 
@@ -23,7 +60,56 @@ dagcomponentfuncs.Dropdown = function (props) {
     const options = props.colDef.cellRendererParams.values.map((opt) =>
         React.createElement('option', {value: opt}, opt)
     );
+    return React.createElement(
+        'select',
+        {
+            value: props.value,
+            onChange: selectionHandler,
+            style: {padding: 10},
+        },
+        options
+    );
+};
 
+// custom component to display boolean data as a checkbox
+dagcomponentfuncs.Checkbox = function (props) {
+    const {setData, data} = props;
+    function onClick() {
+        if (!('checked' in event.target)) {
+            const checked = !event.target.children[0].checked;
+            const colId = props.column.colId;
+            props.node.setDataValue(colId, checked);
+        }
+    }
+    function checkedHandler() {
+        // update grid data
+        const checked = event.target.checked;
+        const colId = props.column.colId;
+        props.node.setDataValue(colId, checked);
+        // update cellRendererData prop so it can be used to trigger a callback
+        setData(checked);
+    }
+    return React.createElement(
+        'div',
+        {onClick: onClick},
+        React.createElement('input', {
+            type: 'checkbox',
+            checked: props.value,
+            onChange: checkedHandler,
+            style: {cursor: 'pointer'},
+        })
+    );
+};
+
+//custom component for displaying content different colored tags based on the cell value
+dagcomponentfuncs.Tags = function (props) {
+    if (props.value == 'High') {
+        backgroundColor = '#d8f0d3';
+    } else if (props.value == 'Low') {
+        backgroundColor = '#f5cccc';
+    } else {
+        backgroundColor = '#fffec8';
+    }
     return React.createElement(
         'div',
         {
@@ -37,115 +123,21 @@ dagcomponentfuncs.Dropdown = function (props) {
             },
         },
         React.createElement(
-            'select',
+            'div',
             {
-                value: props.value,
-                onChange: selectionHandler,
+                style: {
+                    backgroundColor: backgroundColor,
+                    borderRadius: '15px',
+                    padding: '5px',
+                    color: 'black',
+                },
             },
-            options
+            props.value
         )
     );
 };
 
-dagcomponentfuncs.Checkbox = function (props) {
-    const {setData, data} = props;
-    function onClick() {
-        if (!('checked' in event.target)) {
-            const checked = !event.target.children[0].checked;
-            const colId = props.column.colId;
-            props.node.setDataValue(colId, checked);
-        }
-    }
-
-    function checkedHandler() {
-        // update grid data
-        const checked = event.target.checked;
-        const colId = props.column.colId;
-        props.node.setDataValue(colId, checked);
-        // update cellRendererData prop so it can be used to trigger a callback
-        setData(checked);
-    }
-    return React.createElement(
-        'div',
-        {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
-            onClick: onClick,
-        },
-        React.createElement('input', {
-            type: 'checkbox',
-            checked: props.value,
-            onChange: checkedHandler,
-            style: {cursor: 'pointer'},
-        })
-    );
-};
-
-dagcomponentfuncs.Tags = function (props) {
-    if (props.value == 'High') {
-        newTag = React.createElement(
-            'div',
-            {
-                style: {
-                    backgroundColor: '#d8f0d3',
-                    borderRadius: '15px',
-                    padding: '5px',
-                    color: 'black',
-                },
-            },
-            props.value
-        );
-    } else if (props.value == 'Low') {
-        newTag = React.createElement(
-            'div',
-            {
-                style: {
-                    backgroundColor: '#f5cccc',
-                    borderRadius: '15px',
-                    padding: '5px',
-                    color: 'black',
-                },
-            },
-            props.value
-        );
-    } else {
-        newTag = React.createElement(
-            'div',
-            {
-                style: {
-                    backgroundColor: '#fffec8',
-                    borderRadius: '15px',
-                    padding: '5px',
-                    color: 'black',
-                },
-            },
-            props.value
-        );
-    }
-
-    return React.createElement(
-        'div',
-        {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
-        },
-        newTag
-    );
-};
-
-
+// custom html img component to display an image thumbnail in the grid
 dagcomponentfuncs.ImgThumbnail = function (props) {
     const {setData, data} = props;
 
@@ -159,64 +151,21 @@ dagcomponentfuncs.ImgThumbnail = function (props) {
             style: {
                 width: '100%',
                 height: '100%',
-                padding: '5px',
                 display: 'flex',
                 alignItems: 'center',
             },
         },
-        React.createElement(
-            'img',
-            {
-                onClick: onClick,
-                style: {width: '100%', height: 'auto'},
-                src: props.value,
-            },
-        )
+        React.createElement('img', {
+            onClick: onClick,
+            style: {width: '100%', height: 'auto'},
+            src: props.value,
+        })
     );
 };
 
-
-dagcomponentfuncs.Button = function (props) {
-    const {setData, data} = props;
-
-    if (!props.value) {
-        return React.createElement('button');
-    }
-
-    function onClick() {
-        setData();
-    }
-
-    return React.createElement(
-        'div',
-        {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
-        },
-        React.createElement(
-            'button',
-            {
-                onClick: onClick,
-                className: props.className,
-            },
-            props.children
-        )
-    );
-};
-
+// Custom button that when clicked updates other columns in the grid
 dagcomponentfuncs.CustomButton = function (props) {
     const {setData, data} = props;
-
-    if (!props.value) {
-        return React.createElement('button');
-    }
-
     function onClick() {
         // update data in the grid
         let colId = props.column.colId;
@@ -228,30 +177,17 @@ dagcomponentfuncs.CustomButton = function (props) {
         // update cellRendererData prop so it can be used to trigger a callback - include n_clicks
         setData({n_clicks: newData['n_clicks']});
     }
-
     return React.createElement(
-        'div',
+        'button',
         {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
+            onClick: onClick,
+            className: props.value.className,
         },
-        React.createElement(
-            'button',
-            {
-                onClick: onClick,
-                className: props.value.className,
-            },
-            props.value.children
-        )
+        props.value.children
     );
 };
 
+// Custom Tootlip component
 dagcomponentfuncs.CustomTooltip = function (props) {
     info = [
         React.createElement('h4', {}, props.data.ticker),
@@ -271,62 +207,20 @@ dagcomponentfuncs.CustomTooltip = function (props) {
     );
 };
 
-
-
-
-dagcomponentfuncs.CustomLoadingOverlay = function (props) {
-    return React.createElement(
-        'div',
-        {
-            style: {
-                border: '1pt solid grey',
-                color: props.color || 'grey',
-                padding: 10,
-            },
-        },
-        React.createElement('div', {}, props.loadingMessage),
-    );
-};
-
-
-
-dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
-    return React.createElement(
-        'div',
-        {
-            style: {
-                border: '1pt solid grey',
-                color: 'grey',
-                padding: 10,
-                fontSize: props.fontSize
-            },
-        },
-        React.createElement('div', {}, props.message),
-    );
-};
-
-
-
 // Used in the conditional rendering example
 dagcomponentfuncs.MoodRenderer = function (props) {
-    const imgForMood = 'https://www.ag-grid.com/example-assets/smileys/' + (props.value === 'Happy' ? 'happy.png' : 'sad.png')
+    const imgForMood =
+        'https://www.ag-grid.com/example-assets/smileys/' +
+        (props.value === 'Happy' ? 'happy.png' : 'sad.png');
 
-    return React.createElement(
-        'img',
-        {src: imgForMood, width: "20px"},
-    );
-}
+    return React.createElement('img', {src: imgForMood, width: '20px'});
+};
 
 dagcomponentfuncs.GenderRenderer = function (props) {
     const image = props.value === 'Male' ? 'male.png' : 'female.png';
     const imageSource = `https://www.ag-grid.com/example-assets/genders/${image}`;
-    return React.createElement(
-        'img',
-        {src: imageSource, width: "20px"},
-    );
-}
-
-
+    return React.createElement('img', {src: imageSource, width: '20px'});
+};
 
 // use for adding a dcc.Graph to the grid with clickData available in a callback
 dagcomponentfuncs.DCC_GraphClickData = function (props) {
@@ -352,6 +246,51 @@ dagcomponentfuncs.DCC_Graph = function (props) {
         style: {height: '100%'},
         config: {displayModeBar: false},
     });
+};
+
+// use for making dbc.Button with FontAwesome or Bootstrap icons
+dagcomponentfuncs.DBC_Button = function (props) {
+    const {setData, data} = props;
+
+    function onClick() {
+        setData();
+    }
+    let leftIcon, rightIcon;
+    if (props.leftIcon) {
+        leftIcon = React.createElement('i', {
+            className: props.leftIcon,
+        });
+    }
+    if (props.rightIcon) {
+        rightIcon = React.createElement('i', {
+            className: props.rightIcon,
+        });
+    }
+    return React.createElement(
+        window.dash_bootstrap_components.Button,
+        {
+            onClick,
+            color: props.color,
+            disabled: props.disabled,
+            download: props.download,
+            external_link: props.external_link,
+            href: props.href,
+            outline: props.outline,
+            size: props.size,
+            style: {
+                margin: props.margin,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            },
+            target: props.target,
+            title: props.title,
+            type: props.type,
+        },
+        leftIcon,
+        props.value,
+        rightIcon
+    );
 };
 
 // use for making dmc.Button with DashIconify icons
@@ -392,4 +331,33 @@ dagcomponentfuncs.DMC_Button = function (props) {
     );
 };
 
+// Custom Loading Overlay
+dagcomponentfuncs.CustomLoadingOverlay = function (props) {
+    return React.createElement(
+        'div',
+        {
+            style: {
+                border: '1pt solid grey',
+                color: props.color || 'grey',
+                padding: 10,
+            },
+        },
+        props.loadingMessage
+    );
+};
 
+// Custom overlay for No Rows
+dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
+    return React.createElement(
+        'div',
+        {
+            style: {
+                border: '1pt solid grey',
+                color: 'grey',
+                padding: 10,
+                fontSize: props.fontSize,
+            },
+        },
+        props.message
+    );
+};

@@ -15,7 +15,7 @@ register_page(
 text1 = """
 # Cell Renderers
 
-By default the grid renders values into the cells as strings. If you want something more complex you can use a cell renderer.
+By default the grid renders values in the cells as strings. If you want something more complex you can use a cell renderer.
 
 - `cellRenderer` (function) Provide your own cell Renderer component for this column's cells.
 
@@ -61,14 +61,18 @@ The grid comes with some provided cell renderers out of the box. These cell rend
 - Group Cell Renderer: (Enterprise only) For showing group details with expand & collapse functionality when using any of the Row Grouping, Master Detail or Tree Data.
 - Show Change Cell Renderers: For animating changes when data is changing.  See examples in <dccLink href='/rendering/change-cell-renderers' children='Rendering' /> . 
 
+-------------------
+` `  
+` `  
+
 ## Custom Cell Renderers
 
 ### Registering custom components
 
-In order to safely render custom components in Dash, they must be added to the dash-ag-grid namespace. See
- the <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' />  section for more information.
+In order to safely render custom components in Dash, they must be added to the dash-ag-grid namespace. Dash will register
+ the components defined in the `window.dashAgGridComponentFunctions` namespace with the grid. See the  <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' />  section for more information.
 
-Register the component by adding the component to a `.js` file in the `assets` folder. Add it to the `dashAgGridComponentFunctions` namespace like this:
+Before running Example 1, create a file called `dashAgGridComponentFunctions.js` in the `assets` folder then add this component:
 
 ```
 var dagcomponentfuncs = (window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {});
@@ -83,21 +87,47 @@ dagcomponentfuncs.StockLink = function (props) {
 
 ```
 
+The code snippet above creates the `dashAgGridComponentFunctions` namespace and defines the `Stocklink` component that we will use in Example 1.
+
+When the component is registered, the grid will make the grid APIs, a number of utility methods as well as the cell & row values available to you via `props`.
+For more information see the [AG Grid docs](https://www.ag-grid.com/react-data-grid/component-cell-renderer/#cell-renderer-component-2).
+  We will cover this in more detail later, but for now, note that `props.value` is the cell value in the "Stock Ticker" column in Example 1.
+
+
+Create elements in the component using: 
+```text
+React.createElement(element type, {element props}, children)
+```
+
+In Example 1  we make the link by creating an html "a" element with an `href` prop like this:
+```
+React.createElement(
+        'a',
+        {href: 'https://finance.yahoo.com/quote/' + props.value},
+        props.value
+);
+```
+
+
+
 ` `  
 ` `  
 
 
-### Example 1:  Registering  custom components
+#### Example 1:  Simple Custom Component
 
-This example uses a simple function to create a link to Yahoo Finance based on the stock ticker in the cell.
+This is a simple example of registering a custom component to render the stock ticker as a link to Yahoo Finance.
 
 """
 
 text2 = """
-### Triggering callbacks with custom components
+
+` `  
+` `  
+
+### Callbacks with custom components
 To use the custom components in a callback, the component must call the `setData()` function, which will update the
- Dash prop `cellRendererData`.  You can then use the Dash prop `cellRendererData` as an input of a callback.  The 
- `cellRendererData` dict contains information on which component triggered the callback, including arbitrary data sent from the component.
+ Dash prop `cellRendererData`.  Use this prop to get information on which component triggered the callback.
 
 `cellRendererData` (dict; optional): Special prop to allow feedback from cell renderer to the grid. `cellRendererData` is a dict with keys:
 
@@ -119,42 +149,123 @@ You may also include arbitrary data which will be included  the `value` key, for
 ` `  
 
 
-### Example 2: Triggering callbacks
-This example shows how to add buttons to cells in the grid.  Use the `cellRendererData` prop in the callback
+#### Example 2: Button component with callback
+This example shows how to add HTML buttons to cells in the grid and use the `cellRendererData` prop in the callback
 to see which button triggered the callback.
 
 Note the following:
- - `cellRendererData` prop is updated by calling `setData()` in the custom `Button` component
- - The button is styled with Bootstrap class names passed to the component in the `cellRendererParams` prop from the Dash app.
+ - The button component is defined as `Button` in the `dashAgGridComponentFunctions.js` file in the assets folder. 
+ - `cellRendererData` prop is updated by calling `setData()` in the component
  - The `cellRendererData` prop is used as an Input of a Dash callback, and it contains information on which button was clicked. 
+ - The HTML button is styled with Bootstrap class names passed to the component in the `cellRendererParams` prop from the Dash app.
  
 """
-
-
 
 text3 = """
 
 ` `  
 ` `  
 
-### Example 3:  Including extra data in `cellRenderData`
+### Using other component libraries.
 
-This example shows how to pass extra data from a custom component to Dash for use in a callback.  We pass the state of
- the checkbox to the `value` key of the `cellRendererData` prop.   We do this by calling the function `setData(checked)` in the component.
+It's possible to make custom components for use with the `cellRenderer` using any of the component modules you have
+ imported in your Dash app. In this section we will show how to add the following components:
+ - Button from Dash Bootstrap Components
+ - Graph from Dash Core Components
+ - Button from Dash Mantine Components
+ - Icons from Dash Iconify
+  
+  
+
+#### Example 3: Cell Renderer with `dbc.Button` 
+This is the same app as Example 2 above, except instead of creating an HTML button, we'll use the `Button` component from the `dash-bootstrap-components` library. 
  
-Compare the data in the callback in this example to the Button example above.  You will see that the in the Button example,
-there is no `value` key in the `cellRendererData`.
+Since we have imported `dash_bootstrap_components` in our app, we can access the `dbc.Button` component like this:
+```
+window.dash_bootstrap_components.Button
+```
+You can make a custom component with `React.createElement` with a `dbc.Button` instead of a regular HTML Button like this:  
+ 
+```
+React.createElement(window.dash_bootstrap_components.Button, {dbc.Button props}, children)
+```
+
+Note the following:
+ - The button is defined as `DBC_Button_Simple` in the `dashAgGridComponentFunctions.js` file in the assets folder. 
+ - The callback works the same way as the button in Example 2
+ - The button is styled with the `dbc.Button` component's `color` prop, and is passed to the component in the
+  `cellRendererParams` prop from the Dash app.
+
 
 """
+
 
 text4 = """
 
 ` `  
 ` `  
 
-### Example 4:  Custom Image Component
+#### Example 4:  Cell Renderer with `dcc.Graph` 
 
-This example is similar to Example 2 and 3. It shows how you can create other custom components.
+In this example we will render a plotly figure in a custom `dcc.Graph` component in the grid. Since we have imported
+ `dash_core_components` in our app, we can access the `dcc.Graph` component like this:
+```
+window.dash_core_components.Graph
+```
+So now we can make a component with `React.createElement` with `dcc.Graph` like this:
+
+```
+React.createElement(window.dash_core_components.Graph, {dcc.Graph props}, children)
+```
+
+ 
+In the example below note the following:
+ - The graph component is defined as `DCC_GraphClickData` in the `dashAgGridComponentFunctions.js` file in the assets folder
+ - `cellRendererData` prop is updated by calling `setData()` with the clickData in the figure.
+ - The figure is a plotly figure from the "graph" column of the dataframe. 
+
+"""
+
+text5 = """
+
+` `  
+` `  
+
+### Example 5:  Cell Render with `dmc.Button` with DashIconify icons.
+
+This example is similar to Example 3 and 4, but uses the Dash Mantine Components and Dash Iconify libraries.
+
+In this example, note the following:
+- The button is defined as `DMC_Button` in the `dashAgGridComponentFunctions.js` file in the assets folder. 
+- All three buttons use the same component, and are customized for the color, icons, etc buy passing props to the component using the
+ `cellRendererParams` prop.
+
+"""
+
+
+text6 = """
+
+` `  
+` `  
+
+#### Example 6:  Including extra data in `cellRenderData`
+
+This example shows how to pass extra data from a custom component to Dash for use in a callback.  We pass the state of
+ the checkbox to the `value` key of the `cellRendererData` prop.   We do this by calling the function `setData(checked)` in the component.
+
+Compare the data in the callback in this example to the Button example above.  You will see that the in the Button example,
+there is no `value` key in the `cellRendererData`.
+
+"""
+
+text7 = """
+
+` `  
+` `  
+
+#### Example 7:  Custom Image Component
+
+This example is another simple example of creating a custom component with data passed back to Dash in the callback. 
 
 The `ImgThumbnail` custom component renders an `img` HTML tag and uses the cell value in the `scr` attribute. The CSS in the `style`
 makes the image responsive.  The size of the image is determined by the column width and row height of the grid.
@@ -193,67 +304,12 @@ def show_change(data):
 ```
 """
 
-
-text5 = """
-
-` `  
-` `  
-
-### Example 5:  Custom `dcc.Graph` component
-
-It's possible to make custom components for use with the `cellRenderer` using any of the component modules you have
- imported in your Dash app.  In this example we will show how to make a custom component using `dcc.Graph`.
-
-Since we have imported `dash_core_components` in our app, we can access the `dcc.Graph` component like this:
-```
-window.dash_core_components.Graph
-```
-So now we can make a component with `React.createElement` with `window.dash_core_components.Graph`  instead of
- regular HTML elements like we made in previous examples.  
- 
-Here is a simple custom  `DCC_Graph` component. This will render a figure in a `dcc.Graph` component in a cell in the grid.
-
-
-```
-dagcomponentfuncs.DCC_Graph = function (props) {
-    return React.createElement(window.dash_core_components.Graph, {
-        figure: props.value,
-        setProps,
-        style: {height: '100%'},
-        config: {displayModeBar: false},
-    });
-};
-```
-
-In the example below note the following:
- - The custom component is named DCC_GraphClickData and is  defined in the `dashAgGridComponentFunctions.js` file in the assets folder
- - `cellRendererData` prop is updated by calling `setData()` with the clickData in the figure.
- - the figure is defined in the "graph" column of the dataframe. 
-
-"""
-
-text6 = """
+text8 = """
 
 ` `  
 ` `  
 
-### Example 6:  Dash Mantine Components Button with DashIconify icons.
-
-This example is similar to Example 5, but uses the Dash Mantine Components and DashIconify.
-
-In this example, note the following:
-- The button is defined as `DMC_Button` in the `dashAgGridComponentFunctions.js file in the assets folder. 
-- All three buttons use the same component, and are customized for the color, icons, etc buy passing props to the component using the
- `cellRendererParams` prop.
-
-"""
-
-text7 = """
-
-` `  
-` `  
-
-### Example 7:  More Custom Cell renderers
+#### Example 8:  More Custom Cell renderers
 
 In this example we show several components:
 - The Stock Ticker column uses the `stockLink` function from Example 1 to create the links.  It also has a custom tooltip component.
@@ -267,13 +323,13 @@ updates the value in the Action column.
 
 """
 
-img8="https://user-images.githubusercontent.com/72614349/231599764-fc0a54ce-9957-4f2c-a2d6-a8254b5588f9.png"
+img9="https://user-images.githubusercontent.com/72614349/231599764-fc0a54ce-9957-4f2c-a2d6-a8254b5588f9.png"
 
-text8= """
+text9= """
 ` `  
 ` `  
 
-### Example 8:  My Portfolio Demo
+#### Example 9:  My Portfolio Demo
 
 Here is another example app with custom components- this one is made with dash-mantine-components.   
 This is just an image since it includes live stock data.  Please see the code in [Github](https://github.com/plotly/dash-ag-grid/tree/dev/more_examples/demo_stock_portfolio_dmc)
@@ -287,17 +343,21 @@ layout = html.Div(
         make_md(text2),
         example_app("examples.components.cell_renderer_button", make_layout=make_tabs),
         make_md(text3),
-        example_app("examples.components.cell_renderer_checkbox", make_layout=make_tabs),
+        example_app("examples.components.cell_renderer_dbc_button_simple", make_layout=make_tabs),
         make_md(text4),
-        example_app("examples.components.cell_renderer_img", make_layout=make_tabs),
-        make_md(text5),
         example_app("examples.components.cell_renderer_graph", make_layout=make_tabs),
-        make_md(text6),
+        make_md(text5),
         example_app("examples.components.cell_renderer_dmc_button", make_layout=make_tabs),
+        make_md(text6),
+        example_app("examples.components.cell_renderer_checkbox", make_layout=make_tabs),
         make_md(text7),
-        example_app("examples.components.cell_renderer_custom_components", make_layout=make_tabs),
+        example_app("examples.components.cell_renderer_img", make_layout=make_tabs),
+
+
         make_md(text8),
-        make_feature_card(img8, "")
+        example_app("examples.components.cell_renderer_custom_components", make_layout=make_tabs),
+        make_md(text9),
+        make_feature_card(img9, "")
 
         #  up_next("text"),
     ],
