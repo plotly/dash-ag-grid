@@ -9,6 +9,7 @@ register_page(
     order=2,
     description=app_description,
     title="Dash AG Grid Components - cell renderers",
+    name="Cell renderer components"
 
 )
 
@@ -329,10 +330,17 @@ text9= """
 ` `  
 ` `  
 
-#### Example 9:  My Portfolio Demo
+#### Example 9:  Stock Portfolio Demo
 
 Here is another example app with custom components- this one is made with dash-mantine-components.   
 This is just an image since it includes live stock data.  Please see the code in [Github](https://github.com/plotly/dash-ag-grid/tree/dev/more_examples/demo_stock_portfolio_dmc)
+
+"""
+
+
+text10 = """
+
+#### Example 10 Component Galleries
 
 """
 
@@ -357,7 +365,10 @@ layout = html.Div(
         make_md(text8),
         example_app("examples.components.cell_renderer_custom_components", make_layout=make_tabs),
         make_md(text9),
-        make_feature_card(img9, "")
+        make_feature_card(img9, ""),
+        make_md(text10),
+        example_app("examples.components.cell_renderer_dbc_button", make_layout=make_tabs),
+        example_app("examples.components.cell_renderer_dbc_progress", make_layout=make_tabs),
 
         #  up_next("text"),
     ],
