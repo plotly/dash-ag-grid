@@ -274,7 +274,7 @@ dagcomponentfuncs.DBC_Button = function (props) {
             disabled: props.disabled,
             download: props.download,
             external_link: props.external_link,
-            href: props.href,
+            href: (props.href === undefined) ? null : 'https://finance.yahoo.com/quote/' + props.value,
             outline: props.outline,
             size: props.size,
             style: {
@@ -292,6 +292,31 @@ dagcomponentfuncs.DBC_Button = function (props) {
         rightIcon
     );
 };
+
+// use for making dbc.Progress
+dagcomponentfuncs.DBC_Progress = function (props) {
+    const {setData, data} = props;
+
+    function onClick() {
+        setData(props.value);
+    }
+    return React.createElement(
+        window.dash_bootstrap_components.Progress,
+        {
+            onClick,
+            animated: props.animated,
+            className: props.className,
+            color: props.color,
+            label: (props.label === undefined) ? "": props.value + '%',
+            max: props.max,
+            min: props.min,
+            striped: props.striped,
+            style: props.style,
+            value: props.value
+        },
+    );
+};
+
 
 // use for making dmc.Button with DashIconify icons
 dagcomponentfuncs.DMC_Button = function (props) {
