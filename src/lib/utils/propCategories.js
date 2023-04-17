@@ -258,6 +258,7 @@ export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS = {
     filterParams: 1,
     cellRendererParams: 1,
     cellEditorParams: 1,
+    tooltipComponentParams: 1,
 };
 
 /**
