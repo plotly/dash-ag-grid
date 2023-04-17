@@ -65,7 +65,11 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - added new `columnSize` available, `responsiveSizeToFit` which will adjust column sizes based upon grid size and columns added or removed
   - added `columnSizeOptions` to take an object that is compatible with AG Grid to perform sizing options as needed
   - added ability to push `columnState` back to grid and replay the settings
-  
+ 
+- [#145](https://github.com/plotly/dash-ag-grid/pull/145)
+  - added singular support for `alignedGrids`
+  - added ability for functions with `tooltipComponentParams`
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
