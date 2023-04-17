@@ -65,7 +65,6 @@ DashAgGrid.defaultProps = {
     exportDataAsCsv: false,
     selectAll: false,
     deselectAll: false,
-    autoSizeAllColumns: false,
     enableEnterpriseModules: false,
     updateColumnState: false,
     persisted_props: ['selectedRows'],
@@ -167,18 +166,6 @@ DashAgGrid.propTypes = {
      * If true, the internal method deselectAll() will be called
      */
     deselectAll: PropTypes.bool,
-
-    /**
-     * Set to true to autosize all columns, considering both headers and data
-     * Or pass an object of options for how to autosize.
-     * Currently supports `skipHeaders`, set this true to only consider data when autosizing.
-     */
-    autoSizeAllColumns: PropTypes.oneOfType([
-        PropTypes.bool,
-        PropTypes.exact({
-            skipHeaders: PropTypes.bool,
-        }),
-    ]),
 
     /**
      * If true, the internal method updateColumnState() will be called
@@ -288,11 +275,53 @@ DashAgGrid.propTypes = {
     }),
 
     /**
-     * Size the columns autoSizeAll changes the column sizes to fit the column's content,
+     * Size the columns autoSize changes the column sizes to fit the column's content,
      * sizeToFit changes the column sizes to fit the width of the table
+     * responsiveSizeToFit changes the column sizes to fit the width of the table and also resizing upon grid or column changes
      * and null bypasses the altering of the column widths
      */
-    columnSize: PropTypes.oneOf(['sizeToFit', 'autoSizeAll', null]),
+    columnSize: PropTypes.oneOf([
+        'sizeToFit',
+        'autoSize',
+        'responsiveSizeToFit',
+        null,
+    ]),
+
+    /**
+     * Options to customize the columnSize operation.
+     * autoSize calls either autoSizeColumns or autoSizeAllColumns, see:
+     * https://www.ag-grid.com/react-data-grid/column-sizing/#autosize-column-api,
+     * and sizeToFit and responsiveSizeToFit call sizeColumnsToFit, see:
+     * https://www.ag-grid.com/react-data-grid/column-sizing/#size-columns-to-fit
+     */
+    columnSizeOptions: PropTypes.exact({
+        /**
+         * for (responsive)sizeToFit: per-column minimum and maximum width, in pixels.
+         */
+        columnLimits: PropTypes.arrayOf(
+            PropTypes.exact({
+                key: PropTypes.string,
+                minWidth: PropTypes.number,
+                maxWidth: PropTypes.number,
+            })
+        ),
+        /**
+         * for (responsive)sizeToFit: default minimum width, in pixels, if not overridden by columnLimits
+         */
+        defaultMinWidth: PropTypes.number,
+        /**
+         * for (responsive)sizeToFit: default maximum width, in pixels, if not overridden by columnLimits
+         */
+        defaultMaxWidth: PropTypes.number,
+        /**
+         * for autoSize: list of column keys to autosize. If omitted, all columns will be autosized.
+         */
+        keys: PropTypes.arrayOf(PropTypes.string),
+        /**
+         * for autoSize: should we skip header contents and only consider cell contents?
+         */
+        skipHeader: PropTypes.bool,
+    }),
 
     /**
      * Object used to perform the row styling. See AG-Grid Row Style.

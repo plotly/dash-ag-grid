@@ -12,6 +12,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - Remove `agGridColumns` component due to deprecation in AG Grid v29
   - Remove some hardcoded CSS
 
+- [#132](https://github.com/plotly/dash-ag-grid/pull/132)
+  - removed prop `autoSizeAllColumns`
+
 ### Added
 
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
@@ -58,7 +61,11 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#111](https://github.com/plotly/dash-ag-grid/pull/111)
   - added `filterModel` prop in order to capture the grid's active filters
 
-
+- [#132](https://github.com/plotly/dash-ag-grid/pull/132)
+  - added new `columnSize` available, `responsiveSizeToFit` which will adjust column sizes based upon grid size and columns added or removed
+  - added `columnSizeOptions` to take an object that is compatible with AG Grid to perform sizing options as needed
+  - added ability to push `columnState` back to grid and replay the settings
+  
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
@@ -95,6 +102,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 - [#111](https://github.com/plotly/dash-ag-grid/pull/111)
   - fixing templates to only populate when `dangerously_allow_code=True`
+
+- [#132](https://github.com/plotly/dash-ag-grid/pull/132)
+  - fixed `columnSize` to update upon interaction
 
 ## [1.3.2] - 2023-01-13
 

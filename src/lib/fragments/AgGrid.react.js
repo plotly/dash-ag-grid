@@ -100,7 +100,6 @@ export default class DashAgGrid extends Component {
         // Additional Exposure
         this.selectAll = this.selectAll.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
-        this.autoSizeAllColumns = this.autoSizeAllColumns.bind(this);
         this.updateColumnState = this.updateColumnState.bind(this);
         this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
         this.rowTransaction = this.rowTransaction.bind(this);
@@ -373,17 +372,17 @@ export default class DashAgGrid extends Component {
 
     onSortChanged() {
         const {setProps, rowModelType} = this.props;
+        const propsToSet = {};
         if (rowModelType === 'clientSide') {
             const virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
                 virtualRowData.push(node.data);
             });
 
-            setProps({
-                virtualRowData: virtualRowData,
-                columnState: this.state.gridColumnApi.getColumnState(),
-            });
+            propsToSet.virtualRowData = virtualRowData;
         }
+        propsToSet.columnState = this.state.gridColumnApi.getColumnState();
+        setProps(propsToSet);
     }
 
     componentDidMount() {
@@ -534,10 +533,10 @@ export default class DashAgGrid extends Component {
             exportDataAsCsv,
             selectAll,
             deselectAll,
-            autoSizeAllColumns,
             deleteSelectedRows,
             filterModel,
             setProps,
+            columnState,
         } = this.props;
 
         const propsToSet = {};
@@ -550,10 +549,12 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
-        this.updateColumnWidths();
-
         if (!isEmpty(filterModel)) {
             this.state.gridApi.setFilterModel(filterModel);
+        }
+
+        if (columnState) {
+            this.setColumnState();
         }
 
         if (resetColumnState) {
@@ -576,11 +577,6 @@ export default class DashAgGrid extends Component {
             propsToSet.deselectAll = false;
         }
 
-        if (autoSizeAllColumns) {
-            this.autoSizeAllColumns(autoSizeAllColumns, false);
-            propsToSet.autoSizeAllColumns = false;
-        }
-
         if (deleteSelectedRows) {
             this.deleteSelectedRows(false);
             propsToSet.deleteSelectedRows = false;
@@ -589,8 +585,6 @@ export default class DashAgGrid extends Component {
         if (!isEmpty(propsToSet)) {
             setProps(propsToSet);
         }
-
-        this.updateColumnState();
 
         if (this.state.rowTransaction) {
             this.state.rowTransaction.map((data) =>
@@ -604,6 +598,8 @@ export default class DashAgGrid extends Component {
         this.setSelection(selectedRows);
         // Hydrate virtualRowData
         this.onFilterChanged(true);
+
+        this.updateColumnWidths();
     }
 
     onCellClicked({value, column: {colId}, rowIndex, node}) {
@@ -642,20 +638,48 @@ export default class DashAgGrid extends Component {
     }
 
     onDisplayedColumnsChanged() {
-        // this.updateColumnWidths();
+        if (this.props.columnSize === 'responsiveSizeToFit') {
+            this.updateColumnWidths();
+        }
     }
 
     onGridSizeChanged() {
-        // this.updateColumnWidths();
+        if (this.props.columnSize === 'responsiveSizeToFit') {
+            this.updateColumnWidths();
+        }
     }
 
     updateColumnWidths() {
-        if (this.state.gridApi || this.state.gridColumnApi) {
-            if (this.props.columnSize === 'autoSizeAll') {
-                this.state.gridColumnApi.autoSizeAllColumns(false);
-            } else if (this.props.columnSize === 'sizeToFit') {
-                this.state.gridApi.sizeColumnsToFit();
+        const {columnSize, columnSizeOptions, setProps} = this.props;
+        const {gridApi, gridColumnApi} = this.state;
+        if (gridApi || gridColumnApi) {
+            const {
+                keys,
+                skipHeader,
+                defaultMinWidth,
+                defaultMaxWidth,
+                columnLimits,
+            } = columnSizeOptions || {};
+            if (columnSize === 'autoSize') {
+                if (keys) {
+                    gridColumnApi.autoSizeColumns(keys, skipHeader);
+                } else {
+                    gridColumnApi.autoSizeAllColumns(skipHeader);
+                }
+            } else if (
+                columnSize === 'sizeToFit' ||
+                columnSize === 'responsiveSizeToFit'
+            ) {
+                gridApi.sizeColumnsToFit({
+                    defaultMinWidth,
+                    defaultMaxWidth,
+                    columnLimits,
+                });
             }
+            if (columnSize !== 'responsiveSizeToFit') {
+                setProps({columnSize: null});
+            }
+            this.updateColumnState();
         }
     }
 
@@ -741,6 +765,15 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    setColumnState() {
+        if (!this.state.gridApi) {
+            return;
+        }
+        this.state.gridColumnApi.applyColumnState({
+            state: this.props.columnState,
+        });
+    }
+
     resetColumnState(reset = true) {
         if (!this.state.gridApi) {
             return;
@@ -750,6 +783,7 @@ export default class DashAgGrid extends Component {
             this.props.setProps({
                 resetColumnState: false,
             });
+            this.updateColumnState();
         }
     }
 
@@ -795,21 +829,6 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    autoSizeAllColumns(opts, reset = true) {
-        if (!this.state.gridApi) {
-            return;
-        }
-        const allColumnIds = this.state.gridColumnApi
-            .getColumnState()
-            .map((column) => column.colId);
-        const skipHeaders = Boolean(opts?.skipHeaders);
-        this.state.gridColumnApi.autoSizeColumns(allColumnIds, skipHeaders);
-        if (reset) {
-            this.props.setProps({
-                autoSizeAllColumns: false,
-            });
-        }
-    }
     // end event actions
 
     updateColumnState() {
@@ -869,13 +888,14 @@ export default class DashAgGrid extends Component {
             exportDataAsCsv,
             selectAll,
             deselectAll,
-            autoSizeAllColumns,
             deleteSelectedRows,
             rowTransaction,
             updateColumnState,
             csvExportParams,
             dashGridOptions,
             filterModel,
+            columnSize,
+            columnState,
             ...restProps
         } = this.props;
 
@@ -893,6 +913,14 @@ export default class DashAgGrid extends Component {
             }
         }
 
+        if (columnSize) {
+            this.updateColumnWidths();
+        }
+
+        if (columnState) {
+            this.setColumnState();
+        }
+
         if (resetColumnState) {
             this.resetColumnState();
         }
@@ -907,10 +935,6 @@ export default class DashAgGrid extends Component {
 
         if (deselectAll) {
             this.deselectAll();
-        }
-
-        if (autoSizeAllColumns) {
-            this.autoSizeAllColumns(autoSizeAllColumns);
         }
 
         if (updateColumnState) {
