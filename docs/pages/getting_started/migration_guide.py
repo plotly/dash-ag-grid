@@ -12,7 +12,7 @@ text1 = """
 -----------
 Dash AG Grid will continue to evolve through a series of alpha releases until it's ready for the 2.0.0 production release.
 
-Significant changes from 1.3.0 through 2.0.0a4 include:
+Significant changes include:
   - making dash-ag-grid prop names align with the upstream AG Grid API
   - making dash-ag-grid more secure
   - improving performance and fixing bugs
@@ -64,6 +64,11 @@ __2.0.0a4__
 __2.0.0a5__
 
 - No breaking changes
+
+__2.0.0rc1__
+
+- Removed undocumented `AutoSizeAllColumns` prop
+- Renamed option -  `columnSize="autoSizeAll"` is now `columnSize="autoSize"`
 
 -----------------
 
