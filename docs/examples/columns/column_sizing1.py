@@ -29,19 +29,16 @@ app.layout = html.Div(
         dcc.RadioItems(
             id="column-size-radio",
             options=[
-                {"label": i, "value": j}
-                for i, j in [
-                    ("Auto size", "autoSizeAll"),
-                    ("Size to fit", "sizeToFit"),
-                ]
+                {"label": "Auto size", "value": "autoSize"},
+                {"label": "Size to fit", "value": "sizeToFit"}
             ],
-            value="autoSizeAll",
+            value="autoSize",
         ),
         dag.AgGrid(
             id="column-size-grid",
             columnDefs=columnDefs,
             rowData=rowData,
-            columnSize="autoSizeAll",
+            columnSize="autoSize",
             defaultColDef={"resizable":True}
         ),
     ]

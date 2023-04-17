@@ -68,7 +68,7 @@ To get around this, you can turn off column virtualisation by setting grid prope
 By default the grid will also resize the column to fit the header. If you do not want the headers to be included in the autosize calculation, set the grid property `skipHeaderOnAutoSize=True`.
 
 ## Autosize Column API
-The `columnSize="autoSizeAll"` prop auto-sizes  all columns based on its contents.
+The `columnSize="autoSize"` prop auto-sizes  all columns based on its contents.
 
 Autosizing columns can also be done using the following column API methods. If `skipHeader=True`, the header won't be included when calculating the column widths.
 

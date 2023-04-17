@@ -73,7 +73,6 @@ For example, `pagination` is not defined as a prop in dash-ag-grid.  To enable p
 
 The following props can be used to trigger a Dash Callback:
 ```
-- autoSizeAllColumns
 - cellClicked
 - cellValueChanged
 - cellRendererData
@@ -112,9 +111,7 @@ The following props can be used to trigger a Dash Callback:
     exportDataAsCsv: false,
     selectAll: false,
     selectAllFiltered: false,
-    deselectAll: false,
-    autoSizeAllColumns: false,
-    autoSizeAllColumnsSkipHeaders: false,
+    deselectAll: false,    
     enableEnterpriseModules: false,
     updateColumnState: false,
     persisted_props: ['selectedRows'],
