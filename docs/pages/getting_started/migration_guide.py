@@ -42,7 +42,8 @@ __2.0.0a2__
 __2.0.0a3__
 
 
-- `clickData` - change prop name to `cellRendererData`
+- `clickData` - change prop name to `cellRendererData`. If you used `clickData` with the `rowMenu` component, note that
+ the format of the data now included in `cellRendererData` is different than `clickData`.  See the <dccLink href='/components/row-menu' children='Row Menu' /> component example in the docs.
 
 - When using `cell Style`, functions or string expressions, change the AG Grid parameters to start with `params.`  
 For example, change `colDef.headerName` to  `params.colDef.headerName`.

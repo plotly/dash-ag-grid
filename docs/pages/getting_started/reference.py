@@ -110,15 +110,14 @@ The following props can be used to trigger a Dash Callback:
     resetColumnState: false,
     exportDataAsCsv: false,
     selectAll: false,
-    selectAllFiltered: false,
-    deselectAll: false,    
+    deselectAll: false,
     enableEnterpriseModules: false,
     updateColumnState: false,
     persisted_props: ['selectedRows'],
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
     dangerously_allow_code: false,
-    rowModelType: 'clientSide',
+    rowModelType: 'clientSide'
 ```    
 
 ` `  

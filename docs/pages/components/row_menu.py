@@ -35,7 +35,23 @@ You can also create custom components and cell renderers.  For examples see:
 
 ### Row Menu
 
-This component is included in dash-ag-grid
+The `rowMenu` is a Cell Renderer component that is automatically included with  dash-ag-grid. This means that it's
+ not not necessary to include it in the `dashAgGridComponentFunctions.js` file in the `assets` folder. 
+
+When the user selects an option from the rowMenu, the `cellRendererData is updated.
+
+
+`cellRendererData` (dict; optional): Special prop to allow feedback from cell renderer to the grid. `cellRendererData` is a dict with keys:
+
+- `colId` (string; optional): Column ID from where the event was fired.
+
+- `rowId` (boolean | number | string | dict | list; optional): Row Id from the grid, this could be a number automatically, or set via getRowId.
+
+- `rowIndex` (number; optional): Row Index from the grid, this is associated with the row count.
+
+- `timestamp` (boolean | number | string | dict | list; optional): Timestamp of when the event was fired.
+
+- `value` (boolean | number | string | dict | list; optional): value of the menu item selected..
 
 """
 
