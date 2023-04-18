@@ -22,9 +22,9 @@ Overlay components allow you to add your own overlays to AG Grid. Use these when
 
 The example below demonstrates how to provide custom loading message to the grid. Notice the following:
 
-- The Custom Loading Component is defined in the `dashAgGridComponentFunctions.js` file in the `assets` folder.
-- The Custom Loading Component is supplied by name via `loadingOverlayComponent`.  
-- The Custom Tooltip Parameters (for text color and the message) are supplied using `loadingOverlayComponentParams`.
+- The `CustomLoadingOverlay` component is defined in the `dashAgGridComponentFunctions.js` file in the `assets` folder.
+- The component is supplied by name via `loadingOverlayComponent` prop.  
+- The additional parameters (for text color and the message) are supplied using `loadingOverlayComponentParams` prop.
 
 """
 
@@ -34,9 +34,9 @@ text2 = """
 
 The example below demonstrates how to provide custom no rows message to the grid. Notice the following:
 
-- The Custom No Rows Component is defined in the `dashAgGridComponentFunctions.js` file in the `assets` folder.
-- The Custom No Rows Component is supplied by name via `noRowsOverlayComponent`.  
-- The Custom Tooltip Parameters (for text color and the message) are supplied using `noRowsOverlayComponentParams`.
+- The `CustomNoRowsOverlay` component is defined in the `dashAgGridComponentFunctions.js` file in the `assets` folder.
+- The component is supplied by name via `noRowsOverlayComponent` prop.  
+- The additional parameters (for text color and the message) are supplied using `noRowsOverlayComponentParams` prop.
 
 
 

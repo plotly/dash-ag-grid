@@ -1,7 +1,7 @@
 """
-This app is for Alpha version 2.0.0a2
+This app is for Alpha version 2.0.0a5
 
-pip install dash-ag-grid==2.0.0a2
+pip install dash-ag-grid==2.0.0a5
 
 """
 

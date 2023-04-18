@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=1,
     description=app_description,
-    title="Dash AG Grid Scrolling",
+    title="Dash AG Grid Pagination",
 )
 
 text1 = """

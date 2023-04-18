@@ -6,7 +6,7 @@ from utils.utils import app_description
 
 register_page(
     __name__,
-    order=1,
+    order=4,
     description=app_description,
     title="Dash AG Grid Components",
     # name="Bootstrap Utility Classes",
@@ -53,8 +53,22 @@ The first example does not have `dangerously_allow_code` enabled, so the links w
 The second example has `dangerously_allow_code=True`.
 
 Note - it is also possible to safely render HTML using the cell renderer component.
-"""
 
+The images images in these examples are loaded from a remote source the link is formatted like this:
+```
+"![alt text: sun](https://www.ag-grid.com/example-assets/weather/sun.png)"
+```
+
+They can also be loaded locally using:
+```
+    f"![image alt text]({app.get_asset_url('sun.png')})"
+```
+Or if you are using a multi page app
+
+```
+    f"![image alt text]({dash.get_asset_url('sun.png')})"
+```
+"""
 
 layout = html.Div(
     [

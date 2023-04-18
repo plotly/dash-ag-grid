@@ -4,6 +4,10 @@ import dash_bootstrap_components as dbc
 from utils.nav import navbar, make_side_nav
 from utils.utils import example_apps
 
+# need these two imports for the custom comonents
+import dash_mantine_components
+import dash_iconify
+
 
 # syntax highlighting light or dark
 light_hljs = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/stackoverflow-light.min.css"

@@ -20,7 +20,7 @@ app.layout = html.Div(
             columnDefs=[{"field": i, "id": i} for i in df.columns],
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
-            defaultColDef={"editable": True},
+            defaultColDef={"editable": True, "minWidth": 120},
         ),
         html.Div(id="editing-grid-output"),
     ],

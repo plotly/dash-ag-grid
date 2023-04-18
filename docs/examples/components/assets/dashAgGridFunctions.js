@@ -47,5 +47,22 @@ dagfuncs.DatePicker = class {
     // and we could leave this method out also, false is the default
     return false;
   }
+}
 
+
+
+// Used in the conditional rendering example
+dagfuncs.moodOrGender = function (params) {
+  var dagcomponentfuncs = window.dashAgGridComponentFunctions
+           const moodDetails = {
+              component: dagcomponentfuncs.MoodRenderer,
+            };
+            const genderDetails = {
+              component: dagcomponentfuncs.GenderRenderer,
+            };
+            if (params.data) {
+              if (params.data.type === 'gender') return genderDetails;
+              else if (params.data.type === 'mood') return moodDetails;
+            }
+            return undefined;
 }

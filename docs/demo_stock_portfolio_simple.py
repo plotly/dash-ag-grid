@@ -1,7 +1,7 @@
 """
-This app is for Alpha version 2.0.0a2
+This app is for Alpha version 2.0.0a5
 
-pip install dash-ag-grid==2.0.0a2
+pip install dash-ag-grid==2.0.0a5
 
 """
 
@@ -92,7 +92,7 @@ defaultColDef = {
     "minWidth": 125,
 }
 
-table = dag.AgGrid(
+grid = dag.AgGrid(
     id="portfolio-grid",
     className="ag-theme-alpine-dark",
     columnDefs=columnDefs,
@@ -110,7 +110,7 @@ app.layout = dbc.Container(
     [
         header,
         dbc.Row([dbc.Col(candlestick), dbc.Col(pie)]),
-        dbc.Row(dbc.Col(table, className="py-4")),
+        dbc.Row(dbc.Col(grid, className="py-4")),
     ],
 )
 

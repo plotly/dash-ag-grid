@@ -1,9 +1,9 @@
 """
-Working with infinite scroll against a backend database in AG-Grid.
+Working with infinite scroll in AG-Grid.
 """
 
 import dash_ag_grid as dag
-from dash import Dash, Input, Output, html, no_update
+from dash import Dash, Input, Output, dcc, html, no_update
 import pandas as pd
 
 app = Dash(__name__)
@@ -17,13 +17,12 @@ df = pd.DataFrame(data=raw_data)
 
 app.layout = html.Div(
     [
+        dcc.Markdown("Infinite scroll with selectable rows"),
         dag.AgGrid(
-            id="grid1",
-
+            id="infinite-grid",
             columnSize="sizeToFit",
             columnDefs=[{"field": "id"}, {"field": "name"}],
             defaultColDef={"sortable": True},
-            enableEnterpriseModules=True,
             rowModelType="infinite",
             dashGridOptions={
                 # The number of rows rendered outside the viewable area the grid renders.
@@ -31,28 +30,26 @@ app.layout = html.Div(
                 # How many blocks to keep in the store. Default is no limit, so every requested block is kept.
                 "maxBlocksInCache": 1,
                 "rowSelection": "multiple",
-            }
+            },
         ),
-        html.Div(id="output2"),
-        html.Div(id="cell-output2"),
-        html.Div(id="edit-output2"),
-    ]
+        html.Div(id="infinite-output"),
+    ],
+    style={"margin": 20},
 )
 
 
-@app.callback(Output("output2", "children"), Input("grid1", "selectedRows"))
+@app.callback(
+    Output("infinite-output", "children"), Input("infinite-grid", "selectedRows")
+)
 def display_selected_car2(selectedRows):
     if selectedRows:
-        return [
-            f"You selected id {s['id']} and name {s['name']}" for s in selectedRows
-        ]
-
+        return [f"You selected id {s['id']} and name {s['name']}" for s in selectedRows]
     return no_update
 
 
 @app.callback(
-    Output("grid1", "getRowsResponse"),
-    Input("grid1", "getRowsRequest"),
+    Output("infinite-grid", "getRowsResponse"),
+    Input("infinite-grid", "getRowsRequest"),
 )
 def infinite_scroll(request):
     if request is None:
