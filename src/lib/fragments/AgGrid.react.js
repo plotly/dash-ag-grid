@@ -133,6 +133,7 @@ export default class DashAgGrid extends Component {
         this.buildArray = this.buildArray.bind(this);
         this.onAsyncTransactionsFlushed =
             this.onAsyncTransactionsFlushed.bind(this);
+        this.onPaginationChanged = this.onPaginationChanged.bind(this);
 
         // Additional Exposure
         this.selectAll = this.selectAll.bind(this);
@@ -164,6 +165,24 @@ export default class DashAgGrid extends Component {
 
         this.selectionEventFired = false;
         this.reference = React.createRef();
+    }
+
+    onPaginationChanged() {
+        const {setProps} = this.props;
+        const {gridApi} = this.state;
+        if (gridApi) {
+            setProps({
+                paginationInfo: {
+                    paginationIsLastPageFound:
+                        gridApi.paginationIsLastPageFound(),
+                    paginationGetPageSize: gridApi.paginationGetPageSize(),
+                    paginationGetCurrentPage:
+                        gridApi.paginationGetCurrentPage(),
+                    paginationGetTotalPages: gridApi.paginationGetTotalPages(),
+                    paginationGetRowCount: gridApi.paginationGetRowCount(),
+                },
+            });
+        }
     }
 
     setSelection(selection) {
@@ -583,6 +602,7 @@ export default class DashAgGrid extends Component {
             filterModel,
             setProps,
             columnState,
+            paginationGoTo,
         } = this.props;
 
         const propsToSet = {};
@@ -595,12 +615,21 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
+        if (this.reference.current.props.pagination) {
+            this.onPaginationChanged();
+        }
+
         if (!isEmpty(filterModel)) {
             this.state.gridApi.setFilterModel(filterModel);
         }
 
         if (columnState) {
             this.setColumnState();
+        }
+
+        if (paginationGoTo) {
+            this.paginationGoTo(false);
+            propsToSet.paginationGoTo = null;
         }
 
         if (resetColumnState) {
@@ -798,6 +827,15 @@ export default class DashAgGrid extends Component {
         );
     }
 
+    setColumnState() {
+        if (!this.state.gridApi) {
+            return;
+        }
+        this.state.gridColumnApi.applyColumnState({
+            state: this.props.columnState,
+        });
+    }
+
     // Event actions that reset
     exportDataAsCsv(csvExportParams, reset = true) {
         if (!this.state.gridApi) {
@@ -811,13 +849,32 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    setColumnState() {
-        if (!this.state.gridApi) {
+    paginationGoTo(reset = true) {
+        const {gridApi} = this.state;
+        if (!gridApi) {
             return;
         }
-        this.state.gridColumnApi.applyColumnState({
-            state: this.props.columnState,
-        });
+        switch (this.props.paginationGoTo) {
+            case 'next':
+                gridApi.paginationGoToNextPage();
+                break;
+            case 'previous':
+                gridApi.paginationGoToPreviousPage();
+                break;
+            case 'last':
+                gridApi.paginationGoToLastPage();
+                break;
+            case 'first':
+                gridApi.paginationGoToFirstPage();
+                break;
+            default:
+                gridApi.paginationGoToPage(this.props.paginationGoTo);
+        }
+        if (reset) {
+            this.props.setProps({
+                paginationGoTo: null,
+            });
+        }
     }
 
     resetColumnState(reset = true) {
@@ -942,6 +999,7 @@ export default class DashAgGrid extends Component {
             filterModel,
             columnSize,
             columnState,
+            paginationGoTo,
             ...restProps
         } = this.props;
 
@@ -957,6 +1015,10 @@ export default class DashAgGrid extends Component {
                     this.state.gridApi.setFilterModel(filterModel);
                 }
             }
+        }
+
+        if (paginationGoTo) {
+            this.paginationGoTo();
         }
 
         if (columnSize) {
@@ -1009,6 +1071,7 @@ export default class DashAgGrid extends Component {
                     onRowGroupOpened={this.onRowGroupOpened}
                     onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}
                     onAsyncTransactionsFlushed={this.onAsyncTransactionsFlushed}
+                    onPaginationChanged={this.onPaginationChanged}
                     onGridSizeChanged={debounce(
                         this.onGridSizeChanged,
                         RESIZE_DEBOUNCE_MS

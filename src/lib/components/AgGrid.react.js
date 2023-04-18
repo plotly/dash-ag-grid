@@ -74,6 +74,7 @@ DashAgGrid.defaultProps = {
     rowModelType: 'clientSide',
     dashGridOptions: {},
     filterModel: {},
+    paginationGoTo: null,
 };
 DashAgGrid.propTypes = {
     /********************************
@@ -377,6 +378,21 @@ DashAgGrid.propTypes = {
          */
         failCallback: PropTypes.func,
     }),
+
+    /**
+     * If in pagination mode, this will be populated with info from the pagination API:
+     * https://www.ag-grid.com/react-data-grid/grid-api/#reference-pagination
+     */
+    paginationInfo: PropTypes.object,
+
+    /**
+     * If in pagination mode, this will navigate to: ['next', 'previous', 'last', 'first', number]
+     * https://www.ag-grid.com/react-data-grid/grid-api/#reference-pagination
+     */
+    paginationGoTo: PropTypes.oneOfType([
+        PropTypes.oneOf(['first', 'last', 'next', 'previous', null]),
+        PropTypes.number,
+    ]),
 
     /**
      * If filtering client-side rowModel, what the filter model is.
