@@ -108,7 +108,7 @@ def test_cd002_column_drag(dash_duo):
     )
 
     @app.callback(Output('bottomGrid', 'dashGridOptions'), Output('topGrid', 'dashGridOptions'),
-                  Input('link', 'n_clicks'))
+                  Input('bottomGrid', 'gridReady'))
     def alignGrid(n):
         if n:
             return {'alignedGrids': 'topGrid'}, {'alignedGrids': 'bottomGrid'}
@@ -125,8 +125,6 @@ def test_cd002_column_drag(dash_duo):
     grid.wait_for_viewport_cols(3)
     botGrid.wait_for_pinned_cols(0)
     botGrid.wait_for_viewport_cols(3)
-
-    dash_duo.find_element('#link').click()
 
     grid.drag_col(2, 0)  # last column first but not pinned
 

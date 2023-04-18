@@ -66,42 +66,7 @@ const xssMessage = (context) => {
 
 const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
 
-function findReact(dom, traverseUp = 0) {
-    const key = Object.keys(dom).find((key) => {
-        return (
-            key.startsWith('__reactFiber$') || // react 17+
-            key.startsWith('__reactInternalInstance$')
-        ); // react <17
-    });
-    const domFiber = dom[key];
-    if (domFiber === null) {
-        return null;
-    }
-
-    // react <16
-    if (domFiber._currentElement) {
-        let compFiber = domFiber._currentElement._owner;
-        for (let i = 0; i < traverseUp; i++) {
-            compFiber = compFiber._currentElement._owner;
-        }
-        return compFiber._instance;
-    }
-
-    // react 16+
-    const getCompFiber = (fiber) => {
-        // return fiber._debugOwner; // this also works, but is __DEV__ only
-        let parentFiber = fiber.return;
-        while (typeof parentFiber.type === 'string') {
-            parentFiber = parentFiber.return;
-        }
-        return parentFiber;
-    };
-    let compFiber = getCompFiber(domFiber);
-    for (let i = 0; i < traverseUp; i++) {
-        compFiber = getCompFiber(compFiber);
-    }
-    return compFiber.stateNode;
-}
+const agGridRefs = {};
 
 export default class DashAgGrid extends Component {
     constructor(props) {
@@ -375,12 +340,16 @@ export default class DashAgGrid extends Component {
                 return this.convertMaybeFunctionNoParams(value);
             }
             if (target === 'alignedGrids') {
-                return (
-                    document.getElementById(value) && [
-                        findReact(document.getElementById(value)).reference
-                            .current,
-                    ]
-                );
+                if (Array.isArray(value)) {
+                    const aligning = [];
+                    value.map((t) => {
+                        if (agGridRefs[t]) {
+                            aligning.push(agGridRefs[t].current);
+                        }
+                    });
+                    return aligning;
+                }
+                return agGridRefs[value] && [agGridRefs[value].current];
             }
 
             return value;
@@ -452,6 +421,13 @@ export default class DashAgGrid extends Component {
 
     componentDidMount() {
         this.setState({mounted: true});
+    }
+
+    componentWillUnmount() {
+        this.setState({mounted: false, gridApi: null, gridColumnApi: null});
+        if (this.props.id) {
+            delete agGridRefs[this.props.id];
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -656,6 +632,8 @@ export default class DashAgGrid extends Component {
             this.deleteSelectedRows(false);
             propsToSet.deleteSelectedRows = false;
         }
+
+        propsToSet.gridReady = true;
 
         if (!isEmpty(propsToSet)) {
             setProps(propsToSet);
@@ -1055,6 +1033,10 @@ export default class DashAgGrid extends Component {
 
         if (rowTransaction) {
             this.rowTransaction(rowTransaction);
+        }
+
+        if (id) {
+            agGridRefs[id] = this.reference;
         }
 
         return (

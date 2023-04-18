@@ -75,6 +75,7 @@ DashAgGrid.defaultProps = {
     dashGridOptions: {},
     filterModel: {},
     paginationGoTo: null,
+    gridReady: false,
 };
 DashAgGrid.propTypes = {
     /********************************
@@ -85,6 +86,11 @@ DashAgGrid.propTypes = {
      * The ID used to identify this component in Dash callbacks.
      */
     id: PropTypes.string,
+
+    /**
+     * Initial prop is false, will be updated to True once the grid is ready.
+     */
+    gridReady: PropTypes.bool,
 
     /**
      * Dash-assigned callback that gets fired when the input changes
