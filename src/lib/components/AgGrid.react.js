@@ -318,7 +318,8 @@ DashAgGrid.propTypes = {
          */
         keys: PropTypes.arrayOf(PropTypes.string),
         /**
-         * for autoSize: should we skip header contents and only consider cell contents?
+         * for autoSize: If skipHeader=True, the header won't be included when calculating the column widths.
+         * default: False
          */
         skipHeader: PropTypes.bool,
     }),
