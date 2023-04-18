@@ -43,17 +43,57 @@ columnDefs = [
     { "field": "address", "resizable": False },
 ]
 ```
+## Column Size
+
+To set the column size, use the `columnSize` prop, along with `columnSizeOptions` to customize the `columnSize` operation.
+
+`columnSize` takes one of the following:
+ - `"autoSize"`:  changes the column sizes to fit the column's content. This calls AG Grid functions - `autoSizeColumns` or `autoSizeAllColumns`  
+
+ - `"sizeToFit"`: changes the column sizes to fit the width of the grid.  This calls the AG Grid function `sizeColumnsToFit`  
+
+ - `"responsiveSizeToFit"`:  changes the column sizes to fit the width of the grid and also resizing upon grid or column changes. This calls the AG Grid function `sizeColumnsToFit`  
+
+ - `None`:  bypasses the altering of the column widths  
 
 
-## Size Columns to Fit
+ 
+`columnSizeOptions` (dict): Options to customize the `columnSize` operation. `columnSizeOptions` is a dict with keys:
+ - `columnLimits` (list of dicts; optional): for (responsive)sizeToFit: per-column minimum and maximum width, in pixels.  `columnLimits` is a list of dicts with keys:
+     - `key` (string; optional)
+     - `maxWidth` (number; optional)
+     - `minWidth` (number; optional)
 
-The `columnSize="sizeToFit"` prop makes the currently visible columns fit the screen. The columns will scale (growing or shrinking) to fit the available width.
+ - `defaultMaxWidth` (number; optional): for (responsive)sizeToFit: default maximum width, in pixels, if not overridden by `columnLimits`.
 
-If you don't want a particular column to be included in the auto resize, then set the width of that column in the column definition.
+ - `defaultMinWidth` (number; optional): for (responsive)sizeToFit: default minimum width, in pixels, if not overridden by `columnLimits`.
+
+ - `keys` (list of strings; optional): for `autoSize`: list of column keys to auto size. If omitted, all columns will be auto sized.
+
+ - `skipHeader` (boolean; optional): for `autoSize`: If `skipHeader=True`, the header won't be included when calculating the column widths.
+
+
+Note that `columnSize` and `columnSizeOptions` are dash props only.  You won't find these props defined the same way in the AG Grid docs.
+
+
+### Responsive Size  to Fit
+
+Setting `columnSize="responsiveSizeToFit"` makes the currently visible columns fit the screen. The columns will scale (growing or shrinking) to fit the available width.
+
+If you don't want a particular column to be included in the auto resize, then set the column definition `suppressSizeToFit=True`. This is helpful if, for example, you want the first column to remain fixed width, but all other columns to fill the width of the grid.
 
 Column default widths, rather than current widths, are used while calculating the new widths. This insures the result is deterministic and not depend on any Column resizing the user may have manually done.
 
-## Auto-Size Columns
+### Size to Fit
+
+Setting `columnSize="sizeToFit"` makes the columns fit the width of the grid. However, unlike "responsiveSizeToFit",  this
+ is only done once when the grid is rendered.  If the browser window changes, or the user changes the column width, the
+  columns will not be continually resized. 
+
+If you don't want a particular column to be included in the auto resize, then set the column definition `suppressSizeToFit=True`.
+
+
+### Auto-Size Columns
 
 Just like Excel, each column can be 'auto resized' by double clicking the right side of the header rather than dragging it. When you do this, the grid will work out the best width to fit the contents of the cells in the column.
 
@@ -67,16 +107,34 @@ Column Virtualisation is the technique the grid uses to render large amounts of 
 To get around this, you can turn off column virtualisation by setting grid property `suppressColumnVirtualisation=True`. The choice is yours, whether you want column virtualisation working OR auto-size working using off-screen columns.
 By default the grid will also resize the column to fit the header. If you do not want the headers to be included in the autosize calculation, set the grid property `skipHeaderOnAutoSize=True`.
 
-## Autosize Column API
-The `columnSize="autoSize"` prop auto-sizes  all columns based on its contents.
+### Autosize 
+Setting `columnSize="autoSize"` will auto-size  all columns based on its contents.
 
-Autosizing columns can also be done using the following column API methods. If `skipHeader=True`, the header won't be included when calculating the column widths.
+By default the grid will also resize the column to fit the header. If you do not want the headers to be included in the autosize calculation, set the grid property:
+```
+columnSizeOptions={"skipHeader":True}
+```
 
 Column Groups are never considered when calculating the column widths.
 
+### Example:  Column Size
 
-The Example below shows how to make columns adjust to fit either the screen or their contents.
+The Example below shows how to make columns adjust to fit either the screen or their contents.  With each option, try
+ resizing the columns (by dragging the column header) and resize the browser width to see how the grid responds.
+
 """
+
+text1a = """
+### Example: `columnSize="sizeToFit"`
+
+Note the following:
+
+- The athlete column has `suppressSizeToFit` and is not resized.
+- The age column has `maxWidth`: 50, which takes precedence over the functions `defaultMinWidth`: 100
+- The country column has `maxWidth`: 300, which takes precedence over the functions minWidth: 900 defined for the country column.
+
+"""
+
 
 
 text2 = """
@@ -129,6 +187,8 @@ layout = html.Div(
     [
         make_md(text1),
         example_app("examples.columns.column_sizing1", make_layout=make_tabs),
+        make_md(text1a),
+        example_app("examples.columns.column_sizing1a", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.columns.column_sizing2", make_layout=make_tabs),
         make_md(text3),
