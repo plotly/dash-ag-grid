@@ -17,7 +17,7 @@ data = {
     "ticker": ["AAPL", "MSFT", "AMZN", "GOOGL"],
     "company": ["Apple", "Microsoft", "Amazon", "Alphabet"],
     "price": [154.99, 268.65, 100.47, 96.75],
-    "buy": [{"n_clicks": 0} for i in range(4)],
+    "buy": ["Buy" for i in range(4)],
 }
 df = pd.DataFrame(data)
 
@@ -37,7 +37,7 @@ columnDefs = [
     {
         "field": "buy",
         "cellRenderer": "Button",
-        "cellRendererParams": {"className": "btn btn-success", "children": "Buy"},
+        "cellRendererParams": {"className": "btn btn-success"},
     },
 ]
 
@@ -55,6 +55,7 @@ grid = dag.AgGrid(
     rowData=df.to_dict("records"),
     columnSize="autoSizeAll",
     defaultColDef=defaultColDef,
+    dashGridOptions={"rowHeight": 48},
 )
 
 
@@ -89,40 +90,20 @@ Put the following in the dashAgGridComponentFunctions.js file in the assets fold
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
-
 dagcomponentfuncs.Button = function (props) {
     const {setData, data} = props;
-
-    if (!props.value) {
-        return React.createElement('button');
-    }
 
     function onClick() {
         setData();
     }
-
     return React.createElement(
-        'div',
+        'button',
         {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
+            onClick: onClick,
+            className: props.className,
         },
-        React.createElement(
-            'button',
-            {
-                onClick: onClick,                
-                className: props.className,
-            },
-            props.children
-        )
+        props.value
     );
 };
-
 
 """

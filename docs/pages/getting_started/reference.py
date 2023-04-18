@@ -7,7 +7,7 @@ register_page(
     __name__, order=2, description=app_description, title="Dash AG Grid - Reference")
 
 text1 = """
-# Dash AG Grid Reference
+# Reference
 
 AG Grid is highly customizable and has hundreds of props.  Only a subset of these props are defined in the dash-ag-grid
  component. The props defined in dash-ag-grid can be found in the reference section below.  These props are all
@@ -83,6 +83,7 @@ The following props can be used to trigger a Dash Callback:
 - deleteSelectedRows
 - deselectAll
 - exportDataAsCsv
+- filterModel
 - getDetailRequest
 - getDetailResponse
 - getRowsRequest
@@ -208,7 +209,20 @@ The following grid level props props will take functions as inputs.  If the prop
     'getRowStyle',
     'getRowClass',
     'rowClassRules',
+    'cellClassRules,
     'isFullWidthRow',
+    
+    // templates
+    'overlayLoadingTemplate',
+    'overlayNoRowsTemplate',
+    
+    // other
+    'frameworkComponents',
+    'getRowId',
+    'getDataPath',
+    'detailCellRendererParams',
+    'detailGridOptions',
+    
 ```
 - __Column Level Prop__  
 
@@ -224,6 +238,8 @@ The following column level props will take functions as inputs.  If the prop doe
     'filterValueGetter',
     'headerValueGetter',
     'template',
+    'cellClassRules',
+    'rowClassRules',
 
 
      // Columns
@@ -291,9 +307,23 @@ The following column level props will take functions as inputs.  If the prop doe
     'showColumnMenu',
     'progressSort',
     'setSort',
+    'headerComponentParams',    
+    
 
     // Header Group Component Parameters
     'setExpanded',
+    'headerGroupComponentsParams',
+    
+    // In filterParams or filterParams.filterOptions[]
+    'filterPlaceholder',
+    'predicate',
+    'filterParams',
+    'filterOptions',
+    
+    // other params
+    'cellRendererParams',
+    'cellEditorParams',
+    'children',
 
 ```
 

@@ -48,22 +48,47 @@ const columnDefs = [
 
 """
 
-
 text3 = """
->
-> Cell Editing can also be performed via Cell Editor Components; please see:
-> - <dccLink href='/editing/provided-cell-editors' children='Provided cell editors' />  to see select (dropdown) editors, and lage text (textarea) editors
->
+
+` `  
+` `  
+
+### Dynamic Parameters
+Parameters for cell editors can be dynamic to allow different selections based on what cell is being edited. For
+ example, you might have a 'City' column that has values based on the 'Country' column. To do this, provide
+  a function that returns parameters for the property `cellEditorParams`.
+ 
+This function is defined in the `dashAgGridFunctions.js` file in the `assets` folder: 
+```
+
+var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};
+
+dagfuncs.dynamicOptions = function(params) {
+    const selectedCountry = params.data.country;
+    if (selectedCountry === 'United States') {
+        return {
+            values: ['Boston', 'Chicago', 'San Francisco'],
+        };
+    } else {
+        return {
+            values: ['Montreal', 'Vancouver', 'Calgary']
+        };
+    }
+}
+```  
+
+
+#### Example: Conditional options in dropdown
+
 """
 
 
-
-text2 = """
+text4 = """
 
 ` `  
 ` `  
 
-#### Datepicker Example
+### Datepicker Example
 
 The example below demonstrates how to use a custom date picker as a cell editor. The 'Date' column uses a Component
  cell editor that allows you to pick a date using jQuery UI Datepicker.
@@ -79,13 +104,23 @@ Notice the following:
 """
 
 
+text5 = """
+>
+> Cell Editing can also be performed via Cell Editor Components; please see:
+> - <dccLink href='/editing/provided-cell-editors' children='Provided cell editors' />  to see select (dropdown) editors, and lage text (textarea) editors
+>
+"""
+
+
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.editing.cell_editors", make_layout=make_tabs),
-        make_md(text2),
-        example_app("examples.components.cell_editor_datepicker", make_layout=make_tabs),
         make_md(text3),
+        example_app("examples.editing.cell_editors_dynamic", make_layout=make_tabs),
+        make_md(text4),
+        example_app("examples.components.cell_editor_datepicker", make_layout=make_tabs),
+        make_md(text5),
 
         # up_next("text"),
     ],

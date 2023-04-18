@@ -32,6 +32,7 @@ columnDefs = [
         "field": "ticker",
         "cellRenderer": "StockLink",
         "tooltipField": "ticker",
+        "tooltipComponent": "CustomTooltip",
     },
     {"headerName": "Company", "field": "company", "filter": True},
     {
@@ -43,7 +44,6 @@ columnDefs = [
     },
     {
         "headerName": "Volume",
-        "type": "rightAligned",
         "field": "volume",
         "cellRenderer": "Tags",
         "editable": True,
@@ -69,7 +69,7 @@ defaultColDef = {
     "resizable": True,
     "sortable": True,
     "editable": False,
-    "tooltipComponent": "myCustomTooltip",
+    "minWidth": 125
 }
 
 
@@ -80,7 +80,7 @@ grid = dag.AgGrid(
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
     defaultColDef=defaultColDef,
-    dashGridOptions={"tooltipShowDelay": 100}
+    dashGridOptions={"tooltipShowDelay": 100, "rowHeight":48}
 )
 
 

@@ -67,7 +67,7 @@ dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
                 fontSize: props.fontSize
             },
         },
-        React.createElement('div', {}, props.message),
+        props.message
     );
 };
 
