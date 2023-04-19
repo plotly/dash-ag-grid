@@ -442,7 +442,6 @@ export default class DashAgGrid extends Component {
             agGridRefs[id] = this.reference.current;
             eventBus.dispatch(id);
         }
-        this.setState({mounted: true});
     }
 
     componentWillUnmount() {
@@ -460,7 +459,6 @@ export default class DashAgGrid extends Component {
             detailCellRendererParams,
             masterDetail,
             setProps,
-            columnSize,
             id,
         } = this.props;
 
@@ -495,14 +493,6 @@ export default class DashAgGrid extends Component {
             !this.selectionEventFired
         ) {
             this.setSelection(selectedRows);
-        }
-
-        if (
-            JSON.stringify(this.props.columnDefs) !==
-                JSON.stringify(prevProps.columnDefs) ||
-            prevProps.columnSize !== columnSize
-        ) {
-            this.updateColumnWidths();
         }
 
         // Reset selection event flag
@@ -626,6 +616,8 @@ export default class DashAgGrid extends Component {
             gridColumnApi: params.columnApi,
         });
 
+        this.updateColumnWidths();
+
         if (this.reference.current.props.pagination) {
             this.onPaginationChanged();
         }
@@ -684,8 +676,8 @@ export default class DashAgGrid extends Component {
         this.setSelection(selectedRows);
         // Hydrate virtualRowData
         this.onFilterChanged(true);
-
-        this.updateColumnWidths();
+        this.setState({mounted: true});
+        this.updateColumnState();
     }
 
     onCellClicked({value, column: {colId}, rowIndex, node}) {
@@ -727,6 +719,9 @@ export default class DashAgGrid extends Component {
         if (this.props.columnSize === 'responsiveSizeToFit') {
             this.updateColumnWidths();
         }
+        if (this.state.mounted) {
+            this.updateColumnState();
+        }
     }
 
     onGridSizeChanged() {
@@ -765,7 +760,9 @@ export default class DashAgGrid extends Component {
             if (columnSize !== 'responsiveSizeToFit') {
                 setProps({columnSize: null});
             }
-            this.updateColumnState();
+            if (this.state.mounted) {
+                this.updateColumnState();
+            }
         }
     }
 
@@ -844,6 +841,7 @@ export default class DashAgGrid extends Component {
         }
         this.state.gridColumnApi.applyColumnState({
             state: this.props.columnState,
+            applyOrder: true,
         });
     }
 
@@ -942,17 +940,14 @@ export default class DashAgGrid extends Component {
             });
         }
     }
-
     // end event actions
 
     updateColumnState() {
-        if (!this.state.gridApi) {
+        if (!this.state.gridApi || !this.state.mounted) {
             return;
         }
         this.props.setProps({
-            columnState: JSON.parse(
-                JSON.stringify(this.state.gridColumnApi.getColumnState())
-            ),
+            columnState: this.state.gridColumnApi.getColumnState(),
             updateColumnState: false,
         });
     }
@@ -1008,9 +1003,9 @@ export default class DashAgGrid extends Component {
             csvExportParams,
             dashGridOptions,
             filterModel,
-            columnSize,
             columnState,
             paginationGoTo,
+            columnSize,
             ...restProps
         } = this.props;
 
@@ -1034,10 +1029,6 @@ export default class DashAgGrid extends Component {
 
         if (columnSize) {
             this.updateColumnWidths();
-        }
-
-        if (columnState) {
-            this.setColumnState();
         }
 
         if (resetColumnState) {
@@ -1075,7 +1066,6 @@ export default class DashAgGrid extends Component {
                 const addGrid = (id) => {
                     const strId = stringifyId(id);
                     eventBus.on(this.props.id, strId, () => {
-                        this.updateColumnState();
                         this.setState({
                             toggle: this.state.toggle
                                 ? !this.state.toggle
@@ -1094,6 +1084,10 @@ export default class DashAgGrid extends Component {
                     addGrid(dashGridOptions.alignedGrids);
                 }
             }
+        }
+
+        if (columnState) {
+            this.setColumnState();
         }
 
         return (

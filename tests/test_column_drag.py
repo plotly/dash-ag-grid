@@ -1,4 +1,4 @@
-from dash import Dash, html, Output, Input, no_update
+from dash import Dash, html, Output, Input, no_update, State
 from dash_ag_grid import AgGrid
 import plotly.express as px
 import pandas as pd
@@ -89,14 +89,7 @@ def test_cd002_column_drag(dash_duo):
         defaultColDef=defaultColDef,
         dashGridOptions={'alignedGrids': ['middleGrid', 'bottomGrid']}
     )
-    grid2 = AgGrid(
-        id="middleGrid",
-        columnDefs=columnDefs,
-        rowData=df.to_dict("records"),
-        columnSize="autoSize",
-        defaultColDef=defaultColDef,
-        dashGridOptions={'alignedGrids':'bottomGrid'}
-    )
+
     gridBot = AgGrid(
         id="bottomGrid",
         columnDefs=columnDefs,
@@ -117,8 +110,18 @@ def test_cd002_column_drag(dash_duo):
         style={"margin": 20},
     )
 
-    @app.callback(Output('hiding', 'children'), Input('link', 'n_clicks'))
-    def addGrid(n):
+    @app.callback(Output('hiding', 'children'), Input('link', 'n_clicks'),
+                  State('topGrid', 'columnState'))
+    def addGrid(n, s):
+        grid2 = AgGrid(
+            id="middleGrid",
+            columnDefs=columnDefs,
+            rowData=df.to_dict("records"),
+            columnSize="autoSize",
+            defaultColDef=defaultColDef,
+            dashGridOptions={'alignedGrids': 'bottomGrid'},
+            columnState = s
+        )
         if n:
             return grid2
         return no_update
@@ -161,10 +164,7 @@ def test_cd002_column_drag(dash_duo):
     grid.pin_col(1, 1)
     midGrid = utils.Grid(dash_duo, "middleGrid")
     grid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
-
-    # disabled for AG Grid issue
-    #midGrid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
-
+    midGrid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
     botGrid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
     grid.wait_for_pinned_cols(2)
     grid.wait_for_viewport_cols(1)
@@ -173,8 +173,8 @@ def test_cd002_column_drag(dash_duo):
     midGrid.wait_for_pinned_cols(2)
     midGrid.wait_for_viewport_cols(1)
 
-    # pin first non-pinned column by dragging it to its own left edge (adjust when AG Grid issue is fixed)
-    midGrid.pin_col(1, 1)
+    # pin first non-pinned column by dragging it to its own left edge
+    midGrid.pin_col(2, 2)
 
     grid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
     botGrid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
