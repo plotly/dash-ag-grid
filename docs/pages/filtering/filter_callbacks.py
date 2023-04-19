@@ -6,7 +6,7 @@ from utils.utils import app_description
 
 register_page(
     __name__,
-    order=6,
+    order=2,
     description=app_description,
     title="Dash AG Grid Filtering with Dash Callbacks",
 )
@@ -53,11 +53,24 @@ This example demonstrates
 """
 
 
+text3 = """
+` `
+` `
+### Example 3:  Filtered and sorted data
+
+This example demonstrates using the `virtualRowData` in a callback to access filtered and sorted data in a callback..
+Note - Use `rowData` to get the original data.
+
+"""
+
+
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.filtering.filter_model1", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.filtering.filter_model2", make_layout=make_tabs),
+        make_md(text3),
+        example_app("examples.filtering.virtualrowdata", make_layout=make_tabs),
     ],
 )
