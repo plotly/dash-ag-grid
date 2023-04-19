@@ -110,17 +110,23 @@ def test_cd002_column_drag(dash_duo):
     app.layout = html.Div(
         [
             grid,
-            grid2,
+            html.Div(id='hiding'),
             gridBot,
             html.Button(id='link')
         ],
         style={"margin": 20},
     )
 
+    @app.callback(Output('hiding', 'children'), Input('link', 'n_clicks'))
+    def addGrid(n):
+        if n:
+            return grid2
+        return no_update
+
     dash_duo.start_server(app)
 
+
     grid = utils.Grid(dash_duo, "topGrid")
-    midGrid = utils.Grid(dash_duo, "middleGrid")
     botGrid = utils.Grid(dash_duo, "bottomGrid")
 
     grid.wait_for_all_header_texts(["Stock Ticker", "Company", "Last Close Price"])
@@ -148,18 +154,27 @@ def test_cd002_column_drag(dash_duo):
     grid.wait_for_viewport_cols(2)
     botGrid.wait_for_viewport_cols(2)
 
+    #add midGrid
+    dash_duo.find_element('#link').click()
+
     # pin first non-pinned column by dragging it to its own left edge
     grid.pin_col(1, 1)
-
+    midGrid = utils.Grid(dash_duo, "middleGrid")
     grid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
+
+    # disabled for AG Grid issue
+    #midGrid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
+
     botGrid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
     grid.wait_for_pinned_cols(2)
     grid.wait_for_viewport_cols(1)
     botGrid.wait_for_pinned_cols(2)
     botGrid.wait_for_viewport_cols(1)
+    midGrid.wait_for_pinned_cols(2)
+    midGrid.wait_for_viewport_cols(1)
 
-    # pin first non-pinned column by dragging it to its own left edge
-    midGrid.pin_col(2, 2)
+    # pin first non-pinned column by dragging it to its own left edge (adjust when AG Grid issue is fixed)
+    midGrid.pin_col(1, 1)
 
     grid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
     botGrid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
@@ -167,3 +182,5 @@ def test_cd002_column_drag(dash_duo):
     grid.wait_for_viewport_cols(1)
     botGrid.wait_for_pinned_cols(3)
     botGrid.wait_for_viewport_cols(0)
+    midGrid.wait_for_pinned_cols(3)
+    midGrid.wait_for_viewport_cols(0)

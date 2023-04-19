@@ -68,6 +68,26 @@ const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
 
 const agGridRefs = {};
 
+const eventBus = {
+    listeners: {},
+    on(id, data, callback) {
+        if (!(id in eventBus.listeners)) {
+            eventBus.listeners[id] = {};
+        }
+        eventBus.listeners[id][data] = callback;
+    },
+    dispatch(data) {
+        for (const id in eventBus.listeners) {
+            if (data in eventBus.listeners[id]) {
+                eventBus.listeners[id][data]();
+            }
+        }
+    },
+    remove(id) {
+        delete eventBus.listeners[id];
+    },
+};
+
 function stringifyId(id) {
     if (typeof id !== 'object') {
         return id;
@@ -419,7 +439,8 @@ export default class DashAgGrid extends Component {
     componentDidMount() {
         const {id} = this.props;
         if (id) {
-            agGridRefs[stringifyId(id)] = this.reference.current;
+            agGridRefs[id] = this.reference.current;
+            eventBus.dispatch(id);
         }
         this.setState({mounted: true});
     }
@@ -427,7 +448,8 @@ export default class DashAgGrid extends Component {
     componentWillUnmount() {
         this.setState({mounted: false, gridApi: null, gridColumnApi: null});
         if (this.props.id) {
-            delete agGridRefs[stringifyId(this.props.id)];
+            delete agGridRefs[this.props.id];
+            eventBus.remove(this.props.id);
         }
     }
 
@@ -444,10 +466,12 @@ export default class DashAgGrid extends Component {
 
         if (id !== prevProps.id) {
             if (id) {
-                agGridRefs[stringifyId(id)] = this.reference.current;
+                agGridRefs[id] = this.reference.current;
+                eventBus.dispatch(id);
             }
             if (prevProps.id) {
-                delete agGridRefs[stringifyId(prevProps.id)];
+                delete agGridRefs[prevProps.id];
+                eventBus.remove(prevProps.id);
             }
         }
 
@@ -1050,11 +1074,20 @@ export default class DashAgGrid extends Component {
                 alignedGrids = [];
                 const addGrid = (id) => {
                     const strId = stringifyId(id);
+                    eventBus.on(this.props.id, strId, () => {
+                        this.updateColumnState();
+                        this.setState({
+                            toggle: this.state.toggle
+                                ? !this.state.toggle
+                                : false,
+                        });
+                    });
                     if (!agGridRefs[strId]) {
                         agGridRefs[strId] = {api: null};
                     }
                     alignedGrids.push(agGridRefs[strId]);
                 };
+                eventBus.remove(this.props.id);
                 if (Array.isArray(dashGridOptions.alignedGrids)) {
                     dashGridOptions.alignedGrids.map(addGrid);
                 } else {
