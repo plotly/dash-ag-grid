@@ -116,7 +116,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - fixed `columnSize` to update upon interaction
 
 - [#145](https://github.com/plotly/dash-ag-grid/pull/145)
-  - fixed `onRowDrag` to trigger `virtualRowData` update
+  - fixed `onRowDragEnd` to trigger `virtualRowData` update
   - fixed all `virtualRowData` updates to take into account the sorting
 
 ## [1.3.2] - 2023-01-13
