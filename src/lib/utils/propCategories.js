@@ -295,4 +295,5 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'getDetailRequest',
     'getDetailResponse',
     'dangerously_allow_code',
+    'alignedGrids',
 ];

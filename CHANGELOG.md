@@ -67,11 +67,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - added ability to push `columnState` back to grid and replay the settings
  
 - [#145](https://github.com/plotly/dash-ag-grid/pull/145)
-  - added singular support for `alignedGrids`
+  - added support for `alignedGrids`
   - added ability for functions with `tooltipComponentParams`
   - added `paginationInfo` for read-only info from the grid's pagination
   - added `paginationGoTo` to navigate to different pages
-  - added `gridReady` for easier determination of `gridApi` availability
 
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)

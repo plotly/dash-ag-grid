@@ -339,18 +339,6 @@ export default class DashAgGrid extends Component {
             if (GRID_MAYBE_FUNCTIONS_NO_PARAMS[target]) {
                 return this.convertMaybeFunctionNoParams(value);
             }
-            if (target === 'alignedGrids') {
-                if (Array.isArray(value)) {
-                    const aligning = [];
-                    value.map((t) => {
-                        if (agGridRefs[t]) {
-                            aligning.push(agGridRefs[t].current);
-                        }
-                    });
-                    return aligning;
-                }
-                return agGridRefs[value] && [agGridRefs[value].current];
-            }
 
             return value;
         }
@@ -420,6 +408,10 @@ export default class DashAgGrid extends Component {
     }
 
     componentDidMount() {
+        const {id} = this.props;
+        if (id) {
+            agGridRefs[id] = this.reference.current;
+        }
         this.setState({mounted: true});
     }
 
@@ -632,8 +624,6 @@ export default class DashAgGrid extends Component {
             this.deleteSelectedRows(false);
             propsToSet.deleteSelectedRows = false;
         }
-
-        propsToSet.gridReady = true;
 
         if (!isEmpty(propsToSet)) {
             setProps(propsToSet);
@@ -1035,14 +1025,27 @@ export default class DashAgGrid extends Component {
             this.rowTransaction(rowTransaction);
         }
 
-        if (id) {
-            agGridRefs[id] = this.reference;
+        let alignedGrids;
+        if (dashGridOptions.alignedGrids) {
+            alignedGrids = [];
+            const addGrid = (id) => {
+                if (!agGridRefs[id]) {
+                    agGridRefs[id] = {api: null};
+                }
+                alignedGrids.push(agGridRefs[id]);
+            };
+            if (Array.isArray(dashGridOptions.alignedGrids)) {
+                dashGridOptions.alignedGrids.map(addGrid);
+            } else {
+                addGrid(dashGridOptions.alignedGrids);
+            }
         }
 
         return (
             <div id={id} className={className} style={style}>
                 <AgGridReact
                     ref={this.reference}
+                    alignedGrids={alignedGrids}
                     onGridReady={this.onGridReady}
                     onSelectionChanged={this.onSelectionChanged}
                     onCellClicked={this.onCellClicked}

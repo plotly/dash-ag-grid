@@ -87,6 +87,15 @@ def test_cd002_column_drag(dash_duo):
         rowData=df.to_dict("records"),
         columnSize="autoSize",
         defaultColDef=defaultColDef,
+        dashGridOptions={'alignedGrids': ['middleGrid', 'bottomGrid']}
+    )
+    grid2 = AgGrid(
+        id="middleGrid",
+        columnDefs=columnDefs,
+        rowData=df.to_dict("records"),
+        columnSize="autoSize",
+        defaultColDef=defaultColDef,
+        dashGridOptions={'alignedGrids':'bottomGrid'}
     )
     gridBot = AgGrid(
         id="bottomGrid",
@@ -101,22 +110,17 @@ def test_cd002_column_drag(dash_duo):
     app.layout = html.Div(
         [
             grid,
+            grid2,
             gridBot,
             html.Button(id='link')
         ],
         style={"margin": 20},
     )
 
-    @app.callback(Output('bottomGrid', 'dashGridOptions'), Output('topGrid', 'dashGridOptions'),
-                  Input('bottomGrid', 'gridReady'))
-    def alignGrid(n):
-        if n:
-            return {'alignedGrids': 'topGrid'}, {'alignedGrids': 'bottomGrid'}
-        return no_update
-
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "topGrid")
+    midGrid = utils.Grid(dash_duo, "middleGrid")
     botGrid = utils.Grid(dash_duo, "bottomGrid")
 
     grid.wait_for_all_header_texts(["Stock Ticker", "Company", "Last Close Price"])
@@ -153,3 +157,13 @@ def test_cd002_column_drag(dash_duo):
     grid.wait_for_viewport_cols(1)
     botGrid.wait_for_pinned_cols(2)
     botGrid.wait_for_viewport_cols(1)
+
+    # pin first non-pinned column by dragging it to its own left edge
+    midGrid.pin_col(2, 2)
+
+    grid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
+    botGrid.wait_for_all_header_texts(["Stock Ticker", "Last Close Price", "Company"])
+    grid.wait_for_pinned_cols(2)
+    grid.wait_for_viewport_cols(1)
+    botGrid.wait_for_pinned_cols(3)
+    botGrid.wait_for_viewport_cols(0)
