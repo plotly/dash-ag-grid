@@ -68,6 +68,17 @@ const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
 
 const agGridRefs = {};
 
+function stringifyId(id) {
+    if (typeof id !== 'object') {
+        return id;
+    }
+    const stringifyVal = (v) => (v && v.wild) || JSON.stringify(v);
+    const parts = Object.keys(id)
+        .sort()
+        .map((k) => JSON.stringify(k) + ':' + stringifyVal(id[k]));
+    return '{' + parts.join(',') + '}';
+}
+
 export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
@@ -356,7 +367,7 @@ export default class DashAgGrid extends Component {
         const propsToSet = {filterModel};
         if (rowModelType === 'clientSide') {
             const virtualRowData = [];
-            this.state.gridApi.forEachNodeAfterFilter((node) => {
+            this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
                 virtualRowData.push(node.data);
             });
             propsToSet.virtualRowData = virtualRowData;
@@ -378,7 +389,7 @@ export default class DashAgGrid extends Component {
         if (rowData) {
             const virtualRowData = [];
             if (rowModelType === 'clientSide') {
-                this.state.gridApi.forEachNodeAfterFilter((node) => {
+                this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
                     virtualRowData.push(node.data);
                 });
             }
@@ -408,7 +419,7 @@ export default class DashAgGrid extends Component {
     componentDidMount() {
         const {id} = this.props;
         if (id) {
-            agGridRefs[id] = this.reference.current;
+            agGridRefs[stringifyId(id)] = this.reference.current;
         }
         this.setState({mounted: true});
     }
@@ -416,7 +427,7 @@ export default class DashAgGrid extends Component {
     componentWillUnmount() {
         this.setState({mounted: false, gridApi: null, gridColumnApi: null});
         if (this.props.id) {
-            delete agGridRefs[this.props.id];
+            delete agGridRefs[stringifyId(this.props.id)];
         }
     }
 
@@ -428,7 +439,17 @@ export default class DashAgGrid extends Component {
             masterDetail,
             setProps,
             columnSize,
+            id,
         } = this.props;
+
+        if (id !== prevProps.id) {
+            if (id) {
+                agGridRefs[stringifyId(id)] = this.reference.current;
+            }
+            if (prevProps.id) {
+                delete agGridRefs[stringifyId(prevProps.id)];
+            }
+        }
 
         if (this.isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = this.props.getRowsResponse;
@@ -476,7 +497,7 @@ export default class DashAgGrid extends Component {
         if (gridApi) {
             if (rowData && rowModelType === 'clientSide') {
                 const virtualRowData = [];
-                gridApi.forEachNodeAfterFilter((node) => {
+                gridApi.forEachNodeAfterFilterAndSort((node) => {
                     virtualRowData.push(node.data);
                 });
 
@@ -660,7 +681,7 @@ export default class DashAgGrid extends Component {
     }) {
         const virtualRowData = [];
         if (this.props.rowModelType === 'clientSide' && this.state.gridApi) {
-            this.state.gridApi.forEachNodeAfterFilter((node) => {
+            this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
                 virtualRowData.push(node.data);
             });
         }
@@ -1028,10 +1049,11 @@ export default class DashAgGrid extends Component {
             if ('alignedGrids' in dashGridOptions) {
                 alignedGrids = [];
                 const addGrid = (id) => {
-                    if (!agGridRefs[id]) {
-                        agGridRefs[id] = {api: null};
+                    const strId = stringifyId(id);
+                    if (!agGridRefs[strId]) {
+                        agGridRefs[strId] = {api: null};
                     }
-                    alignedGrids.push(agGridRefs[id]);
+                    alignedGrids.push(agGridRefs[strId]);
                 };
                 if (Array.isArray(dashGridOptions.alignedGrids)) {
                     dashGridOptions.alignedGrids.map(addGrid);
@@ -1052,6 +1074,7 @@ export default class DashAgGrid extends Component {
                     onCellValueChanged={this.onCellValueChanged}
                     onFilterChanged={this.onFilterChanged}
                     onSortChanged={this.onSortChanged}
+                    onRowDragEnd={this.onSortChanged}
                     onRowDataUpdated={this.onRowDataUpdated}
                     onRowGroupOpened={this.onRowGroupOpened}
                     onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}

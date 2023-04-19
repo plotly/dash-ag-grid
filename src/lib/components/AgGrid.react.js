@@ -383,7 +383,13 @@ DashAgGrid.propTypes = {
      * If in pagination mode, this will be populated with info from the pagination API:
      * https://www.ag-grid.com/react-data-grid/grid-api/#reference-pagination
      */
-    paginationInfo: PropTypes.object,
+    paginationInfo: PropTypes.exact({
+        isLastPageFound: PropTypes.bool,
+        pageSize: PropTypes.number,
+        currentPage: PropTypes.number,
+        totalPages: PropTypes.number,
+        rowCount: PropTypes.number,
+    }),
 
     /**
      * If in pagination mode, this will navigate to: ['next', 'previous', 'last', 'first', number]
