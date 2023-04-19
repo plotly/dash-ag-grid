@@ -1026,18 +1026,20 @@ export default class DashAgGrid extends Component {
         }
 
         let alignedGrids;
-        if (dashGridOptions.alignedGrids) {
-            alignedGrids = [];
-            const addGrid = (id) => {
-                if (!agGridRefs[id]) {
-                    agGridRefs[id] = {api: null};
+        if (dashGridOptions) {
+            if ('alignedGrids' in dashGridOptions) {
+                alignedGrids = [];
+                const addGrid = (id) => {
+                    if (!agGridRefs[id]) {
+                        agGridRefs[id] = {api: null};
+                    }
+                    alignedGrids.push(agGridRefs[id]);
+                };
+                if (Array.isArray(dashGridOptions.alignedGrids)) {
+                    dashGridOptions.alignedGrids.map(addGrid);
+                } else {
+                    addGrid(dashGridOptions.alignedGrids);
                 }
-                alignedGrids.push(agGridRefs[id]);
-            };
-            if (Array.isArray(dashGridOptions.alignedGrids)) {
-                dashGridOptions.alignedGrids.map(addGrid);
-            } else {
-                addGrid(dashGridOptions.alignedGrids);
             }
         }
 
