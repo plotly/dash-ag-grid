@@ -138,13 +138,11 @@ export default class DashAgGrid extends Component {
         if (gridApi) {
             setProps({
                 paginationInfo: {
-                    paginationIsLastPageFound:
-                        gridApi.paginationIsLastPageFound(),
-                    paginationGetPageSize: gridApi.paginationGetPageSize(),
-                    paginationGetCurrentPage:
-                        gridApi.paginationGetCurrentPage(),
-                    paginationGetTotalPages: gridApi.paginationGetTotalPages(),
-                    paginationGetRowCount: gridApi.paginationGetRowCount(),
+                    isLastPageFound: gridApi.paginationIsLastPageFound(),
+                    pageSize: gridApi.paginationGetPageSize(),
+                    currentPage: gridApi.paginationGetCurrentPage(),
+                    totalPages: gridApi.paginationGetTotalPages(),
+                    rowCount: gridApi.paginationGetRowCount(),
                 },
             });
         }
