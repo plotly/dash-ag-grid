@@ -75,7 +75,6 @@ DashAgGrid.defaultProps = {
     dashGridOptions: {},
     filterModel: {},
     paginationGoTo: null,
-    gridReady: false,
 };
 DashAgGrid.propTypes = {
     /********************************
