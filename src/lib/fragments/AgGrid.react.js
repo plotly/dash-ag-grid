@@ -432,7 +432,9 @@ export default class DashAgGrid extends Component {
 
             propsToSet.virtualRowData = virtualRowData;
         }
-        propsToSet.columnState = this.state.gridColumnApi.getColumnState();
+        propsToSet.columnState = JSON.parse(
+            JSON.stringify(this.state.gridColumnApi.getColumnState())
+        );
         setProps(propsToSet);
     }
 
@@ -947,7 +949,9 @@ export default class DashAgGrid extends Component {
             return;
         }
         this.props.setProps({
-            columnState: this.state.gridColumnApi.getColumnState(),
+            columnState: JSON.parse(
+                JSON.stringify(this.state.gridColumnApi.getColumnState())
+            ),
             updateColumnState: false,
         });
     }
