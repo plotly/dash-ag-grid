@@ -15,7 +15,7 @@ export default class DashAgGrid extends Component {
 
         this.state = {
             gridApi: null,
-            columnApi: null,
+            gridColumnApi: null,
             openGroups: new Set(),
             filterModel: {},
         };

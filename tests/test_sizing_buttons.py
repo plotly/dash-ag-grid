@@ -373,7 +373,7 @@ def test_sb004_sizing_buttons(dash_duo):
         if x != 'responsiveSizeToFit':
             until(lambda: oldValue != dash_duo.find_element('#columnState').get_attribute('innerText'), timeout=3)
         oldValue = dash_duo.find_element('#columnState').text
-        dash_duo.driver.set_window_size(500, 500)
+        dash_duo.driver.set_window_size(400, 400)
         if x == 'responsiveSizeToFit':
             until(lambda: oldValue != dash_duo.find_element('#columnState').get_attribute('innerText'), timeout=3)
         else:

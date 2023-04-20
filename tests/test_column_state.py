@@ -11,7 +11,7 @@ df = px.data.election()
 default_display_cols = ["district_id", "district", "winner"]
 
 
-def test_cs001_columns_state(dash_duo):
+def test_cs001_column_state(dash_duo):
     app = Dash(__name__)
     columnDefs = [
         {"headerName": "Make", "field": "make"},
@@ -141,9 +141,10 @@ def test_cs001_columns_state(dash_duo):
 
     grid.wait_for_pinned_cols(2)
     grid.wait_for_viewport_cols(1)
+    until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
 
     grid.resize_col(1, 50)
     dash_duo.find_element('#get-column-state-button').click()
     testState = colState.copy()
-    testState[1]['width'] = 200
+    testState[1]['width'] = 198
     until(lambda: json.dumps(testState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)

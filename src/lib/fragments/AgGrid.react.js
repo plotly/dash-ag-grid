@@ -628,7 +628,7 @@ export default class DashAgGrid extends Component {
             this.state.gridApi.setFilterModel(filterModel);
         }
 
-        if (columnState) {
+        if (columnState && !this.state.mounted) {
             this.setColumnState();
         }
 
@@ -838,7 +838,7 @@ export default class DashAgGrid extends Component {
     }
 
     setColumnState() {
-        if (!this.state.gridApi) {
+        if (!this.state.gridApi || this.props.updateColumnState) {
             return;
         }
         this.state.gridColumnApi.applyColumnState({
@@ -948,6 +948,7 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi || !this.state.mounted) {
             return;
         }
+
         this.props.setProps({
             columnState: JSON.parse(
                 JSON.stringify(this.state.gridColumnApi.getColumnState())
@@ -1051,10 +1052,6 @@ export default class DashAgGrid extends Component {
             this.deselectAll();
         }
 
-        if (updateColumnState) {
-            this.updateColumnState();
-        }
-
         if (deleteSelectedRows) {
             this.deleteSelectedRows();
         }
@@ -1090,7 +1087,9 @@ export default class DashAgGrid extends Component {
             }
         }
 
-        if (columnState) {
+        if (updateColumnState) {
+            this.updateColumnState();
+        } else if (columnState && !this.props.loading_state.is_loading) {
             this.setColumnState();
         }
 
