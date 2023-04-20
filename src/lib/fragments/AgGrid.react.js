@@ -54,8 +54,11 @@ import * as d3TimeFormat from 'd3-time-format';
 import * as d3Array from 'd3-array';
 const d3 = {...d3Format, ...d3Time, ...d3TimeFormat, ...d3Array};
 
-// Rate-limit for resizing columns when table div is resized
+// Rate-limit for resizing columns when grid div is resized
 const RESIZE_DEBOUNCE_MS = 200;
+
+// Rate-limit for updating columnState when interacting with the grid
+const COL_RESIZE_DEBOUNCE_MS = 500;
 
 const xssMessage = (context) => {
     console.error(
@@ -728,7 +731,10 @@ export default class DashAgGrid extends Component {
     }
 
     onColumnResized() {
-        if (this.state.mounted) {
+        if (
+            this.state.mounted &&
+            this.props.columnSize !== 'responsiveSizeToFit'
+        ) {
             this.updateColumnState();
         }
     }
@@ -1114,8 +1120,14 @@ export default class DashAgGrid extends Component {
                     onRowDragEnd={this.onSortChanged}
                     onRowDataUpdated={this.onRowDataUpdated}
                     onRowGroupOpened={this.onRowGroupOpened}
-                    onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}
-                    onColumnResized={this.onColumnResized}
+                    onDisplayedColumnsChanged={debounce(
+                        this.onDisplayedColumnsChanged,
+                        COL_RESIZE_DEBOUNCE_MS
+                    )}
+                    onColumnResized={debounce(
+                        this.onColumnResized,
+                        COL_RESIZE_DEBOUNCE_MS
+                    )}
                     onAsyncTransactionsFlushed={this.onAsyncTransactionsFlushed}
                     onPaginationChanged={this.onPaginationChanged}
                     onGridSizeChanged={debounce(
