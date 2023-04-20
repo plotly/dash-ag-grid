@@ -1,5 +1,5 @@
 """
-Column State - Resetting columns with a callback.
+Column State - Resetting and loading column state with a callback.
 """
 
 import json
@@ -30,6 +30,51 @@ rowData = [
     {"make": "Porsche", "model": "Boxter", "price": 72000},
 ]
 
+colState = [
+    {
+        "colId": "make",
+        "width": 150,
+        "hide": False,
+        "pinned": "left",
+        "sort": None,
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+    {
+        "colId": "price",
+        "width": 150,
+        "hide": False,
+        "pinned": "left",
+        "sort": None,
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+    {
+        "colId": "model",
+        "width": 150,
+        "hide": False,
+        "pinned": None,
+        "sort": None,
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+]
+
 app.layout = html.Div(
     [
         dcc.Markdown(
@@ -43,14 +88,16 @@ app.layout = html.Div(
                 dbc.Button(
                     "Get Column State", id="get-column-state-button", n_clicks=0
                 ),
+                dbc.Button("Load State", id="load-column-state-button", n_clicks=0),
             ],
         ),
         dag.AgGrid(
             id="reset-column-state-grid",
-            columnSize="sizeToFit",
+            columnSize="autoSize",
             columnDefs=columnDefs,
             defaultColDef=defaultColDef,
             rowData=rowData,
+            columnState=colState,
         ),
         html.Pre(id="reset-column-state-grid-pre"),
     ]
@@ -77,6 +124,16 @@ def reset_column_state(n_reset, n_state):
 )
 def display_column_state(col_state):
     return (json.dumps(col_state, indent=2),)
+
+
+@app.callback(
+    Output("reset-column-state-grid", "columnState"),
+    Input("load-column-state-button", "n_clicks"),
+)
+def loadState(n):
+    if n:
+        return colState
+    return dash.no_update
 
 
 if __name__ == "__main__":
