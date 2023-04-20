@@ -148,3 +148,6 @@ def test_cs001_column_state(dash_duo):
     testState = colState.copy()
     testState[1]['width'] = 198
     until(lambda: json.dumps(testState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
+
+    dash_duo.find_element('#load-column-state-button').click()
+    until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)

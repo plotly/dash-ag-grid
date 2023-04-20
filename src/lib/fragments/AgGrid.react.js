@@ -113,6 +113,7 @@ export default class DashAgGrid extends Component {
         this.onRowGroupOpened = this.onRowGroupOpened.bind(this);
         this.onDisplayedColumnsChanged =
             this.onDisplayedColumnsChanged.bind(this);
+        this.onColumnResized = this.onColumnResized.bind(this);
         this.onGridSizeChanged = this.onGridSizeChanged.bind(this);
         this.updateColumnWidths = this.updateColumnWidths.bind(this);
         this.handleDynamicStyle = this.handleDynamicStyle.bind(this);
@@ -726,6 +727,12 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    onColumnResized() {
+        if (this.state.mounted) {
+            this.updateColumnState();
+        }
+    }
+
     onGridSizeChanged() {
         if (this.props.columnSize === 'responsiveSizeToFit') {
             this.updateColumnWidths();
@@ -1108,6 +1115,7 @@ export default class DashAgGrid extends Component {
                     onRowDataUpdated={this.onRowDataUpdated}
                     onRowGroupOpened={this.onRowGroupOpened}
                     onDisplayedColumnsChanged={this.onDisplayedColumnsChanged}
+                    onColumnResized={this.onColumnResized}
                     onAsyncTransactionsFlushed={this.onAsyncTransactionsFlushed}
                     onPaginationChanged={this.onPaginationChanged}
                     onGridSizeChanged={debounce(
