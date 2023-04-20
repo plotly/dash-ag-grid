@@ -92,6 +92,7 @@ Put the following in the dashAgGridComponentFunctions.js file in the assets fold
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
 
+// custom component to display boolean data as a checkbox
 dagcomponentfuncs.Checkbox = function (props) {
     const {setData, data} = props;
     function onClick() {
@@ -101,7 +102,6 @@ dagcomponentfuncs.Checkbox = function (props) {
             props.node.setDataValue(colId, checked);
         }
     }
-
     function checkedHandler() {
         // update grid data
         const checked = event.target.checked;
@@ -112,17 +112,7 @@ dagcomponentfuncs.Checkbox = function (props) {
     }
     return React.createElement(
         'div',
-        {
-            style: {
-                width: '100%',
-                height: '100%',
-                padding: '5px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            },
-            onClick: onClick,
-        },
+        {onClick: onClick},
         React.createElement('input', {
             type: 'checkbox',
             checked: props.value,

@@ -34,12 +34,11 @@ columnDefs = [
 ]
 
 
-table = dag.AgGrid(
-    id="custom-tooltop",
+grid = dag.AgGrid(
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
     columnSize="sizeToFit",
-    defaultColDef={"editable": False,  "tooltipComponent": "myCustomTooltip"},
+    defaultColDef={"editable": False,  "tooltipComponent": "CustomTooltip"},
     dashGridOptions={"tooltipShowDelay": 100}
 )
 
@@ -47,7 +46,7 @@ table = dag.AgGrid(
 app = Dash(__name__)
 
 app.layout = html.Div(
-    [dcc.Markdown("Example of custom tooltip"), table],
+    [dcc.Markdown("Example of custom tooltip"), grid],
     style={"margin": 20},
 )
 
@@ -57,14 +56,13 @@ if __name__ == "__main__":
 
 """
 Put the following in the dashAgGridComponentFunctions.js file in the assets folder
-This will register the myCustomTooltip function.
 
 -----------
 
 var dagcomponentfuncs = window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions || {};
 
 
-dagcomponentfuncs.myCustomTooltip = function (props) {
+dagcomponentfuncs.CustomTooltip = function (props) {
     info = [
         React.createElement('h4', {}, props.data.ticker),
         React.createElement('div', {}, props.data.company),

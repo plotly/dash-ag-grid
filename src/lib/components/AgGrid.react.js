@@ -288,12 +288,40 @@ DashAgGrid.propTypes = {
     ]),
 
     /**
-     * column sizing options as derived by the columnSize choice,
-     * autoSize https://www.ag-grid.com/react-data-grid/column-sizing/#autosize-column-api,
-     * keys are provided, it is assumed that only these columns will be auto-sized,
-     * sizeToFit/responsiveSizeToFit https://www.ag-grid.com/react-data-grid/column-sizing/#size-columns-to-fit
+     * Options to customize the columnSize operation.
+     * autoSize calls either autoSizeColumns or autoSizeAllColumns, see:
+     * https://www.ag-grid.com/react-data-grid/column-sizing/#autosize-column-api,
+     * and sizeToFit and responsiveSizeToFit call sizeColumnsToFit, see:
+     * https://www.ag-grid.com/react-data-grid/column-sizing/#size-columns-to-fit
      */
-    columnSizeOptions: PropTypes.object,
+    columnSizeOptions: PropTypes.exact({
+        /**
+         * for (responsive)sizeToFit: per-column minimum and maximum width, in pixels.
+         */
+        columnLimits: PropTypes.arrayOf(
+            PropTypes.exact({
+                key: PropTypes.string,
+                minWidth: PropTypes.number,
+                maxWidth: PropTypes.number,
+            })
+        ),
+        /**
+         * for (responsive)sizeToFit: default minimum width, in pixels, if not overridden by columnLimits
+         */
+        defaultMinWidth: PropTypes.number,
+        /**
+         * for (responsive)sizeToFit: default maximum width, in pixels, if not overridden by columnLimits
+         */
+        defaultMaxWidth: PropTypes.number,
+        /**
+         * for autoSize: list of column keys to autosize. If omitted, all columns will be autosized.
+         */
+        keys: PropTypes.arrayOf(PropTypes.string),
+        /**
+         * for autoSize: should we skip header contents and only consider cell contents?
+         */
+        skipHeader: PropTypes.bool,
+    }),
 
     /**
      * Object used to perform the row styling. See AG-Grid Row Style.
@@ -516,7 +544,6 @@ DashAgGrid.propTypes = {
     /**
      * If true, when you drag a column out of the grid (e.g. to the group zone) the column
      * is not hidden.
-     * Default Value: false
      */
     suppressDragLeaveHidesColumns: PropTypes.bool,
 

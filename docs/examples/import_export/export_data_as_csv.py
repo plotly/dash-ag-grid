@@ -8,16 +8,18 @@ from dash import Input, Output, html, dcc
 
 app = dash.Dash(__name__)
 
+
 columnDefs = [
     {"headerName": "Make", "field": "make"},
     {"headerName": "Model", "field": "model"},
     {"headerName": "Price", "field": "price"},
+    {"headerName": "Sale Price", "field": "sale", "hide": True},
 ]
 
 rowData = [
-    {"make": "Toyota", "model": "Celica", "price": 35000},
-    {"make": "Ford", "model": "Mondeo", "price": 32000},
-    {"make": "Porsche", "model": "Boxter", "price": 72000},
+    {"make": "Toyota", "model": "Celica", "price": 35000, "sale": 33000},
+    {"make": "Ford", "model": "Mondeo", "price": 32000, "sale": 29000},
+    {"make": "Porsche", "model": "Boxter", "price": 72000, "sale": 69000},
 ]
 
 app.layout = html.Div(
@@ -25,9 +27,7 @@ app.layout = html.Div(
         dcc.Markdown(
             "Click on the download button below to enable the export data to CSV feature of AG Grid."
         ),
-        html.Div(
-            html.Button("Download CSV", id="csv-button", n_clicks=0),
-        ),
+        html.Button("Download CSV", id="csv-button", n_clicks=0),
         dag.AgGrid(
             id="export-data-grid",
             columnSize="sizeToFit",
@@ -48,7 +48,6 @@ app.layout = html.Div(
 def export_data_as_csv(n_clicks):
     if n_clicks:
         return True
-
     return False
 
 

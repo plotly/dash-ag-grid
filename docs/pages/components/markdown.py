@@ -6,7 +6,7 @@ from utils.utils import app_description
 
 register_page(
     __name__,
-    order=1,
+    order=4,
     description=app_description,
     title="Dash AG Grid Components",
     # name="Bootstrap Utility Classes",
@@ -27,9 +27,18 @@ Other components:
  - <dccLink href='/components/row-menu' children='Row Menu' />  To access menu options in a callback
  - <dccLink href='/rendering/animation-renderer' children='Cell change animation renderer' />
 
-You can also create custom components and cell renderers.
+Custom components:
+
+You can also create custom components and cell renderers.  For examples see:
+ - <dccLink href='/components/cell-renderer' children='Cell Renderers' />  for examples of several custom components`
+ - <dccLink href='/components/overlay' children='Overlay' />  for custom loading and no rows overlay components
+ - <dccLink href='/components/tooltip' children='Tooltip' /> for a custom Tooltip component.
+
+
 
 ### Markdown
+
+This component is included with dash-ag-grid.
 
 """
 
@@ -44,8 +53,22 @@ The first example does not have `dangerously_allow_code` enabled, so the links w
 The second example has `dangerously_allow_code=True`.
 
 Note - it is also possible to safely render HTML using the cell renderer component.
-"""
 
+The images images in these examples are loaded from a remote source the link is formatted like this:
+```
+"![alt text: sun](https://www.ag-grid.com/example-assets/weather/sun.png)"
+```
+
+They can also be loaded locally using:
+```
+    f"![image alt text]({app.get_asset_url('sun.png')})"
+```
+Or if you are using a multi page app
+
+```
+    f"![image alt text]({dash.get_asset_url('sun.png')})"
+```
+"""
 
 layout = html.Div(
     [
