@@ -82,13 +82,13 @@ Setting `columnSize="responsiveSizeToFit"` makes the currently visible columns f
 
 If you don't want a particular column to be included in the auto resize, then set the column definition `suppressSizeToFit=True`. This is helpful if, for example, you want the first column to remain fixed width, but all other columns to fill the width of the grid.
 
-Column default widths, rather than current widths, are used while calculating the new widths. This insures the result is deterministic and not depend on any Column resizing the user may have manually done.
+Column default widths, rather than current widths, are used while calculating the new widths. Note that it is not possible for users to manually change the column width when `columnSize="responsiveSizeToFit"`.
 
 ### Size to Fit
 
 Setting `columnSize="sizeToFit"` makes the columns fit the width of the grid. However, unlike "responsiveSizeToFit",  this
  is only done once when the grid is rendered.  If the browser window changes, or the user changes the column width, the
-  columns will not be continually resized. 
+  columns will not be continually resized. See the Example "Size To Fit with button" if you would like the user to be able to resize the grid again. 
 
 If you don't want a particular column to be included in the auto resize, then set the column definition `suppressSizeToFit=True`.
 
@@ -133,6 +133,14 @@ Note the following:
 - The age column has `maxWidth`: 50, which takes precedence over the functions `defaultMinWidth`: 100
 - The country column has `maxWidth`: 300, which takes precedence over the functions minWidth: 900 defined for the country column.
 
+"""
+
+
+text1b = """
+### Example: `columnSize="sizeToFit"` with a resize button
+
+This example adds a button so the user can resize the grid.  Try changing a column width or the browser window then
+ hit the "Resize" button.
 """
 
 
@@ -189,6 +197,8 @@ layout = html.Div(
         example_app("examples.columns.column_sizing1", make_layout=make_tabs),
         make_md(text1a),
         example_app("examples.columns.column_sizing1a", make_layout=make_tabs),
+        make_md(text1b),
+        example_app("examples.columns.column_sizing1b", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.columns.column_sizing2", make_layout=make_tabs),
         make_md(text3),
