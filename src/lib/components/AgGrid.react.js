@@ -13,7 +13,10 @@ export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {mouted: false};
+        this.state = {
+            mounted: false,
+            rowTransaction: null,
+        };
 
         this.buildArray = this.buildArray.bind(this);
     }
