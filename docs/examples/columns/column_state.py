@@ -11,9 +11,9 @@ import dash_bootstrap_components as dbc
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 columnDefs = [
-    {"headerName": "Make", "field": "make"},
-    {"headerName": "Model", "field": "model"},
-    {"headerName": "Price", "field": "price"},
+    {"field": "make"},
+    {"field": "model"},
+    {"field": "price"},
 ]
 
 
@@ -85,9 +85,6 @@ app.layout = html.Div(
                 dbc.Button(
                     "Reset Column State", id="reset-column-state-button", n_clicks=0
                 ),
-                dbc.Button(
-                    "Get Column State", id="get-column-state-button", n_clicks=0
-                ),
                 dbc.Button("Load State", id="load-column-state-button", n_clicks=0),
             ],
         ),
@@ -106,15 +103,11 @@ app.layout = html.Div(
 
 @app.callback(
     Output("reset-column-state-grid", "resetColumnState"),
-    Output("reset-column-state-grid", "updateColumnState"),
     Input("reset-column-state-button", "n_clicks"),
-    Input("get-column-state-button", "n_clicks"),
 )
-def reset_column_state(n_reset, n_state):
-    if ctx.triggered_id == "reset-column-state-button":
-        return True, False
-    elif ctx.triggered_id == "get-column-state-button":
-        return False, True
+def reset_column_state(n):
+    if n:
+        return True
     return dash.no_update
 
 

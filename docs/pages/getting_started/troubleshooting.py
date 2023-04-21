@@ -11,7 +11,7 @@ text1 = """
 # Troubleshooting Guide
 
 
-### 1. Error Messages - Invalid Props
+### 1. Dash Error Messages - Invalid Props
 
 > "Invalid prop for this component"
 
@@ -91,7 +91,13 @@ dag.AgGrid(
 
 
 
-### 2. It's not working -- check the browser console for error messages 
+### 2. It's not working -- check the browser console for error and warning messages 
+
+Check for both warning messages and error messages.  For example if you use an invalid prop in `columnDefs` or
+ `defaultColDef` you will not get an error message from Dash.  If you open your browser console, you will see a warning
+  message from AG Grid.  Note that invalid props will be ignored, and will seem to "fail silently".
+
+![console_warning](https://user-images.githubusercontent.com/72614349/233742767-efbebbdf-7f81-42cf-8efb-35972eaa7f62.png)
 
 if you are using raw HTML in Markdown or other components that accept raw HTML, or if you are using string
  [expressions](https://www.ag-grid.com/react-data-grid/cell-expressions/) rather than the safer method of validated functions, you must set `dangerously_allow_code=True` 
