@@ -258,6 +258,7 @@ export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS = {
     filterParams: 1,
     cellRendererParams: 1,
     cellEditorParams: 1,
+    tooltipComponentParams: 1,
 };
 
 /**
@@ -294,4 +295,31 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'getDetailRequest',
     'getDetailResponse',
     'dangerously_allow_code',
+    'alignedGrids',
+];
+
+/**
+ * Props to not trigger a render update
+ */
+export const OMIT_PROP_RENDER = [
+    'virtualRowData',
+    'columnState',
+    'filterModel',
+    'selectedRows',
+    'getRowRequest',
+    'getDetailRequest',
+    'cellValueChanged',
+    'cellClicked',
+    'paginationInfo',
+    'cellRendererData',
+];
+
+/**
+ * States to not trigger a render update
+ */
+export const OMIT_STATE_RENDER = [
+    'gridApi',
+    'gridColumnApi',
+    'mounted',
+    'openGroups',
 ];
