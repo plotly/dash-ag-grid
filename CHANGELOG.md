@@ -95,6 +95,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 - [#132](https://github.com/plotly/dash-ag-grid/pull/132)
   - updated `columnSize` option of `autoSizeAll` -> `autoSize`
+
+- [#145](https://github.com/plotly/dash-ag-grid/pull/145)
+  - updated AG Grid `29.1.0` -> `29.3.2`
   
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
