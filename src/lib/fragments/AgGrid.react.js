@@ -73,16 +73,16 @@ const agGridRefs = {};
 
 const eventBus = {
     listeners: {},
-    on(id, data, callback) {
+    on(id, targetId, callback) {
         if (!(id in eventBus.listeners)) {
             eventBus.listeners[id] = {};
         }
-        eventBus.listeners[id][data] = callback;
+        eventBus.listeners[id][targetId] = callback;
     },
-    dispatch(data) {
+    dispatch(targetId) {
         for (const id in eventBus.listeners) {
             if (data in eventBus.listeners[id]) {
-                eventBus.listeners[id][data]();
+                eventBus.listeners[id][targetId]();
             }
         }
     },
