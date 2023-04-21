@@ -13,12 +13,7 @@ export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            gridApi: null,
-            gridColumnApi: null,
-            openGroups: new Set(),
-            filterModel: {},
-        };
+        this.state = {mouted: false};
 
         this.buildArray = this.buildArray.bind(this);
     }

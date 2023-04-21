@@ -81,7 +81,7 @@ const eventBus = {
     },
     dispatch(targetId) {
         for (const id in eventBus.listeners) {
-            if (data in eventBus.listeners[id]) {
+            if (targetId in eventBus.listeners[id]) {
                 eventBus.listeners[id][targetId]();
             }
         }
@@ -161,6 +161,10 @@ export default class DashAgGrid extends Component {
                 markdown: this.generateRenderer(MarkdownRenderer),
                 ...newComponents,
             },
+            rerender: 0,
+            openGroups: new Set(),
+            gridApi: null,
+            gridColumnApi: null,
         };
 
         this.selectionEventFired = false;
@@ -544,16 +548,13 @@ export default class DashAgGrid extends Component {
     }
 
     onRowGroupOpened(e) {
-        const {openGroups} = this.state;
-
-        if (e.expanded) {
-            // If the node was just expanded, add it to the list of open nodes
-            openGroups.add(e.node.key);
-        } else {
-            // If it's collapsed, remove it from the list of open nodes
-            openGroups.delete(e.node.key);
-        }
-        this.setState({openGroups});
+        this.setState(({openGroups}) => ({
+            openGroups: e.expanded
+                ? // If the node was just expanded, add it to the list of open nodes
+                  openGroups.add(e.node.key)
+                : // If it's collapsed, remove it from the list of open nodes
+                  openGroups.delete(e.node.key),
+        }));
     }
 
     onSelectionChanged() {
@@ -981,10 +982,11 @@ export default class DashAgGrid extends Component {
     }
 
     rowTransaction(data) {
-        if (this.state.mounted) {
-            if (this.state.gridApi) {
-                if (this.state.rowTransaction) {
-                    this.state.rowTransaction.forEach(this.applyRowTransaction);
+        const {rowTransaction, gridApi, mounted} = this.state;
+        if (mounted) {
+            if (gridApi) {
+                if (rowTransaction) {
+                    rowTransaction.forEach(this.applyRowTransaction);
                     this.setState({rowTransaction: null});
                 }
                 this.applyRowTransaction(data);
@@ -994,8 +996,8 @@ export default class DashAgGrid extends Component {
                 });
             } else {
                 this.setState({
-                    rowTransaction: this.state.rowTransaction
-                        ? this.buildArray(this.state.rowTransaction, data)
+                    rowTransaction: rowTransaction
+                        ? this.buildArray(rowTransaction, data)
                         : [JSON.parse(JSON.stringify(data))],
                 });
             }
@@ -1080,11 +1082,9 @@ export default class DashAgGrid extends Component {
                 const addGrid = (id) => {
                     const strId = stringifyId(id);
                     eventBus.on(this.props.id, strId, () => {
-                        this.setState({
-                            toggle: this.state.toggle
-                                ? !this.state.toggle
-                                : false,
-                        });
+                        this.setState(({rerender}) => ({
+                            rerender: rerender + 1,
+                        }));
                     });
                     if (!agGridRefs[strId]) {
                         agGridRefs[strId] = {api: null};
