@@ -82,7 +82,9 @@ Setting `columnSize="responsiveSizeToFit"` makes the currently visible columns f
 
 If you don't want a particular column to be included in the auto resize, then set the column definition `suppressSizeToFit=True`. This is helpful if, for example, you want the first column to remain fixed width, but all other columns to fill the width of the grid.
 
-Column default widths, rather than current widths, are used while calculating the new widths. Note that it is not possible for users to manually change the column width when `columnSize="responsiveSizeToFit"`.
+Note that when when `columnSize="responsiveSizeToFit"`, the column default widths, rather than current widths, are
+ used while calculating the new widths. This ensures the result is deterministic and does not depend on any Column 
+ resizing the user may have manually done.
 
 ### Size to Fit
 
