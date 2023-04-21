@@ -44,7 +44,7 @@ navbar = dbc.NavbarSimple(
             [
                 html.Div("Alpha Release", className="small text-white pt-2"),
                 html.Div([
-                    "2.0.0a5",
+                    "2.0.0rc1",
                     html.A(
                         html.I(className="bi bi-github ps-2 text-white"),
                         href="https://github.com/plotly/dash-ag-grid",
@@ -176,7 +176,7 @@ def make_side_nav():
                 always_open=True,
                 id="sidebar",
             ),
-            dbc.Alert("AG Grid Version 29.1.0", color="primary", className="small py-2 me-2"),
+            dbc.Alert("AG Grid Version 29.3.2", color="primary", className="small py-2 me-2"),
             author_card,
 
             # example of a category with hash tags
