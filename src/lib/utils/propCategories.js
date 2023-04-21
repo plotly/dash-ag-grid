@@ -297,3 +297,29 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'dangerously_allow_code',
     'alignedGrids',
 ];
+
+/**
+ * Props to not trigger a render update
+ */
+export const OMIT_PROP_RENDER = [
+    'virtualRowData',
+    'columnState',
+    'filterModel',
+    'selectedRows',
+    'getRowRequest',
+    'getDetailRequest',
+    'cellValueChanged',
+    'cellClicked',
+    'paginationInfo',
+    'cellRendererData',
+];
+
+/**
+ * States to not trigger a render update
+ */
+export const OMIT_STATE_RENDER = [
+    'gridApi',
+    'gridColumnApi',
+    'mounted',
+    'openGroups',
+];

@@ -32,6 +32,8 @@ import {
     PASSTHRU_PROPS,
     PROPS_NOT_FOR_AG_GRID,
     GRID_DANGEROUS_FUNCTIONS,
+    OMIT_PROP_RENDER,
+    OMIT_STATE_RENDER,
 } from '../utils/propCategories';
 import debounce from '../utils/debounce';
 
@@ -460,6 +462,54 @@ export default class DashAgGrid extends Component {
             delete agGridRefs[this.props.id];
             eventBus.remove(this.props.id);
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        const {gridColumnApi, gridApi} = this.state;
+        const {columnState, filterModel, selectedRows} = nextProps;
+
+        if (
+            !equals(
+                {...omit(OMIT_PROP_RENDER, nextProps)},
+                {...omit(OMIT_PROP_RENDER, this.props)}
+            )
+        ) {
+            return true;
+        }
+        if (
+            !equals(
+                {...omit(OMIT_STATE_RENDER, nextState)},
+                {...omit(OMIT_STATE_RENDER, this.state)}
+            )
+        ) {
+            return true;
+        }
+        if (gridApi) {
+            if (columnState) {
+                if (
+                    !equals(
+                        columnState,
+                        JSON.parse(
+                            JSON.stringify(gridColumnApi.getColumnState())
+                        )
+                    )
+                ) {
+                    return true;
+                }
+            }
+            if (filterModel) {
+                if (!equals(filterModel, gridApi.getFilterModel())) {
+                    return true;
+                }
+            }
+            if (selectedRows) {
+                if (!equals(selectedRows, gridApi.getSelectedRows())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
     }
 
     componentDidUpdate(prevProps) {
