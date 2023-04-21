@@ -91,11 +91,14 @@ dag.AgGrid(
 
 
 
-### 2. It's not working -- check the browser console for error and warning messages 
+### 2. Check the browser console for error and warning messages 
 
-Check for both warning messages and error messages.  For example if you use an invalid prop in `columnDefs` or
- `defaultColDef` you will not get an error message from Dash.  If you open your browser console, you will see a warning
-  message from AG Grid.  Note that invalid props will be ignored, and will seem to "fail silently".
+You often won't get an error message from Dash if something in the Grid is not working.  Errors handled by AG Grid
+ will displayed as messages in the browser console.   Be sure to check for both warning messages and error messages.
+
+For example if you use an invalid prop in `columnDefs` or `defaultColDef` you will not get an error message from 
+   Dash.  If you open your browser console, you will see a warning message like the image below. Note that invalid 
+   props will be ignored, and will seem to "fail silently".
 
 ![console_warning](https://user-images.githubusercontent.com/72614349/233742767-efbebbdf-7f81-42cf-8efb-35972eaa7f62.png)
 
@@ -126,19 +129,7 @@ dag.AgGrid(
 ` `  
 
 
-### 3. It's not working --  no error message
-
-In Dash we depend on the dev tools to alert us to errors  However if prop is misspelled in one of the dicts that pass
- props to the grid such as `columnDefs`, then there will be no error message and it "fails silently" 
-  
-   
-Solution:
-Double check the spelling of the prop and make sure it's in the correct Dash container prop.
-
-` `  
-` `  
-
-### 4.  The grid is gone!
+### 3.  The grid is gone!
 
 Does the grid look like this?
 
@@ -176,7 +167,7 @@ html.Div(
 ` `  
 ` `  
 
-### 5. Debugging custom functions with `log()` 
+### 4. Debugging custom functions with `log()` 
 
 Please see the  <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' /> section for information
 on debugging functions with `log()`
@@ -185,7 +176,7 @@ on debugging functions with `log()`
 
 ` `  
 ` ` 
-### 6. Other
+### 5. Other
 
 For other issues:
   - Search the [Dash Community Forum](https://community.plotly.com/)

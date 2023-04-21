@@ -71,10 +71,10 @@ Welcome to the Dash AG Grid documentation.  These docs are a Dash version of the
 
 text2 = """  
 >
-> #### 🚧 This is a pre release version  
->  We have completed all planned breaking changes and doing the final review before the full 2.0.0 release!  
+> #### This is a prerelease for dash-ag-grid 2.0.0 🎉
+>  We've completed all planned breaking changes and we're now doing the final review before the full 2.0.0 release!  
 >
->  If you have tried previous alpha releases, see our <dccLink href-'/getting-started/migration-guide children='Migration Guide' />
+>  If you have tried previous alpha releases, see our <dccLink href='/getting-started/migration-guide' children='Migration Guide' />
 
 
 ### Getting Started
