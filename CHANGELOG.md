@@ -65,7 +65,13 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - added new `columnSize` available, `responsiveSizeToFit` which will adjust column sizes based upon grid size and columns added or removed
   - added `columnSizeOptions` to take an object that is compatible with AG Grid to perform sizing options as needed
   - added ability to push `columnState` back to grid and replay the settings
-  
+ 
+- [#145](https://github.com/plotly/dash-ag-grid/pull/145)
+  - added support for `alignedGrids`
+  - added ability for functions with `tooltipComponentParams`
+  - added `paginationInfo` for read-only info from the grid's pagination
+  - added `paginationGoTo` to navigate to different pages
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
@@ -86,6 +92,12 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - removed `cellStyle` from the grid level, allowing more flexibility in customization, and alignment with AG grid
   - allowed for functions, styleConditions and regular dictionaries to be passed to the `cellStyle` on all levels
   - added `rowId` to `cellClicked` data
+
+- [#132](https://github.com/plotly/dash-ag-grid/pull/132)
+  - updated `columnSize` option of `autoSizeAll` -> `autoSize`
+
+- [#145](https://github.com/plotly/dash-ag-grid/pull/145)
+  - updated AG Grid `29.1.0` -> `29.3.2`
   
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
@@ -105,6 +117,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 - [#132](https://github.com/plotly/dash-ag-grid/pull/132)
   - fixed `columnSize` to update upon interaction
+
+- [#145](https://github.com/plotly/dash-ag-grid/pull/145)
+  - fixed `onRowDragEnd` to trigger `virtualRowData` update
+  - fixed all `virtualRowData` updates to take into account the sorting
 
 ## [1.3.2] - 2023-01-13
 

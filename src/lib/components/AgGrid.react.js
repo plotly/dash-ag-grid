@@ -14,10 +14,8 @@ export default class DashAgGrid extends Component {
         super(props);
 
         this.state = {
-            gridApi: null,
-            columnApi: null,
-            openGroups: new Set(),
-            filterModel: {},
+            mounted: false,
+            rowTransaction: null,
         };
 
         this.buildArray = this.buildArray.bind(this);
@@ -74,6 +72,7 @@ DashAgGrid.defaultProps = {
     rowModelType: 'clientSide',
     dashGridOptions: {},
     filterModel: {},
+    paginationGoTo: null,
 };
 DashAgGrid.propTypes = {
     /********************************
@@ -318,7 +317,8 @@ DashAgGrid.propTypes = {
          */
         keys: PropTypes.arrayOf(PropTypes.string),
         /**
-         * for autoSize: should we skip header contents and only consider cell contents?
+         * for autoSize: If skipHeader=True, the header won't be included when calculating the column widths.
+         * default: False
          */
         skipHeader: PropTypes.bool,
     }),
@@ -376,6 +376,27 @@ DashAgGrid.propTypes = {
          */
         failCallback: PropTypes.func,
     }),
+
+    /**
+     * If in pagination mode, this will be populated with info from the pagination API:
+     * https://www.ag-grid.com/react-data-grid/grid-api/#reference-pagination
+     */
+    paginationInfo: PropTypes.exact({
+        isLastPageFound: PropTypes.bool,
+        pageSize: PropTypes.number,
+        currentPage: PropTypes.number,
+        totalPages: PropTypes.number,
+        rowCount: PropTypes.number,
+    }),
+
+    /**
+     * If in pagination mode, this will navigate to: ['next', 'previous', 'last', 'first', number]
+     * https://www.ag-grid.com/react-data-grid/grid-api/#reference-pagination
+     */
+    paginationGoTo: PropTypes.oneOfType([
+        PropTypes.oneOf(['first', 'last', 'next', 'previous', null]),
+        PropTypes.number,
+    ]),
 
     /**
      * If filtering client-side rowModel, what the filter model is.
