@@ -44,10 +44,10 @@ without writing JavaScript functions.  See the <dccLink href='/layout/cell-styli
 more details.
 
 
-- `dashGridOptions`:
+- `dashGridOptions`: Use the `dashGridOptions` prop for any valid AG Grid prop that's used on the grid level.  For example, `pagination` is not defined as a prop in dash-ag-grid.  To enable pagination, instead of doing it like this:  
 
-Use the `dashGridOptions` prop for any valid AG Grid prop that's used on the grid level.  
-For example, `pagination` is not defined as a prop in dash-ag-grid.  To enable pagination, instead of doing it like this:
+ 
+ `dashGridOptions` example:
  ```
  # don't do it this way:
  dag.AgGrid(     

@@ -11,7 +11,7 @@ app = Dash(__name__)
 grid = dag.AgGrid(
     id="size-grid",
     rowData=df.to_dict("records"),
-    columnDefs=[{"field": i, "id": i} for i in df.columns],
+    columnDefs=[{"field": i} for i in df.columns],
     defaultColDef={"resizable": True},
     columnSize="sizeToFit",
 )

@@ -18,7 +18,7 @@ app.layout = html.Div(
         dcc.Markdown("Example of using `rowData` in a callback with an editable grid"),
         dag.AgGrid(
             id="editing-grid2",
-            columnDefs=[{"field": i, "id": i} for i in df.columns],
+            columnDefs=[{"field": i} for i in df.columns],
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
             defaultColDef={"editable": True},
