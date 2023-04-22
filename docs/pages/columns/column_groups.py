@@ -126,8 +126,17 @@ Here is the class added to the .css file in the assets folder
 
 """
 
+text3="""
+### Sticky Label
+When Column Groups are too wide, it might be useful to have the Header Label to be always visible while scrolling the grid horizontally. To achieve this, set the column group property `stickyLabel=True`. The example below demonstrates the following:
 
-text3 = """
+- Both 'Athlete Details' and 'Sport Results' have `stickyLabel=True`.
+- If you scroll the grid horizontally, the header label will always be visible until it's completely out of view.
+
+
+"""
+
+text4 = """
 
 ` `
 ` `
@@ -154,6 +163,8 @@ layout = html.Div(
         make_md(text2),
         example_app("examples.columns.column_groups2", make_layout=make_tabs),
         make_md(text3),
+        example_app("examples.columns.column_groups_sticky_label", make_layout=make_tabs),
+        make_md(text4),
         example_app("examples.columns.column_groups3", make_layout=make_tabs),
         #  up_next("text"),
     ],
