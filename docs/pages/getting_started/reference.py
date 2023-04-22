@@ -87,6 +87,8 @@ The following props can be used to trigger a Dash Callback:
 - getDetailResponse
 - getRowsRequest
 - getRowsResponse 
+- paginationGoTo
+- paginationInfo
 - resetColumnState
 - rowData
 - rowTransaction

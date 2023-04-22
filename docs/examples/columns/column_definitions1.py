@@ -28,6 +28,7 @@ app.layout = html.Div(
     [
         dcc.Markdown("This grid has resizeable columns with sort and filter enabled"),
         dag.AgGrid(
+            style={"margin":20},
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
