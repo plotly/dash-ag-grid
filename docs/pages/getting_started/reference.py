@@ -44,10 +44,10 @@ without writing JavaScript functions.  See the <dccLink href='/layout/cell-styli
 more details.
 
 
-- `dashGridOptions`:
+- `dashGridOptions`: Use the `dashGridOptions` prop for any valid AG Grid prop that's used on the grid level.  For example, `pagination` is not defined as a prop in dash-ag-grid.  To enable pagination, instead of doing it like this:  
 
-Use the `dashGridOptions` prop for any valid AG Grid prop that's used on the grid level.  
-For example, `pagination` is not defined as a prop in dash-ag-grid.  To enable pagination, instead of doing it like this:
+ 
+ `dashGridOptions` example:
  ```
  # don't do it this way:
  dag.AgGrid(     
@@ -73,7 +73,6 @@ For example, `pagination` is not defined as a prop in dash-ag-grid.  To enable p
 
 The following props can be used to trigger a Dash Callback:
 ```
-- autoSizeAllColumns
 - cellClicked
 - cellValueChanged
 - cellRendererData
@@ -111,17 +110,14 @@ The following props can be used to trigger a Dash Callback:
     resetColumnState: false,
     exportDataAsCsv: false,
     selectAll: false,
-    selectAllFiltered: false,
     deselectAll: false,
-    autoSizeAllColumns: false,
-    autoSizeAllColumnsSkipHeaders: false,
     enableEnterpriseModules: false,
     updateColumnState: false,
     persisted_props: ['selectedRows'],
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
     dangerously_allow_code: false,
-    rowModelType: 'clientSide',
+    rowModelType: 'clientSide'
 ```    
 
 ` `  

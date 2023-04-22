@@ -15,7 +15,7 @@ app.layout = html.Div(
     [
         dcc.Markdown("This grid has editing enabled on all columns"),
         dag.AgGrid(
-            columnDefs=[{"field": i, "id": i} for i in df.columns],
+            columnDefs=[{"field": i} for i in df.columns],
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
             defaultColDef={"editable": True},

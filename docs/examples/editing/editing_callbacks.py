@@ -17,7 +17,7 @@ app.layout = html.Div(
         dcc.Markdown("Example of using `cellValueChanged` in a callback"),
         dag.AgGrid(
             id="editing-grid",
-            columnDefs=[{"field": i, "id": i} for i in df.columns],
+            columnDefs=[{"field": i} for i in df.columns],
             rowData=df.to_dict("records"),
             columnSize="sizeToFit",
             defaultColDef={"editable": True, "minWidth": 120},
