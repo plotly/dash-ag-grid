@@ -19,7 +19,9 @@ date_obj = "d3.timeParse('%Y-%m-%dT%H:%M:%S')(params.data.date)"
 
 columnDefs = [
     {
+        "headerName": "Datetime string",
         "field": "date",
+        "filter": False,
     },
     {
         "headerName": "MM/DD/YYYY",

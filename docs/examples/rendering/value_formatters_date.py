@@ -7,7 +7,7 @@ rowData = [
     {"date": "2023-02-11"},
     {"date": "2023-06-10"},
     {"date": "2023-11-04"},
-    {"date": "2023-21-03"},
+    {"date": "2023-12-03"},
 ]
 
 # function to create a date object from  a date string "YYYY-MM-DD"
@@ -16,7 +16,9 @@ date_obj = "d3.timeParse('%Y-%m-%d')(params.data.date)"
 
 columnDefs = [
     {
+        "headerName": "Date String",
         "field": "date",
+        "filter": False,
     },
     {
         "headerName": "MM/DD/YYYY",
