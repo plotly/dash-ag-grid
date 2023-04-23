@@ -67,7 +67,7 @@ app = Dash(__name__)
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Datetime formatting example."),
+        dcc.Markdown("Datetime formatting example.  Note - The date filter will not work with datetime.  Time must be zero (i.e. 2023-01-01T00:00:00)"),
         dag.AgGrid(columnDefs=columnDefs, rowData=rowData, defaultColDef=defaultColDef),
     ],
     style={"margin": 20},

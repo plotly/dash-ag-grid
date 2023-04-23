@@ -200,6 +200,37 @@ html.Div(
 
 ```
 
+` `  
+` `  
+### 5. Spaces in field names
+
+If your field names contain spaces, then you cannot use the dot notation  (ie `params.data.date`)
+
+__solution:__  
+Use square brackets around the field name. (ie `params.data['invoice date']`)
+
+For example, if your data looks like:
+
+```
+rowData = [
+    {'invoice date': '12-31-2023', 'price': 100.00}
+    # other rows
+]
+```
+
+
+```
+# wrong way
+ "valueGetter": {"function": "d3.timeParse('%Y-%m-%d')(params.data.invoice date)"}
+
+# wrong way
+myDate="invoice date"
+"valueGetter": {"function": "d3.timeParse('%Y-%m-%d')(params.data.myDate)"}
+
+# right way
+"valueGetter": {"function": "d3.timeParse('%Y-%m-%d')(params.data['invoice date'])"}
+
+```
 
 
 
@@ -215,7 +246,7 @@ on debugging functions with `log()`
 
 ` `  
 ` ` 
-### 6. Other
+### 7. Other
 
 For other issues:
   - Search the [Dash Community Forum](https://community.plotly.com/)
