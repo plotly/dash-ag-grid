@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
 
 """
-Add this to the dashAGGridFunctions.js file in the assets folder
+Add this to the dashAgGridFunctions.js file in the assets folder
 
 
 var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};
