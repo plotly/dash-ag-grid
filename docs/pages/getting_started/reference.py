@@ -136,90 +136,91 @@ The following grid level props props will take functions as inputs.  If the prop
  
 ```     
    // Accessories
-    'getMainMenuItems',
-    'postProcessPopup',
+    getMainMenuItems,
+    postProcessPopup,
 
     // Clipboard
-    'processCellForClipboard',
-    'processHeaderForClipboard',
-    'processGroupHeaderForClipboard',
-    'processCellFromClipboard',
-    'sendToClipboard',
-    'processDataFromClipboard',
+    processCellForClipboard,
+    processHeaderForClipboard,
+    processGroupHeaderForClipboard,
+    processCellFromClipboard,
+    sendToClipboard,
+    processDataFromClipboard,
 
     // Filtering
-    'isExternalFilterPresent',
-    'doesExternalFilterPass',
+    isExternalFilterPresent,
+    doesExternalFilterPass,
 
     // Integrated Charts
-    'getChartToolbarItems',
-    'createChartContainer',
+    getChartToolbarItems,
+    createChartContainer,
 
     // Keyboard Navigation
-    'navigateToNextHeader',
-    'tabToNextHeader',
-    'navigateToNextCell',
-    'tabToNextCell',
+    navigateToNextHeader,
+    tabToNextHeader,
+    navigateToNextCell,
+    tabToNextCell,
 
     // Localisation
-    'getLocaleText',
+    getLocaleText,
 
     // Miscellaneous
-    'getDocument',
+    getDocument,
 
     // Pagination
-    'paginationNumberFormatter',
+    paginationNumberFormatter,
 
     // Pivot and Aggregation
-    'processPivotResultColDef',
-    'processPivotResultColGroupDef',
-    'aggFuncs',
-    'getGroupRowAgg',
+    processPivotResultColDef,
+    processPivotResultColGroupDef,
+    aggFuncs,
+    getGroupRowAgg,
 
     // Rendering
-    'getBusinessKeyForNode',
-    'processRowPostCreate',
+    getBusinessKeyForNode,
+    processRowPostCreate,
 
     // Row Drag and Drop
-    'rowDragText',
+    rowDragText,
 
     // Row Grouping
-    'isGroupOpenByDefault',
-    'initialGroupOrderComparator',
+    isGroupOpenByDefault,
+    initialGroupOrderComparator,
 
     // RowModel: Server-Side
-    'getChildCount',
-    'getServerSideGroupLevelParams',
-    'isServerSideGroupOpenByDefault',
-    'isApplyServerSideTransaction',
-    'isServerSideGroup',
-    'getServerSideGroupKey',
+    getChildCount,
+    getServerSideGroupLevelParams,
+    isServerSideGroupOpenByDefault,
+    isApplyServerSideTransaction,
+    isServerSideGroup,
+    getServerSideGroupKey,
 
     // Selection
-    'isRowSelectable',
-    'fillOperation',
+    isRowSelectable,
+    fillOperation,
 
     // Sorting
-    'postSortRows',
+    postSortRows,
 
     // Styling
-    'getRowHeight',
-    'getRowStyle',
-    'getRowClass',
-    'rowClassRules',
-    'cellClassRules,
-    'isFullWidthRow',
+    getRowHeight,
+    getRowStyle,
+    getRowClass,
+    rowClassRules,
+    cellClassRules,
+    isFullWidthRow,
     
     // templates
-    'overlayLoadingTemplate',
-    'overlayNoRowsTemplate',
+    overlayLoadingTemplate,
+    overlayNoRowsTemplate,
     
     // other
-    'frameworkComponents',
-    'getRowId',
-    'getDataPath',
-    'detailCellRendererParams',
-    'detailGridOptions',
+    frameworkComponents,
+    getRowId,
+    getDataPath,
+    detailCellRendererParams,
+    detailGridOptions,
+    tooltipComponentParams
     
 ```
 - __Column Level Prop__  
@@ -229,99 +230,100 @@ The following column level props will take functions as inputs.  If the prop doe
  below, they can be used in the `columnDefs` or `defaultColDefs` props.
 
 ```
-    'valueGetter',
-    'valueFormatter',
-    'valueParser',
-    'valueSetter',
-    'filterValueGetter',
-    'headerValueGetter',
-    'template',
-    'cellClassRules',
-    'rowClassRules',
+    valueGetter,
+    valueFormatter,
+    valueParser,
+    valueSetter,
+    filterValueGetter,
+    headerValueGetter,
+    template,
+    cellClassRules,
+    rowClassRules,
 
 
      // Columns
-    'keyCreator',
-    'equals',
-    'checkboxSelection',
-    'icons',
-    'suppressNavigable',
-    'suppressKeyboardEvent',
-    'filterParams',
+    keyCreator,
+    equals,
+    checkboxSelection,
+    icons,
+    suppressNavigable,
+    suppressKeyboardEvent,
+    filterParams,
 
     // Columns: Editing
-    'editable',
-    'cellEditor',
-    'cellEditorSelector',
+    editable,
+    cellEditor,
+    cellEditorSelector,
 
     // Columns: Events
-    'onCellDoubleClicked',
-    'onCellContextMenu',
+    onCellDoubleClicked,
+    onCellContextMenu,
 
     // Columns: Filter
-    'getQuickFilterText',
+    getQuickFilterText,
 
     // Columns: Headers
-    'suppressHeaderKeyboardEvent',
-    'headerCheckboxSelection',
+    suppressHeaderKeyboardEvent,
+    headerCheckboxSelection,
 
     // Columns: Pivoting
-    'pivotComparator',
+    pivotComparator,
 
     // Columns: Rendering and Styling
-    'cellStyle',
-    'cellClass',
-    'cellClassRules',
-    'tooltipComponent',
-    'cellRendererSelector',
+    cellStyle,
+    cellClass,
+    cellClassRules,
+    tooltipComponent,
+    cellRendererSelector,
 
     // Columns: Row Dragging
-    'rowDrag',
-    'rowDragText',
-    'dndSource',
-    'dndSourceOnRowDrag',
+    rowDrag,
+    rowDragText,
+    dndSource,
+    dndSourceOnRowDrag,
 
     // Columns: Row Grouping
-    'aggFunc',
-    'initialAggFunc',
+    aggFunc,
+    initialAggFunc,
 
     // Columns: Sort
-    'comparator',
+    comparator,
 
     // Columns: Spanning
-    'colSpan',
-    'rowSpan',
+    colSpan,
+    rowSpan,
 
     // Columns: Tooltips
-    'tooltipValueGetter',
+    tooltipValueGetter,
+    tooltipComponentParams
 
     // Groups
-    'toolPanelClass',
+    toolPanelClass,
 
     // Groups: Header
-    'headerClass',
+    headerClass,
 
     // Header Component Parameters
-    'showColumnMenu',
-    'progressSort',
-    'setSort',
-    'headerComponentParams',    
+    showColumnMenu,
+    progressSort,
+    setSort,
+    headerComponentParams,    
     
 
     // Header Group Component Parameters
-    'setExpanded',
-    'headerGroupComponentsParams',
+    setExpanded,
+    headerGroupComponentsParams,
     
     // In filterParams or filterParams.filterOptions[]
-    'filterPlaceholder',
-    'predicate',
-    'filterParams',
-    'filterOptions',
+    filterPlaceholder,
+    predicate,
+    filterParams,
+    filterOptions,
     
     // other params
-    'cellRendererParams',
-    'cellEditorParams',
-    'children',
+    cellRendererParams,
+    cellEditorParams,
+    children,
 
 ```
 
