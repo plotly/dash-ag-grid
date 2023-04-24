@@ -89,8 +89,8 @@ layout = html.Div(
         example_app(
             "examples.scrolling.row_pagination_page_size", make_layout=make_tabs
         ),
-        make_md(text3),
-        example_app("examples.scrolling.row_pagination_custom", make_layout=make_tabs),
+        # make_md(text3),
+        # example_app("examples.scrolling.row_pagination_custom", make_layout=make_tabs),
         # up_next("text"),
     ],
 )
