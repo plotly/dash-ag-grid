@@ -78,6 +78,7 @@ dagfuncs.NumberInput = class {
     this.eInput.value = params.value;
     this.eInput.style.height = 'var(--ag-row-height)';
     this.eInput.style.fontSize = 'calc(var(--ag-font-size) + 1px)';
+    this.eInput.style.borderWidth = 0;
     this.eInput.style.width = '95%';
     this.eInput.type = "number";
     this.eInput.min = params.min;

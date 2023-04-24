@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=6,
     description=app_description,
-    title="Dash AG Grid Column Definitions",
+    title="Dash AG Grid - Column Sizing",
 )
 
 
