@@ -69,7 +69,8 @@ __2.0.0a5__
 __2.0.0rc1__
 
 - Removed undocumented `AutoSizeAllColumns` prop
-- Renamed option -  `columnSize="autoSizeAll"` is now `columnSize="autoSize"`
+- Renamed option -  `columnSize="autoSizeAll"` is now `columnSize="autoSize"`  Be sure to check out all the new options
+ available for `columnSize` in the docs.
 
 -----------------
 
