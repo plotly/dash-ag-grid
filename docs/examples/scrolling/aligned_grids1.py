@@ -49,6 +49,7 @@ top_grid = dag.AgGrid(
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
     defaultColDef=defaultColDef,
+    columnSize="responsiveSizeToFit",
     dashGridOptions={"alignedGrids": ["bottom-grid"]},
     suppressDragLeaveHidesColumns=False,
 )
@@ -57,6 +58,7 @@ bottom_grid = dag.AgGrid(
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
     defaultColDef=defaultColDef,
+    columnSize="responsiveSizeToFit",
     suppressDragLeaveHidesColumns=False,
 )
 
