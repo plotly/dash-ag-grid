@@ -598,13 +598,19 @@ export default class DashAgGrid extends Component {
     }
 
     onRowGroupOpened(e) {
-        this.setState(({openGroups}) => ({
-            openGroups: e.expanded
+        this.setState(({openGroups}) => {
+            let newGroups = e.expanded
                 ? // If the node was just expanded, add it to the list of open nodes
                   openGroups.add(e.node.key)
                 : // If it's collapsed, remove it from the list of open nodes
-                  openGroups.delete(e.node.key),
-        }));
+                  openGroups.delete(e.node.key);
+            if (newGroups === true || newGroups === false) {
+                newGroups = new Set();
+            }
+            return {
+                openGroups: newGroups,
+            };
+        });
     }
 
     onSelectionChanged() {

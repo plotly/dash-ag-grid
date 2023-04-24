@@ -49,3 +49,4 @@ workflows:
   run-tests:
     jobs:
       - test
+      - test-react-18
