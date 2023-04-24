@@ -1,6 +1,6 @@
 {
     "name": "dash-ag-grid",
-    "version": "2.0.0a5",
+    "version": "2.0.0rc1",
     "description": "Dash wrapper around ag-grid",
     "repository": {
         "type": "git",
