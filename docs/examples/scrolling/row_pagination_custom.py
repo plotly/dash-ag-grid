@@ -70,6 +70,7 @@ def update_pagination_control(pagination_info):
 @app.callback(
     Output("custom-pagination-grid", "paginationGoTo"),
     Input("custom-pagination", "active_page"),
+    prevent_initial_call=True
 )
 def goto_page(n):
     if n is None or n == 1:
