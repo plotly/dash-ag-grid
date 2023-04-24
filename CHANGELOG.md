@@ -98,6 +98,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 - [#145](https://github.com/plotly/dash-ag-grid/pull/145)
   - updated AG Grid `29.1.0` -> `29.3.2`
+
+- [#155](https://github.com/plotly/dash-ag-grid/pull/155)
+  - update React to `18.2.0`
+  - updated `material-ui` to `@mui` for `rowMenuRenderer`
   
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
@@ -121,6 +125,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#145](https://github.com/plotly/dash-ag-grid/pull/145)
   - fixed `onRowDragEnd` to trigger `virtualRowData` update
   - fixed all `virtualRowData` updates to take into account the sorting
+
+- [#155](https://github.com/plotly/dash-ag-grid/pull/155)
+  - fixed `openGroups` where clearing out the set would cause issues
+  - fixed `paginationGoTo` to work with a starting page
 
 ## [1.3.2] - 2023-01-13
 

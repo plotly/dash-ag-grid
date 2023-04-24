@@ -100,7 +100,7 @@ def test_cs001_column_state(dash_duo):
                 rowData=rowData,
                 columnState=colState,
             ),
-            html.Pre(id="reset-column-state-grid-pre"),
+            html.Div(id="reset-column-state-grid-pre"),
         ]
     )
 
@@ -118,8 +118,9 @@ def test_cs001_column_state(dash_duo):
         return no_update
 
     @app.callback(
-        Output('reset-column-state-grid', 'columnState'),
-        Input('load-column-state-button', 'n_clicks')
+        Output('grid', 'columnState'),
+        Input('load-column-state-button', 'n_clicks'),
+        prevent_initial_call=True
     )
     def loadState(n):
         if n:
@@ -141,6 +142,7 @@ def test_cs001_column_state(dash_duo):
 
     grid.wait_for_pinned_cols(2)
     grid.wait_for_viewport_cols(1)
+
     until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
 
     grid.resize_col(1, 50)

@@ -317,9 +317,4 @@ export const OMIT_PROP_RENDER = [
 /**
  * States to not trigger a render update
  */
-export const OMIT_STATE_RENDER = [
-    'gridApi',
-    'gridColumnApi',
-    'mounted',
-    'openGroups',
-];
+export const OMIT_STATE_RENDER = ['gridColumnApi', 'mounted', 'openGroups'];

@@ -393,6 +393,9 @@ export default class DashAgGrid extends Component {
 
     onFilterChanged() {
         const {setProps, rowModelType} = this.props;
+        if (!this.state.gridApi) {
+            return;
+        }
         const filterModel = this.state.gridApi.getFilterModel();
         const propsToSet = {filterModel};
         if (rowModelType === 'clientSide') {
@@ -512,7 +515,7 @@ export default class DashAgGrid extends Component {
         return false;
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
         const {
             selectedRows,
             getDetailResponse,
@@ -520,6 +523,15 @@ export default class DashAgGrid extends Component {
             masterDetail,
             setProps,
             id,
+            resetColumnState,
+            csvExportParams,
+            exportDataAsCsv,
+            selectAll,
+            deselectAll,
+            deleteSelectedRows,
+            filterModel,
+            columnState,
+            paginationGoTo,
         } = this.props;
 
         if (id !== prevProps.id) {
@@ -531,6 +543,72 @@ export default class DashAgGrid extends Component {
                 delete agGridRefs[prevProps.id];
                 eventBus.remove(prevProps.id);
             }
+        }
+
+        if (this.state.gridApi && this.state.gridApi !== prevState.gridApi) {
+            const propsToSet = {};
+            this.updateColumnWidths(false);
+
+            if (this.state.rowTransaction) {
+                this.state.rowTransaction.map((data) =>
+                    this.applyRowTransaction(data, this.state.gridApi)
+                );
+                this.setState({rowTransaction: null});
+                this.syncRowData();
+            }
+
+            // Handles applying selections when a selection was persisted by Dash
+            this.setSelection(selectedRows);
+
+            if (this.reference.current.props.pagination) {
+                this.onPaginationChanged();
+            }
+
+            if (!isEmpty(filterModel)) {
+                this.state.gridApi.setFilterModel(filterModel);
+            }
+
+            if (columnState) {
+                this.setColumnState();
+            }
+
+            if (paginationGoTo) {
+                this.paginationGoTo(false);
+                propsToSet.paginationGoTo = null;
+            }
+
+            if (resetColumnState) {
+                this.resetColumnState(false);
+                propsToSet.resetColumnState = false;
+            }
+
+            if (exportDataAsCsv) {
+                this.exportDataAsCsv(csvExportParams, false);
+                propsToSet.exportDataAsCsv = false;
+            }
+
+            if (selectAll) {
+                this.selectAll(selectAll, false);
+                propsToSet.selectAll = false;
+            }
+
+            if (deselectAll) {
+                this.deselectAll(false);
+                propsToSet.deselectAll = false;
+            }
+
+            if (deleteSelectedRows) {
+                this.deleteSelectedRows(false);
+                propsToSet.deleteSelectedRows = false;
+            }
+
+            if (!isEmpty(propsToSet)) {
+                setProps(propsToSet);
+            }
+            // Hydrate virtualRowData
+            this.onFilterChanged(true);
+            this.setState({mounted: true});
+            this.updateColumnState();
         }
 
         if (this.isDatasourceLoadedForInfiniteScrolling()) {
@@ -654,93 +732,16 @@ export default class DashAgGrid extends Component {
     onGridReady(params) {
         // Applying Infinite Row Model
         // see: https://www.ag-grid.com/javascript-grid/infinite-scrolling/
-        const {
-            rowModelType,
-            selectedRows,
-            resetColumnState,
-            csvExportParams,
-            exportDataAsCsv,
-            selectAll,
-            deselectAll,
-            deleteSelectedRows,
-            filterModel,
-            setProps,
-            columnState,
-            paginationGoTo,
-        } = this.props;
+        const {rowModelType} = this.props;
 
-        const propsToSet = {};
         if (rowModelType === 'infinite') {
             params.api.setDatasource(this.getDatasource());
         }
 
-        this.setState({
+        this.setState(() => ({
             gridApi: params.api,
             gridColumnApi: params.columnApi,
-        });
-
-        this.updateColumnWidths();
-
-        if (this.reference.current.props.pagination) {
-            this.onPaginationChanged();
-        }
-
-        if (!isEmpty(filterModel)) {
-            this.state.gridApi.setFilterModel(filterModel);
-        }
-
-        if (columnState && !this.state.mounted) {
-            this.setColumnState();
-        }
-
-        if (paginationGoTo) {
-            this.paginationGoTo(false);
-            propsToSet.paginationGoTo = null;
-        }
-
-        if (resetColumnState) {
-            this.resetColumnState(false);
-            propsToSet.resetColumnState = false;
-        }
-
-        if (exportDataAsCsv) {
-            this.exportDataAsCsv(csvExportParams, false);
-            propsToSet.exportDataAsCsv = false;
-        }
-
-        if (selectAll) {
-            this.selectAll(selectAll, false);
-            propsToSet.selectAll = false;
-        }
-
-        if (deselectAll) {
-            this.deselectAll(false);
-            propsToSet.deselectAll = false;
-        }
-
-        if (deleteSelectedRows) {
-            this.deleteSelectedRows(false);
-            propsToSet.deleteSelectedRows = false;
-        }
-
-        if (!isEmpty(propsToSet)) {
-            setProps(propsToSet);
-        }
-
-        if (this.state.rowTransaction) {
-            this.state.rowTransaction.map((data) =>
-                this.applyRowTransaction(data, params.api)
-            );
-            this.setState({rowTransaction: null});
-            this.syncRowData();
-        }
-
-        // Handles applying selections when a selection was persisted by Dash
-        this.setSelection(selectedRows);
-        // Hydrate virtualRowData
-        this.onFilterChanged(true);
-        this.setState({mounted: true});
-        this.updateColumnState();
+        }));
     }
 
     onCellClicked({value, column: {colId}, rowIndex, node}) {
@@ -802,7 +803,7 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    updateColumnWidths() {
+    updateColumnWidths(setColumns = true) {
         const {columnSize, columnSizeOptions, setProps} = this.props;
         const {gridApi, gridColumnApi} = this.state;
         if (gridApi || gridColumnApi) {
@@ -832,7 +833,7 @@ export default class DashAgGrid extends Component {
             if (columnSize !== 'responsiveSizeToFit') {
                 setProps({columnSize: null});
             }
-            if (this.state.mounted) {
+            if (setColumns) {
                 this.updateColumnState();
             }
         }

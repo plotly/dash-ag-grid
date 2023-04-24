@@ -162,3 +162,5 @@ def test_td001_tree_data(dash_duo):
     grid.wait_for_cell_text(3, 0, "Brittany Hanson")
     grid.get_cell_collapsable(2, 0).click()
     grid.wait_for_cell_text(3, 0, "Francis Strickland")
+    grid.get_cell_expandable(2, 0).click()
+    grid.wait_for_cell_text(3, 0, "Brittany Hanson")

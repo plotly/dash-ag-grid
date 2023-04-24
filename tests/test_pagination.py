@@ -41,6 +41,7 @@ def test_pa001_pagination(dash_duo):
                 columnSize="sizeToFit",
                 defaultColDef={"resizable": True, "sortable": True, "filter": True},
                 dashGridOptions={"pagination": True},
+                paginationGoTo=5,
             ),
             html.Div(id='grid-info'),
             html.Button(id='changeSize', children='changeSize')
@@ -73,9 +74,9 @@ def test_pa001_pagination(dash_duo):
 
     grid = utils.Grid(dash_duo, "grid")
 
-    grid.wait_for_cell_text(0,0, 'United States')
-    oldValue = ''
-    until(lambda: oldValue != dash_duo.find_element('#grid-info').text, timeout=3)
+    until(lambda: "Australia" == grid.get_cell(500,0).text, timeout=3)
+    oldValue = '{"isLastPageFound": true, "pageSize": 100, "currentPage": 5, "totalPages": 87, "rowCount": 8618}'
+    until(lambda: oldValue == dash_duo.find_element('#grid-info').text, timeout=3)
     oldValue = dash_duo.find_element('#grid-info').text
     dash_duo.find_element('.ag-paging-button[aria-label="Last Page"]').click()
     until(lambda: oldValue != dash_duo.find_element('#grid-info').text, timeout=3)
