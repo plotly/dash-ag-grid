@@ -4,7 +4,7 @@ orbs:
   browser-tools: circleci/browser-tools@1.4.0
 
 jobs:
-  test:
+  test: &test
     docker:
       - image: cimg/python:3.9.9-node
         auth:
@@ -35,6 +35,15 @@ jobs:
           command: |
             . venv/bin/activate
             pytest --headless
+  test-react-18:
+    <<: *test
+    docker:
+      - image: cimg/python:3.9.9-node
+        auth:
+          username: dashautomation
+          password: $DASH_PAT_DOCKERHUB
+        environment:
+          REACT_VERSION: "18.2.0"
 
 workflows:
   run-tests:
