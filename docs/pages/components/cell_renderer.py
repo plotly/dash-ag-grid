@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=2,
     description=app_description,
-    title="Dash AG Grid Components - cell renderers",
+    title="Dash AG Grid Components - Cell Renderers",
     name="Cell renderer components"
 
 )

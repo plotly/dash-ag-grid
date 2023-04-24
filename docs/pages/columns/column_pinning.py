@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=8,
     description=app_description,
-    title="Dash AG Grid Column Definitions",
+    title="Dash AG Grid - Column Pinning",
     # name="Bootstrap Utility Classes",
     # hashtags=["intro","background", "border", "color", "spacing", "text", "position"],
 )

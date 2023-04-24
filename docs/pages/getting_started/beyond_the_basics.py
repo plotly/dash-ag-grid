@@ -5,7 +5,7 @@ from utils.other_components import up_next, make_md, make_feature_card
 
 
 register_page(
-    __name__, order=3, description=app_description, title="Dash AG Grid")
+    __name__, order=3, description=app_description, title="Dash AG Grid - Beyond the Basics")
 
 text1 = """
 # Beyond The Basics

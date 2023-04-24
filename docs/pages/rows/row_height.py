@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=5,
     description=app_description,
-    title="Dash AG Grid Row Height",
+    title="Dash AG Grid - Row Height",
 )
 
 text1 = """
