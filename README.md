@@ -6,9 +6,12 @@ The underlying AG Grid Javascript package is a third-party software component de
 
 
 
-**Dash AG Grid is currently a prerelease**
+## Dash AG Grid is currently a prerelease
 
-We're working hard to get it ready for its initial v2.0.0 open-source release on PyPI. In the meantime if you'd like to try it out, you can clone this repo and follow the instructions in _Developing in this repo_ below to build the component and install it in development mode. At that point you can use `import dash_ag_grid as dag` in your own app. There are two apps in the `docs/` folder that you can run to learn about the component. To run these, first install the docs requirements:
+We've completed all planned breaking changes, and we're now doing the final review before the full 2.0.0 release!
+
+If you have tried previous alpha releases, please see our [Migration Guide.](https://dashaggrid.pythonanywhere.com/getting-started/migration-guide)
+
 
 
 ### Getting Started
@@ -26,8 +29,7 @@ We're working hard to get it ready for its initial v2.0.0 open-source release on
 ### See the docs app live
 https://dashaggrid.pythonanywhere.com/
 
-![image](https://user-images.githubusercontent.com/72614349/216692988-1a63b650-eedf-4c3b-946d-d1d41368a5a9.png)
-
+![docs_app](https://user-images.githubusercontent.com/72614349/233876110-4a29348c-d8e3-4114-b152-bf97f934eac8.png)
 
 ## Contributing
 
