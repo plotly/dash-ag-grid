@@ -117,7 +117,7 @@ def test_cd002_column_drag(dash_duo):
             id="middleGrid",
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
-            columnSize="autoSize",
+            columnSize=None,
             defaultColDef=defaultColDef,
             dashGridOptions={'alignedGrids': 'bottomGrid'},
             columnState = s
