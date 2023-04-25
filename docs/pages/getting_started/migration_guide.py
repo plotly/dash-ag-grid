@@ -72,6 +72,11 @@ __2.0.0rc1__
 - Renamed option -  `columnSize="autoSizeAll"` is now `columnSize="autoSize"`  Be sure to check out all the new options
  available for `columnSize` in the docs.
 
+__2.0.0rc2__
+
+- No breaking changes
+
+
 -----------------
 
 #### Migrating from Dash Enterprise 1.3.0 - Breaking changes summary
