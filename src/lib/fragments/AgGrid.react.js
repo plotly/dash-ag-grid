@@ -11,6 +11,7 @@ import {
     memoizeWith,
     pick,
     omit,
+    assoc,
 } from 'ramda';
 import {
     propTypes as _propTypes,
@@ -164,7 +165,7 @@ export default class DashAgGrid extends Component {
                 ...newComponents,
             },
             rerender: 0,
-            openGroups: new Set(),
+            openGroups: {},
             gridApi: null,
             gridColumnApi: null,
         };
@@ -549,6 +550,13 @@ export default class DashAgGrid extends Component {
             const propsToSet = {};
             this.updateColumnWidths(false);
 
+            const groups = {};
+            this.state.gridApi.forEachNode((node) => {
+                if (node.expanded) {
+                    groups[node.key] = 1;
+                }
+            });
+
             if (this.state.rowTransaction) {
                 this.state.rowTransaction.map((data) =>
                     this.applyRowTransaction(data, this.state.gridApi)
@@ -607,7 +615,7 @@ export default class DashAgGrid extends Component {
             }
             // Hydrate virtualRowData
             this.onFilterChanged(true);
-            this.setState({mounted: true});
+            this.setState({mounted: true, openGroups: groups});
             this.updateColumnState();
         }
 
@@ -658,12 +666,12 @@ export default class DashAgGrid extends Component {
 
             // When the rowData is updated, reopen any row groups if they previously existed in the table
             // Iterate through all nodes in the grid. Unfortunately there's no way to iterate through only nodes representing groups
-            if (openGroups.size > 0) {
+            if (!isEmpty(openGroups)) {
                 gridApi.forEachNode((node) => {
                     // Check if it's a group row based on whether it has the __hasChildren prop
                     if (node.__hasChildren) {
                         // If the key for the node (i.e. the group name) is the same as an
-                        if (openGroups.has(node.key)) {
+                        if (openGroups[node.key]) {
                             gridApi.setRowNodeExpanded(node, true);
                         }
                     }
@@ -676,19 +684,11 @@ export default class DashAgGrid extends Component {
     }
 
     onRowGroupOpened(e) {
-        this.setState(({openGroups}) => {
-            let newGroups = e.expanded
-                ? // If the node was just expanded, add it to the list of open nodes
-                  openGroups.add(e.node.key)
-                : // If it's collapsed, remove it from the list of open nodes
-                  openGroups.delete(e.node.key);
-            if (newGroups === true || newGroups === false) {
-                newGroups = new Set();
-            }
-            return {
-                openGroups: newGroups,
-            };
-        });
+        this.setState(({openGroups}) => ({
+            openGroups: e.expanded
+                ? assoc(e.node.key, 1, openGroups)
+                : omit([e.node.key], openGroups),
+        }));
     }
 
     onSelectionChanged() {
