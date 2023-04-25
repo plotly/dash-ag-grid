@@ -130,6 +130,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - fixed `openGroups` where clearing out the set would cause issues
   - fixed `paginationGoTo` to work with a starting page
 
+- [#158](https://github.com/plotly/dash-ag-grid/pull/158)
+  - fixed `openGroups` to pull initial state, and fixed returning set
+
 ## [1.3.2] - 2023-01-13
 
 ### Updated
