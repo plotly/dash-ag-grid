@@ -65,7 +65,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - added new `columnSize` available, `responsiveSizeToFit` which will adjust column sizes based upon grid size and columns added or removed
   - added `columnSizeOptions` to take an object that is compatible with AG Grid to perform sizing options as needed
   - added ability to push `columnState` back to grid and replay the settings
- 
+
 - [#145](https://github.com/plotly/dash-ag-grid/pull/145)
   - added support for `alignedGrids`
   - added ability for functions with `tooltipComponentParams`
@@ -96,13 +96,13 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#132](https://github.com/plotly/dash-ag-grid/pull/132)
   - updated `columnSize` option of `autoSizeAll` -> `autoSize`
 
-- [#145](https://github.com/plotly/dash-ag-grid/pull/145)
-  - updated AG Grid `29.1.0` -> `29.3.2`
+- [#145](https://github.com/plotly/dash-ag-grid/pull/145) and [#159](https://github.com/plotly/dash-ag-grid/pull/159)
+  - updated AG Grid `29.1.0` -> `29.3.3`
 
 - [#155](https://github.com/plotly/dash-ag-grid/pull/155)
   - update React to `18.2.0`
   - updated `material-ui` to `@mui` for `rowMenuRenderer`
-  
+
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Fix issue where conditional formatting was not applied to nested columns
@@ -126,12 +126,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - fixed `onRowDragEnd` to trigger `virtualRowData` update
   - fixed all `virtualRowData` updates to take into account the sorting
 
-- [#155](https://github.com/plotly/dash-ag-grid/pull/155)
+- [#155](https://github.com/plotly/dash-ag-grid/pull/155) and [#158](https://github.com/plotly/dash-ag-grid/pull/158)
   - fixed `openGroups` where clearing out the set would cause issues
   - fixed `paginationGoTo` to work with a starting page
-
-- [#158](https://github.com/plotly/dash-ag-grid/pull/158)
-  - fixed `openGroups` to pull initial state, and fixed returning set
 
 ## [1.3.2] - 2023-01-13
 
