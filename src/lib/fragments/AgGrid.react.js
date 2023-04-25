@@ -738,10 +738,10 @@ export default class DashAgGrid extends Component {
             params.api.setDatasource(this.getDatasource());
         }
 
-        this.setState(() => ({
+        this.setState({
             gridApi: params.api,
             gridColumnApi: params.columnApi,
-        }));
+        });
     }
 
     onCellClicked({value, column: {colId}, rowIndex, node}) {
