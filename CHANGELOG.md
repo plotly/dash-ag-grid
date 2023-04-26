@@ -133,6 +133,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#158](https://github.com/plotly/dash-ag-grid/pull/158)
   - fixed `openGroups` to pull initial state, and fixed returning set
 
+- [#161](https://github.com/plotly/dash-ag-grid/pull/161)
+  - fixed the default style to be applied even when a style is given from the developer, `style.height` and `style.width` always exist and can be overridden by the developer if provided
+
 ## [1.3.2] - 2023-01-13
 
 ### Updated
