@@ -79,7 +79,7 @@ text2 = """
 
 ### Getting Started
 
-`pip install dash-ag-grid==2.0.0rc1`
+`pip install dash-ag-grid==2.0.0rc2`
 
  1. Read the [Medium article](https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers) or watch the [webinar](https://www.youtube.com/watch?v=Ggekq7C5pz4?utm_source=Webinar%3A+AG+Grid+1%2F26%2F23&utm_medium=medium_article&utm_content=AnnouncingDashAGGrids) introducing Dash AG Grid.
  2. See the Plotly Video [Introducing Dash AG Grid](https://www.youtube.com/watch?v=dovf4FwtwPg)
