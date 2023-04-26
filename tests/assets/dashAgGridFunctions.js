@@ -170,5 +170,5 @@ function monthToComparableNumber(date) {
   const yearNumber = parseInt(date.split('/')[2]);
   const monthNumber = parseInt(date.split('/')[1]);
   const dayNumber = parseInt(date.split('/')[0]);
-  return (yearNumber * 10000) + (monthNumber * 100) + dayNumber;
+  return yearNumber * 10000 + monthNumber * 100 + dayNumber;
 }
