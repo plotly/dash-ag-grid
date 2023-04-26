@@ -208,16 +208,18 @@ export default class DashAgGrid extends Component {
                     ...window.dashAgGridFunctions,
                 };
                 const test = function (node) {
-                    node.setSelected(
-                        evaluate(parsedCondition, {node, ...context})
-                    );
+                    if (evaluate(parsedCondition, {node, ...context})) {
+                        node.setSelected(true);
+                    }
                 };
                 gridApi.forEachNode(test);
             } else if (Object.keys(selection).includes('ids')) {
                 // keeps grid from rendering display unnecessarily
                 gridApi.deselectAll();
                 gridApi.forEachNode((node) => {
-                    node.setSelected(selection.ids[node.id] ? true : false);
+                    if (selection.ids[node.id]) {
+                        node.setSelected(true);
+                    }
                 });
             } else {
                 if (!selection.length) {
@@ -234,11 +236,15 @@ export default class DashAgGrid extends Component {
                             mapId[evaluate(parsedCondition, params)] = true;
                         });
                         gridApi.forEachNode((node) => {
-                            node.setSelected(mapId[node.id]);
+                            if (mapId[node.id]) {
+                                node.setSelected(true);
+                            }
                         });
                     } else {
                         gridApi.forEachNode((node) => {
-                            node.setSelected(includes(node.data, selection));
+                            if (includes(node.data, selection)) {
+                                node.setSelected(true);
+                            }
                         });
                     }
                 }
@@ -767,8 +773,12 @@ export default class DashAgGrid extends Component {
     }
 
     applyRowTransaction(data, gridApi = this.state.gridApi) {
+        const {selectedRows} = this.props;
         if (data.async === false) {
             gridApi.applyTransaction(data);
+            if (selectedRows) {
+                this.setSelection(selectedRows);
+            }
         } else {
             gridApi.applyTransactionAsync(data);
         }
@@ -1107,6 +1117,10 @@ export default class DashAgGrid extends Component {
     }
 
     onAsyncTransactionsFlushed() {
+        const {selectedRows} = this.props;
+        if (selectedRows) {
+            this.setSelection(selectedRows);
+        }
         this.syncRowData();
     }
 
