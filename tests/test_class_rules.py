@@ -15,7 +15,7 @@ def test_cr001_class_rules(dash_duo):
     rowData = [
         {"make": "Toyota", "model": "Celica", "price": 35000},
         {"make": "Ford", "model": "Mondeo", "price": 32000},
-        {"make": "Porsche", "model": "Boxter", "price": 72000},
+        {"make": "Porsche", "model": "Boxster", "price": 72000},
     ]
 
     columnDefs = [
@@ -39,7 +39,7 @@ def test_cr001_class_rules(dash_duo):
                     "editable": True,
                 },
                 rowClassRules={"row-orange": "params.data.model == 'Mondeo'",
-                               "row-red": "params.data.model == 'Boxter'",
+                               "row-red": "params.data.model == 'Boxster'",
                                "row-blue": "params.data.model == 'Celica'"},
                 dashGridOptions={'getRowClass': {'function': "rowTest(params)"}}
             ),

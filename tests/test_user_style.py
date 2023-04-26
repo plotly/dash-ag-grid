@@ -11,7 +11,7 @@ df = px.data.election()
 default_display_cols = ["district_id", "district", "winner"]
 
 
-def test_cs001_column_state(dash_duo):
+def test_us001_user_style(dash_duo):
     app = Dash(__name__)
     columnDefs = [
         {"headerName": "Make", "field": "make"},
@@ -29,7 +29,7 @@ def test_cs001_column_state(dash_duo):
     rowData = [
         {"make": "Toyota", "model": "Celica", "price": 35000},
         {"make": "Ford", "model": "Mondeo", "price": 32000},
-        {"make": "Porsche", "model": "Boxter", "price": 72000},
+        {"make": "Porsche", "model": "Boxster", "price": 72000},
     ]
 
     app.layout = html.Div(

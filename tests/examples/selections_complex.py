@@ -44,10 +44,10 @@ app.layout = html.Div(
         dcc.Markdown("Selections are persisted when data is updated."),
         html.Button(id="generate-data", children="Generate data"),
         dcc.Dropdown(
-            options=[{"label": i, "value": i} for i in ["Celica", "Mondeo", "Boxter"]],
+            options=[{"label": i, "value": i} for i in ["Celica", "Mondeo", "Boxster"]],
             id="model-picker",
             multi=True,
-            value=["Celica", "Mondeo", "Boxter"],
+            value=["Celica", "Mondeo", "Boxster"],
         ),
         dag.AgGrid(
             id="persisting-selectable-grid-callbacks",
@@ -79,7 +79,7 @@ def generate_data(n_clicks, values):
     rowData = [
         {"make": "Toyota", "model": "Celica", "price": 35000},
         {"make": "Ford", "model": "Mondeo", "price": 32000},
-        {"make": "Porsche", "model": "Boxter", "price": 72000},
+        {"make": "Porsche", "model": "Boxster", "price": 72000},
     ]
     if n_clicks:
         return [i for i in rowData if i["model"] in values]
