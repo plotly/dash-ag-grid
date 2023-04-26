@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=2,
     description=app_description,
-    title="Dash AG Grid Components - cell renderers",
+    title="Dash AG Grid Components - Cell Renderers",
     name="Cell renderer components"
 
 )
@@ -126,8 +126,9 @@ text2 = """
 ` `  
 ` `  
 
-### Callbacks with custom components
-To use the custom components in a callback, the component must call the `setData()` function, which will update the
+### cellRenderer  components & Dash Callbacks
+
+To use the custom cellRenderer components in a callback, the component must call the `setData()` function, which will update the
  Dash prop `cellRendererData`.  Use this prop to get information on which component triggered the callback.
 
 `cellRendererData` (dict; optional): Special prop to allow feedback from cell renderer to the grid. `cellRendererData` is a dict with keys:

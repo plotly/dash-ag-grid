@@ -11,7 +11,7 @@ text1 = """
 # Troubleshooting Guide
 
 
-### 1. Error Messages - Invalid Props
+### 1. Dash Error Messages - Invalid Props
 
 > "Invalid prop for this component"
 
@@ -35,7 +35,7 @@ dag.AgGrid(
 )
 ```
 
-Solution:
+__Solution:__
 Valid grid level props can be passed to the grid in the `dashGridOptions` container like this:
 ```
 # Correct way
@@ -55,7 +55,7 @@ dag.AgGrid(
     # other props
 )
 ```
-Solution:
+__Solution:__
 Valid column level props can be passed to the grid in the `defaultColDef` or the `columnDefs` container like this:
 ```
 # Correct way using defaultColDef
@@ -91,7 +91,16 @@ dag.AgGrid(
 
 
 
-### 2. It's not working -- check the browser console for error messages 
+### 2. Check the browser console for error and warning messages 
+
+You often won't get an error message from Dash if something in the grid is not working.  Errors handled by AG Grid
+ will be displayed as messages in the browser console.   Be sure to check for both warning messages and error messages.
+
+For example if you use an invalid prop in `columnDefs` or `defaultColDef` you will not get an error message from 
+   Dash.  If you open your browser console, you will see a warning message like the image below. Note that invalid 
+   props will be ignored, and will seem to "fail silently".
+
+![console_warning](https://user-images.githubusercontent.com/72614349/233742767-efbebbdf-7f81-42cf-8efb-35972eaa7f62.png)
 
 if you are using raw HTML in Markdown or other components that accept raw HTML, or if you are using string
  [expressions](https://www.ag-grid.com/react-data-grid/cell-expressions/) rather than the safer method of validated functions, you must set `dangerously_allow_code=True` 
@@ -100,14 +109,14 @@ if you are using raw HTML in Markdown or other components that accept raw HTML, 
 ![console_error](https://user-images.githubusercontent.com/72614349/230785808-8c32d184-29f5-458e-8e78-9ed1d73757d8.png)
 
 
-Solution 1:
+__Solution 1:__
 
 Before setting `dangerously_allow_code=True`, please try other ways to make your app more secure.  For more info on
  using functions, see the <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' /> section.  Instead of rendering raw HTML,
   consider using custom <dccLink href='/components/cell-renderer' children='Components.' />
 
 
-Solution 2:
+__Solution 2:__
 ```
 dag.AgGrid(
     `dangerously_allow_code=True`,
@@ -120,25 +129,13 @@ dag.AgGrid(
 ` `  
 
 
-### 3. It's not working --  no error message
-
-In Dash we depend on the dev tools to alert us to errors  However if prop is misspelled in one of the dicts that pass
- props to the grid such as `columnDefs`, then there will be no error message and it "fails silently" 
-  
-   
-Solution:
-Double check the spelling of the prop and make sure it's in the correct Dash container prop.
-
-` `  
-` `  
-
-### 4.  The grid is gone!
+### 3.  The grid is gone!
 
 Does the grid look like this?
 
 ![no_grid](https://user-images.githubusercontent.com/72614349/230976812-6025617c-bf3d-47d3-9b95-686288feb73f.png)
 
-Solution:  
+__Solution:__ 
 The grid must always have a theme class set on its container, whether this is a provided theme or your own. The default
  is `className="ag-theme-alpine"`.  If you set the grid's `className` prop to something else, be sure to include the theme.
  
@@ -170,7 +167,77 @@ html.Div(
 ` `  
 ` `  
 
-### 5. Debugging custom functions with `log()` 
+### 4.  The whole grid is gone!
+
+Instead of  the grid, do you just see a line like this?:
+
+![no_grid](https://user-images.githubusercontent.com/72614349/233809597-f8687dc0-6a5f-4999-96db-b90cf876e706.png)
+
+__Solution:__
+
+The default for the `style` prop is:  `style={'height': '400px', 'width': '100%'}`  If you set the `style` prop on the grid level to
+ something else, be sure to set the height and width as well.  Here are some examples:
+ 
+ ```
+# Wrong way:
+dag.AgGrid(
+    style={"margin": 20},
+    # other props
+)
+
+
+# Correct way:
+dag.AgGrid(
+    style={"height": "400px", "width": "100%", "margin": 20}
+    # other props
+)
+
+# Another Correct way:
+html.Div(
+    dag.AgGrid(...),
+    style={"margin": 20},
+)
+
+```
+
+` `  
+` `  
+### 5. Spaces in field names
+
+If your field names contain spaces, then you cannot use the dot notation  (ie `params.data.date`)
+
+__solution:__  
+Use square brackets around the field name. (ie `params.data['invoice date']`)
+
+For example, if your data looks like:
+
+```
+rowData = [
+    {'invoice date': '12-31-2023', 'price': 100.00}
+    # other rows
+]
+```
+
+
+```
+# wrong way
+ "valueGetter": {"function": "d3.timeParse('%Y-%m-%d')(params.data.invoice date)"}
+
+# wrong way
+myDate="invoice date"
+"valueGetter": {"function": "d3.timeParse('%Y-%m-%d')(params.data.myDate)"}
+
+# right way
+"valueGetter": {"function": "d3.timeParse('%Y-%m-%d')(params.data['invoice date'])"}
+
+```
+
+
+
+` `  
+` `  
+
+### 6. Debugging custom functions with `log()` 
 
 Please see the  <dccLink href='/getting-started/beyond-the-basics' children='Beyond the Basics' /> section for information
 on debugging functions with `log()`
@@ -179,7 +246,7 @@ on debugging functions with `log()`
 
 ` `  
 ` ` 
-### 6. Other
+### 7. Other
 
 For other issues:
   - Search the [Dash Community Forum](https://community.plotly.com/)

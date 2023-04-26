@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=2,
     description=app_description,
-    title="Dash AG Grid Import Export - clipboard",
+    title="Dash AG Grid Import Export - Clipboard",
 )
 
 text1 = """

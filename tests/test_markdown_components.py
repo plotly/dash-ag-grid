@@ -65,7 +65,7 @@ def test_mc001_markdown_components(dash_duo):
         },
         {
             "make": "***Porsche*** in both",
-            "model": "<b>Boxter</b> in HTML bold",
+            "model": "<b>Boxster</b> in HTML bold",
             "link": "[Example](#)",
             "image": "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)",
         },

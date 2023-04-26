@@ -11,7 +11,7 @@ register_page(
     __name__,
     order=4,
     description=app_description,
-    title="Dash AG Grid Filtering",
+    title="Dash AG Grid - Date Filtering",
 )
 
 
@@ -138,6 +138,14 @@ The example below shows the date filter in action, using some of the configurati
 - The minimum valid year is set to 2000, and maximum valid year is 2021. Dates outside this range will be considered invalid, and will:
     - Deactivate the column filter. This avoids the filter getting applied as the user is typing a year - for example suppose the user is typing the year 2008, the filter doesn't execute for values 2, 20 or 200 (as the text 2008 is partially typed).
     - Be highlighted with a red border (default theme) or other theme-appropriate highlight.
+
+
+> #### See more date filter examples in the docs
+> - <dccLink href='/rendering/value-formatters-with-d3-format' children='Rendering - Value formatters with d3' /> (last 3 examples)
+> - <dccLink href='/filtering/column-filters-overview' children='Filtering - Column filters overview' />  (first example)
+> - <dccLink href='/rows/row-sorting' children='Rows - Row Sorting' /> (Example 2 sorting dates)
+> 
+
 
 """
 

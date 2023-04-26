@@ -40,7 +40,7 @@ def test_rm001_row_menu(dash_duo):
                     },
                     {
                         "make": "Porsche",
-                        "model": "Boxter",
+                        "model": "Boxster",
                         "price": 72000,
                         "menu": [
                             {"label": "Option 7", "value": 7},
@@ -83,7 +83,7 @@ def test_rm001_row_menu(dash_duo):
 
     ### testing components
     grid.element_click_cell_button(0, 3)
-    assert 'opacity: 1' in dash_duo.find_element('.MuiPopover-root .MuiMenu-paper').get_attribute('style')
-    dash_duo.find_elements('.MuiPopover-root .MuiMenu-paper .MuiMenu-list .MuiListItem-button')[1].click()
+    assert 'opacity: 1' in dash_duo.find_element('.MuiMenu-paper').get_attribute('style')
+    dash_duo.find_elements('.MuiMenu-paper .MuiMenu-list .MuiMenuItem-root')[1].click()
     dash_duo.wait_for_text_to_equal('#click-data',
                                     'You selected option 2 from the colId menu, rowIndex 0, rowId Toyota.')

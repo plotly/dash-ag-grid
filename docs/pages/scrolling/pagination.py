@@ -26,14 +26,58 @@ The first example shows the default settings for pagination.
 text2 = """
 ### Example: Auto Page Size
 
-The example above shows Auto Page size.  When you set `paginationAutoPageSize`=True the grid will automatically show as
+The example above shows Auto Page size.  When you set `paginationAutoPageSize=True` the grid will automatically show as
  many rows in each page as it can fit. If you resize the display area of the grid, the page size automatically changes. 
  Note that there are no vertical scroll bars in this example.
  
 
 ### Example: Setting Page Size
 
-The example below sets the number of rows to display in each page with `paginationPageSize`
+The example below sets the number of rows to display in each page with `paginationPageSize`.
+"""
+
+text3 = """
+### Example: Custom Pagination Controls
+
+If you would like to provide your own pagination controls, do the following:
+ - Set `pagination=True` to enable pagination.
+ - Set `suppressPaginationPanel=True` so the grid will not show the standard navigation controls for pagination.
+ - Provide your own  pagination component.
+
+```
+dag.AgGrid(
+    dashGridOptions={"pagination": True, "suppressPaginationPanel": True}
+    # other props
+)
+
+```
+
+
+Use the following Dash props to control the pagination.
+
+- `paginationGoTo` (a value equal to: 'first', 'last', 'next', 'previous', null | number; optional): When pagination is enabled, this will navigate to the specified page.
+
+- `paginationInfo` (dict; optional): When pagination is enabled, this will be populated with info from the pagination API. `paginationInfo` is a dict with keys:
+
+    - `currentPage` (number; optional)
+
+    - `isLastPageFound` (boolean; optional)
+
+    - `pageSize` (number; optional)
+
+    - `rowCount` (number; optional)
+
+    - `totalPages` (number; optional)
+
+In the example below you can see how this works. 
+
+- The pagination component is `dbc.Pagination` from the dash-bootstrap-components library
+- We use `paginationGoTo` as the output of the callback to go to the page selected.
+- We use  `totalPages ` in the `paginationInfo` dict to update the dbc.Pagination buttons when the number of pages changes, such as when filtering data.
+
+The example also sets property `suppressScrollOnNewData=True`, which tells the grid to NOT scroll to the top when the page changes.
+
+
 """
 
 
@@ -45,6 +89,8 @@ layout = html.Div(
         example_app(
             "examples.scrolling.row_pagination_page_size", make_layout=make_tabs
         ),
+        make_md(text3),
+        example_app("examples.scrolling.row_pagination_custom", make_layout=make_tabs),
         # up_next("text"),
     ],
 )

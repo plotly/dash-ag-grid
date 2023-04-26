@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=2,
     description=app_description,
-    title="Dash AG Grid Filtering",
+    title="Dash AG Grid - Text Filter",
 )
 
 text1 = """

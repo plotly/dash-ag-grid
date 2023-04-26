@@ -7,7 +7,7 @@ register_page(
     __name__,
     order=5,
     description=app_description,
-    title="Dash AG Grid Layout and Style",
+    title="Dash AG Grid Layout and Style - Customising Selections",
 )
 
 text1 = """

@@ -81,6 +81,22 @@ class Grid:
             .release()
         ).perform()
 
+    def resize_col(self, col, adj):
+        from_col = self.dash_duo.find_element(
+            f'#{self.id} [aria-rowindex="1"] .ag-header-cell[aria-colindex="{col + 1}"] .ag-header-cell-resize'
+        )
+        (
+            ActionChains(self.dash_duo.driver)
+            .move_to_element(from_col)
+            .click_and_hold()
+            .move_to_location(
+                from_col.location["x"] + adj,
+                from_col.location["y"]
+            )
+            .pause(1)
+            .release()
+        ).perform()
+
     def wait_for_rendered_rows(self, expected):
         self._wait_for_count(f"#{self.id} .ag-row", expected, "rendered rows")
 

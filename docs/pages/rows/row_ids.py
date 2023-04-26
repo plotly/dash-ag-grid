@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=1,
     description=app_description,
-    title="Dash AG Grid Rows",
+    title="Dash AG Grid - Row IDs",
 )
 
 text1 = """
@@ -32,8 +32,7 @@ text2 = """
 ### Application Assigned IDs
 When the Application assigns Row IDs, this provides a common Row ID across the grid and the Application. This has advantages such as:
 
-1. The grid API getRowNode(id) can be called with the Application known ID (eg employeeId) to get the Row Node for a particular piece of data.
-2. When updating Row Data (either by updating the rowData attribute, or using Update Transactions), the grid uses the Row ID to map old vs new data (e.g. it can work out which Rows to add / remove / update rather than doing a blanket replacement of old vs new data). This allows the grid to keep state such as Row Selection.
+When updating Row Data (either by updating the rowData attribute, or using Update Transactions), the grid uses the Row ID to map old vs new data (e.g. it can work out which Rows to add / remove / update rather than doing a blanket replacement of old vs new data). This allows the grid to keep state such as Row Selection.
 
 
 Setting Row IDs is done using the `getRowId` prop:
@@ -41,7 +40,18 @@ Setting Row IDs is done using the `getRowId` prop:
 
 _Note:  Row IDs are required when updating rowData in a callback_
 
-The example below uses  `getRowId="id"` to use the "id" column for the data for the Row ID
+We will show two examples of assigning row ids - using an existing unique id and creating a unique id in the dataset.
+
+#### Example 1:
+In this example, the data contains a unique id in the dataset in the "id" column.  We use `getRowId="params.data.id"` to assign the id.
+
+"""
+
+text3 = """
+#### Example 2:
+
+In this example, the data does not contain a unique id in the dataset.  We first create a unique id using the
+ dataframe's index, then assign it using `getRowId="params.data.index"`
 
 """
 
@@ -52,6 +62,8 @@ layout = html.Div(
         example_app("examples.rows.row_ids", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.rows.row_ids_from_data", make_layout=make_tabs),
+        make_md(text3),
+        example_app("examples.rows.row_ids_from_df_index", make_layout=make_tabs),
         # up_next("text"),
     ],
 )

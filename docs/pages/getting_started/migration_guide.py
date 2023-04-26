@@ -12,7 +12,7 @@ text1 = """
 -----------
 Dash AG Grid will continue to evolve through a series of alpha releases until it's ready for the 2.0.0 production release.
 
-Significant changes from 1.3.0 through 2.0.0a4 include:
+Significant changes include:
   - making dash-ag-grid prop names align with the upstream AG Grid API
   - making dash-ag-grid more secure
   - improving performance and fixing bugs
@@ -42,7 +42,8 @@ __2.0.0a2__
 __2.0.0a3__
 
 
-- `clickData` - change prop name to `cellRendererData`
+- `clickData` - change prop name to `cellRendererData`. If you used `clickData` with the `rowMenu` component, note that
+ the data now included in `cellRendererData` is different than `clickData`.  See the <dccLink href='/components/row-menu' children='Row Menu' /> component example in the docs.
 
 - When using `cell Style`, functions or string expressions, change the AG Grid parameters to start with `params.`  
 For example, change `colDef.headerName` to  `params.colDef.headerName`.
@@ -64,6 +65,17 @@ __2.0.0a4__
 __2.0.0a5__
 
 - No breaking changes
+
+__2.0.0rc1__
+
+- Removed undocumented `AutoSizeAllColumns` prop
+- Renamed option -  `columnSize="autoSizeAll"` is now `columnSize="autoSize"`  Be sure to check out all the new options
+ available for `columnSize` in the docs.
+
+__2.0.0rc2__
+
+- No breaking changes
+
 
 -----------------
 

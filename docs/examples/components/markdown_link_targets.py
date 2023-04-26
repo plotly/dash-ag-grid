@@ -52,7 +52,7 @@ rowData = [
     },
     {
         "make": "***Porsche*** in both",
-        "model": "<b>Boxter</b> in HTML bold",
+        "model": "<b>Boxster</b> in HTML bold",
         "link": "[Example](#)",
         "image": rain,
     },

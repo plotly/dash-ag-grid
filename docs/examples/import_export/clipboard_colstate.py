@@ -52,15 +52,6 @@ app.layout = html.Div(
 
 
 @app.callback(
-    Output("clipboard-state-grid", "updateColumnState"),
-    Input("clipboard-state", "n_clicks"),
-    prevent_initial_call=True,
-)
-def selected(_):
-    return True
-
-
-@app.callback(
     Output("clipboard-state", "content"),
     Input("clipboard-state", "n_clicks"),
     Input("clipboard-state-grid", "columnState"),

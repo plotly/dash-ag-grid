@@ -53,7 +53,7 @@ grid = dag.AgGrid(
     id="custom-component-checkbox-grid",
     columnDefs=columnDefs,
     rowData=df.to_dict("records"),
-    columnSize="autoSizeAll",
+    columnSize="autoSize",
     defaultColDef=defaultColDef,
 )
 

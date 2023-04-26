@@ -1,15 +1,15 @@
 """
-Column Sizing
+Column Size
 """
 
 import dash_ag_grid as dag
-import dash
-from dash import Input, Output, html, dcc
+from dash import Dash, html, dcc, Input, Output
 
-app = dash.Dash(__name__)
+app = Dash(__name__)
+
 
 columnDefs = [
-    {"headerName": "Make", "field": "make"},
+    {"headerName": "Make of the Car", "field": "make"},
     {"headerName": "Model", "field": "model"},
     {"headerName": "Price", "field": "price"},
 ]
@@ -17,40 +17,44 @@ columnDefs = [
 rowData = [
     {"make": "Toyota", "model": "Celica", "price": 35000},
     {"make": "Ford", "model": "Mondeo", "price": 32000},
-    {"make": "Porsche", "model": "Boxter", "price": 72000},
+    {"make": "Porsche", "model": "Boxster", "price": 72000},
 ]
 
 
 app.layout = html.Div(
     [
-        dcc.Markdown(
-            "Switch between autosize and size to fit to see the columns respond. Columns can also be resized by dragging at their edge."
-        ),
+        dcc.Markdown("This grid demonstrates setting the column size"),
         dcc.RadioItems(
             id="column-size-radio",
             options=[
-                {"label": i, "value": j}
-                for i, j in [
-                    ("Auto size", "autoSizeAll"),
-                    ("Size to fit", "sizeToFit"),
-                ]
+                {"label": "Auto size", "value": "autoSize"},
+                {"label": "Auto size skip header", "value": "autoSizeSkipHeader"},
+                {"label": "Size to fit", "value": "sizeToFit"},
+                {"label": "Responsive Size to fit", "value": "responsiveSizeToFit"}
             ],
-            value="autoSizeAll",
+            value="autoSize",
         ),
+
         dag.AgGrid(
             id="column-size-grid",
             columnDefs=columnDefs,
             rowData=rowData,
-            columnSize="autoSizeAll",
-            defaultColDef={"resizable":True}
+            columnSize="autoSize",
+            defaultColDef={"resizable": True, "sortable": True, "filter": True},
         ),
-    ]
+    ],
+    style={"margin": 20},
 )
 
-
-@app.callback(Output("column-size-grid", "columnSize"), Input("column-size-radio", "value"))
-def column_sizing(size_type):
-    return size_type
+@app.callback(
+    Output("column-size-grid","columnSize"),
+    Output("column-size-grid", "columnSizeOptions"),
+    Input("column-size-radio", "value"),
+)
+def update_columnSize(v):
+    if v == "autoSizeSkipHeader":
+        return "autoSize", {"skipHeader": True}
+    return v, {"skipHeader": False}
 
 
 if __name__ == "__main__":

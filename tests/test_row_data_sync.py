@@ -21,7 +21,7 @@ def test_rs001_rowdata_sync(dash_duo):
     rowData = [
         {"make": "Toyota", "model": "Celica", "price": 35000},
         {"make": "Ford", "model": "Mondeo", "price": 32000},
-        {"make": "Porsche", "model": "Boxter", "price": 72000},
+        {"make": "Porsche", "model": "Boxster", "price": 72000},
     ]
 
     extraData = [
@@ -97,7 +97,7 @@ def test_rs001_rowdata_sync(dash_duo):
 
     base = '[{"make": "Toyota", "model": "Celica", "price": 35000}, '\
                                                  '{"make": "Ford", "model": "Mondeo", "price": 32000}, '\
-                                                 '{"make": "Porsche", "model": "Boxter", "price": 72000}'
+                                                 '{"make": "Porsche", "model": "Boxster", "price": 72000}'
 
     ### testing editing sync
     for x in range(2):
@@ -106,26 +106,26 @@ def test_rs001_rowdata_sync(dash_duo):
         grid.get_cell(1, 1).click()
         dash_duo.wait_for_text_to_equal("#data", '[{"make": "t", "model": "Celica", "price": 35000}, '
                                                  '{"make": "Ford", "model": "Mondeo", "price": 32000}, '
-                                                 '{"make": "Porsche", "model": "Boxter", "price": 72000}]')
+                                                 '{"make": "Porsche", "model": "Boxster", "price": 72000}]')
         dash_duo.wait_for_text_to_equal("#virtualData", '[{"make": "t", "model": "Celica", "price": 35000}, '
                                                  '{"make": "Ford", "model": "Mondeo", "price": 32000}, '
-                                                 '{"make": "Porsche", "model": "Boxter", "price": 72000}]')
+                                                 '{"make": "Porsche", "model": "Boxster", "price": 72000}]')
         grid.get_cell(1, 1).send_keys('t')
         grid.get_cell(2,2).click()
         dash_duo.wait_for_text_to_equal("#data", '[{"make": "t", "model": "Celica", "price": 35000}, '
                                                  '{"make": "Ford", "model": "t", "price": 32000}, '
-                                                 '{"make": "Porsche", "model": "Boxter", "price": 72000}]')
+                                                 '{"make": "Porsche", "model": "Boxster", "price": 72000}]')
         dash_duo.wait_for_text_to_equal("#virtualData", '[{"make": "t", "model": "Celica", "price": 35000}, '
                                                  '{"make": "Ford", "model": "t", "price": 32000}, '
-                                                 '{"make": "Porsche", "model": "Boxter", "price": 72000}]')
+                                                 '{"make": "Porsche", "model": "Boxster", "price": 72000}]')
         grid.get_cell(2, 2).send_keys('t')
         grid.get_cell(0,0).click()
         dash_duo.wait_for_text_to_equal("#data", '[{"make": "t", "model": "Celica", "price": 35000}, '
                                                  '{"make": "Ford", "model": "t", "price": 32000}, '
-                                                 '{"make": "Porsche", "model": "Boxter", "price": "t"}]')
+                                                 '{"make": "Porsche", "model": "Boxster", "price": "t"}]')
         dash_duo.wait_for_text_to_equal("#virtualData", '[{"make": "t", "model": "Celica", "price": 35000}, '
                                                  '{"make": "Ford", "model": "t", "price": 32000}, '
-                                                 '{"make": "Porsche", "model": "Boxter", "price": "t"}]')
+                                                 '{"make": "Porsche", "model": "Boxster", "price": "t"}]')
         dash_duo.find_element("#reset").click()
         dash_duo.wait_for_text_to_equal("#data", base + ']')
         dash_duo.find_element("#editMode").click()
