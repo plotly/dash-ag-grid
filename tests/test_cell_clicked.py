@@ -22,7 +22,7 @@ def test_cc001_cell_clicked(dash_duo):
     rowData = [
         {"make": "Toyota", "model": "Celica", "price": 35000},
         {"make": "Ford", "model": "Mondeo", "price": 32000},
-        {"make": "Porsche", "model": "Boxter", "price": 72000},
+        {"make": "Porsche", "model": "Boxster", "price": 72000},
     ]
 
     defaultColDef = {"valueSetter":{"function":"addEdits(params)"}, "editable": True}
@@ -64,5 +64,5 @@ def test_cc001_cell_clicked(dash_duo):
     until(lambda: '{"value": "Mondeo", "colId": "model", "rowIndex": 1, "rowId": "Mondeo"'
                   in dash_duo.find_element('#focus').get_attribute('innerText'), timeout=3)
     grid.get_cell(2, 2).click()
-    until(lambda: '{"value": 72000, "colId": "price", "rowIndex": 2, "rowId": "Boxter"'
+    until(lambda: '{"value": 72000, "colId": "price", "rowIndex": 2, "rowId": "Boxster"'
                   in dash_duo.find_element('#focus').get_attribute('innerText'), timeout=3)

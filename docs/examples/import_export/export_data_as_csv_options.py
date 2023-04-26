@@ -18,7 +18,7 @@ columnDefs = [
 rowData = [
     {"make": "Toyota", "model": "Celica", "price": 35000, "sale": 33000},
     {"make": "Ford", "model": "Mondeo", "price": 32000, "sale": 29000},
-    {"make": "Porsche", "model": "Boxter", "price": 72000, "sale": 69000},
+    {"make": "Porsche", "model": "Boxster", "price": 72000, "sale": 69000},
 ]
 
 app.layout = html.Div(

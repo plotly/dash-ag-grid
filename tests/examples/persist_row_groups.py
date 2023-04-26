@@ -20,11 +20,11 @@ app.layout = html.Div(
                     dcc.Dropdown(
                         options=[
                             {"label": i, "value": i}
-                            for i in ["Celica", "Mondeo", "Boxter"]
+                            for i in ["Celica", "Mondeo", "Boxster"]
                         ],
                         id="model-selector",
                         multi=True,
-                        value=["Celica", "Mondeo", "Boxter"],
+                        value=["Celica", "Mondeo", "Boxster"],
                     ),
                     label="Filter by model",
                 ),
@@ -69,7 +69,7 @@ app.layout = html.Div(
 data = [
     {"make": "Toyota", "model": "Celica", "price": 35000},
     {"make": "Ford", "model": "Mondeo", "price": 32000},
-    {"make": "Porsche", "model": "Boxter", "price": 72000},
+    {"make": "Porsche", "model": "Boxster", "price": 72000},
 ]
 new_data = []
 

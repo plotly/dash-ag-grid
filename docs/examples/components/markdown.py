@@ -41,7 +41,7 @@ rowData = [
     },
     {
         "make": "Porsche",
-        "model": "Boxter",
+        "model": "Boxster",
         "price": 72000,
         "link": "[Example](#)",
         "image": rain

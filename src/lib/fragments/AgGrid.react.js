@@ -1164,7 +1164,11 @@ export default class DashAgGrid extends Component {
         }
 
         return (
-            <div id={id} className={className} style={style}>
+            <div
+                id={id}
+                className={className}
+                style={{height: '400px', width: '100%', ...style}}
+            >
                 <AgGridReact
                     ref={this.reference}
                     alignedGrids={alignedGrids}

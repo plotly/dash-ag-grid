@@ -57,7 +57,6 @@ export default class DashAgGrid extends Component {
 }
 
 DashAgGrid.defaultProps = {
-    style: {height: '400px', width: '100%'},
     className: 'ag-theme-alpine',
     resetColumnState: false,
     exportDataAsCsv: false,

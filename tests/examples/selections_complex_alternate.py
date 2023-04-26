@@ -27,11 +27,11 @@ Try making selections, then filtering up or down and refreshing the page. Notice
                     dcc.Dropdown(
                         options=[
                             {"label": i, "value": i}
-                            for i in ["Celica", "Mondeo", "Boxter"]
+                            for i in ["Celica", "Mondeo", "Boxster"]
                         ],
                         id="model-selector",
                         multi=True,
-                        value=["Celica", "Mondeo", "Boxter"],
+                        value=["Celica", "Mondeo", "Boxster"],
                     ),
                     label="Filter by model",
                 ),
@@ -128,7 +128,7 @@ def generate_data(n_clicks, values, years):
     data = [
         {"make": "Toyota", "model": "Celica", "price": 35000},
         {"make": "Ford", "model": "Mondeo", "price": 32000},
-        {"make": "Porsche", "model": "Boxter", "price": 72000},
+        {"make": "Porsche", "model": "Boxster", "price": 72000},
     ] * 10
     new_data = []
     for i, row in enumerate(data):

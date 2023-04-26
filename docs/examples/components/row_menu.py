@@ -37,7 +37,7 @@ rowData = [
     },
     {
         "make": "Porsche",
-        "model": "Boxter",
+        "model": "Boxster",
         "price": 72000,
         "menu": [
             {"label": "Option 7", "value": 7},
