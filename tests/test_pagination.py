@@ -19,7 +19,7 @@ def test_pa001_pagination(dash_duo):
         "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
     )
 
-    opts = ['first', 'next', 'previous', 'last', 40]
+    opts = ['first', 'next', 'previous', 'last', 0, 40]
 
     # basic columns definition with column defaults
     columnDefs = [
