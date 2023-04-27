@@ -232,7 +232,7 @@ export default class DashAgGrid extends Component {
                             getRowId.replaceAll('params.data.', '')
                         ).body[0].expression;
                         const mapId = {};
-                        selection.map((params) => {
+                        selection.forEach((params) => {
                             mapId[evaluate(parsedCondition, params)] = true;
                         });
                         gridApi.forEachNode((node) => {
