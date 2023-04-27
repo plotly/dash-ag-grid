@@ -629,7 +629,7 @@ export default class DashAgGrid extends Component {
                 this.setColumnState();
             }
 
-            if (paginationGoTo) {
+            if (paginationGoTo || paginationGoTo === 0) {
                 this.paginationGoTo(false);
                 propsToSet.paginationGoTo = null;
             }
@@ -1159,7 +1159,7 @@ export default class DashAgGrid extends Component {
             }
         }
 
-        if (paginationGoTo) {
+        if (paginationGoTo || paginationGoTo === 0) {
             this.paginationGoTo();
         }
 
