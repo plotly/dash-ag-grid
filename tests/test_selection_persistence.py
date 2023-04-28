@@ -105,7 +105,7 @@ def test_sp001_selection_persistence(dash_duo):
             if ctx.triggered_id == 'ids':
                 return {'ids': ['Toyota']}
             if ctx.triggered_id == 'function':
-                return {'function': "node.data.make === 'Porsche'"}
+                return {'function': "params.data.make === 'Porsche'"}
             return [{"make": "Ford", "model": "Mondeo", "price": 32000}]
         return []
 
