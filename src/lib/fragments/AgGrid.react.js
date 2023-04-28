@@ -213,7 +213,7 @@ export default class DashAgGrid extends Component {
                     }
                 };
                 gridApi.forEachNode(test);
-            } else if (Object.keys(selection).includes('ids')) {
+            } else if (has('ids', selection)) {
                 // keeps grid from rendering display unnecessarily
                 gridApi.deselectAll();
                 const mapId = {};
