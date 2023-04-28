@@ -11,6 +11,7 @@ import {
     memoizeWith,
     pick,
     omit,
+    includes,
     assoc,
 } from 'ramda';
 import {
@@ -164,6 +165,7 @@ export default class DashAgGrid extends Component {
                 markdown: this.generateRenderer(MarkdownRenderer),
                 ...newComponents,
             },
+            pauseSelections: false,
             rerender: 0,
             openGroups: {},
             gridApi: null,
@@ -192,15 +194,59 @@ export default class DashAgGrid extends Component {
 
     setSelection(selection) {
         const {gridApi} = this.state;
+        const {getRowId} = this.props;
         if (gridApi && selection) {
-            if (!selection.length) {
+            this.setState({pauseSelections: true});
+            if (has('function', selection)) {
+                // keeps grid from rendering display unnecessarily
                 gridApi.deselectAll();
-            } else {
+                const test = this.parseFunction(selection.function);
                 gridApi.forEachNode((node) => {
-                    const isSelected = selection.some(equals(node.data));
-                    node.setSelected(isSelected);
+                    if (test(node)) {
+                        node.setSelected(true);
+                    }
                 });
+            } else if (has('ids', selection)) {
+                // keeps grid from rendering display unnecessarily
+                gridApi.deselectAll();
+                const mapId = {};
+                selection.ids.forEach((id) => {
+                    mapId[id] = true;
+                });
+                gridApi.forEachNode((node) => {
+                    if (mapId[node.id]) {
+                        node.setSelected(true);
+                    }
+                });
+            } else {
+                if (!selection.length) {
+                    gridApi.deselectAll();
+                } else {
+                    // keeps grid from rendering display unnecessarily
+                    gridApi.deselectAll();
+                    if (getRowId) {
+                        const parsedCondition = esprima.parse(
+                            getRowId.replaceAll('params.data.', '')
+                        ).body[0].expression;
+                        const mapId = {};
+                        selection.forEach((params) => {
+                            mapId[evaluate(parsedCondition, params)] = true;
+                        });
+                        gridApi.forEachNode((node) => {
+                            if (mapId[node.id]) {
+                                node.setSelected(true);
+                            }
+                        });
+                    } else {
+                        gridApi.forEachNode((node) => {
+                            if (includes(node.data, selection)) {
+                                node.setSelected(true);
+                            }
+                        });
+                    }
+                }
             }
+            this.setState({pauseSelections: false});
         }
     }
 
@@ -580,7 +626,7 @@ export default class DashAgGrid extends Component {
                 this.setColumnState();
             }
 
-            if (paginationGoTo) {
+            if (paginationGoTo || paginationGoTo === 0) {
                 this.paginationGoTo(false);
                 propsToSet.paginationGoTo = null;
             }
@@ -651,10 +697,10 @@ export default class DashAgGrid extends Component {
             this.props;
         const {openGroups, gridApi} = this.state;
 
-        // Call the API to select rows
-        this.setSelection(selectedRows);
-
         if (gridApi) {
+            // Call the API to select rows
+            this.setSelection(selectedRows);
+
             if (rowData && rowModelType === 'clientSide') {
                 const virtualRowData = [];
                 gridApi.forEachNodeAfterFilterAndSort((node) => {
@@ -692,10 +738,12 @@ export default class DashAgGrid extends Component {
     }
 
     onSelectionChanged() {
-        // Flag that the selection event was fired
-        this.selectionEventFired = true;
-        const selectedRows = this.state.gridApi.getSelectedRows();
-        this.props.setProps({selectedRows});
+        if (!this.state.pauseSelections) {
+            // Flag that the selection event was fired
+            this.selectionEventFired = true;
+            const selectedRows = this.state.gridApi.getSelectedRows();
+            this.props.setProps({selectedRows});
+        }
     }
 
     isDatasourceLoadedForInfiniteScrolling() {
@@ -722,8 +770,12 @@ export default class DashAgGrid extends Component {
     }
 
     applyRowTransaction(data, gridApi = this.state.gridApi) {
+        const {selectedRows} = this.props;
         if (data.async === false) {
             gridApi.applyTransaction(data);
+            if (selectedRows) {
+                this.setSelection(selectedRows);
+            }
         } else {
             gridApi.applyTransactionAsync(data);
         }
@@ -1062,6 +1114,10 @@ export default class DashAgGrid extends Component {
     }
 
     onAsyncTransactionsFlushed() {
+        const {selectedRows} = this.props;
+        if (selectedRows) {
+            this.setSelection(selectedRows);
+        }
         this.syncRowData();
     }
 
@@ -1100,7 +1156,7 @@ export default class DashAgGrid extends Component {
             }
         }
 
-        if (paginationGoTo) {
+        if (paginationGoTo || paginationGoTo === 0) {
             this.paginationGoTo();
         }
 
