@@ -72,6 +72,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - added `paginationInfo` for read-only info from the grid's pagination
   - added `paginationGoTo` to navigate to different pages
 
+-[#164](https://github.com/plotly/dash-ag-grid/pull/164)
+ - added ability for `selectedRows` to be passed functions or ids for performing selections
+
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Update AG Grid from v27.x to v29.x - see [AG Grid Changelog](https://www.ag-grid.com/changelog/) for details.
@@ -103,6 +106,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - update React to `18.2.0`
   - updated `material-ui` to `@mui` for `rowMenuRenderer`
 
+-[#164](https://github.com/plotly/dash-ag-grid/pull/164)
+ - updated `selectedRows` to maintain persistence by utilizing `rowIds` if available
+
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
   - Fix issue where conditional formatting was not applied to nested columns
@@ -132,6 +138,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 - [#161](https://github.com/plotly/dash-ag-grid/pull/161)
   - fixed the default style to be applied even when a style is given from the developer, `style.height` and `style.width` always exist and can be overridden by the developer if provided
+
+-[#164](https://github.com/plotly/dash-ag-grid/pull/164)
+  - fixed `comparator` to not be restricted to just params
+  - fixed `paginationGoTo` to allow `0` to be passed
 
 ## [1.3.2] - 2023-01-13
 
