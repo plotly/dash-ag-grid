@@ -197,7 +197,7 @@ export default class DashAgGrid extends Component {
         const {getRowId} = this.props;
         if (gridApi && selection) {
             this.setState({pauseSelections: true});
-            if (Object.keys(selection).includes('function')) {
+            if (has('function', selection)) {
                 // keeps grid from rendering display unnecessarily
                 gridApi.deselectAll();
                 const parsedCondition = esprima.parse(selection.function)
