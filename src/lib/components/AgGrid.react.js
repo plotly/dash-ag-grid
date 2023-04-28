@@ -603,10 +603,16 @@ DashAgGrid.propTypes = {
 
     /**
      * The actively selected rows from the grid (may include filtered rows)
+     * Can take one of three forms:
+     * (1) an array of row objects - if you have defined `getRowId`, you only need the fields it uses.
+     * (2) an object containing `function` with a function string
+     * - see: https://www.ag-grid.com/react-data-grid/row-selection/#example-using-foreachnode (selectAllAmerican function)
+     * (3) an object containing `ids` with a list of row IDs
      */
     selectedRows: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.object),
-        PropTypes.object,
+        PropTypes.exact({function: PropTypes.string.isRequired}),
+        PropTypes.exact({ids: PropTypes.arrayOf(PropTypes.string).isRequired}),
     ]),
 
     /**
