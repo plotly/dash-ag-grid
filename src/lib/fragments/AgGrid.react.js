@@ -200,19 +200,12 @@ export default class DashAgGrid extends Component {
             if (has('function', selection)) {
                 // keeps grid from rendering display unnecessarily
                 gridApi.deselectAll();
-                const parsedCondition = esprima.parse(selection.function)
-                    .body[0].expression;
-                const context = {
-                    d3,
-                    ...customFunctions,
-                    ...window.dashAgGridFunctions,
-                };
-                const test = function (node) {
-                    if (evaluate(parsedCondition, {node, ...context})) {
+                const test = this.parseFunction(selection.function);
+                gridApi.forEachNode((node) => {
+                    if (test(node)) {
                         node.setSelected(true);
                     }
-                };
-                gridApi.forEachNode(test);
+                });
             } else if (has('ids', selection)) {
                 // keeps grid from rendering display unnecessarily
                 gridApi.deselectAll();
