@@ -5,24 +5,17 @@ Dash AG Grid is a Dash component wrapper for the AG Grid Javascript package, ena
 The underlying AG Grid Javascript package is a third-party software component developed by [AG Grid Ltd](http://www.ag-grid.com/). Many AG Grid features are available for free in the AG Grid [Community version](https://github.com/ag-grid/ag-grid). However, some features require a paid subscription to the AG Grid Enterprise version ([more info available here](https://www.ag-grid.com/license-pricing.php)). The demos which use Enterprise features are clearly marked.
 
 
-
-## Dash AG Grid is currently a prerelease
-
-We've completed all planned breaking changes, and we're now doing the final review before the full 2.0.0 release!
-
-If you have tried previous alpha releases, please see our [Migration Guide.](https://dashaggrid.pythonanywhere.com/getting-started/migration-guide)
-
-
-
 ### Getting Started
 
-`pip install dash-ag-grid==2.0.0rc2`
+`pip install dash-ag-grid`
 
  1. Read the [Medium article](https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers) or watch the [webinar](https://www.youtube.com/watch?v=Ggekq7C5pz4?utm_source=Webinar%3A+AG+Grid+1%2F26%2F23&utm_medium=medium_article&utm_content=AnnouncingDashAGGrids) introducing Dash AG Grid.
  2. See the live [stock portfolio demo app](https://sales-demo.plotly.com/dash-ag-grid) from the webinar hosted by Plotly.
  3. Get the code for the demo app in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)
  4. Learn more about [AG Grid](https://www.ag-grid.com/react-data-grid) in the upstream docs, including more information on community features and licensing for the enterprise version.
 
+
+If you have tried previous alpha releases, please see our [Migration Guide.](https://dashaggrid.pythonanywhere.com/getting-started/migration-guide)
 
 
 
