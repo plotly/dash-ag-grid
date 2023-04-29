@@ -12,7 +12,6 @@ grid = dag.AgGrid(
     columnDefs=[{"field": i} for i in df.columns],
     defaultColDef={"resizable": True, "sortable": True, "filter": True, "minWidth":125},
     columnSize="sizeToFit",
-    getRowId="params.data.State"
 )
 
 app.layout = html.Div([grid, html.Div(id="quickstart-output")])
