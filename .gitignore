@@ -13,6 +13,7 @@ NAMESPACE
 Project.toml
 src/*.jl
 src/jl/*.jl
+lib/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### VisualStudioCode template

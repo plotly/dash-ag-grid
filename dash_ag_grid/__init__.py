@@ -28,35 +28,42 @@ _current_path = _os.path.dirname(_os.path.abspath(__file__))
 
 _this_module = _sys.modules[__name__]
 
+_unpkg = f'https://unpkg.com/dash-ag-grid@{__version__}/dash_ag_grid/'
 
 _js_dist = [
     {
         'relative_package_path': 'dash_ag_grid.min.js',
+        'external_url': f'{_unpkg}dash_ag_grid.min.js',
         'namespace': package_name
     },
     {
         'relative_package_path': 'dash_ag_grid.min.js.map',
         'namespace': package_name,
+        'external_url': f'{_unpkg}dash_ag_grid.min.js.map',
         'dynamic': True
     },
     {
         'relative_package_path': 'async-community.js',
         'namespace': package_name,
+        'external_url': f'{_unpkg}async-community.js',
         'async': True
     },
     {
         'relative_package_path': 'async-community.js.map',
         'namespace': package_name,
+        'external_url': f'{_unpkg}async-community.js.map',
         'dynamic': True
     },
     {
         'relative_package_path': 'async-enterprise.js',
         'namespace': package_name,
+        'external_url': f'{_unpkg}async-enterprise.js',
         'async': True
     },
     {
         'relative_package_path': 'async-enterprise.js.map',
         'namespace': package_name,
+        'external_url': f'{_unpkg}async-enterprise.js.map',
         'dynamic': True
     },
 ]

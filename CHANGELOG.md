@@ -4,21 +4,20 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## [2.0.0]
+## [2.0.0] - 2023-05-02
 
 ### Removed
 
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
-  - Remove `agGridColumns` component due to deprecation in AG Grid v29
+  - Remove `agGridColumns` component due to deprecation in AG Grid v29, use `columnDefs` instead.
   - Remove some hardcoded CSS
 
-- [#132](https://github.com/plotly/dash-ag-grid/pull/132)
-  - removed prop `autoSizeAllColumns`
+- [#132](https://github.com/plotly/dash-ag-grid/pull/132) Remove prop `autoSizeAllColumns`, use the `columnSize` prop instead.
 
 ### Added
 
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
-  - Add `className` prop for css customization native to ag-grid
+  - Add `className` prop for css customization native to AG Grid
   - Add `enable*` props for easier user / dash manipulation, for creating buttons
   - Add overarching `dangerously_allow_code` prop to grid props only provided at render, to keep `columnDefs` from receiving possible updates to execute malicious JavaScript (originally called `dangerously_allow_html` but renamed later)
   - Add `data_previous` and `data_previous_timestamp` props to allow easier change tracking in callbacks
@@ -33,47 +32,38 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - Allow for `null` to be passed to `columnSize`, to prevent the fit to width or autosize being the only options
 
 - [#28](https://github.com/plotly/dash-ag-grid/pull/28)
-  - allowed for other column prop functions to pass without disabling them if `dangerously_allow_code` is not passed
-  - copying over `columnDef` `dangerously_allow_code` to allow for the prop to be placed only on the grid level
-  - created a unified function parser to be easier to maintain
-  - brought the props to iterate through into a separate js `utils/functionVars.js` file
-  - switched to keeping `params` together instead of splitting into separate keys, to allow for easier transition to using AG Grid docs
-  - updated `test/test_add_remove_update_rows.py` to apply the new variable configuration
+  - Allow for other column prop functions to pass without disabling them if `dangerously_allow_code` is not passed
+  - Copy over `columnDef` `dangerously_allow_code` to allow for the prop to be placed only on the grid level
+  - Keep `params` together instead of splitting into separate keys, to allow for easier transition to using AG Grid docs
 
 - [#39](https://github.com/plotly/dash-ag-grid/pull/39)
-  - Allowed for `defaultColDef` to be iterated through for functions
-  - Added `tooltipComponent` to be altered if it was list as a function object
-  - Added tests for `custom_components.py`, and made it so the stock data is pulled from a csv instead of live.
+  - Allow for `defaultColDef` to be iterated through for functions
+  - Add `tooltipComponent` to be altered if it was list as a function object
 
-- [#49](https://github.com/plotly/dash-ag-grid/pull/49) Safely handle more attributes when `dangerously_allow_code` is disabled: top-level attributes `rowClassRules`, `getRowStyle`, and `getRowClass`; and column attributes `cellClass`, `cellStyle`, and `cellClassRules`.
+- [#49](https://github.com/plotly/dash-ag-grid/pull/49) Safely handle more attributes when `dangerously_allow_code` is disabled:
+  - Top-level attributes `rowClassRules`, `getRowStyle`, and `getRowClass`
+  - Column attributes `cellClass`, `cellStyle`, and `cellClassRules`
 
-- [#67](https://github.com/plotly/dash-ag-grid/pull/67) Function parsing recursvie columndefs
-  - adding more functions to be available for parsing
-  - allowed for recursively going through `columnDefs` -> `children` and master detail info
-  - added various tests for functionality
+- [#67](https://github.com/plotly/dash-ag-grid/pull/67) Function parsing recursive columnDefs
+  - Add more functions to be available for parsing
+  - Allow for recursively going through `columnDefs` -> `children` and master detail info
 
-- [#76](https://github.com/plotly/dash-ag-grid/pull/76) Adding logging function
-  - adding logging function available by default, available via `{"function": "log()"}`
+- [#76](https://github.com/plotly/dash-ag-grid/pull/76) Add logging function available by default, available via `{"function": "log()"}`
 
-- [#81](https://github.com/plotly/dash-ag-grid/pull/81)
-  - added tests for `cellClicked` data
-
-- [#111](https://github.com/plotly/dash-ag-grid/pull/111)
-  - added `filterModel` prop in order to capture the grid's active filters
+- [#111](https://github.com/plotly/dash-ag-grid/pull/111) Add `filterModel` prop in order to capture the grid's active filters
 
 - [#132](https://github.com/plotly/dash-ag-grid/pull/132)
-  - added new `columnSize` available, `responsiveSizeToFit` which will adjust column sizes based upon grid size and columns added or removed
-  - added `columnSizeOptions` to take an object that is compatible with AG Grid to perform sizing options as needed
-  - added ability to push `columnState` back to grid and replay the settings
+  - Add new `columnSize` option `responsiveSizeToFit`, which will adjust column sizes based upon grid size and columns added or removed
+  - Add `columnSizeOptions` prop to modify the behavior chosen in `columnSize`
+  - Add ability to push `columnState` back to grid and replay the settings
 
 - [#145](https://github.com/plotly/dash-ag-grid/pull/145)
-  - added support for `alignedGrids`
-  - added ability for functions with `tooltipComponentParams`
-  - added `paginationInfo` for read-only info from the grid's pagination
-  - added `paginationGoTo` to navigate to different pages
+  - Support `alignedGrids`
+  - Support functions with `tooltipComponentParams`
+  - Add `paginationInfo` for read-only info from the grid's pagination
+  - Add `paginationGoTo` to navigate to different pages
 
--[#164](https://github.com/plotly/dash-ag-grid/pull/164)
- - added ability for `selectedRows` to be passed functions or ids for performing selections
+-[#164](https://github.com/plotly/dash-ag-grid/pull/164) Support passing `selectedRows` functions or ids for performing selections
 
 ### Updated
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
@@ -82,66 +72,63 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - Update `requirements.txt` (Python dependencies for demos and docs) to allow the latest packages
 
 - [#39](https://github.com/plotly/dash-ag-grid/pull/39)
-  - Changing `selectionChanged` to `selectedRows` to make props align with AG Grid.
-  - Document adjustments for `selectionChanged` to `selectedRows`, also allowed for persistence in the `selectedRows`
+  - Change `selectionChanged` to `selectedRows` to make props align with AG Grid
+  - Allow `selectedRows` to persist
 
-- [#70](https://github.com/plotly/dash-ag-grid/pull/70)
-  - Changing `clickData` to `cellRendererData` to more closely line up with what this does
+- [#70](https://github.com/plotly/dash-ag-grid/pull/70) Change `clickData` to `cellRendererData` to more closely line up with what this does
 
 - [#81](https://github.com/plotly/dash-ag-grid/pull/81)
-  - prop clean-up overhaul
-  - updating testing that broke due to props no longer being on the grid, but in dashGridOptions
-  - added testing for selection and sizing buttons
-  - removed `cellStyle` from the grid level, allowing more flexibility in customization, and alignment with AG grid
-  - allowed for functions, styleConditions and regular dictionaries to be passed to the `cellStyle` on all levels
-  - added `rowId` to `cellClicked` data
+  - Prop clean-up overhaul
+  - Remove `cellStyle` from the grid level, allowing more flexibility in customization, and alignment with AG grid
+  - Allow for functions, styleConditions and regular dictionaries to be passed to the `cellStyle` on all levels
+  - Add `rowId` to `cellClicked` data
 
-- [#132](https://github.com/plotly/dash-ag-grid/pull/132)
-  - updated `columnSize` option of `autoSizeAll` -> `autoSize`
+- [#132](https://github.com/plotly/dash-ag-grid/pull/132) Change `columnSize` option of `autoSizeAll` -> `autoSize`
 
-- [#145](https://github.com/plotly/dash-ag-grid/pull/145) and [#159](https://github.com/plotly/dash-ag-grid/pull/159)
-  - updated AG Grid `29.1.0` -> `29.3.3`
+- [#145](https://github.com/plotly/dash-ag-grid/pull/145) and [#159](https://github.com/plotly/dash-ag-grid/pull/159) Update AG Grid `29.1.0` -> `29.3.3`
 
 - [#155](https://github.com/plotly/dash-ag-grid/pull/155)
-  - update React to `18.2.0`
-  - updated `material-ui` to `@mui` for `rowMenuRenderer`
+  - Update React to `18.2.0`
+  - Update `material-ui` to `@mui` for `rowMenuRenderer`
 
--[#164](https://github.com/plotly/dash-ag-grid/pull/164)
- - updated `selectedRows` to maintain persistence by utilizing `rowIds` if available
+-[#164](https://github.com/plotly/dash-ag-grid/pull/164) Update `selectedRows` to maintain persistence by utilizing `rowIds` if available
 
 ### Fixed
 - [Overhaul commit](https://github.com/plotly/dash-ag-grid/commit/b888d6ab4fcb4afac187492e8b6c9cf0d0f8842b)
-  - Fix issue where conditional formatting was not applied to nested columns
+  - Fix conditional formatting for nested columns
   - Fix issue where columns would not take edits or adjustments due to becoming static
 
 - [#6](https://github.com/plotly/dash-ag-grid/pull/6) Fix props issue for `enableAddRows`
+
 - [#19](https://github.com/plotly/dash-ag-grid/pull/19) Fixed `cellClicked` as reported in [#17](https://github.com/plotly/dash-ag-grid/issues/17)
+
 - [#45](https://github.com/plotly/dash-ag-grid/pull/45) Fix [#44](https://github.com/plotly/dash-ag-grid/issues/44), markdown ignoring `target="_blank"` to open links in a new tab. Now if `dangerously_use_code` is `false`, markdown cells honor `columnDef.linkTarget`, but if `dangerously_use_code` is `true` you MUST use the HTML syntax `<a target="_blank">` to achieve this, markdown syntax `[text](url)` will ignore `columnDef.linkTarget`.
+
 - [#47](https://github.com/plotly/dash-ag-grid/pull/47) Fix `virtualRowData` by setting the default `rowModelType='clientSide'`
-- [#81](https://github.com/plotly/dash-ag-grid/pull/81) Fixing syncing issue with `rowData`, `virtualRowData` when cell edits and async `rowTransactions` occur
-- [#90](https://github.com/plotly/dash-ag-grid/pull/90) Fixing `columnState` to be populated once `gridReady`
-- [#92](https://github.com/plotly/dash-ag-grid/pull/92) Fixing `defaultStyle` when no `styleConditions` is in `cellStyle`
 
-- [#111](https://github.com/plotly/dash-ag-grid/pull/111)
-  - fixing templates to only populate when `dangerously_allow_code=True`
+- [#81](https://github.com/plotly/dash-ag-grid/pull/81) Fix syncing issue with `rowData`, `virtualRowData` when cell edits and async `rowTransactions` occur
 
-- [#132](https://github.com/plotly/dash-ag-grid/pull/132)
-  - fixed `columnSize` to update upon interaction
+- [#90](https://github.com/plotly/dash-ag-grid/pull/90) Fix `columnState` to be populated once `gridReady`
+
+- [#92](https://github.com/plotly/dash-ag-grid/pull/92) Fix `defaultStyle` when no `styleConditions` is in `cellStyle`
+
+- [#111](https://github.com/plotly/dash-ag-grid/pull/111) Fix templates to only populate when `dangerously_allow_code=True`
+
+- [#132](https://github.com/plotly/dash-ag-grid/pull/132) Fix `columnSize` to update upon interaction
 
 - [#145](https://github.com/plotly/dash-ag-grid/pull/145)
-  - fixed `onRowDragEnd` to trigger `virtualRowData` update
-  - fixed all `virtualRowData` updates to take into account the sorting
+  - Fix `onRowDragEnd` to trigger `virtualRowData` update
+  - Fix all `virtualRowData` updates to take into account sorting
 
 - [#155](https://github.com/plotly/dash-ag-grid/pull/155) and [#158](https://github.com/plotly/dash-ag-grid/pull/158)
-  - fixed `openGroups` where clearing out the set would cause issues
-  - fixed `paginationGoTo` to work with a starting page
+  - Fix `openGroups` where clearing out the set would cause issues
+  - Fix `paginationGoTo` to work with a starting page
 
-- [#161](https://github.com/plotly/dash-ag-grid/pull/161)
-  - fixed the default style to be applied even when a style is given from the developer, `style.height` and `style.width` always exist and can be overridden by the developer if provided
+- [#161](https://github.com/plotly/dash-ag-grid/pull/161) Fix the default style to be applied even when a style is given from the developer. `style.height` and `style.width` always exist but can be overridden if other values are provided in the `style` prop.
 
 -[#164](https://github.com/plotly/dash-ag-grid/pull/164)
-  - fixed `comparator` to not be restricted to just params
-  - fixed `paginationGoTo` to allow `0` to be passed
+  - Fix `comparator` to not be restricted to just params
+  - Fix `paginationGoTo` to allow `0` to be passed
 
 ## [1.3.2] - 2023-01-13
 
