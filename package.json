@@ -1,7 +1,7 @@
 {
     "name": "dash-ag-grid",
     "version": "2.0.0",
-    "description": "Dash wrapper around ag-grid",
+    "description": "Dash wrapper around AG Grid, the best interactive data grid for the web.",
     "repository": {
         "type": "git",
         "url": "git://github.com/plotly/dash-ag-grid.git"
@@ -10,13 +10,12 @@
         "url": "https://github.com/plotly/dash-ag-grid/issues"
     },
     "homepage": "https://github.com/plotly/dash-ag-grid",
-    "main": "build/index.js",
+    "main": "dash_ag_grid/dash_ag_grid.min.js",
     "scripts": {
-        "validate-init": "python _validate_init.py",
-        "prepublishOnly": "npm run validate-init",
+        "prepublishOnly": "rm -rf lib && babel src --out-dir lib --copy-files --config-file ./.babelrc && rm -rf lib/jl/ lib/*.jl",
         "build:js": "webpack --mode production",
         "build:backends": "dash-generate-components ./src/lib/components dash_ag_grid -p package-info.json --r-prefix '' --jl-prefix ''",
-        "build": "npm run build:js && npm run build:backends",
+        "build": "run-s prepublishOnly build:js build:backends",
         "postbuild": "es-check es2015 dash_ag_grid/*.js",
         "private::format.eslint": "eslint --quiet --fix src",
         "private::format.prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -46,6 +45,7 @@
         "static-eval": "^2.1.0"
     },
     "devDependencies": {
+        "@babel/cli": "^7.21.5",
         "@babel/core": "^7.21.5",
         "@babel/eslint-parser": "^7.21.3",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
@@ -71,7 +71,8 @@
         "webpack-cli": "^5.0.2"
     },
     "files": [
-        "/dash_ag_grid/*{.js,.map}"
+        "/dash_ag_grid/*{.js,.map}",
+        "/lib/"
     ],
     "engines": {
         "node": ">=8.11.0",
