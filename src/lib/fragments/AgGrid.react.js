@@ -55,8 +55,7 @@ import 'ag-grid-community/styles/ag-theme-material.css';
 import * as d3Format from 'd3-format';
 import * as d3Time from 'd3-time';
 import * as d3TimeFormat from 'd3-time-format';
-import * as d3Array from 'd3-array';
-const d3 = {...d3Format, ...d3Time, ...d3TimeFormat, ...d3Array};
+const d3 = {...d3Format, ...d3Time, ...d3TimeFormat};
 
 // Rate-limit for resizing columns when grid div is resized
 const RESIZE_DEBOUNCE_MS = 200;
