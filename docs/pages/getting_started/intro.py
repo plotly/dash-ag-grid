@@ -70,16 +70,10 @@ Welcome to the Dash AG Grid documentation.  These docs are a Dash version of the
 """
 
 text2 = """  
->
-> #### This is a prerelease for dash-ag-grid 2.0.0 🎉
->  We've completed all planned breaking changes and we're now doing the final review before the full 2.0.0 release!  
->
->  If you have tried previous alpha releases, see our <dccLink href='/getting-started/migration-guide' children='Migration Guide' />
-
 
 ### Getting Started
 
-`pip install dash-ag-grid==2.0.0rc2`
+`pip install dash-ag-grid`
 
  1. Read the [Medium article](https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers) or watch the [webinar](https://www.youtube.com/watch?v=Ggekq7C5pz4?utm_source=Webinar%3A+AG+Grid+1%2F26%2F23&utm_medium=medium_article&utm_content=AnnouncingDashAGGrids) introducing Dash AG Grid.
  2. See the Plotly Video [Introducing Dash AG Grid](https://www.youtube.com/watch?v=dovf4FwtwPg)
@@ -89,6 +83,8 @@ text2 = """
  
 Note that the webinar and Medium article are based on the first alpha release 2.0.0a1.  Please be sure to see the updated
  code for the [demo_stock_portfolio.py](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)) app.
+ 
+If you have tried previous alpha releases, see our <dccLink href='/getting-started/migration-guide' children='Migration Guide' />
  
 ### Contributing
 

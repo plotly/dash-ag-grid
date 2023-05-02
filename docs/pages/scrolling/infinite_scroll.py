@@ -80,14 +80,27 @@ The grid cannot do sorting or filtering for you, as it does not have all of the 
 ### Example 2: Infinite Scroll with Sort and Filter
 """
 
+text3 = """
+
+
+` `  
+` `  
+
+
+### Example 3 Infinite Scroll with Pagination
+
+Pagination in AG Grid is supported in all the different row models.  Here is an example with the Infinite Row Model.
+
+"""
+
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.scrolling.infinite_scroll", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.scrolling.infinite_scroll_sort_filter", make_layout=make_tabs),
-
-
+        make_md(text3),
+        example_app("examples.scrolling.infinite_scroll_pagination", make_layout=make_tabs),
         # up_next("text"),
     ],
 )

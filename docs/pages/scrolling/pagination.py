@@ -76,7 +76,12 @@ In the example below you can see how this works.
 - We use  `totalPages ` in the `paginationInfo` dict to update the dbc.Pagination buttons when the number of pages changes, such as when filtering data.
 
 The example also sets property `suppressScrollOnNewData=True`, which tells the grid to NOT scroll to the top when the page changes.
+"""
 
+text4 = """
+### Example: Selecting the page in a callback
+
+This example updates the `paginationGoTo` prop in a callback to set the page.
 
 """
 
@@ -91,6 +96,8 @@ layout = html.Div(
         ),
         make_md(text3),
         example_app("examples.scrolling.row_pagination_custom", make_layout=make_tabs),
+        make_md(text4),
+        example_app("examples.scrolling.row_pagination_goto_page", make_layout=make_tabs),
         # up_next("text"),
     ],
 )

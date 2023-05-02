@@ -104,10 +104,6 @@ columnDefs = [
 ]
 ```
 
-
-"""
-
-text2 = """
 ### Refresh of Styles
 If you refresh a cell, or a cell is updated due to editing, the `cellStyle`, `cellClass`are applied again. This has the following effect:
 
@@ -134,13 +130,42 @@ cellStyle={
 }
 ```
 
+### Examples
+Here are a few simple examples using the `cellStyle`, and  `cellClassRules` props.
+"""
+
+
+text2 = """
+This next example uses `styleConditions` to style one column based on the value of a different column. Note the following:
+ - The cells in the "price" column are styled based on the "color" column
+ - The "color" column is in the `rowData` but it does not need to be displayed in the grid
+"""
+
+text3 = """
+The next two examples are based on the `DataTable` examples in the [Dash Docs.](https://dash.plotly.com/datatable/conditional-formatting#highlighting-cells-by-value-with-a-colorscale-like-a-heatmap)
+ These recipes shades cells with  `cellStyle` and `styleConditions` and creates a legend with HTML components. You'll need to `pip install colorlover` to get the colorscales.
+ 
+"""
+
+text4 = """
+> 
+> See how to format cells like button, tags, links, dropdowns, and more! in the <dccLink href="/components/cell-renderer" children="Components" /> section
+>
+
 """
 
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.layout.cell_styling", make_layout=make_tabs),
-        make_md(text2)
+        make_md(text2),
+        example_app("examples.layout.cell_styling_based_on_dif_col", make_layout=make_tabs),
+        make_md(text3),
+        example_app("examples.layout.cell_styling_heatmap", make_layout=make_tabs),
+        example_app("examples.layout.cell_styling_heatmap_col", make_layout=make_tabs),
+        example_app("examples.layout.cell_styling_heatmap_js_function", make_layout=make_tabs),
+        make_md(text4),
+
         # up_next("text"),
     ],
 )

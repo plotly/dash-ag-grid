@@ -42,9 +42,9 @@ navbar = dbc.NavbarSimple(
         ),
         html.Div(
             [
-                html.Div("Pre Release", className="small text-white pt-2"),
+                html.Div("Version", className="small text-white pt-2"),
                 html.Div([
-                    "2.0.0rc2",
+                    "2.0.0",
                     html.A(
                         html.I(className="bi bi-github ps-2 text-white"),
                         href="https://github.com/plotly/dash-ag-grid",

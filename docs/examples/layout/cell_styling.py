@@ -40,7 +40,7 @@ rowData = [
 
 grid_with_default_cell_styles = html.Div(
     [
-        html.H3(children="Grid with Default Cell Styles"),
+        html.H5(children="Grid with Conditional Cell Style and  Default Style"),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=rowData,
@@ -61,7 +61,7 @@ grid_with_default_cell_styles = html.Div(
 
 grid_with_cell_style = html.Div(
     [
-        html.H3(children="Grid with Individual Cell Style"),
+        html.H5(children="Grid with Individual Cell Style"),
         dag.AgGrid(
             columnDefs=cellStylColumnDefs,
             rowData=rowData,
@@ -76,7 +76,7 @@ grid_with_cell_style = html.Div(
 
 grid_with_conditional_cell_styles = html.Div(
     [
-        html.H3(children="Grid with Conditional Cell Styles"),
+        html.H5(children="Grid with Conditional Cell Styles"),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=rowData,
@@ -105,7 +105,7 @@ grid_with_conditional_cell_styles = html.Div(
 
 grid_with_cell_class_rules = html.Div(
     [
-        html.H3(children="Grid with Cell Class Rules"),
+        html.H5(children="Grid with Cell Class Rules"),
         dag.AgGrid(
             columnDefs=cellClassRulesColumnDefs,
             rowData=rowData,
@@ -122,10 +122,9 @@ grid_with_cell_class_rules = html.Div(
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Examples of cell styling using the AG-Grid Cell Style approach."),
-        grid_with_default_cell_styles,
         grid_with_cell_style,
         grid_with_conditional_cell_styles,
+        grid_with_default_cell_styles,
         grid_with_cell_class_rules,
     ]
 )

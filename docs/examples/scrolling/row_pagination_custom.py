@@ -73,7 +73,7 @@ def update_pagination_control(pagination_info):
     prevent_initial_call=True
 )
 def goto_page(n):
-    if n is None or n == 1:
+    if n is None:
         return "first"
     # grid pagination starts at zero
     return n - 1
