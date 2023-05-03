@@ -56,6 +56,7 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dcc.Location(id="url"),
+                dcc.Store(id="enterprise-store", data=""),
                 dbc.Col(make_side_nav(), xs=5, md=4, xl=3, style={"maxWidth": 300},),
                 dbc.Col(
                     html.Div(
@@ -89,6 +90,23 @@ def open_sidebar_category(path):
     segments = path.split("/")
     category = "/" + segments[1]
     return category
+
+
+# refreshes the page after visiting AG Grid Enterprise examples to reset to AG Grid Community
+app.clientside_callback(
+    """
+    function(url, enterpriseStore) {
+        const newStore = url.startsWith("/enterprise") ? "enterprise" : "";
+        if (!url.startsWith("/enterprise")  && enterpriseStore === "enterprise") {
+            window.location.reload()    
+        }
+        return newStore
+    }
+    """,
+    Output('enterprise-store', 'data'),
+    Input('url', 'pathname'),
+    State('enterprise-store', 'data'),
+)
 
 
 if __name__ == "__main__":
