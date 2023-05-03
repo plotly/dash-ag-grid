@@ -153,7 +153,7 @@ def make_side_nav():
                     make_sidebar_category(category="/columns", title="Columns"),
                     make_sidebar_category(category="/rows", title="Rows"),
                     make_sidebar_category(category="/layout", title="Layout & Style"),
-                    make_sidebar_category(category="/clientside", title="Clientside Data"),
+                    make_sidebar_category(category="/clientside-data", title="Clientside Data"),
                     make_sidebar_category(category="/selection", title="Selection"),
                     make_sidebar_category(category="/filtering", title="Filtering"),
                     make_sidebar_category(category="/rendering", title="Rendering"),
@@ -170,6 +170,9 @@ def make_side_nav():
                     ),
                     make_sidebar_category(
                         category="/other-examples", title="Other Examples"
+                    ),
+                    make_sidebar_category(
+                        category="/persistence", title="Persistence"
                     ),
                 ],
                 flush=True,
