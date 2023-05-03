@@ -114,8 +114,7 @@ DashAgGrid.propTypes = {
 
     /**
      * Properties whose user interactions will persist after refreshing the
-     * component or the page. Since only `value` is allowed this prop can
-     * normally be ignored.
+     * component or the page.
      */
     persisted_props: PropTypes.arrayOf(PropTypes.string),
 

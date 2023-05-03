@@ -171,6 +171,9 @@ def make_side_nav():
                     make_sidebar_category(
                         category="/other-examples", title="Other Examples"
                     ),
+                    make_sidebar_category(
+                        category="/persistence", title="Persistence"
+                    ),
                 ],
                 flush=True,
                 always_open=True,
