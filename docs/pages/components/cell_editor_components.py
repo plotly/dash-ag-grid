@@ -162,7 +162,10 @@ Note the following:
  - See how to organize the dropdown options into categories in the Things To Do column dropdown
 """
 
-
+text5 = """
+Thanks to @alistair.welch for the DMC_Select component.  See the [Dash Community Forum posts](https://community.plotly.com/t/using-dash-mantine-components-dmc-select-as-an-ag-grid-cell-editor/74988)
+for more information, and also this [forum post](https://community.plotly.com/t/using-dash-core-components-dropdown-as-an-ag-grid-cell-editor/74898/15) for more background on how this component was developed.
+"""
 
 
 layout = html.Div(
@@ -175,6 +178,7 @@ layout = html.Div(
         example_app("examples.components.cell_editor_dmc_select", make_layout=make_tabs),
         make_md(text4),
         example_app("examples.components.cell_editor_dmc_select_labels_and_vals", make_layout=make_tabs),
+        make_md(text5)
 
     ],
 )
