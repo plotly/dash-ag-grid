@@ -14,10 +14,10 @@ register_page(
 text1 = """
 # Persistence
 
-Persistence works with AG Grid the same way as in other Dash components. See more information on peristence in the
- [Dash Documention](https://dash.plotly.com/persistence).  Note that the grid must have an `id` to enable persistence.
+Persistence works with AG Grid the same way as in other Dash components. See more information on persistence in the
+ [Dash Documentation](https://dash.plotly.com/persistence).  Note that the grid must have an `id` to enable persistence.
 
-This is from the <dccLink href="/getting-started/reference" children="Reference section"/> of the docs:
+This is from the <dccLink href="/getting-started/reference" children="Reference section"/>:
 
 **`persisted_props`** (*list of strings*; default `['selectedRows']`): Properties whose user interactions will persist after refreshing the component or the page.
 
