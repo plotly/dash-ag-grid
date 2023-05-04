@@ -12,7 +12,7 @@
     "homepage": "https://github.com/plotly/dash-ag-grid",
     "main": "dash_ag_grid/dash_ag_grid.min.js",
     "scripts": {
-        "prepublishOnly": "rm -rf lib && babel src --out-dir lib --copy-files --config-file ./.babelrc && rm -rf lib/jl/ lib/*.jl",
+        "prepublishOnly": "rimraf -rf lib && babel src --out-dir lib --copy-files --config-file ./.babelrc && rimraf -rf lib/jl/ lib/*.jl",
         "build:js": "webpack --mode production",
         "build:backends": "dash-generate-components ./src/lib/components dash_ag_grid -p package-info.json --r-prefix '' --jl-prefix ''",
         "build": "run-s prepublishOnly build:js build:backends",
