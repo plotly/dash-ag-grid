@@ -64,7 +64,8 @@ if __name__ == "__main__":
 """
 Addd the following to a .css file in the assets folder
 
-```
+------------------
+
 .header1 .ag-header-cell-label {
   /*Necessary to allow for text to grow vertically*/
   height: 100%;
@@ -84,6 +85,6 @@ Addd the following to a .css file in the assets folder
   line-height: 2em;
   margin-top: 60px;
 }
-```
+
 
 """
