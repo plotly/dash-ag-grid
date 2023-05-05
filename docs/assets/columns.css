@@ -62,3 +62,10 @@
   font-weight: bold;
 }
 
+
+/* For centered columns example */
+.center-header .ag-header-cell-label {
+   justify-content: center;
+}
+
+
