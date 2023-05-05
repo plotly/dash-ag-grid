@@ -123,10 +123,37 @@ rightAligned = {
     'cellClass': 'ag-right-aligned-cell'
 }
 ```
+"""
 
+text5 = """
 
+` `  
+` ` 
 
+## Centered Columns
 
+To center the cell content you can use `"cellStyle": {'textAlign': 'center'}` either in the `columnDefs` or `defaultColDef`
+
+To center the header text, you can add the following class to the `.css` file in the `/assets` folder
+
+```css
+.center-header .ag-header-cell-label {
+   justify-content: center;
+}
+```
+
+Then add the class name to the column using `headerClass`.  In the following snippet, this will center content of one column:
+
+```python
+
+columnDefs = [
+    {"field": "make", "headerClass": 'center-header', "cellStyle": {'textAlign': 'center'}}
+]
+```
+
+In this example, all columns are centered by setting the `headerClass` and `cellStyle` in the `defaultColDef` prop
+
+Thanks to [@Spyhuntr](https://github.com/Spyhuntr) for this example!
 """
 
 
@@ -141,6 +168,8 @@ layout = html.Div(
         example_app("examples.columns.column_definitions3", make_layout=make_tabs),
         make_md(text4),
         example_app("examples.columns.column_definitions4", make_layout=make_tabs),
+        make_md(text5),
+        example_app("examples.columns.column_definitions5", make_layout=make_tabs),
         # up_next("text"),
     ],
 )
