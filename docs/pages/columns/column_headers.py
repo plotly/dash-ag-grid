@@ -76,12 +76,6 @@ The following class was added to a .css file in the assets folder
 
 text2 = """
 
-` `
-` `
-` `  
-` ` 
-
-
 ## Auto Header Height
 
 
@@ -98,12 +92,6 @@ Try making a column smaller by dragging the resize handle on the column header, 
 
 
 text3 = """
-
-` `
-` `
-` `  
-` ` 
-
 
 ## Header Tooltips
 You can provide a tooltip to the header using colDef.headerTooltip.

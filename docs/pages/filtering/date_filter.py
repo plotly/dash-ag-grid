@@ -17,10 +17,6 @@ register_page(
 
 text1 = """
 
-"""
-
-text1 = """
-
 # Date Filter
 Date filters allow you to filter date data. The Provided Filters and Simple Filters pages explain the parts of the date filter that are the same as the other provided filters. This page builds on that and explains some details that are specific to the date filter.
 

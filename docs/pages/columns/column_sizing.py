@@ -148,9 +148,6 @@ This example adds a button so the user can resize the grid.  Try changing a colu
 
 
 text2 = """
-
-` `
-` `
 ## Shift Resizing
 If you hold the Shift key while dragging the resize handle, the column will take space away from the column adjacent to it. This means the total width for all columns will be constant.
 

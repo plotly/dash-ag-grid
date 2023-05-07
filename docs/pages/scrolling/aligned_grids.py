@@ -43,9 +43,6 @@ Below shows two grids, both aligned with the other (so any column change to one 
 
 text2 = """
 
-` `  
-` `  
-
 ### Events
 The events which are fired as part of the grid alignment relationship are as follows:
 

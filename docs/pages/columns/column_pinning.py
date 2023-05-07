@@ -37,8 +37,6 @@ Example Pinning
 
 text2 = """
 
-` `
-` `
 ## Pinning Via Column Dragging
 
 It is possible to pin a column by moving the column in the following ways:

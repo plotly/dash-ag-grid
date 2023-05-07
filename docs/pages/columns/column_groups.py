@@ -51,8 +51,6 @@ columnDefs= [
 
 text2 = """
 
-` `
-` `
 ## Column Definitions vs Column Group Definitions
 
 
@@ -137,10 +135,6 @@ When Column Groups are too wide, it might be useful to have the Header Label to 
 """
 
 text4 = """
-
-` `
-` `
-
 ## Group Changes
 
 

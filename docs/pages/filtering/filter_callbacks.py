@@ -42,8 +42,7 @@ This example demonstrates
 """
 
 text2 = """
-` `
-` `
+
 ### Example 2:  Setting the Filter Model when the app starts
 
 This example demonstrates 
@@ -54,8 +53,6 @@ This example demonstrates
 
 
 text3 = """
-` `
-` `
 ### Example 3:  Filtered and sorted data
 
 This example demonstrates using the `virtualRowData` in a callback to access filtered and sorted data in a callback..

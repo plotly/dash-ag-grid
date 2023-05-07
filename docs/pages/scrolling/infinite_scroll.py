@@ -70,10 +70,6 @@ Tip - You can also use the keyboard to navigate. Click on a row to focus the gri
 
 text2 = """
 
-` `  
-` `  
-
-
 ### Aggregation and Grouping
 Aggregation and grouping are not available in infinite scrolling. This is because to do so would require the grid knowing the entire dataset, which is not possible when using the Infinite Row Model. If you need aggregation and / or grouping for large datasets, check the Server-Side Row Model for doing aggregations on the server-side.
 
@@ -84,11 +80,6 @@ The grid cannot do sorting or filtering for you, as it does not have all of the 
 """
 
 text3 = """
-
-
-` `  
-` `  
-
 
 ### Example 3 Infinite Scroll with Pagination
 

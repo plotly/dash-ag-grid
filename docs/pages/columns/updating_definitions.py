@@ -31,11 +31,8 @@ For example try the following:
    - Sort Country column. Note changing columns doesn't impact its sort.
 """
 
+
 text2 = """
-
-` `  
-` ` 
-
 ## Updating Column Definitions
 
 All properties of a column definition can be updated. For example if you want to change the Header Name of a column, you update the headerName on the Column Definition and then set the list of Column Definitions into the grid again.
@@ -54,9 +51,6 @@ Note that any resizing, sorting etc of the Columns is kept intact between update
 
 text3 = """
 
-` `  
-` `
-
 ##  Column Definition State Retrieval
 
 There will be times when you'll want to retrieve the current Column Definition in order to perhaps persist them, or perhaps retrieve, alter and then re-apply the modified columns.
@@ -66,9 +60,6 @@ The current column state can be retrieved with columnState
 
 
 text4 = """
-
-` `  
-` `
 
 ##  Updating Column Groups
 
