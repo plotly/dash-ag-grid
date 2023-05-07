@@ -140,7 +140,7 @@ The example below shows the date filter in action, using some of the configurati
     - Be highlighted with a red border (default theme) or other theme-appropriate highlight.
 
 
-> #### See more date filter examples in the docs
+> #### See more date filter examples:
 > - <dccLink href='/rendering/value-formatters-with-d3-format' children='Rendering - Value formatters with d3' /> (last 3 examples)
 > - <dccLink href='/filtering/column-filters-overview' children='Filtering - Column filters overview' />  (first example)
 > - <dccLink href='/rows/row-sorting' children='Rows - Row Sorting' /> (Example 2 sorting dates)

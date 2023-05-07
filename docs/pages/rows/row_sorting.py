@@ -73,6 +73,33 @@ In the example below, try clicking on the date column header, and you will see t
 This example also demonstrates the date filter.  For more information, see <dccLink href="/filtering/date-filter" children="Date Filter" /> page.
 """
 
+text2a = """
+### Custom Sorting
+
+Custom sorting is provided at a column level by configuring a comparator on the column definition.
+
+- `comparator` (Function) Override the default sorting order by providing a custom sort comparator.
+    - `valueA`, `valueB` are the values to compare.
+    - `nodeA`, `nodeB` are the corresponding RowNodes. Useful if additional details are required by the sort.
+    - `isDescending` - true if sort direction is desc. Not to be used for inverting the return value as the grid already applies asc or desc ordering.
+    Return:
+    - `0`  valueA is the same as valueB
+    - `> 0` Sort valueA after valueB
+    - `< 0` Sort valueA before valueB
+
+### Custom Sorting Example
+This is the example from the [AG Grid docs](https://www.ag-grid.com/react-data-grid/row-sorting/#custom-sorting-example). 
+ It shows a custom sorting using the `comparator` prop and a custom  function to determine the sort order.  The example 
+ parses a string date field.  Note that with Dash it's easier to  use the provided `d3` functions as shown in the example
+  above rather than write your own custom function.
+
+Example below shows the following:
+
+- Default sorting on the **Athlete** column.
+- When the **Year** column is not sorted, it shows a custom icon (up/down arrow).
+- The **Date** column has strings as the row data, but has a custom comparator so that when you sort this column it sorts as dates, not as strings.
+
+"""
 
 text3 = """
 ### Multi Column Sorting
@@ -97,6 +124,8 @@ layout = html.Div(
         example_app("examples.rows.row_sorting", make_layout=make_tabs),
         make_md(text2),
         example_app("examples.rows.row_sorting_date", make_layout=make_tabs),
+        make_md(text2a),
+        example_app("examples.rows.row_sorting_custom", make_layout=make_tabs),
         make_md(text3),
         make_feature_card(img, "")
         # up_next("text"),
