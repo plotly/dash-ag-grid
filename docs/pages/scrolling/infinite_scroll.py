@@ -63,6 +63,9 @@ In a nutshell, every time the grid wants more rows, it will call `getRows()` on 
   - `storeInfo` (boolean | number | string | dict | list; optional): Any extra info for the grid to associate with this load.
 
 ### Example 1:  Infinite Scroll Simple Example
+
+Tip - You can also use the keyboard to navigate. Click on a row to focus the grid.  Then use `page up` and `page down` keys to scroll by page.  Use the `home` and
+ `end` keys to quickly go to the first and last row of the data.
 """
 
 text2 = """
