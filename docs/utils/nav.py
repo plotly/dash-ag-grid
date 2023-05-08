@@ -154,6 +154,7 @@ def make_side_nav():
                     make_sidebar_category(category="/rows", title="Rows"),
                     make_sidebar_category(category="/layout", title="Layout & Style"),
                     make_sidebar_category(category="/clientside-data", title="Clientside Data"),
+                    make_sidebar_category(category="/serverside-data", title="Serverside Data"),
                     make_sidebar_category(category="/selection", title="Selection"),
                     make_sidebar_category(category="/filtering", title="Filtering"),
                     make_sidebar_category(category="/rendering", title="Rendering"),

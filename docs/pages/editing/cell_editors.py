@@ -50,9 +50,6 @@ const columnDefs = [
 
 text3 = """
 
-` `  
-` `  
-
 ### Dynamic Parameters
 Parameters for cell editors can be dynamic to allow different selections based on what cell is being edited. For
  example, you might have a 'City' column that has values based on the 'Country' column. To do this, provide
@@ -85,9 +82,6 @@ dagfuncs.dynamicOptions = function(params) {
 
 text4 = """
 
-` `  
-` `  
-
 ### Example:  Custom Datepicker component
 
 The example below demonstrates how to use a custom date picker as a cell editor. The 'Date' column uses a Component
@@ -104,9 +98,6 @@ Notice the following:
 """
 
 text5 = """
-
-` `  
-` ` 
 
 ### Example:  Custom Number Input component
 

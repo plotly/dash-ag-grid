@@ -36,9 +36,6 @@ Note the following:
 
 text2 = """
 
-` `  
-` ` 
-
 ### Example:  Custom Number Input component
 
 The example below demonstrates how to use a custom number input as a cell editor. The 'Price' column uses a Component
@@ -54,9 +51,6 @@ Note the following:
 """
 
 text3 = """
-
-` `  
-` ` 
 
 ### Example:  Custom Dropdown Component dmc.Select
 
@@ -146,9 +140,6 @@ In the example below, note the following:
 
 
 text4 = """
-
-` `  
-` ` 
 
 ### Example:  Custom Dropdown Component dmc.Select  with different Options
 

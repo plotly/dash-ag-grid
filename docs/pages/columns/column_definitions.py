@@ -56,7 +56,7 @@ defaultColDef = {'editable': True}
 
 
 text2 = """
-------------------
+
 ## Grouping columns
 
 If you want the columns to be grouped, you can include them as children like so:
@@ -80,9 +80,6 @@ columnDefs = [
 
 
 text3 = """
-
-` `  
-` ` 
 ## Column Types
 
 The grid also provides additional ways to help simplify and avoid duplication of column definitions. This is done through the following:
@@ -97,10 +94,6 @@ Default columns and column types can specify any of the [column properties](http
 """
 
 text4 = """"
-
-` `  
-` ` 
-
 ## Right Aligned and Numeric Columns
 
 The grid provides a handy shortcut for aligning columns to the right. Setting the column definition type to rightAligned aligns the column header and contents to the right, which makes the scanning of the data easier for the user.
@@ -126,9 +119,6 @@ rightAligned = {
 """
 
 text5 = """
-
-` `  
-` ` 
 
 ## Centered Columns
 

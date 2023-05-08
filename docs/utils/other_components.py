@@ -28,11 +28,11 @@ def up_next(text):
     )
 
 
-def make_md(text):
-    return dcc.Markdown(
+def make_md(text, className="mt-5"):
+    return html.Div(dcc.Markdown(
         text, className="mx-5 px-3", dangerously_allow_html=True, link_target="_blank",
         style={"maxWidth": 1000}
-    )
+    ),className=className)
 
 
 enterprise_blurb = """

@@ -469,3 +469,34 @@ dagfuncs.DMC_Select = class {
 };
 // end dmc.Select
 
+
+
+
+// Used in the row sorting custom comparator example
+dagfuncs.dateComparator = function (date1, date2) {
+  const date1Number = monthToComparableNumber(date1);
+  const date2Number = monthToComparableNumber(date2);
+  if (date1Number === null && date2Number === null) {
+    return 0;
+  }
+  if (date1Number === null) {
+    return -1;
+  }
+  if (date2Number === null) {
+    return 1;
+  }
+  return date1Number - date2Number;
+}
+// eg 29/08/2004 gets converted to 20040829
+function monthToComparableNumber(date) {
+  if (date === undefined || date === null) {
+    return null;
+  }
+  const yearNumber = parseInt(date.split('/')[2]);
+  const monthNumber = parseInt(date.split('/')[1]);
+  const dayNumber = parseInt(date.split('/')[0]);
+  return (yearNumber * 10000) + (monthNumber * 100) + dayNumber;
+}
+// end custom comparator example
+
+
