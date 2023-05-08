@@ -14,30 +14,37 @@ register_page(
 )
 
 text1 = """
-## React Data Grid: Column Headers
-Each column has a header at the top that typically displays the column name and has access to column features,
- such as sorting, filtering and a column menu. This page explains how you can manage the headers.
+# Column Headers
 
-### Header Height
+Each column has a header at the top that typically displays the column name and has access to column features,
+such as sorting, filtering and a column menu. This page explains how you can manage the headers.
+
+## Header Height
 
 These properties can be used to change the different heights used in the headers.
 
-- `headerHeight`   The height in pixels for the row containing the column label header. If not specified, it uses the theme value of header-height.
-- `groupHeaderHeight` The height in pixels for the rows containing header column groups. If not specified, it uses headerHeight.
-- `floatingFiltersHeight`  The height in pixels for the row containing the floating filters. If not specified, it uses the theme value of header-height.
-- `pivotHeaderHeight` (enterprise) The height in pixels for the row containing the columns when in pivot mode. If not specified, it uses headerHeight.
-- `pivotGroupHeaderHeight`  (enterprise) The height in pixels for the row containing header column groups when in pivot mode. If not specified, it uses groupHeaderHeight.
+- `headerHeight`   The height in pixels for the row containing the column label header. If not specified, it uses the
+  theme value of `header-height`.
+- `groupHeaderHeight` The height in pixels for the rows containing header column groups. If not specified, it
+  uses `headerHeight`.
+- `floatingFiltersHeight`  The height in pixels for the row containing the floating filters. If not specified, it uses
+  the theme value of `header-height`.
+- `pivotHeaderHeight` (enterprise) The height in pixels for the row containing the columns when in pivot mode. If not
+  specified, it uses `headerHeight`.
+- `pivotGroupHeaderHeight`  (enterprise) The height in pixels for the row containing header column groups when in pivot
+  mode. If not specified, it uses `groupHeaderHeight`.
 
-### Text Orientation
+## Text Orientation
 
 By default, the text label for the header is display horizontally, i.e. as normal readable text. To display the text in
- another orientation you have to provide your own CSS to change the orientation and also provide the adequate header
-  heights using the appropriate grid property.
+another orientation you have to provide your own CSS to change the orientation and also provide the adequate header
+heights using the appropriate grid property.
 
-Example: Header Height and Text Orientation
-The following example shows how you can provide a unique look and feel to the headers. Note that:
+### Example: Header Height and Text Orientation\
 
-The header heights have all been changed via grid options:
+The following example shows how you can provide a unique look and feel to the headers.\
+Note that the header heights have all been changed via dashGridOptions:
+
 ```
 groupHeaderHeight= 75,
 headerHeight= 150,
@@ -85,7 +92,7 @@ To enable this, set `autoHeaderHeight=True` on the column definition you want to
 
 The example below demonstrates using the `autoHeaderHeight` property in conjunction with the `wrapHeaderText` property, so that long column names are fully displayed.
 
-Note that the long column header names wrap onto another line
+Note that the long column header names wrap onto another line\
 Try making a column smaller by dragging the resize handle on the column header, observe that the header will expand so the full header content is still visible.
 
 """
@@ -97,9 +104,8 @@ text3 = """
 You can provide a tooltip to the header using colDef.headerTooltip.
 
 The example below shows header tooltips. Note the following:
-
-All the columns, apart from Country and Year, have a header tooltip set.
-We have set the Grid `tooltipShowDelay` property to 500ms to make the tooltips appear quicker.
+- All the columns, apart from Country and Year, have a header tooltip set.
+- We have set the Grid `tooltipShowDelay` property to 500ms to make the tooltips appear quicker.
 
 
 """

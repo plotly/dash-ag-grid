@@ -3,15 +3,12 @@ Updating Column Groups
 
 """
 
-
-
 import dash_ag_grid as dag
-from dash import Dash, dcc, html, Input, Output, State, ctx
+from dash import Dash, dcc, html, Input, Output, ctx
 import dash_bootstrap_components as dbc
 import pandas as pd
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
-
 
 df = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
@@ -47,7 +44,6 @@ columnDefs1 = [
     },
 ]
 
-
 columnDefs2 = [
     {
         "headerName": "GROUP A",
@@ -80,7 +76,6 @@ columnDefs2 = [
     },
 ]
 
-
 defaultColDef = {
     "initialWidth": 150,
     "sortable": True,
@@ -107,16 +102,10 @@ app.layout = html.Div(
     Output("column-group-set", "columnDefs"),
     Input("column-group1-set-btn", "n_clicks"),
     Input("column-group2-set-btn", "n_clicks"),
-    State("column-group-set", "columnState"),
     prevent_initial_call=True,
 )
-def toggle_cols(n1, n2, col_state):
-    # print(col_state)
-    if ctx.triggered_id == "column-group2-set-btn":
-        print("2")
-        return columnDefs2
-    print("1")
-    return columnDefs1
+def toggle_cols(*_):
+    return columnDefs2 if ctx.triggered_id == "column-group2-set-btn" else columnDefs1
 
 
 if __name__ == "__main__":

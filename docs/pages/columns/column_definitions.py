@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=1,
     description=app_description,
-    title="Dash AG Grid Column Definitions",
+    title="Dash AG Grid - Column Definitions",
     # name="Bootstrap Utility Classes",
     # hashtags=["intro","background", "border", "color", "spacing", "text", "position"],
 )
@@ -93,7 +93,7 @@ Default columns and column types can specify any of the [column properties](http
 
 """
 
-text4 = """"
+text4 = """
 ## Right Aligned and Numeric Columns
 
 The grid provides a handy shortcut for aligning columns to the right. Setting the column definition type to rightAligned aligns the column header and contents to the right, which makes the scanning of the data easier for the user.
