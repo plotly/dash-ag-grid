@@ -62,6 +62,12 @@ The grid comes with some provided cell renderers out of the box. These cell rend
 - Group Cell Renderer: (Enterprise only) For showing group details with expand & collapse functionality when using any of the Row Grouping, Master Detail or Tree Data.
 - Show Change Cell Renderers: For animating changes when data is changing.  See examples in <dccLink href='/rendering/change-cell-renderers' children='Rendering' /> . 
 
+
+#### Grid Performance
+Note that adding cell renderers and and custom components can reduce grid performance.  For more information, please 
+see <dccLink href="/scrolling/scrolling-performance" children="Scrolling Performance."/>
+
+
 -------------------
 ` `  
 ` `  
