@@ -11,6 +11,20 @@ register_page(
 )
 
 text1 = """
+# Updating rowData 
+
+With the AG Grid Clientside row model, all the data is loaded in the grid, then the user can sort, filter, group,
+ and more by interacting with the grid's UI.  Those are all handled by the grid on the clientside without any Dash callbacks.  
+ 
+In Dash apps, it's common to select or filter data in a callback, then display the result in the grid.  In the example
+ below, we use a Dash callback to filter the data based on the value of the `dcc.Dropdown`, then update the grid's `rowData` prop.
+
+> Note - if your callback uses a different dataset or creates new columns, be sure to update the Column Definitions as well as the `rowData`.
+
+### Example:  Updating rowData in a callback
+"""
+
+text2 = """
 # Transaction Updates
 Transaction Updates allow large numbers of rows in the grid to be added, removed or updated in an efficient manner. Use Transaction Updates for fast changes to large datasets.
 
@@ -47,7 +61,7 @@ rowTransaction = {
 }
 ```
 
-### Example 1: Updating with `rowTransaction` and `rowData`
+### Example: Updating with `rowTransaction` and `rowData`
 
 The example updates data in different ways:
 
@@ -56,8 +70,8 @@ The example updates data in different ways:
 """
 
 
-text2 = """
-### Example 2:  Adding pre-selected rows
+text3 = """
+### Example:  Adding pre-selected rows
 
 In this example, note the following:
 - Row ids are set with `getRowId(params.data.id)`
@@ -71,8 +85,10 @@ In this example, note the following:
 layout = html.Div(
     [
         make_md(text1),
-        example_app("examples.clientside_data.rowTransaction", make_layout=make_tabs),
+        example_app("examples.clientside_data.update_rowData", make_layout=make_tabs),
         make_md(text2),
+        example_app("examples.clientside_data.rowTransaction", make_layout=make_tabs),
+        make_md(text3),
         example_app("examples.clientside_data.rowTransaction2", make_layout=make_tabs),
     ],
 )
