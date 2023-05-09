@@ -500,3 +500,9 @@ function monthToComparableNumber(date) {
 // end custom comparator example
 
 
+// Used in the Selections - "Just Filtered" example,  to keep check boxes always in the first column
+dagfuncs.isFirstColumn = function(params) {
+  var displayedColumns = params.columnApi.getAllDisplayedColumns();
+  var thisIsFirstColumn = displayedColumns[0] === params.column;
+  return thisIsFirstColumn;
+}
