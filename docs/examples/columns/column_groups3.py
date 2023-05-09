@@ -2,14 +2,12 @@
 Group Changes
 """
 
-
-
 import dash_ag_grid as dag
 from dash import Dash, dcc, html, Input, Output, ctx
+import dash_bootstrap_components as dbc
 import pandas as pd
 
-app = Dash(__name__)
-
+app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 df = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
@@ -87,7 +85,6 @@ participantAndMedalsInGroups = [
     },
 ]
 
-
 defaultColDef = {
     "resizable": True,
     "initialWidth": 160,
@@ -97,11 +94,11 @@ defaultColDef = {
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Demonstration column groups."),
-        html.Button("No Groups", id="no-groups"),
-        html.Button("Participants in Group", id="participants-in-group"),
-        html.Button("Medals in Group", id="medals-in-group"),
-        html.Button(
+        dcc.Markdown("Demonstration group changes."),
+        dbc.Button("No Groups", id="no-groups"),
+        dbc.Button("Participants in Group", id="participants-in-group"),
+        dbc.Button("Medals in Group", id="medals-in-group"),
+        dbc.Button(
             "Participants and Medals in Group", id="participants-and-medals-in-group"
         ),
         dag.AgGrid(
@@ -111,7 +108,6 @@ app.layout = html.Div(
             defaultColDef=defaultColDef,
         ),
     ],
-    className="header3",
 )
 
 

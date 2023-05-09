@@ -1,21 +1,28 @@
 """
-Column State - Resetting and loading column state with a callback.
+Column State - Resetting and saving/restoring column state with a callback.
 """
 
 import json
 import dash_ag_grid as dag
 import dash
-from dash import Input, Output, html, dcc, ctx
+from dash import Input, Output, html, dcc, State
 import dash_bootstrap_components as dbc
+import pandas as pd
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
-columnDefs = [
-    {"field": "make"},
-    {"field": "model"},
-    {"field": "price"},
-]
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
 
+columnDefs = [
+    {"field": "country"},
+    {"field": "year"},
+    {"field": "athlete"},
+    {"field": "age"},
+    {"field": "sport"},
+    {"field": "total"},
+]
 
 defaultColDef = {
     "initialWidth": 150,
@@ -24,57 +31,6 @@ defaultColDef = {
     "filter": True,
 }
 
-rowData = [
-    {"make": "Toyota", "model": "Celica", "price": 35000},
-    {"make": "Ford", "model": "Mondeo", "price": 32000},
-    {"make": "Porsche", "model": "Boxster", "price": 72000},
-]
-
-colState = [
-    {
-        "colId": "make",
-        "width": 150,
-        "hide": False,
-        "pinned": "left",
-        "sort": None,
-        "sortIndex": None,
-        "aggFunc": None,
-        "rowGroup": False,
-        "rowGroupIndex": None,
-        "pivot": False,
-        "pivotIndex": None,
-        "flex": None,
-    },
-    {
-        "colId": "price",
-        "width": 150,
-        "hide": False,
-        "pinned": "left",
-        "sort": None,
-        "sortIndex": None,
-        "aggFunc": None,
-        "rowGroup": False,
-        "rowGroupIndex": None,
-        "pivot": False,
-        "pivotIndex": None,
-        "flex": None,
-    },
-    {
-        "colId": "model",
-        "width": 150,
-        "hide": False,
-        "pinned": None,
-        "sort": None,
-        "sortIndex": None,
-        "aggFunc": None,
-        "rowGroup": False,
-        "rowGroupIndex": None,
-        "pivot": False,
-        "pivotIndex": None,
-        "flex": None,
-    },
-]
-
 app.layout = html.Div(
     [
         dcc.Markdown(
@@ -82,51 +38,50 @@ app.layout = html.Div(
         ),
         html.Div(
             [
-                dbc.Button(
-                    "Reset Column State", id="reset-column-state-button", n_clicks=0
-                ),
-                dbc.Button("Load State", id="load-column-state-button", n_clicks=0),
+                dbc.Button("Save Column State", id="save-column-state-button"),
+                dbc.Button("Restore Column State", id="restore-column-state-button"),
+                dbc.Button("Reset Column State", id="reset-column-state-button"),
             ],
         ),
         dag.AgGrid(
             id="reset-column-state-grid",
-            columnSize="autoSize",
-            columnDefs=columnDefs,
+            rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
-            rowData=rowData,
-            columnState=colState,
+            columnDefs=columnDefs,
         ),
+        dcc.Markdown("Saved columns state:"),
         html.Pre(id="reset-column-state-grid-pre"),
     ]
 )
 
 
 @app.callback(
-    Output("reset-column-state-grid", "resetColumnState"),
-    Input("reset-column-state-button", "n_clicks"),
-)
-def reset_column_state(n):
-    if n:
-        return True
-    return dash.no_update
-
-
-@app.callback(
     Output("reset-column-state-grid-pre", "children"),
-    Input("reset-column-state-grid", "columnState"),
+    Input("save-column-state-button", "n_clicks"),
+    State("reset-column-state-grid", "columnState"),
+    prevent_initial_call=True,
 )
-def display_column_state(col_state):
-    return (json.dumps(col_state, indent=2),)
+def save_column_state(_, col_state):
+    return json.dumps(col_state, indent=2)
 
 
 @app.callback(
     Output("reset-column-state-grid", "columnState"),
-    Input("load-column-state-button", "n_clicks"),
+    Input("restore-column-state-button", "n_clicks"),
+    State("reset-column-state-grid-pre", "children"),
+    prevent_initial_call=True,
 )
-def loadState(n):
-    if n:
-        return colState
-    return dash.no_update
+def restore_column_state(_, saved_col_state):
+    return json.loads(saved_col_state) if saved_col_state else dash.no_update
+
+
+@app.callback(
+    Output("reset-column-state-grid", "resetColumnState"),
+    Input("reset-column-state-button", "n_clicks"),
+)
+def reset_column_state(_):
+    # Triggers the AG Gris internal method resetColumnState() by setting dag.AgGrid.resetColumnState = True
+    return True
 
 
 if __name__ == "__main__":

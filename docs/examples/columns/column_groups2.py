@@ -46,7 +46,7 @@ defaultColDef = {
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Demonstration column groups."),
+        dcc.Markdown("Demonstration marry children."),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
