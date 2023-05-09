@@ -3,7 +3,7 @@ Example of sticky headings
 """
 
 import dash_ag_grid as dag
-from dash import Dash, html
+from dash import Dash, dcc, html
 import pandas as pd
 
 app = Dash(__name__)
@@ -43,6 +43,7 @@ defaultColDef = {
 
 app.layout = html.Div(
     [
+        dcc.Markdown("Demonstration sticky label."),
         dag.AgGrid(
             id="my-grid",
             rowData=df.to_dict("records"),
@@ -52,7 +53,6 @@ app.layout = html.Div(
     ],
     style={"margin": 20},
 )
-
 
 if __name__ == "__main__":
     app.run_server(debug=True)

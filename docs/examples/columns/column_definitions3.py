@@ -7,7 +7,6 @@ import pandas as pd
 
 app = Dash(__name__)
 
-
 df = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
 )
@@ -20,33 +19,23 @@ columnTypes = {
 }
 
 columnDefs = [
-    # # using default ColDef
+    # using default ColDef
     {"field": "athlete"},
     {"field": "sport"},
     # using number column type
     {"field": "age", "type": "numberColumn"},
     # overrides the default with a number filter
-    {"field": "year", "type": "numberColumn", "filter": "agNumberColumnFilter"},
-    # # using date and non-editable column types
-    {
-        "field": "date",
-        "type": ["nonEditableColumn"],
-        "width": 220,
-    },
+    {"field": "year", "filter": "agNumberColumnFilter"},
+    # using non-editable column types
+    {"field": "date", "type": "nonEditableColumn", "width": 220},
     {
         "headerName": "Medals",
-        "groupId": "medalsGroup",
         "children": [
             # using medal column type
             {"headerName": "Gold", "field": "gold", "type": "medalColumn"},
             {"headerName": "Silver", "field": "silver", "type": "medalColumn"},
             {"headerName": "Bronze", "field": "bronze", "type": "medalColumn"},
-            {
-                "headerName": "Total",
-                "field": "total",
-                "type": "medalColumn",
-                "columnGroupShow": "closed",
-            },
+            {"headerName": "Total", "field": "total", "type": "medalColumn", "columnGroupShow": "closed"},
         ],
     },
 ]
@@ -65,9 +54,9 @@ defaultColDef = {
 }
 
 defaultColGroupDef = {
+    # Moving the columns outside the group (and hence breaking the group) is not allowed
     "marryChildren": True,
 }
-
 
 app.layout = html.Div(
     [
@@ -77,14 +66,13 @@ app.layout = html.Div(
             rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
             dashGridOptions={
-                'defaultColGroupDef' :defaultColGroupDef,
-                'columnTypes':columnTypes,
+                'defaultColGroupDef': defaultColGroupDef,
+                'columnTypes': columnTypes,
             }
         ),
     ],
     style={"margin": 20},
 )
-
 
 if __name__ == "__main__":
     app.run_server(debug=True)
