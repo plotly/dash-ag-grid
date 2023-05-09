@@ -30,6 +30,7 @@ columnDefs = [
     {"field": "date", "type": "nonEditableColumn", "width": 220},
     {
         "headerName": "Medals",
+        "groupId": "medalsGroup",
         "children": [
             # using medal column type
             {"headerName": "Gold", "field": "gold", "type": "medalColumn"},

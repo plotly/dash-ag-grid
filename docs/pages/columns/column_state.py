@@ -42,6 +42,17 @@ Properties available on the `columnState` interface.
 - `rowGroup` (boolean | null) True if row group active
 - `rowGroupIndex` (number | null) The order of the row group, if grouping by many columns
 
+
+` `
+` `
+### Save and Apply State
+
+The example below demonstrates saving and restoring column state. Try the following:
+
+- Click 'Save State' to save the Column State.
+- Change some column state e.g. resize columns, move columns around, apply column sorting or row grouping etc.
+- Click 'Restore State' and the column's state is set back to where it was when you clicked 'Save State'.
+- Click 'Reset State' and the state will go back to what was defined in the Column Definitions.
 """
 
 layout = html.Div(

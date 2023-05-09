@@ -45,8 +45,8 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
-            dashGridOptions={"rowSelection":"multiple"},
-            selectedRows= df.head(4).to_dict("records")
+            dashGridOptions={"rowSelection": "multiple"},
+            selectedRows=df.head(4).to_dict("records"),
         ),
         html.Div(id="preselect-checkbox-output"),
     ],

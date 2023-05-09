@@ -155,12 +155,21 @@ In the above example, you can see `params.value` is used in the function.  The p
   to the [Value Formatters section of the AG Grid docs](https://www.ag-grid.com/react-data-grid/value-formatters/) and
    click on the  `ValueFormatterFunc`  you will see the options available :
 
-![aggrid-params](https://user-images.githubusercontent.com/72614349/223864592-08258816-023b-44b2-a5e8-6bb3786a4692.png)
+![aggrid-params-valueformatter](https://user-images.githubusercontent.com/72614349/223864592-08258816-023b-44b2-a5e8-6bb3786a4692.png)
+
+If you go to the `isRowSelectable` function , you will see there is only one option, which is the `node`:
+
+![aggrid-params-isrowslectable](https://user-images.githubusercontent.com/72614349/236876053-d9b59864-8c03-4c5e-830f-360322d2e999.png)
+
+All the options are positional arguments, and in Dash, they are passed to the function as `params`.  To see what options
+ are available to use in the function, you can use `log()`.  The example below shows how to use `log()` to see what
+  params are available with the `valueFormatter` prop.
 
 ### Debugging JavaScript functions in dash-ag-grid
 
 To make it easier to debug in-line JavaScript functions in your Dash app, you can use the `log()` function.  This calls the `console.log()`
  method to log messages to the browser's console. The message may be one or more strings and/or JavaScript objects.
+ This makes it easy to see details about which options are available for use in the `params`.
 
 #### Example:  Debugging
 This is the app from the <dccLink href='/rendering/value-formatters-intro' children='valueFormatters Intro' /> section.
