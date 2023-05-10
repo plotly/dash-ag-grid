@@ -327,22 +327,6 @@ dagfuncs.heatMap = function (props) {
 
 
 
-// Used in the cell editor dropdown example
-//  dynamicOptions function is for providing different options based on data in a different column
-//  Use this in the cellEditorParams
-dagfuncs.dynamicOptions = function (params) {
-    const selectedCountry = params.data.country;
-    if (selectedCountry === 'United States') {
-        return {
-            options: ['Boston', 'Chicago', 'San Francisco'],
-        };
-    } else {
-        return {
-            options: ['Montreal', 'Vancouver', 'Calgary'],
-        };
-    }
-};
-
 // Used in the cell editor dropdown examples
 //     filterArray function displays the label instead of the value when the dropdown options contain both
 //     Use this in a valueFormatter
