@@ -27,7 +27,11 @@ app.layout = html.Div(
     [
         html.Label("Select Sport:"),
         dcc.Dropdown(
-            df["sport"].unique(), "Equestrian", id="update-rowdata-dd", clearable=False
+            df["sport"].unique(),
+            "Equestrian",
+            id="update-rowdata-dd",
+            clearable=False,
+            style={"marginBottom": 10},
         ),
         dag.AgGrid(
             id="update-rowdata-grid",
