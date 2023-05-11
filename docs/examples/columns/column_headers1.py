@@ -1,10 +1,3 @@
-"""
-Column Headers formatting
-
-"""
-
-
-
 import dash_ag_grid as dag
 from dash import Dash, dcc, html
 import pandas as pd
@@ -15,18 +8,7 @@ df = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
 )
 
-column_names = [
-    "athlete",
-    "gold",
-    "silver",
-    "bronze",
-    "total",
-    "age",
-    "country",
-    "sport",
-    "year",
-    "date",
-]
+column_names = ["athlete", "gold", "silver", "bronze", "total", "age", "country", "sport", "year", "date"]
 
 columnDefs = [
     {"headerName": "Athlete Details", "children": [{"field": i} for i in column_names]}
@@ -36,8 +18,9 @@ defaultColDef = {
     "sortable": True,
     "resizable": True,
     "editable": True,
+    "filter": True,
+    "floatingFilter": True
 }
-
 
 app.layout = html.Div(
     [
@@ -49,8 +32,9 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             columnSize="sizeToFit",
             dashGridOptions={
-                'groupHeaderHeight':75,
-                'headerHeight':150,
+                'groupHeaderHeight': 75,
+                'headerHeight': 150,
+                'floatingFiltersHeight': 25,
             }
         ),
     ],
@@ -59,32 +43,3 @@ app.layout = html.Div(
 
 if __name__ == "__main__":
     app.run_server(debug=True)
-
-
-"""
-Addd the following to a .css file in the assets folder
-
-------------------
-
-.header1 .ag-header-cell-label {
-  /*Necessary to allow for text to grow vertically*/
-  height: 100%;
-  padding: 0 !important;
-}
-
-.header1 .ag-header-group-cell {
-  font-size: 50px;
-}
-
-.header1 .ag-header-cell-label .ag-header-cell-text {
-  /*Force the width corresponding at how much width
-    we need once the text is laid out vertically*/
-  width: 55px;
-  writing-mode: vertical-lr;
-  -ms-writing-mode: tb-lr;
-  line-height: 2em;
-  margin-top: 60px;
-}
-
-
-"""

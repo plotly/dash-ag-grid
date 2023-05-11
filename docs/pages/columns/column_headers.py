@@ -40,14 +40,15 @@ By default, the text label for the header is display horizontally, i.e. as norma
 another orientation you have to provide your own CSS to change the orientation and also provide the adequate header
 heights using the appropriate grid property.
 
-### Example: Header Height and Text Orientation\
+### Example: Header Height and Text Orientation
 
 The following example shows how you can provide a unique look and feel to the headers.\
 Note that the header heights have all been changed via dashGridOptions:
 
 ```
-groupHeaderHeight= 75,
-headerHeight= 150,
+groupHeaderHeight = 75,
+headerHeight = 150,
+floatingFiltersHeight = 25,
 ```
 """
 
