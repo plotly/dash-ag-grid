@@ -44,7 +44,7 @@ defaultColDef = {"resizable": True}
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Demonstration of Pinning via Column Dragging and lock pin"),
+        dcc.Markdown("Demonstration of Lock Pinned"),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),

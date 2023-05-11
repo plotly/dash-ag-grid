@@ -80,7 +80,7 @@ def restore_column_state(_, saved_col_state):
     Input("reset-column-state-button", "n_clicks"),
 )
 def reset_column_state(_):
-    # Triggers the AG Gris internal method resetColumnState() by setting dag.AgGrid.resetColumnState = True
+    # Triggers the AG Grid internal method resetColumnState() by setting dag.AgGrid.resetColumnState = True
     return True
 
 
