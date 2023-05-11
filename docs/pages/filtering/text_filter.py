@@ -51,7 +51,7 @@ By default the text filter performs strict case-insensitive text filtering, i.e.
 - __contains 'gbp'__ will show 1 value ['345GBP']
 
 You can change the default behaviour by providing your own `textMatcher`, which allows you to provide your own logic to decide when to include a row in the filtered results.
-(Note - not available in dash yet)
+
 
 ### Text Formatter
 By default, the grid compares the text filter with the values in a case-insensitive way, by converting both the filter text and the values to lower-case and comparing them; for example, 'o' will match 'Olivia' and 'Salmon'. If you instead want to have case-sensitive matches, you can set `caseSensitive = True` in the `filterParams`, so that no lower-casing is performed. In this case, 'o' would no longer match 'Olivia'.
