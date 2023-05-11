@@ -54,8 +54,6 @@ By default, the Number Filter uses HTML5 number inputs. However, these have mixe
 
 For these reasons, the Number Filter allows you to control what characters the user is allowed to type, and provide custom logic to parse the provided value into a number to be used in the filtering. In this case, a text input is used with JavaScript controlling what characters the user is allowed (rather than the browser).
 
-> Note - the custom number support is is not yet available in Dash.  This feature and example comming soon. Please see Column Filters Overview and the Text filter Sections for more examples.
-
 """
 
 

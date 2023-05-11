@@ -50,7 +50,7 @@ app.layout = html.Div(
 def new_and_selected(n, selected):
     new_row = [{"id": str(n), "name": random_names[n % 8], "number": str(n)}]
     selected = selected + new_row if selected else new_row
-    return {"add": new_row}, selected
+    return {"add": new_row, "async": False}, selected
 
 
 if __name__ == "__main__":
