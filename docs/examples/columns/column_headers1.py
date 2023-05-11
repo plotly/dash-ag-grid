@@ -34,7 +34,7 @@ app.layout = html.Div(
             dashGridOptions={
                 'groupHeaderHeight': 75,
                 'headerHeight': 150,
-                'floatingFiltersHeight': 25,
+                'floatingFiltersHeight': 50,
             }
         ),
     ],

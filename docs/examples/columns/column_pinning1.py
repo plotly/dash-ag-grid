@@ -28,11 +28,6 @@ columnDefs = [
     {"field": "total", "width": 100, "pinned": "right"},
 ]
 
-clear_col_state = [
-    {'colId': col['field'], 'pinned': None}
-    for col in columnDefs
-]
-
 defaultColDef = {"sortable": True, "resizable": True}
 
 app.layout = html.Div(
