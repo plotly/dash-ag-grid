@@ -18,28 +18,6 @@
     margin-top: 60px;
 }
 
-/*Floating filters*/
-.header1 .ag-floating-filter-body {
-    height: 50px;
-}
-
-.header1 .ag-floating-filter-body input {
-    height: 49px;
-}
-
-.header1 .ag-floating-filter-button {
-    margin-top: -49px;
-}
-
-.header1 .ag-floating-filter-button button {
-    height: 49px;
-}
-
-.header1 .ag-floating-filter-body input {
-    font-size: 15px;
-    font-weight: bold;
-}
-
 .header3 .ag-header-group-cell-with-group {
     background-color: #00e7b1 !important;
 }
