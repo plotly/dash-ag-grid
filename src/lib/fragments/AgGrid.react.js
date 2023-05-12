@@ -515,7 +515,7 @@ export default class DashAgGrid extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const {gridColumnApi, gridApi} = this.state;
+        const {gridApi} = this.state;
         const {columnState, filterModel, selectedRows} = nextProps;
 
         if (
@@ -536,14 +536,7 @@ export default class DashAgGrid extends Component {
         }
         if (gridApi) {
             if (columnState) {
-                if (
-                    !equals(
-                        columnState,
-                        JSON.parse(
-                            JSON.stringify(gridColumnApi.getColumnState())
-                        )
-                    )
-                ) {
+                if (!equals(columnState, this.props.columnState)) {
                     return true;
                 }
             }
