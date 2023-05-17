@@ -60,7 +60,12 @@
 }
 
 
-/* Used in Column Spanning example */
+/* Used in Column Spanning Simple example */
+.colSpanning .ag-body-viewport [col-id='country'] {
+    background-color: #a6e1ec;
+}
+
+/* Used in Column Spanning Complex example */
 .header-cell {
     background-color: #a6e1ec;
     font-size: 25px;
