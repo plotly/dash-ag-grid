@@ -157,6 +157,8 @@ export default class DashAgGrid extends Component {
 
         this.convertedPropCache = {};
 
+        this.uiColumnState = null;
+
         this.state = {
             ...this.props.parentState,
             components: {
@@ -574,9 +576,9 @@ export default class DashAgGrid extends Component {
             paginationGoTo,
         } = this.props;
 
-        if (this.state.gridColumnApi && this.props.loading_state.is_loading) {
+        if (this.state.gridColumnApi) {
             if (
-                this.props.columnState !== prevProps.columnState &&
+                !equals(this.props.columnState, this.uiColumnState) &&
                 !this.state.columnState_push
             ) {
                 this.setState({columnState_push: true});
@@ -970,6 +972,7 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi || this.props.updateColumnState) {
             return;
         }
+        this.uiColumnState = this.props.columnState;
         if (this.state.columnState_push) {
             this.state.gridColumnApi.applyColumnState({
                 state: this.props.columnState,
@@ -1081,10 +1084,14 @@ export default class DashAgGrid extends Component {
             return;
         }
 
+        var columnState = JSON.parse(
+            JSON.stringify(this.state.gridColumnApi.getColumnState())
+        );
+
+        this.uiColumnState = columnState;
+
         this.props.setProps({
-            columnState: JSON.parse(
-                JSON.stringify(this.state.gridColumnApi.getColumnState())
-            ),
+            columnState,
             updateColumnState: false,
         });
     }
