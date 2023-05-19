@@ -43,7 +43,7 @@ defaultColDef = {
 app.layout = html.Div(
     [
         dcc.Markdown("Demonstration of updating column definitions in a callback"),
-        dbc.Button("exclude medals", id="medal-toggle", n_clicks=0),
+        dbc.Button("Exclude Medals", id="medal-toggle", n_clicks=1),
         dag.AgGrid(
             id="toggle-metals-columns",
             rowData=df.to_dict("records"),
