@@ -1,10 +1,10 @@
 """
-Working with Enterprise AG-grid modules.
+Accessing the hidden/displayed state of the columns with Enterprise AG-grid modules.
 """
 
 import dash_ag_grid as dag
 import dash
-from dash import html, dcc
+from dash import html, dcc, Input, Output
 
 
 app = dash.Dash(__name__)
@@ -24,10 +24,7 @@ rowData = [
 app.layout = html.Div(
     [
         dcc.Markdown(
-            "To enable Enterprise modules from ag-grid, a grid component must have the `enableEnterpriseModules` parameter set to `True` and a valid key added in the `licenseKey` parameter. This example uses a dummy key. In general, it is recommended to save the key as an environment variable."
-        ),
-        dcc.Markdown(
-            "More information on using ag-grid Enterprise with or without a license key, as well as a listing of which features are restricted only to Enterprise ag-grid, is available on [their website](https://www.ag-grid.com/react-grid/licensing/)."
+            "Using the enterprise menu you can select to display or hide columns and column groups. This state can be accessed in a callback using the property columnVisible"
         ),
         dag.AgGrid(
             id="input",
@@ -41,8 +38,17 @@ app.layout = html.Div(
             licenseKey="LICENSE_KEY_HERE",
             dashGridOptions={"enableRangeSelection": True},
         ),
+        html.Div(id="output"),
     ],
 )
+
+
+@app.callback(
+    Output("output", "children"),
+    Input("input", "columnDefs"),
+)
+def show_col_definitions(col_defs):
+    return str(col_defs)
 
 
 if __name__ == "__main__":
