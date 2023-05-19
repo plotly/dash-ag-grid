@@ -538,7 +538,7 @@ export default class DashAgGrid extends Component {
         }
         if (gridApi) {
             if (columnState) {
-                if (!equals(columnState, this.props.columnState)) {
+                if (columnState !== this.props.columnState) {
                     return true;
                 }
             }
@@ -576,9 +576,9 @@ export default class DashAgGrid extends Component {
             paginationGoTo,
         } = this.props;
 
-        if (this.state.gridColumnApi) {
+        if (this.state.gridColumnApi && this.props.loading_state.is_loading) {
             if (
-                !equals(this.props.columnState, this.uiColumnState) &&
+                this.props.columnState !== this.uiColumnState &&
                 !this.state.columnState_push
             ) {
                 this.setState({columnState_push: true});
