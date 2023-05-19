@@ -5,6 +5,7 @@ import json
 
 from . import utils
 from dash.testing.wait import until
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 df = px.data.election()
@@ -17,6 +18,12 @@ def test_cs001_column_state(dash_duo):
         {"headerName": "Make", "field": "make"},
         {"headerName": "Model", "field": "model"},
         {"headerName": "Price", "field": "price"},
+    ]
+
+    alt_columnDefs = [
+        {"field": "price", "pinned": False, "sort": "asc"},
+        {"field": "model", "pinned": False},
+        {"field": "make", "pinned": False},
     ]
 
     defaultColDef = {
@@ -77,6 +84,51 @@ def test_cs001_column_state(dash_duo):
         }
     ]
 
+    alt_colState = [
+        {
+            "colId": "price",
+            "width": 198,
+            "hide": False,
+            "pinned": None,
+            "sort": "asc",
+            "sortIndex": None,
+            "aggFunc": None,
+            "rowGroup": False,
+            "rowGroupIndex": None,
+            "pivot": False,
+            "pivotIndex": None,
+            "flex": None
+        },
+        {
+            "colId": "model",
+            "width": 150,
+            "hide": False,
+            "pinned": None,
+            "sort": None,
+            "sortIndex": None,
+            "aggFunc": None,
+            "rowGroup": False,
+            "rowGroupIndex": None,
+            "pivot": False,
+            "pivotIndex": None,
+            "flex": None
+        },
+        {
+            "colId": "make",
+            "width": 150,
+            "hide": False,
+            "pinned": None,
+            "sort": None,
+            "sortIndex": None,
+            "aggFunc": None,
+            "rowGroup": False,
+            "rowGroupIndex": None,
+            "pivot": False,
+            "pivotIndex": None,
+            "flex": None
+        },
+    ]
+
     app.layout = html.Div(
         [
             html.Div(
@@ -90,6 +142,12 @@ def test_cs001_column_state(dash_duo):
                     html.Button(
                         "Load State", id="load-column-state-button", n_clicks=0
                     ),
+                    html.Button(
+                        "Change Column Defs", id="load-column-defs", n_clicks=0
+                    ),
+                    html.Button(
+                        "Load Both Column Defs and State", id="load-column-state-defs-button", n_clicks=0
+                    )
                 ],
             ),
             dag.AgGrid(
@@ -134,6 +192,27 @@ def test_cs001_column_state(dash_duo):
     def display_column_state(col_state):
         return json.dumps(col_state)
 
+    @app.callback(
+        Output('grid', 'columnDefs'),
+        Input('load-column-defs', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def loadState(n):
+        if n:
+            return alt_columnDefs
+        return no_update
+
+    @app.callback(
+        Output('grid', 'columnState', allow_duplicate=True),
+        Output('grid', 'columnDefs', allow_duplicate=True),
+        Input('load-column-state-defs-button', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def loadState(n):
+        if n:
+            return colState, columnDefs
+        return no_update, no_update
+
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
@@ -152,4 +231,15 @@ def test_cs001_column_state(dash_duo):
     until(lambda: json.dumps(testState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
 
     dash_duo.find_element('#load-column-state-button').click()
+    until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
+
+    (
+        ActionChains(dash_duo.driver)
+            .move_to_element(dash_duo.find_element('#load-column-defs'))
+            .click()
+    ).perform()
+    until(lambda: json.dumps(alt_colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
+    grid.wait_for_cell_text(0, 0, "32000")
+
+    dash_duo.find_element('#load-column-state-defs-button').click()
     until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
