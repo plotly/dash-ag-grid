@@ -71,6 +71,28 @@ def test_mc001_markdown_components(dash_duo):
         },
     ]
 
+    rowData2 = [
+        {
+            "make": "*Toyota* in italics",
+            "model": "`code snippet`",
+            "image": "{0} {0} {0} {0} {0}".format(
+                "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)"
+            ),
+        },
+        {
+            "make": "**Ford** in bold",
+            "model": "Mondeo",
+            "image": "{0} {0} {0} {0}".format(
+                "![alt text: sun](https://www.ag-grid.com/example-assets/weather/sun.png)"
+            ),
+        },
+        {
+            "make": "***Porsche*** in both",
+            "model": "<b>Boxster</b> in HTML bold",
+            "image": "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)",
+        },
+    ]
+
     raw_html_example1 = html.Div(
         [
             dcc.Markdown(
@@ -102,9 +124,24 @@ def test_mc001_markdown_components(dash_duo):
         ]
     )
 
+    raw_html_example3 = html.Div(
+        [
+            dcc.Markdown(
+                "This grid has both Markdown and raw HTML. By default, raw HTML is not rendered."
+            ),
+            dag.AgGrid(
+                id="not_dangerous2",
+                columnSize="sizeToFit",
+                columnDefs=columnDefs,
+                rowData=rowData2,
+            ),
+            html.Hr(),
+        ]
+    )
+
 
     app.layout = html.Div(
-        [raw_html_example1, raw_html_example2],
+        [raw_html_example1, raw_html_example2, raw_html_example3],
         style={"flexWrap": "wrap"},
     )
 
@@ -112,6 +149,7 @@ def test_mc001_markdown_components(dash_duo):
 
     safe_grid = utils.Grid(dash_duo, "not_dangerous")
     dangerous_grid = utils.Grid(dash_duo, "dangerous")
+    safe2_grid = utils.Grid(dash_duo, "not_dangerous2")
 
     for grid in [safe_grid, dangerous_grid]:
         grid.wait_for_cell_text(0, 0, "Toyota in italics")
@@ -132,3 +170,7 @@ def test_mc001_markdown_components(dash_duo):
     assert dangerous_grid.get_cell(2, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#">Example</a></div></div>'
     dangerous_grid.wait_for_cell_text(1, 2, 'Link to new tab')
     assert dangerous_grid.get_cell(1, 2).get_attribute('innerHTML') == '<div class="agGrid-Markdown"><div><a href="#" target="_blank">Link to new tab</a></div></div>'
+
+    assert safe2_grid.get_cell(0, 2).text == ''
+    assert safe2_grid.get_cell(1, 2).text == ''
+    assert safe2_grid.get_cell(2, 2).text == ''
