@@ -53,30 +53,31 @@ if __name__ == "__main__":
 
 """
 
-Put the following in the .css file in the assets folder.  This is important because if 
-a background was not set, the cell background would be transparent and the underlying 
-cell would still be visible.
+--------------------
+
+Add the following to the .css file in the assets folder:
+
+--------------------
 
 .cell-span {
   background-color: #00e5ff;
 }
 
----------------------------
+----------------
 
-Put the following in the dashAgGridComponentFunctions.js file in the assets folder
-This will register the functions used to format the currencies.
+Add the following to the dashAgGridFunctions.js file in the assets folder
 
----------------
+----------------
 
 var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};
 
 dagfuncs.rowSpan = function(params) {
   var athlete = params.data ? params.data.athlete : undefined;
   if (athlete === 'Aleksey Nemov') {
-    // have all Russia age columns width 2
+    // have all Aleksey Nemov cells in column athlete of height of 2 rows
     return 2;
   } else if (athlete === 'Ryan Lochte') {
-    // have all United States column width 4
+    // have all Ryan Lochte cells in column athlete of height of 4 rows
     return 4;
   } else {
     // all other rows should be just normal

@@ -1,12 +1,13 @@
 var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};
 
+// Used in Row Spanning Simple Example
 dagfuncs.rowSpan = function (params) {
     var athlete = params.data ? params.data.athlete : undefined;
     if (athlete === 'Aleksey Nemov') {
-        // have all Russia age columns width 2
+        // have all Aleksey Nemov cells in column athlete of height of 2 rows
         return 2;
     } else if (athlete === 'Ryan Lochte') {
-        // have all United States column width 4
+        // have all Ryan Lochte cells in column athlete of height of 4 rows
         return 4;
     } else {
         // all other rows should be just normal
@@ -14,6 +15,14 @@ dagfuncs.rowSpan = function (params) {
     }
 }
 
+// Used in Row Spanning Complex Example
+dagfuncs.rowSpanComplex = function (params) {
+    if (params.data.show) {
+        return 4;
+    } else {
+        return 1;
+    }
+}
 
 dagfuncs.numberComparator = function (val1, val2) {
     console.log(val1, val2);
@@ -63,3 +72,20 @@ dagfuncs.postSort = function (params) {
     }
 }
 // end row sorting - post sort example
+
+// Used in the row dragging - Custom Row Drag Text example and Custom Row Drag Text with Multiple Draggers example
+const hostCities = {2000: "Sydney", 2004: "Athens", 2008: "Beijing", 2012: "London",}
+
+dagfuncs.rowDragText = function (params) {
+    const {year} = params.rowNode.data;
+    if (year in hostCities) {
+        return `${params.defaultTextValue} (${hostCities[year]} Olympics)`
+    }
+    return params.defaultTextValue;
+}
+
+// added for multi draggers
+dagfuncs.athleteRowDragText = function (params) {
+    return `${params.rowNodes.length} athlete(s) selected`
+}
+// end row dragging - Custom Row Drag Text example  and Custom Row Drag Text with Multiple Draggers example
