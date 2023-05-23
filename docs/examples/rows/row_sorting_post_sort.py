@@ -2,13 +2,12 @@
 Example post-sort
 """
 
-import dash
 import dash_ag_grid as dag
-from dash import dcc, html
+from dash import Dash, dcc, html
 import dash_bootstrap_components as dbc
 import pandas as pd
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
+app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
 
 df = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
@@ -50,7 +49,7 @@ if __name__ == "__main__":
 """
 ----------------
 
-Add the following to the dashAgGridFunctions.js file in theA assets folder
+Add the following to the dashAgGridFunctions.js file in the assets folder
 
 ----------------
 var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};

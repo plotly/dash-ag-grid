@@ -60,10 +60,10 @@ var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};
 dagfuncs.simpleSpanning = function (params) {
     const country = params.data.country;
     if (country === 'Russia') {
-        // have all Russia age columns width 2
+        // have all Russia cells in column country of width of 2 columns
         return 2;
     } else if (country === 'United States') {
-        // have all United States column width 4
+        // have all United States cells in column country of width of 4 columns
         return 4;
     } else {
         // all other rows should be just normal

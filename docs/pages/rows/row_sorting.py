@@ -232,7 +232,7 @@ This is provided via the grid callback function as shown below:
 dashGridOptions = {"postSortRows": {"function": "postSort(params)"}}
 ```
 
-> `postSortRows` (Function) Callback to perform additional sorting after the grid has sorted the rows.
+> `postSortRows` (function) Function to perform additional sorting after the grid has sorted the rows.
 
 The following example uses this configuration to perform a post-sort on the rows. The custom function puts rows with
 Michael Phelps at the top always.
