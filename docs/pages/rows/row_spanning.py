@@ -27,7 +27,7 @@ dashGridOptions = {'suppressRowTransform': True}
 Row spanning is then configured at the column definition level. To have a cell span more than one row, return how many
 rows to span in the callback colDef.rowSpan.
 
-- rowSpan (Function) By default, each cell will take up the height of one row. You can change this behaviour to allow
+> `rowSpan` (Function) By default, each cell will take up the height of one row. You can change this behaviour to allow
   cells to span multiple rows.
 
 ```

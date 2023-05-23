@@ -53,9 +53,9 @@ dashGridOptions = {"rowHeight": 50}
 
 Changing the property will set a new row height for all rows, including pinned rows top and bottom.
 
-## getRowHeight Callback
+## `getRowHeight` Function
 
-> `getRowHeight` (function) Callback version of property `rowHeight` to set height for each row individually. Function
+> `getRowHeight` (function) Function version of property `rowHeight` to set height for each row individually. Function
 > should return a positive number of pixels, or return `null`/`undefined` to use the default row height.
 
 To change the row height so that each row can have a different height, implement the `getRowHeight(params)` callback.

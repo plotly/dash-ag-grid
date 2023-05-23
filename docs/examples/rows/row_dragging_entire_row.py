@@ -29,7 +29,7 @@ app.layout = html.Div(
     [
         dcc.Markdown("This grid shows the row dragging on entire row"),
         dag.AgGrid(
-            id='grid-row-dragging',
+            id='grid-row-dragging-entire-row',
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,

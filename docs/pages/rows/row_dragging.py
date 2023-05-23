@@ -86,10 +86,10 @@ When multi-row dragging is enabled:
 text2 = """
 The logic for managed dragging is simple and has the following constraints:
 
-- Works with [Client-Side](https://dashaggrid.pythonanywhere.com/clientside-data/overview) row model only; not with
-  the [Infinite](https://dashaggrid.pythonanywhere.com/serverside-data/infinite-row-model), Server-Side or Viewport row
+- Works with <dccLink href='/clientside-data/overview' children='Client-Side' /> row model only; not with
+  the <dccLink href='/serverside-data/infinite-row-model' children='Infinite' />, Server-Side or Viewport row
   models.
-- Does not work if [Pagination](https://dashaggrid.pythonanywhere.com/scrolling/pagination) is enabled.
+- Does not work if <dccLink href='/scrolling/pagination' children='Pagination' /> is enabled.
 - Does not work when sorting is applied. This is because the sort order of the rows depends on the data and moving the
   data would break the sort order.
 - Does not work when filtering is applied. This is because a filter removes rows making it impossible to know what '
@@ -138,7 +138,7 @@ dashGridOptions = {"rowDragText": {"function": "params.defaultTextValue + ' (age
 
 > `rowDragText` (Function) A callback that should return a string to be displayed by the `rowDragComp` while dragging a
 > row. If this callback is not set, the current cell value will be used. If the `rowDragText` callback is set in the
-> ColDef it will take precedence over this, except when `rowDragEntireRow=true`.
+> ColDef it will take precedence over this, except when `rowDragEntireRow=True`.
 
 The example below shows dragging with custom text. The following can be noted:
 
@@ -163,7 +163,7 @@ dagfuncs.rowDragText = function (params) {
 text4 = """
 ### Custom Row Drag Text with Multiple Draggers
 
-If the grid has more than one column set with `rowDrag=true`, the `rowDragText` callback can be set in the `colDef`.
+If the grid has more than one column set with `rowDrag=True`, the `rowDragText` callback can be set in the `colDef`.
 
 ```python
 columnDefs = [
@@ -206,18 +206,19 @@ the [ICellRendererParams](https://www.ag-grid.com/react-data-grid/component-cell
 as follows:
 
 ```js
-// your custom cell renderer code
-
 // this will hold the reference to the element you want to act as row dragger.
-myRef = React.createRef();
+const myRef = React.useRef(null);
 
-componentDidMount()
-{
-    this.props.registerRowDragger(this.myRef.current);
-}
+// synchronize the element with the registerRowDragger function
+React.useEffect(() => {
+    props.registerRowDragger(myRef.current, props.startDragPixels);
+});
+
+// then use the reference in the actual element
+React.createElement('i', {className: 'fas fa-arrows-alt-v', ref: myRef})
 ```
 
-> When using `registerRowDragger` you should **not** set the property `rowDrag=true` in the Column Definition. Doing
+> When using `registerRowDragger` you should **not** set the property `rowDrag=True` in the Column Definition. Doing
 > that will cause the cell to have two row draggers.
 
 ### Row Dragger with Custom Start Drag Pixels 
