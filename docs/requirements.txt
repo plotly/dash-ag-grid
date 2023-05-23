@@ -4,8 +4,8 @@ pandas>=1.2.3
 pyyaml>=6.0
 dash-bootstrap-components>=1.0.0
 yfinance
-dash-mantine-components>=0.12.0
+dash-mantine-components
 dash-iconify
-statsmodels
 colorlover
+statsmodels
 
