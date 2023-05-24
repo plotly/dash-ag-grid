@@ -71,27 +71,7 @@ def test_mc001_markdown_components(dash_duo):
         },
     ]
 
-    rowData2 = [
-        {
-            "make": "*Toyota* in italics",
-            "model": "`code snippet`",
-            "image": "{0} {0} {0} {0} {0}".format(
-                "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)"
-            ),
-        },
-        {
-            "make": "**Ford** in bold",
-            "model": "Mondeo",
-            "image": "{0} {0} {0} {0}".format(
-                "![alt text: sun](https://www.ag-grid.com/example-assets/weather/sun.png)"
-            ),
-        },
-        {
-            "make": "***Porsche*** in both",
-            "model": "<b>Boxster</b> in HTML bold",
-            "image": "![alt text: rain](https://www.ag-grid.com/example-assets/weather/rain.png)",
-        },
-    ]
+    rowData2 = [{k:row[k] for k in row if k != "link"} for row in rowData]
 
     raw_html_example1 = html.Div(
         [
