@@ -68,7 +68,8 @@
         "style-loader": "^3.3.2",
         "styled-jsx": "^5.1.2",
         "webpack": "^5.81.0",
-        "webpack-cli": "^5.0.2"
+        "webpack-cli": "^5.0.2",
+        "rimraf": "^3.0.2"
     },
     "files": [
         "/dash_ag_grid/*{.js,.map}",
