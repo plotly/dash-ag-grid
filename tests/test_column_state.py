@@ -2,10 +2,10 @@ from dash import Dash, html, Output, Input, no_update, State, ctx
 import dash_ag_grid as dag
 import plotly.express as px
 import json
+import time
 
 from . import utils
 from dash.testing.wait import until
-from selenium.webdriver.common.action_chains import ActionChains
 
 
 df = px.data.election()
@@ -233,11 +233,8 @@ def test_cs001_column_state(dash_duo):
     dash_duo.find_element('#load-column-state-button').click()
     until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
 
-    (
-        ActionChains(dash_duo.driver)
-            .move_to_element(dash_duo.find_element('#load-column-defs'))
-            .click()
-    ).perform()
+    time.sleep(.2) ### pause to emulate user clicking, if no pause column state doesnt trigger properly
+    dash_duo.find_element('#load-column-defs').click()
     until(lambda: json.dumps(alt_colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
     grid.wait_for_cell_text(0, 0, "32000")
 
