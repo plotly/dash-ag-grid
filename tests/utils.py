@@ -66,6 +66,37 @@ class Grid:
             .release()
         ).perform()
 
+    def drag_column_list(self, from_index, to_index):
+        from_col = self.dash_duo.find_element(f'#{self.id} .ag-column-drop-cell[aria-posinset="{from_index+1}"]'
+                                              f' .ag-icon-grip')
+        to_col = self.dash_duo.find_element(f'#{self.id} .ag-column-drop-cell[aria-posinset="{to_index+1}"]')
+        (
+            ActionChains(self.dash_duo.driver)
+                .move_to_element(from_col)
+                .click_and_hold()
+                .move_to_location(
+                to_col.location["x"] + to_col.size["width"] * 0.5,
+                to_col.location["y"] + to_col.size["height"] * 0.5
+            )
+                .pause(0.5)
+                .release()
+        ).perform()
+
+    def add_column_drop(self, from_index):
+        from_col = self.get_header_cell(from_index)
+        list = self.dash_duo.find_element(f'#{self.id} .ag-column-drop-wrapper .ag-column-drop .ag-column-drop-list')
+        (
+            ActionChains(self.dash_duo.driver)
+                .move_to_element(from_col)
+                .click_and_hold()
+                .move_to_location(
+                    list.location["x"] + list.size["width"] * 1.2,
+                    list.location["y"] + list.size["height"] * 0.5
+                )
+                .pause(0.5)
+                .release()
+        ).perform()
+
     def pin_col(self, col, pinned_cols=0):
         from_col = self.get_header_cell(col)
         pin_col = self.get_header_cell(pinned_cols)
