@@ -650,6 +650,11 @@ DashAgGrid.propTypes = {
     }),
 
     /**
+     * Array of Columns with their visibility status.
+     */
+    columnVisible: PropTypes.arrayOf(PropTypes.object),
+
+    /**
      * Other ag-grid options
      */
     dashGridOptions: PropTypes.object,

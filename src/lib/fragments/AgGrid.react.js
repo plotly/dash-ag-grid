@@ -120,6 +120,7 @@ export default class DashAgGrid extends Component {
         this.onDisplayedColumnsChanged =
             this.onDisplayedColumnsChanged.bind(this);
         this.onColumnResized = this.onColumnResized.bind(this);
+        this.onColumnVisible = this.onColumnVisible.bind(this);
         this.onGridSizeChanged = this.onGridSizeChanged.bind(this);
         this.updateColumnWidths = this.updateColumnWidths.bind(this);
         this.handleDynamicStyle = this.handleDynamicStyle.bind(this);
@@ -890,6 +891,40 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    onColumnVisible({visible, columns, source}) {
+        if (source == 'toolPanelUi' || source == 'columnMenu') {
+            const {columnDefs, setProps} = this.props;
+
+            const colIds = columnDefs.flatMap((columnDef) => {
+                if ('children' in columnDef) {
+                    const field = columnDef.children.map((column) => {
+                        return column.field;
+                    });
+                    return field;
+                } else {
+                    const {field} = columnDef;
+                    return field;
+                }
+            });
+            setProps({
+                columnVisible: colIds.map((column) => {
+                    return {
+                        column,
+                        visible:
+                            this.state.gridColumnApi.getColumn(column).visible,
+                    };
+                }),
+            });
+            this.state.gridColumnApi.setColumnsVisible(
+                columns.map((column) => {
+                    const {colId} = column;
+                    return colId;
+                }),
+                visible
+            );
+        }
+    }
+
     parseFunction = memoizeWith(String, (funcString) => {
         const parsedCondition = esprima.parse(funcString).body[0].expression;
         const context = {
@@ -1244,6 +1279,7 @@ export default class DashAgGrid extends Component {
                         this.onColumnResized,
                         COL_RESIZE_DEBOUNCE_MS
                     )}
+                    onColumnVisible={this.onColumnVisible}
                     onAsyncTransactionsFlushed={this.onAsyncTransactionsFlushed}
                     onPaginationChanged={this.onPaginationChanged}
                     onGridSizeChanged={debounce(
