@@ -137,6 +137,7 @@ export default class DashAgGrid extends Component {
         this.onAsyncTransactionsFlushed =
             this.onAsyncTransactionsFlushed.bind(this);
         this.onPaginationChanged = this.onPaginationChanged.bind(this);
+        this.scrollToRow = this.scrollToRow.bind(this);
 
         // Additional Exposure
         this.selectAll = this.selectAll.bind(this);
@@ -578,6 +579,7 @@ export default class DashAgGrid extends Component {
             filterModel,
             columnState,
             paginationGoTo,
+            scrollToRow,
         } = this.props;
 
         if (id !== prevProps.id) {
@@ -628,6 +630,11 @@ export default class DashAgGrid extends Component {
             if (paginationGoTo || paginationGoTo === 0) {
                 this.paginationGoTo(false);
                 propsToSet.paginationGoTo = null;
+            }
+
+            if (scrollToRow) {
+                this.scrollToRow(scrollToRow);
+                propsToSet.scrollToRow = null;
             }
 
             if (resetColumnState) {
@@ -1010,6 +1017,19 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    scrollToRow(reset = false) {
+        const {gridApi} = this.state;
+        if (!gridApi) {
+            return;
+        }
+        gridApi.ensureIndexVisible(this.props.scrollToRow, 'top');
+        if (reset) {
+            this.props.setProps({
+                scrollToRow: null,
+            });
+        }
+    }
+
     resetColumnState(reset = true) {
         if (!this.state.gridApi) {
             return;
@@ -1138,6 +1158,7 @@ export default class DashAgGrid extends Component {
             columnState,
             paginationGoTo,
             columnSize,
+            scrollToRow,
             ...restProps
         } = this.props;
 
@@ -1157,6 +1178,10 @@ export default class DashAgGrid extends Component {
 
         if (paginationGoTo || paginationGoTo === 0) {
             this.paginationGoTo();
+        }
+
+        if (scrollToRow || scrollToRow === 0) {
+            this.scrollToRow();
         }
 
         if (columnSize) {

@@ -488,6 +488,11 @@ DashAgGrid.propTypes = {
      */
     virtualRowData: PropTypes.arrayOf(PropTypes.object),
 
+    /**
+     * Scrolls to the row with the specified index.
+     */
+    scrollToRow: PropTypes.number,
+
     /********************************
      * GRID PROPS
      *******************************/
