@@ -899,7 +899,7 @@ export default class DashAgGrid extends Component {
     }
 
     onColumnVisible({visible, columns, source}) {
-        if (source == 'toolPanelUi' || source == 'columnMenu') {
+        if (source === 'toolPanelUi' || source === 'columnMenu') {
             const {columnDefs, setProps} = this.props;
 
             const colIds = columnDefs.flatMap((columnDef) => {
@@ -908,10 +908,9 @@ export default class DashAgGrid extends Component {
                         return column.field;
                     });
                     return field;
-                } else {
-                    const {field} = columnDef;
-                    return field;
                 }
+                const {field} = columnDef;
+                return field;
             });
             setProps({
                 columnVisible: colIds.map((column) => {
