@@ -26,15 +26,26 @@ app.layout = html.Div(
         dbc.Row(
             [
                 dbc.Col(
-                    dbc.Input(
-                        id="row-index",
-                        type="number",
-                        min=0,
-                        max=df.shape[0] - 1,
-                        step=1,
-                    )
+                    [
+                        dbc.Label("Row index"),
+                        dbc.Input(
+                            id="row-index",
+                            type="number",
+                            min=0,
+                            max=df.shape[0] - 1,
+                            step=1,
+                        ),
+                    ]
                 ),
-                dbc.Col(dbc.Button("Go to row", id="btn")),
+                dbc.Col(
+                    [
+                        dbc.Label("Column"),
+                        dcc.Dropdown(
+                            options=[c["field"] for c in columnDefs], id="column"
+                        ),
+                    ]
+                ),
+                dbc.Col(dbc.Button("Scroll to", id="btn")),
             ],
             style={"margin-bottom": 20},
         ),
@@ -51,11 +62,19 @@ app.layout = html.Div(
 
 
 @app.callback(
-    Output("grid", "scrollToRow"), Input("btn", "n_clicks"), State("row-index", "value")
+    Output("grid", "scrollTo"),
+    Input("btn", "n_clicks"),
+    State("row-index", "value"),
+    State("column", "value"),
 )
-def scroll_to_row(clicks, row):
+def scroll_to_row_and_col(clicks, row_index, column):
     if clicks:
-        return row
+        scroll_to = {}
+        if row_index or row_index == 0:
+            scroll_to["rowIndex"] = row_index
+        if column:
+            scroll_to["column"] = column
+        return scroll_to
 
 
 if __name__ == "__main__":

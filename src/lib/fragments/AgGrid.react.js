@@ -137,7 +137,7 @@ export default class DashAgGrid extends Component {
         this.onAsyncTransactionsFlushed =
             this.onAsyncTransactionsFlushed.bind(this);
         this.onPaginationChanged = this.onPaginationChanged.bind(this);
-        this.scrollToRow = this.scrollToRow.bind(this);
+        this.scrollTo = this.scrollTo.bind(this);
 
         // Additional Exposure
         this.selectAll = this.selectAll.bind(this);
@@ -579,7 +579,7 @@ export default class DashAgGrid extends Component {
             filterModel,
             columnState,
             paginationGoTo,
-            scrollToRow,
+            scrollTo,
         } = this.props;
 
         if (id !== prevProps.id) {
@@ -632,9 +632,9 @@ export default class DashAgGrid extends Component {
                 propsToSet.paginationGoTo = null;
             }
 
-            if (scrollToRow) {
-                this.scrollToRow(scrollToRow);
-                propsToSet.scrollToRow = null;
+            if (scrollTo) {
+                this.scrollTo(scrollTo);
+                propsToSet.scrollTo = null;
             }
 
             if (resetColumnState) {
@@ -1017,15 +1017,23 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    scrollToRow(reset = false) {
+    scrollTo(reset = false) {
         const {gridApi} = this.state;
         if (!gridApi) {
             return;
         }
-        gridApi.ensureIndexVisible(this.props.scrollToRow, 'top');
+        if (
+            this.props.scrollTo.rowIndex ||
+            this.props.scrollTo.rowIndex === 0
+        ) {
+            gridApi.ensureIndexVisible(this.props.scrollTo.rowIndex, 'top');
+        }
+        if (this.props.scrollTo.column) {
+            gridApi.ensureColumnVisible(this.props.scrollTo.column, 'start');
+        }
         if (reset) {
             this.props.setProps({
-                scrollToRow: null,
+                scrollTo: null,
             });
         }
     }
@@ -1158,7 +1166,7 @@ export default class DashAgGrid extends Component {
             columnState,
             paginationGoTo,
             columnSize,
-            scrollToRow,
+            scrollTo,
             ...restProps
         } = this.props;
 
@@ -1180,8 +1188,8 @@ export default class DashAgGrid extends Component {
             this.paginationGoTo();
         }
 
-        if (scrollToRow || scrollToRow === 0) {
-            this.scrollToRow();
+        if (scrollTo) {
+            this.scrollTo();
         }
 
         if (columnSize) {

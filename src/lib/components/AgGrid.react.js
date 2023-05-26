@@ -491,7 +491,7 @@ DashAgGrid.propTypes = {
     /**
      * Scrolls to the row with the specified index.
      */
-    scrollToRow: PropTypes.number,
+    scrollTo: PropTypes.object,
 
     /********************************
      * GRID PROPS

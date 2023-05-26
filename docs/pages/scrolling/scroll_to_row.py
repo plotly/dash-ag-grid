@@ -15,7 +15,7 @@ text1 = """
 
 # Scroll to row
 
-You can use the prop `scrollToRow` to scroll to a specific row given its index. 
+You can use the prop `scrollTo` to scroll to a specific row given its index. 
 """
 
 
