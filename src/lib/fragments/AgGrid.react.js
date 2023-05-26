@@ -170,6 +170,7 @@ export default class DashAgGrid extends Component {
             openGroups: {},
             gridApi: null,
             gridColumnApi: null,
+            columnState_push: true,
         };
 
         this.selectionEventFired = false;
@@ -515,7 +516,7 @@ export default class DashAgGrid extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const {gridColumnApi, gridApi} = this.state;
+        const {gridApi} = this.state;
         const {columnState, filterModel, selectedRows} = nextProps;
 
         if (
@@ -536,14 +537,7 @@ export default class DashAgGrid extends Component {
         }
         if (gridApi) {
             if (columnState) {
-                if (
-                    !equals(
-                        columnState,
-                        JSON.parse(
-                            JSON.stringify(gridColumnApi.getColumnState())
-                        )
-                    )
-                ) {
+                if (columnState !== this.props.columnState) {
                     return true;
                 }
             }
@@ -580,6 +574,15 @@ export default class DashAgGrid extends Component {
             columnState,
             paginationGoTo,
         } = this.props;
+
+        if (this.state.gridColumnApi && this.props.loading_state.is_loading) {
+            if (
+                this.props.columnState !== prevProps.columnState &&
+                !this.state.columnState_push
+            ) {
+                this.setState({columnState_push: true});
+            }
+        }
 
         if (id !== prevProps.id) {
             if (id) {
@@ -661,7 +664,11 @@ export default class DashAgGrid extends Component {
             }
             // Hydrate virtualRowData
             this.onFilterChanged(true);
-            this.setState({mounted: true, openGroups: groups});
+            this.setState({
+                mounted: true,
+                openGroups: groups,
+                columnState_push: false,
+            });
             this.updateColumnState();
         }
 
@@ -998,10 +1005,14 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi || this.props.updateColumnState) {
             return;
         }
-        this.state.gridColumnApi.applyColumnState({
-            state: this.props.columnState,
-            applyOrder: true,
-        });
+
+        if (this.state.columnState_push) {
+            this.state.gridColumnApi.applyColumnState({
+                state: this.props.columnState,
+                applyOrder: true,
+            });
+            this.setState({columnState_push: false});
+        }
     }
 
     // Event actions that reset
@@ -1106,10 +1117,12 @@ export default class DashAgGrid extends Component {
             return;
         }
 
+        var columnState = JSON.parse(
+            JSON.stringify(this.state.gridColumnApi.getColumnState())
+        );
+
         this.props.setProps({
-            columnState: JSON.parse(
-                JSON.stringify(this.state.gridColumnApi.getColumnState())
-            ),
+            columnState,
             updateColumnState: false,
         });
     }
