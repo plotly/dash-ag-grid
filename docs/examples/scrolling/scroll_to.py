@@ -85,6 +85,7 @@ def scroll_to_row_and_col(
             scroll_to["rowIndexPosition"] = row_index_position
         if column_position:
             scroll_to["columnPosition"] = column_position
+        scroll_to["columnPosition"] = None
         return scroll_to
 
 

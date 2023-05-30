@@ -1027,8 +1027,7 @@ export default class DashAgGrid extends Component {
             this.props.scrollTo.rowIndex === 0
         ) {
             const rowIndexPosition =
-                this.props.scrollTo.rowIndexPosition === null ||
-                this.props.scrollTo.rowIndexPosition === undefined
+                this.props.scrollTo.rowIndexPosition === null
                     ? 'top'
                     : this.props.scrollTo.rowIndexPosition;
             gridApi.ensureIndexVisible(
@@ -1038,8 +1037,7 @@ export default class DashAgGrid extends Component {
         }
         if (this.props.scrollTo.column) {
             const columnPosition =
-                this.props.scrollTo.columnPosition === null ||
-                this.props.scrollTo.columnPosition === undefined
+                this.props.scrollTo.columnPosition === null
                     ? 'auto'
                     : this.props.scrollTo.columnPosition;
             gridApi.ensureColumnVisible(
