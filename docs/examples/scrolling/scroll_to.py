@@ -11,15 +11,7 @@ df = pd.read_csv(
 )
 
 # basic columns definition with column defaults
-columnDefs = [
-    {"field": "country"},
-    {"field": "year"},
-    {"field": "athlete"},
-    {"field": "age"},
-    {"field": "date"},
-    {"field": "sport"},
-    {"field": "total"},
-]
+columnDefs = [{"field": c} for c in df.columns]
 
 app.layout = html.Div(
     [
@@ -35,6 +27,11 @@ app.layout = html.Div(
                             max=df.shape[0] - 1,
                             step=1,
                         ),
+                        dbc.Label("Position"),
+                        dcc.Dropdown(
+                            options=["top", "bottom", "middle"],
+                            id="row-index-position",
+                        ),
                     ]
                 ),
                 dbc.Col(
@@ -43,18 +40,24 @@ app.layout = html.Div(
                         dcc.Dropdown(
                             options=[c["field"] for c in columnDefs], id="column"
                         ),
+                        dbc.Label("Position"),
+                        dcc.Dropdown(
+                            options=["auto", "start", "middle", "end"],
+                            id="column-position",
+                        ),
                     ]
                 ),
-                dbc.Col(dbc.Button("Scroll to", id="btn")),
+                dbc.Col(dbc.Button("Scroll to", id="btn"), align="center"),
             ],
+            align="center",
             style={"margin-bottom": 20},
         ),
         dag.AgGrid(
             id="grid",
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),
-            columnSize="sizeToFit",
-            defaultColDef={"resizable": True, "sortable": True, "filter": True},
+            columnSize="autoSize",
+            defaultColDef={"resizable": True, "sortable": True},
         ),
     ],
     style={"margin": 20},
@@ -66,14 +69,22 @@ app.layout = html.Div(
     Input("btn", "n_clicks"),
     State("row-index", "value"),
     State("column", "value"),
+    State("row-index-position", "value"),
+    State("column-position", "value"),
 )
-def scroll_to_row_and_col(clicks, row_index, column):
+def scroll_to_row_and_col(
+    clicks, row_index, column, row_index_position, column_position
+):
     if clicks:
         scroll_to = {}
         if row_index or row_index == 0:
             scroll_to["rowIndex"] = row_index
         if column:
             scroll_to["column"] = column
+        if row_index_position:
+            scroll_to["rowIndexPosition"] = row_index_position
+        if column_position:
+            scroll_to["columnPosition"] = column_position
         return scroll_to
 
 

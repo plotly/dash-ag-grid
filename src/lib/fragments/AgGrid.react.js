@@ -1026,10 +1026,26 @@ export default class DashAgGrid extends Component {
             this.props.scrollTo.rowIndex ||
             this.props.scrollTo.rowIndex === 0
         ) {
-            gridApi.ensureIndexVisible(this.props.scrollTo.rowIndex, 'top');
+            const rowIndexPosition =
+                this.props.scrollTo.rowIndexPosition === null ||
+                this.props.scrollTo.rowIndexPosition === undefined
+                    ? 'top'
+                    : this.props.scrollTo.rowIndexPosition;
+            gridApi.ensureIndexVisible(
+                this.props.scrollTo.rowIndex,
+                rowIndexPosition
+            );
         }
         if (this.props.scrollTo.column) {
-            gridApi.ensureColumnVisible(this.props.scrollTo.column, 'start');
+            const columnPosition =
+                this.props.scrollTo.columnPosition === null ||
+                this.props.scrollTo.columnPosition === undefined
+                    ? 'auto'
+                    : this.props.scrollTo.columnPosition;
+            gridApi.ensureColumnVisible(
+                this.props.scrollTo.column,
+                columnPosition
+            );
         }
         if (reset) {
             this.props.setProps({

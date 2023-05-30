@@ -489,9 +489,29 @@ DashAgGrid.propTypes = {
     virtualRowData: PropTypes.arrayOf(PropTypes.object),
 
     /**
-     * Scrolls to the row with the specified index.
+     * Scrolls to a specific position.
      */
-    scrollTo: PropTypes.object,
+    scrollTo: PropTypes.shape({
+        /**
+         * rowIndex, typically a row number.
+         */
+        rowIndex: PropTypes.number,
+
+        /**
+         * Position of the row in the grid after scrolling. Default `top`.
+         */
+        rowIndexPosition: PropTypes.oneOf(['top', 'bottom', 'middle']),
+
+        /**
+         * Column to scroll to, must be equal to one `field` in `columnDefs`.
+         */
+        column: PropTypes.string,
+
+        /**
+         *  Position of the column in the grid after scrolling. Default `auto`.
+         */
+        columnPosition: PropTypes.oneOf(['auto', 'start', 'middle', 'end']),
+    }),
 
     /********************************
      * GRID PROPS
