@@ -132,7 +132,7 @@ author_card = dbc.Card(
     dcc.Markdown(
         """
         Prototype docs maintained by Dash community members  
-        [@AnnMarieW](https://community.plotly.com/u/AnnMarieW/summary) & [@jinnyzor](https://community.plotly.com/u/jinnyzor/summary)  
+        [@AnnMarieW](https://community.plotly.com/u/AnnMarieW/summary), [@jinnyzor](https://community.plotly.com/u/jinnyzor/summary) & [@Skiks](https://community.plotly.com/u/skiks) 
         
         Plotly Dash AG Grid docs coming soon!
         """
@@ -154,6 +154,7 @@ def make_side_nav():
                     make_sidebar_category(category="/rows", title="Rows"),
                     make_sidebar_category(category="/layout", title="Layout & Style"),
                     make_sidebar_category(category="/clientside-data", title="Clientside Data"),
+                    make_sidebar_category(category="/serverside-data", title="Serverside Data"),
                     make_sidebar_category(category="/selection", title="Selection"),
                     make_sidebar_category(category="/filtering", title="Filtering"),
                     make_sidebar_category(category="/rendering", title="Rendering"),

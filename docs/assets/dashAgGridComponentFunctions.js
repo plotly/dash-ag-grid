@@ -17,6 +17,7 @@ dagcomponentfuncs.Button = function (props) {
     function onClick() {
         setData();
     }
+
     return React.createElement(
         'button',
         {
@@ -34,6 +35,7 @@ dagcomponentfuncs.DBC_Button_Simple = function (props) {
     function onClick() {
         setData();
     }
+
     return React.createElement(
         window.dash_bootstrap_components.Button,
         {
@@ -74,6 +76,7 @@ dagcomponentfuncs.Dropdown = function (props) {
 // custom component to display boolean data as a checkbox
 dagcomponentfuncs.Checkbox = function (props) {
     const {setData, data} = props;
+
     function onClick() {
         if (!('checked' in event.target)) {
             const checked = !event.target.children[0].checked;
@@ -81,6 +84,7 @@ dagcomponentfuncs.Checkbox = function (props) {
             props.node.setDataValue(colId, checked);
         }
     }
+
     function checkedHandler() {
         // update grid data
         const checked = event.target.checked;
@@ -89,6 +93,7 @@ dagcomponentfuncs.Checkbox = function (props) {
         // update cellRendererData prop so it can be used to trigger a callback
         setData(checked);
     }
+
     return React.createElement(
         'div',
         {onClick: onClick},
@@ -166,6 +171,7 @@ dagcomponentfuncs.ImgThumbnail = function (props) {
 // Custom button that when clicked updates other columns in the grid
 dagcomponentfuncs.CustomButton = function (props) {
     const {setData, data} = props;
+
     function onClick() {
         // update data in the grid
         let colId = props.column.colId;
@@ -177,6 +183,7 @@ dagcomponentfuncs.CustomButton = function (props) {
         // update cellRendererData prop so it can be used to trigger a callback - include n_clicks
         setData({n_clicks: newData['n_clicks']});
     }
+
     return React.createElement(
         'button',
         {
@@ -225,12 +232,14 @@ dagcomponentfuncs.GenderRenderer = function (props) {
 // use for adding a dcc.Graph to the grid with clickData available in a callback
 dagcomponentfuncs.DCC_GraphClickData = function (props) {
     const {setData} = props;
+
     function setProps() {
         const graphProps = arguments[0];
         if (graphProps['clickData']) {
             setData(graphProps);
         }
     }
+
     return React.createElement(window.dash_core_components.Graph, {
         figure: props.value,
         setProps,
@@ -255,6 +264,7 @@ dagcomponentfuncs.DBC_Button = function (props) {
     function onClick() {
         setData();
     }
+
     let leftIcon, rightIcon;
     if (props.leftIcon) {
         leftIcon = React.createElement('i', {
@@ -301,6 +311,7 @@ dagcomponentfuncs.DBC_Progress = function (props) {
     function onClick() {
         setData(props.value);
     }
+
     return React.createElement(
         window.dash_bootstrap_components.Progress,
         {
@@ -308,7 +319,7 @@ dagcomponentfuncs.DBC_Progress = function (props) {
             animated: props.animated,
             className: props.className,
             color: props.color,
-            label: (props.label === undefined) ? "": props.value + '%',
+            label: (props.label === undefined) ? "" : props.value + '%',
             max: props.max,
             min: props.min,
             striped: props.striped,
@@ -326,6 +337,7 @@ dagcomponentfuncs.DMC_Button = function (props) {
     function onClick() {
         setData();
     }
+
     let leftIcon, rightIcon;
     if (props.leftIcon) {
         leftIcon = React.createElement(window.dash_iconify.DashIconify, {
@@ -385,5 +397,53 @@ dagcomponentfuncs.CustomNoRowsOverlay = function (props) {
             },
         },
         props.message
+    );
+};
+
+
+// Used in  Enterprise Group Cell Renderer example
+dagcomponentfuncs.SimpleCellRenderer = function (props) {
+    return React.createElement(
+        'span',
+        {
+            style: {
+                backgroundColor: props.node.group ? 'coral' : 'lightgreen',
+                padding: 2,
+            },
+        },
+        props.value
+    );
+};
+
+// Used in Row Spanning Complex Example
+dagcomponentfuncs.ShowCellRenderer = function (props) {
+    let children;
+    if (props.value) {
+        children = [
+            React.createElement('div', {className: 'show-name'}, props.value.name),
+            React.createElement('div', {className: 'show-presenter'}, props.value.presenter),
+        ]
+    }
+    return React.createElement('div', null, children)
+}
+
+// Used in Row Dragging - Row Dragger inside Custom Cell Renderers
+dagcomponentfuncs.CustomCellRenderer = function (props) {
+
+    const myRef = React.useRef(null);
+
+    React.useEffect(() => {
+        props.registerRowDragger(myRef.current, props.startDragPixels);
+    });
+
+    return React.createElement('div', {className: 'my-custom-cell-renderer'},
+        [
+            React.createElement('div', {className: 'athlete-info'}, [
+                React.createElement('span', null, props.data.athlete),
+                React.createElement('span', null, props.data.country),
+            ]),
+            React.createElement('span', null, props.data.year),
+            React.createElement('i', {className: 'fas fa-arrows-alt-v', ref: myRef})
+        ]
     );
 };

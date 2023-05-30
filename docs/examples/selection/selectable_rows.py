@@ -45,10 +45,10 @@ app.layout = html.Div(
             rowData=df.to_dict("records"),
             defaultColDef=defaultColDef,
             dashGridOptions={
-                "rowSelection":"multiple",
+                "rowSelection": "multiple",
                 "isRowSelectable": {
                     "function": "params.data ? params.data.year < 2007 : false"
-                }
+                },
             },
         ),
         html.Div(id="selectable-checkbox-output"),

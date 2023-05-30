@@ -62,6 +62,12 @@ The grid comes with some provided cell renderers out of the box. These cell rend
 - Group Cell Renderer: (Enterprise only) For showing group details with expand & collapse functionality when using any of the Row Grouping, Master Detail or Tree Data.
 - Show Change Cell Renderers: For animating changes when data is changing.  See examples in <dccLink href='/rendering/change-cell-renderers' children='Rendering' /> . 
 
+
+#### Grid Performance
+Note that adding cell renderers and and custom components can reduce grid performance.  For more information, please 
+see <dccLink href="/scrolling/scrolling-performance" children="Scrolling Performance."/>
+
+
 -------------------
 ` `  
 ` `  
@@ -123,9 +129,6 @@ This is a simple example of registering a custom component to render the stock t
 
 text2 = """
 
-` `  
-` `  
-
 ### cellRenderer  components & Dash Callbacks
 
 To use the custom cellRenderer components in a callback, the component must call the `setData()` function, which will update the
@@ -165,9 +168,6 @@ Note the following:
 
 text3 = """
 
-` `  
-` `  
-
 ### Using other component libraries.
 
 It's possible to make custom components for use with the `cellRenderer` using any of the component modules you have
@@ -204,9 +204,6 @@ Note the following:
 
 text4 = """
 
-` `  
-` `  
-
 #### Example 4:  Cell Renderer with `dcc.Graph` 
 
 In this example we will render a plotly figure in a custom `dcc.Graph` component in the grid. Since we have imported
@@ -230,9 +227,6 @@ In the example below note the following:
 
 text5 = """
 
-` `  
-` `  
-
 ### Example 5:  Cell Render with `dmc.Button` with DashIconify icons.
 
 This example is similar to Example 3 and 4, but uses the Dash Mantine Components and Dash Iconify libraries.
@@ -247,9 +241,6 @@ In this example, note the following:
 
 text6 = """
 
-` `  
-` `  
-
 #### Example 6:  Including extra data in `cellRenderData`
 
 This example shows how to pass extra data from a custom component to Dash for use in a callback.  We pass the state of
@@ -261,9 +252,6 @@ there is no `value` key in the `cellRendererData`.
 """
 
 text7 = """
-
-` `  
-` `  
 
 #### Example 7:  Custom Image Component
 
@@ -308,9 +296,6 @@ def show_change(data):
 
 text8 = """
 
-` `  
-` `  
-
 #### Example 8:  More Custom Cell renderers
 
 In this example we show several components:
@@ -328,8 +313,6 @@ updates the value in the Action column.
 img9="https://user-images.githubusercontent.com/72614349/231599764-fc0a54ce-9957-4f2c-a2d6-a8254b5588f9.png"
 
 text9= """
-` `  
-` `  
 
 #### Example 9:  Stock Portfolio Demo
 

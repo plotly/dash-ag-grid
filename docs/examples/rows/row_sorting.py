@@ -24,7 +24,7 @@ columnDefs = [
 
 app.layout = html.Div(
     [
-        dcc.Markdown("This grid can be sorted by all rows except the Total column"),
+        dcc.Markdown("This grid can be sorted by all columns except the **Total** column"),
         dag.AgGrid(
             columnDefs=columnDefs,
             rowData=df.to_dict("records"),

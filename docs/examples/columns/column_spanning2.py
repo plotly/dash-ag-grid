@@ -49,7 +49,7 @@ columnDefs = [
 
 app.layout = html.Div(
     [
-        dcc.Markdown("Example: Column Spanning"),
+        dcc.Markdown("Example: Column Spanning Complex"),
         dag.AgGrid(
             style={"height": 600},
             columnDefs=columnDefs,
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 """
 --------------------
 
-Add the following to the .css file in the asses folder:
+Add the following to the .css file in the assets folder:
 
 --------------------
 
@@ -93,6 +93,7 @@ Add the following to the .css file in the asses folder:
 Add the following to the dashAgGridFunctions.js file in the assets folder
 
 ----------------
+var dagfuncs = window.dashAgGridFunctions = window.dashAgGridFunctions || {};
 
 function isHeaderRow(params) {
   return params.data.section === 'big-title';

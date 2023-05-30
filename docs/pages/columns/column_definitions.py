@@ -8,7 +8,7 @@ register_page(
     __name__,
     order=1,
     description=app_description,
-    title="Dash AG Grid Column Definitions",
+    title="Dash AG Grid - Column Definitions",
     # name="Bootstrap Utility Classes",
     # hashtags=["intro","background", "border", "color", "spacing", "text", "position"],
 )
@@ -56,7 +56,7 @@ defaultColDef = {'editable': True}
 
 
 text2 = """
-------------------
+
 ## Grouping columns
 
 If you want the columns to be grouped, you can include them as children like so:
@@ -80,9 +80,6 @@ columnDefs = [
 
 
 text3 = """
-
-` `  
-` ` 
 ## Column Types
 
 The grid also provides additional ways to help simplify and avoid duplication of column definitions. This is done through the following:
@@ -96,11 +93,7 @@ Default columns and column types can specify any of the [column properties](http
 
 """
 
-text4 = """"
-
-` `  
-` ` 
-
+text4 = """
 ## Right Aligned and Numeric Columns
 
 The grid provides a handy shortcut for aligning columns to the right. Setting the column definition type to rightAligned aligns the column header and contents to the right, which makes the scanning of the data easier for the user.
@@ -123,10 +116,34 @@ rightAligned = {
     'cellClass': 'ag-right-aligned-cell'
 }
 ```
+"""
 
+text5 = """
 
+## Centered Columns
 
+To center the cell content you can use `"cellStyle": {'textAlign': 'center'}` either in the `columnDefs` or `defaultColDef`
 
+To center the header text, you can add the following class to the `.css` file in the `/assets` folder
+
+```css
+.center-header .ag-header-cell-label {
+   justify-content: center;
+}
+```
+
+Then add the class name to the column using `headerClass`.  In the following snippet, this will center content of one column:
+
+```python
+
+columnDefs = [
+    {"field": "make", "headerClass": 'center-header', "cellStyle": {'textAlign': 'center'}}
+]
+```
+
+In this example, all columns are centered by setting the `headerClass` and `cellStyle` in the `defaultColDef` prop
+
+Thanks to [@Spyhuntr](https://github.com/Spyhuntr) for this example!
 """
 
 
@@ -141,6 +158,8 @@ layout = html.Div(
         example_app("examples.columns.column_definitions3", make_layout=make_tabs),
         make_md(text4),
         example_app("examples.columns.column_definitions4", make_layout=make_tabs),
+        make_md(text5),
+        example_app("examples.columns.column_definitions5", make_layout=make_tabs),
         # up_next("text"),
     ],
 )

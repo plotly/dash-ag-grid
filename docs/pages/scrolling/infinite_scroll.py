@@ -63,13 +63,12 @@ In a nutshell, every time the grid wants more rows, it will call `getRows()` on 
   - `storeInfo` (boolean | number | string | dict | list; optional): Any extra info for the grid to associate with this load.
 
 ### Example 1:  Infinite Scroll Simple Example
+
+Tip - You can also use the keyboard to navigate. Click on a row to focus the grid.  Then use `page up` and `page down` keys to scroll by page.  Use the `home` and
+ `end` keys to quickly go to the first and last row of the data.
 """
 
 text2 = """
-
-` `  
-` `  
-
 
 ### Aggregation and Grouping
 Aggregation and grouping are not available in infinite scrolling. This is because to do so would require the grid knowing the entire dataset, which is not possible when using the Infinite Row Model. If you need aggregation and / or grouping for large datasets, check the Server-Side Row Model for doing aggregations on the server-side.
@@ -81,11 +80,6 @@ The grid cannot do sorting or filtering for you, as it does not have all of the 
 """
 
 text3 = """
-
-
-` `  
-` `  
-
 
 ### Example 3 Infinite Scroll with Pagination
 

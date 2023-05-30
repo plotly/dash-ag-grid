@@ -49,10 +49,10 @@ app.layout = html.Div(
 
 
 @app.callback(
-    Output("quick-filter-grid", "quickFilterText"), Input("quick-filter-input", "value")
+    Output("quick-filter-grid", "dashGridOptions"), Input("quick-filter-input", "value")
 )
 def update_filter(filter_value):
-    return filter_value
+    return {"quickFilterText":filter_value}
 
 
 if __name__ == "__main__":
