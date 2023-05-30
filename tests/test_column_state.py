@@ -233,7 +233,7 @@ def test_cs001_column_state(dash_duo):
     dash_duo.find_element('#load-column-state-button').click()
     until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
 
-    time.sleep(.2) ### pause to emulate user clicking, if no pause column state doesnt trigger properly
+    time.sleep(.4) ### pause to emulate user clicking, if no pause column state doesnt trigger properly
     dash_duo.find_element('#load-column-defs').click()
     until(lambda: json.dumps(alt_colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
     grid.wait_for_cell_text(0, 0, "32000")
