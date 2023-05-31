@@ -27,6 +27,24 @@ jquery_external_stylesheets=[
     ]
 
 
+
+
+
+
+alert = dbc.Alert([
+    dcc.Markdown(
+        """
+        #### 📣 Great News!
+        ##### Dash AG Grid docs are now at
+        #### [dash.plotly.com](https://dash.plotly.com/dash-ag-grid)  
+        ------
+        Please use the official dash-docs as this site is no longer being updated
+        """
+    ),
+], className="text-center mx-auto", dismissable=True, style={"maxWidth": 800} )
+
+
+
 app = Dash(
     __name__,
     use_pages=True,
@@ -52,6 +70,7 @@ for k in example_apps:
 
 app.layout = dbc.Container(
     [
+        dbc.Row(dbc.Col(alert, className="mx-auto")),
         navbar,
         dbc.Row(
             [

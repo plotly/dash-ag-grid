@@ -14,18 +14,9 @@ If you have tried v2.0.0 alpha releases, release candidates, or our v1.x enterpr
 
 `pip install dash-ag-grid`
 
-1. Read the [Medium article](https://medium.com/plotly/announcing-dash-ag-grid-fbb4a1c83e62#:~:text=Dash%20AG%20Grid%20is%20a,grid%20accessible%20to%20our%20customers) or watch the [webinar](https://www.youtube.com/watch?v=Ggekq7C5pz4?utm_source=Webinar%3A+AG+Grid+1%2F26%2F23&utm_medium=medium_article&utm_content=AnnouncingDashAGGrids) introducing Dash AG Grid.
-2. See the live [stock portfolio demo app](https://sales-demo.plotly.com/dash-ag-grid) from the webinar hosted by Plotly.
-3. Get the code for the demo app in [GitHub](https://github.com/plotly/dash-ag-grid/blob/dev/docs/demo_stock_portfolio.py)
-4. Learn more about [AG Grid](https://www.ag-grid.com/react-data-grid) in the upstream docs, including more information on community features and licensing for the enterprise version.
-
 
 ### Documentation
-At v2.0.0 release we're still working to move all the Dash AG Grid docs into the official Dash docs, https://dash.plotly.com/dash-ag-grid.
-In the meantime you can find them all here: https://dashaggrid.pythonanywhere.com/
-
-![docs_app](https://user-images.githubusercontent.com/72614349/233876110-4a29348c-d8e3-4114-b152-bf97f934eac8.png)
-
+Please see the [Dash Documentation](https://dash.plotly.com/dash-ag-grid).
 
 ## Contributing
 
@@ -35,14 +26,6 @@ If you have identified a bug or have an idea for a new feature, it's best to sta
 
 The docs are under development as well. There are many examples in the official AG Grid docs that have not been included here yet. Please open an issue or do pull requests for edits or to add examples. Or post your question, comments or demo apps on the [Dash Community Forum](https://community.plotly.com/).
 
-### Running the docs app locally
-```
-cd docs/
-pip install -r requirements.txt
-```
-Then you can run the apps there:
-- `demo_stock_portfolio.py` and `demo_stock_portfolio_simple.py` are small apps demonstrating some key features of Dash AG Grid, such as calculated columns, conditional formatting, and connecting its data and selected rows to graphs.
-- `app.py` runs a comprehensive documentation app. After we complete the open-source release, this will be merged into the main dash docs at https://dash.plotly.com/ but right now this app is the best way to explore Dash AG Grid.
 
 ### Developing in this repo
 
