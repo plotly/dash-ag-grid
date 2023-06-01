@@ -7,10 +7,11 @@ df = px.data.medals_wide()
 
 columnDefs = []
 for i in df.columns:
-    if i == 'nation':
-        columnDefs.append({'field': i, 'editable':False})
+    if i == "nation":
+        columnDefs.append({"field": i, "editable": False})
     else:
-        columnDefs.append({'field': i})
+        columnDefs.append({"field": i})
+
 
 def test_cv001_cell_value_changed(dash_duo):
     app = Dash(__name__)
@@ -23,13 +24,13 @@ def test_cv001_cell_value_changed(dash_duo):
                 columnSize="sizeToFit",
                 defaultColDef={"editable": True},
                 id="information",
-                getRowId="params.data.nation"
+                getRowId="params.data.nation",
             ),
             dag.AgGrid(
-                id='history',
-                columnDefs=[{'field': 'Key', 'checkboxSelection': True}] +
-                           [{"field": i} for i in ['Column', 'OldValue', 'NewValue']],
-                rowData=[]
+                id="history",
+                columnDefs=[{"field": "Key", "checkboxSelection": True}]
+                + [{"field": i} for i in ["Column", "OldValue", "NewValue"]],
+                rowData=[],
             ),
         ],
         style={"margin": 20},
@@ -37,8 +38,8 @@ def test_cv001_cell_value_changed(dash_duo):
 
     app.clientside_callback(
         """function (n){if (n) {return true} return window.dash_clientside.no_update}""",
-        Output('show_history', 'is_open'),
-        Input('viewHistory', 'n_clicks')
+        Output("show_history", "is_open"),
+        Input("viewHistory", "n_clicks"),
     )
 
     app.clientside_callback(
@@ -78,15 +79,15 @@ def test_cv001_cell_value_changed(dash_duo):
     grid.wait_for_cell_text(0, 0, "South Korea")
 
     ### testing history
-    grid.get_cell(0, 1).send_keys('50')
+    grid.get_cell(0, 1).send_keys("50")
     grid.get_cell(1, 2).click()
-    
+
     hist.wait_for_rendered_rows(1)
 
     hist.element_click_cell_checkbox(0, 0)
     hist.wait_for_rendered_rows(0)
 
-    grid.get_cell(0, 1).send_keys('50')
+    grid.get_cell(0, 1).send_keys("50")
     grid.get_cell(1, 2).click()
 
     hist.wait_for_rendered_rows(1)
@@ -95,8 +96,7 @@ def test_cv001_cell_value_changed(dash_duo):
     hist.element_click_cell_checkbox(0, 0)
     hist.wait_for_rendered_rows(0)
 
-    grid.get_cell(0, 1).send_keys('50')
+    grid.get_cell(0, 1).send_keys("50")
     grid.get_cell(1, 2).click()
 
     hist.wait_for_rendered_rows(1)
-

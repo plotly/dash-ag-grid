@@ -12,16 +12,18 @@ default_display_cols = ["district_id", "district", "winner"]
 
 def test_cd001_drag_columns(dash_duo):
     app = Dash()
-    app.layout = html.Div([
-        AgGrid(
-            id="grid",
-            rowData=df.to_dict("records"),
-            columnDefs=[
-                {"headerName": col.capitalize(), "field": col}
-                for col in default_display_cols
-            ],
-        )
-    ])
+    app.layout = html.Div(
+        [
+            AgGrid(
+                id="grid",
+                rowData=df.to_dict("records"),
+                columnDefs=[
+                    {"headerName": col.capitalize(), "field": col}
+                    for col in default_display_cols
+                ],
+            )
+        ]
+    )
 
     dash_duo.start_server(app)
 
@@ -49,6 +51,7 @@ def test_cd001_drag_columns(dash_duo):
     grid.wait_for_all_header_texts(["District_id", "Winner", "District"])
     grid.wait_for_pinned_cols(2)
     grid.wait_for_viewport_cols(1)
+
 
 def test_cd002_column_drag(dash_duo):
     data = {
@@ -87,7 +90,7 @@ def test_cd002_column_drag(dash_duo):
         rowData=df.to_dict("records"),
         columnSize="autoSize",
         defaultColDef=defaultColDef,
-        dashGridOptions={'alignedGrids': ['middleGrid', 'bottomGrid']}
+        dashGridOptions={"alignedGrids": ["middleGrid", "bottomGrid"]},
     )
 
     gridBot = AgGrid(
@@ -101,17 +104,15 @@ def test_cd002_column_drag(dash_duo):
     app = Dash(__name__)
 
     app.layout = html.Div(
-        [
-            grid,
-            html.Div(id='hiding'),
-            gridBot,
-            html.Button(id='link')
-        ],
+        [grid, html.Div(id="hiding"), gridBot, html.Button(id="link")],
         style={"margin": 20},
     )
 
-    @app.callback(Output('hiding', 'children'), Input('link', 'n_clicks'),
-                  State('topGrid', 'columnState'))
+    @app.callback(
+        Output("hiding", "children"),
+        Input("link", "n_clicks"),
+        State("topGrid", "columnState"),
+    )
     def addGrid(n, s):
         grid2 = AgGrid(
             id="middleGrid",
@@ -119,15 +120,14 @@ def test_cd002_column_drag(dash_duo):
             rowData=df.to_dict("records"),
             columnSize=None,
             defaultColDef=defaultColDef,
-            dashGridOptions={'alignedGrids': 'bottomGrid'},
-            columnState = s
+            dashGridOptions={"alignedGrids": "bottomGrid"},
+            columnState=s,
         )
         if n:
             return grid2
         return no_update
 
     dash_duo.start_server(app)
-
 
     grid = utils.Grid(dash_duo, "topGrid")
     botGrid = utils.Grid(dash_duo, "bottomGrid")
@@ -157,8 +157,8 @@ def test_cd002_column_drag(dash_duo):
     grid.wait_for_viewport_cols(2)
     botGrid.wait_for_viewport_cols(2)
 
-    #add midGrid
-    dash_duo.find_element('#link').click()
+    # add midGrid
+    dash_duo.find_element("#link").click()
 
     # pin first non-pinned column by dragging it to its own left edge
     grid.pin_col(1, 1)

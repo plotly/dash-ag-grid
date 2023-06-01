@@ -10,32 +10,42 @@ df = px.data.election()
 default_display_cols = ["district_id"]
 other_cols = ["district", "winner"]
 
-df = pd.concat([df, pd.DataFrame({'district': ['test']})])
-
+df = pd.concat([df, pd.DataFrame({"district": ["test"]})])
 
 
 def test_fi002_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    app.layout = html.Div([
-        dag.AgGrid(
-            id="grid",
-            rowData=df.to_dict("records"),
-            columnDefs=[
-                {"headerName": col.capitalize(), "field": col,
-                 'filterParams': {'function': 'filterParams()'},
-                 'filter': 'agNumberColumnFilter'}
-                for col in default_display_cols
-                ] + [
-                   {"headerName": col.capitalize(), "field": col,
-                    'filterParams': {'filterOptions': ['contains', 'startsWith', 'endsWith'],
-                                     'defaultOption': 'endsWith'},
-                    'filter': True}
-                   for col in other_cols
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid",
+                rowData=df.to_dict("records"),
+                columnDefs=[
+                    {
+                        "headerName": col.capitalize(),
+                        "field": col,
+                        "filterParams": {"function": "filterParams()"},
+                        "filter": "agNumberColumnFilter",
+                    }
+                    for col in default_display_cols
+                ]
+                + [
+                    {
+                        "headerName": col.capitalize(),
+                        "field": col,
+                        "filterParams": {
+                            "filterOptions": ["contains", "startsWith", "endsWith"],
+                            "defaultOption": "endsWith",
+                        },
+                        "filter": True,
+                    }
+                    for col in other_cols
                 ],
-            defaultColDef={"floatingFilter": True}
-        )
-    ])
+                defaultColDef={"floatingFilter": True},
+            )
+        ]
+    )
 
     dash_duo.start_server(app)
 

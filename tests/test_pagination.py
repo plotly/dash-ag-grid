@@ -19,7 +19,7 @@ def test_pa001_pagination(dash_duo):
         "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
     )
 
-    opts = ['first', 'next', 'previous', 'last', 0, 40]
+    opts = ["first", "next", "previous", "last", 0, 40]
 
     # basic columns definition with column defaults
     columnDefs = [
@@ -43,18 +43,18 @@ def test_pa001_pagination(dash_duo):
                 dashGridOptions={"pagination": True},
                 paginationGoTo=5,
             ),
-            html.Div(id='grid-info'),
-            html.Button(id='changeSize', children='changeSize')
-
-        ] + [html.Button(id={'type': 'nav', 'index': x}, children=x) for x in opts],
+            html.Div(id="grid-info"),
+            html.Button(id="changeSize", children="changeSize"),
+        ]
+        + [html.Button(id={"type": "nav", "index": x}, children=x) for x in opts],
         style={"margin": 20},
     )
 
-    @app.callback(Output('grid', 'dashGridOptions'), Input('changeSize', 'n_clicks'))
+    @app.callback(Output("grid", "dashGridOptions"), Input("changeSize", "n_clicks"))
     def updatePageSize(n):
         if n:
             opts = Patch()
-            opts['paginationPageSize'] = 10 * n
+            opts["paginationPageSize"] = 10 * n
             return opts
         return no_update
 
@@ -64,30 +64,35 @@ def test_pa001_pagination(dash_duo):
             return json.dumps(h)
         return no_update
 
-    @app.callback(Output('grid', 'paginationGoTo'), Input({'type': 'nav', 'index': ALL}, 'n_clicks'))
+    @app.callback(
+        Output("grid", "paginationGoTo"),
+        Input({"type": "nav", "index": ALL}, "n_clicks"),
+    )
     def updatePage(_):
         if ctx.triggered:
-            return ctx.triggered_id['index']
+            return ctx.triggered_id["index"]
         return no_update
 
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
 
-    until(lambda: "Australia" == grid.get_cell(500,0).text, timeout=3)
+    until(lambda: "Australia" == grid.get_cell(500, 0).text, timeout=3)
     oldValue = '{"isLastPageFound": true, "pageSize": 100, "currentPage": 5, "totalPages": 87, "rowCount": 8618}'
-    until(lambda: oldValue == dash_duo.find_element('#grid-info').text, timeout=3)
-    oldValue = dash_duo.find_element('#grid-info').text
+    until(lambda: oldValue == dash_duo.find_element("#grid-info").text, timeout=3)
+    oldValue = dash_duo.find_element("#grid-info").text
     dash_duo.find_element('.ag-paging-button[aria-label="Last Page"]').click()
-    until(lambda: oldValue != dash_duo.find_element('#grid-info').text, timeout=3)
-    oldValue = dash_duo.find_element('#grid-info').text
+    until(lambda: oldValue != dash_duo.find_element("#grid-info").text, timeout=3)
+    oldValue = dash_duo.find_element("#grid-info").text
 
     btns = dash_duo.find_elements("button")
     for x in range(len(btns)):
         btns[x].click()
-        until(lambda: oldValue != dash_duo.find_element('#grid-info').text, timeout=3)
-        oldValue = dash_duo.find_element('#grid-info').text
+        until(lambda: oldValue != dash_duo.find_element("#grid-info").text, timeout=3)
+        oldValue = dash_duo.find_element("#grid-info").text
 
-    assert oldValue == '{"isLastPageFound": true, "pageSize": 10, ' \
-                       '"currentPage": 40, "totalPages": 862, ' \
-                       '"rowCount": 8618}'
+    assert (
+        oldValue == '{"isLastPageFound": true, "pageSize": 10, '
+        '"currentPage": 40, "totalPages": 862, '
+        '"rowCount": 8618}'
+    )

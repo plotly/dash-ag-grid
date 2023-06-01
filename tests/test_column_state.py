@@ -52,7 +52,7 @@ def test_cs001_column_state(dash_duo):
             "rowGroupIndex": None,
             "pivot": False,
             "pivotIndex": None,
-            "flex": None
+            "flex": None,
         },
         {
             "colId": "price",
@@ -66,7 +66,7 @@ def test_cs001_column_state(dash_duo):
             "rowGroupIndex": None,
             "pivot": False,
             "pivotIndex": None,
-            "flex": None
+            "flex": None,
         },
         {
             "colId": "model",
@@ -80,8 +80,8 @@ def test_cs001_column_state(dash_duo):
             "rowGroupIndex": None,
             "pivot": False,
             "pivotIndex": None,
-            "flex": None
-        }
+            "flex": None,
+        },
     ]
 
     alt_colState = [
@@ -97,7 +97,7 @@ def test_cs001_column_state(dash_duo):
             "rowGroupIndex": None,
             "pivot": False,
             "pivotIndex": None,
-            "flex": None
+            "flex": None,
         },
         {
             "colId": "model",
@@ -111,7 +111,7 @@ def test_cs001_column_state(dash_duo):
             "rowGroupIndex": None,
             "pivot": False,
             "pivotIndex": None,
-            "flex": None
+            "flex": None,
         },
         {
             "colId": "make",
@@ -125,7 +125,7 @@ def test_cs001_column_state(dash_duo):
             "rowGroupIndex": None,
             "pivot": False,
             "pivotIndex": None,
-            "flex": None
+            "flex": None,
         },
     ]
 
@@ -146,8 +146,10 @@ def test_cs001_column_state(dash_duo):
                         "Change Column Defs", id="load-column-defs", n_clicks=0
                     ),
                     html.Button(
-                        "Load Both Column Defs and State", id="load-column-state-defs-button", n_clicks=0
-                    )
+                        "Load Both Column Defs and State",
+                        id="load-column-state-defs-button",
+                        n_clicks=0,
+                    ),
                 ],
             ),
             dag.AgGrid(
@@ -176,9 +178,9 @@ def test_cs001_column_state(dash_duo):
         return no_update
 
     @app.callback(
-        Output('grid', 'columnState'),
-        Input('load-column-state-button', 'n_clicks'),
-        prevent_initial_call=True
+        Output("grid", "columnState"),
+        Input("load-column-state-button", "n_clicks"),
+        prevent_initial_call=True,
     )
     def loadState(n):
         if n:
@@ -193,9 +195,9 @@ def test_cs001_column_state(dash_duo):
         return json.dumps(col_state)
 
     @app.callback(
-        Output('grid', 'columnDefs'),
-        Input('load-column-defs', 'n_clicks'),
-        prevent_initial_call=True
+        Output("grid", "columnDefs"),
+        Input("load-column-defs", "n_clicks"),
+        prevent_initial_call=True,
     )
     def loadState(n):
         if n:
@@ -203,10 +205,10 @@ def test_cs001_column_state(dash_duo):
         return no_update
 
     @app.callback(
-        Output('grid', 'columnState', allow_duplicate=True),
-        Output('grid', 'columnDefs', allow_duplicate=True),
-        Input('load-column-state-defs-button', 'n_clicks'),
-        prevent_initial_call=True
+        Output("grid", "columnState", allow_duplicate=True),
+        Output("grid", "columnDefs", allow_duplicate=True),
+        Input("load-column-state-defs-button", "n_clicks"),
+        prevent_initial_call=True,
     )
     def loadState(n):
         if n:
@@ -222,22 +224,46 @@ def test_cs001_column_state(dash_duo):
     grid.wait_for_pinned_cols(2)
     grid.wait_for_viewport_cols(1)
 
-    until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
+    until(
+        lambda: json.dumps(colState)
+        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        timeout=3,
+    )
 
     grid.resize_col(1, 50)
-    dash_duo.find_element('#get-column-state-button').click()
+    dash_duo.find_element("#get-column-state-button").click()
     testState = colState.copy()
-    testState[1]['width'] = 198
-    until(lambda: json.dumps(testState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
+    testState[1]["width"] = 198
+    until(
+        lambda: json.dumps(testState)
+        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        timeout=3,
+    )
 
-    dash_duo.find_element('#load-column-state-button').click()
-    until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
+    dash_duo.find_element("#load-column-state-button").click()
+    until(
+        lambda: json.dumps(colState)
+        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        timeout=3,
+    )
 
-    time.sleep(.2) ### pause to emulate user clicking, if no pause column state doesnt trigger properly
-    dash_duo.find_element('#load-column-defs').click()
-    until(lambda: json.dumps(alt_colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
+    time.sleep(
+        0.2
+    )  ### pause to emulate user clicking, if no pause column state doesnt trigger properly
+    dash_duo.find_element("#load-column-defs").click()
+    until(
+        lambda: json.dumps(alt_colState)
+        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        timeout=3,
+    )
     grid.wait_for_cell_text(0, 0, "32000")
 
-    time.sleep(.2)  ### pause to emulate user clicking, if no pause column state doesnt trigger properly
-    dash_duo.find_element('#load-column-state-defs-button').click()
-    until(lambda: json.dumps(colState) in dash_duo.find_element('#reset-column-state-grid-pre').text, timeout=3)
+    time.sleep(
+        0.2
+    )  ### pause to emulate user clicking, if no pause column state doesnt trigger properly
+    dash_duo.find_element("#load-column-state-defs-button").click()
+    until(
+        lambda: json.dumps(colState)
+        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        timeout=3,
+    )

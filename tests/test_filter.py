@@ -12,20 +12,28 @@ default_display_cols = ["district_id", "district", "winner"]
 
 def test_fi001_floating_filter(dash_duo):
     app = Dash()
-    app.layout = html.Div([
-        AgGrid(
-            id="grid",
-            rowData=df.to_dict("records"),
-            columnDefs=[
-                {"headerName": col.capitalize(), "field": col}
-                for col in default_display_cols
-            ],
-            defaultColDef={"filter": True, "floatingFilter": True},
-            filterModel={"district_id": {"filterType": "text", "type": "contains", "filter": "12"}}
-        ),
-        html.Div(id='filterModel'),
-        html.Button(id='resetFilters', n_clicks=0)
-    ])
+    app.layout = html.Div(
+        [
+            AgGrid(
+                id="grid",
+                rowData=df.to_dict("records"),
+                columnDefs=[
+                    {"headerName": col.capitalize(), "field": col}
+                    for col in default_display_cols
+                ],
+                defaultColDef={"filter": True, "floatingFilter": True},
+                filterModel={
+                    "district_id": {
+                        "filterType": "text",
+                        "type": "contains",
+                        "filter": "12",
+                    }
+                },
+            ),
+            html.Div(id="filterModel"),
+            html.Button(id="resetFilters", n_clicks=0),
+        ]
+    )
 
     @app.callback(
         Output("filterModel", "children"),
@@ -36,8 +44,8 @@ def test_fi001_floating_filter(dash_duo):
 
     @app.callback(
         Output("grid", "filterModel"),
-        Input('resetFilters', 'n_clicks'),
-        prevent_initial_call=True
+        Input("resetFilters", "n_clicks"),
+        prevent_initial_call=True,
     )
     def updateFilterModel(n):
         return {}
@@ -52,8 +60,11 @@ def test_fi001_floating_filter(dash_duo):
     dash_duo.wait_for_text_to_equal("#filterModel", "{}")
 
     grid.set_filter(0, "12")
-    dash_duo.wait_for_text_to_equal("#filterModel", '{"district_id": {"filterType": "text",'
-                                                    ' "type": "contains", "filter": "12"}}')
+    dash_duo.wait_for_text_to_equal(
+        "#filterModel",
+        '{"district_id": {"filterType": "text",'
+        ' "type": "contains", "filter": "12"}}',
+    )
 
     grid.wait_for_cell_text(0, 1, "112-DeLorimier")
     grid.wait_for_rendered_rows(5)
