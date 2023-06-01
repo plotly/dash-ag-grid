@@ -23,7 +23,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - `filterOptions` now will working with being a regular object
 
 - [#206](https://github.com/plotly/dash-ag-grid/pull/206)
-  - fixes [#195](https://github.com/plotly/dash-ag-grid/issues/195)
+  - fixes [#195](https://github.com/plotly/dash-ag-grid/issues/195) where if the user was to redo the exact same action causing the grid to not trigger the `cellValueChanged` another subsequent time
 
 ## [2.0.0] - 2023-05-02
 
