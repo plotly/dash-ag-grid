@@ -822,6 +822,7 @@ export default class DashAgGrid extends Component {
         data,
         node,
     }) {
+        const timestamp = Date.now();
         const virtualRowData = [];
         if (this.props.rowModelType === 'clientSide' && this.state.gridApi) {
             this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
@@ -836,6 +837,7 @@ export default class DashAgGrid extends Component {
                 oldValue,
                 value,
                 colId,
+                timestamp,
             },
             virtualRowData,
         });

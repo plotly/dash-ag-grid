@@ -179,3 +179,9 @@ class Grid:
         return self.dash_duo.find_element(
             f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] .ag-value-change-delta'
         )
+
+    def element_click_cell_checkbox(self, row, col):
+        chk = self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] .ag-checkbox-input'
+        )
+        chk.click()
