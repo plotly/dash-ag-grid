@@ -347,7 +347,6 @@ export default class DashAgGrid extends Component {
         if (typeof columnDef === 'function') {
             return columnDef;
         }
-        const field = columnDef.field || columnDef.headerName;
 
         return mapObjIndexed((value, target) => {
             if (
@@ -363,6 +362,7 @@ export default class DashAgGrid extends Component {
                 // the second argument tells convertMaybeFunction
                 // that a plain string is dangerous,
                 // and provides the context for error reporting
+                const field = columnDef.field || columnDef.headerName;
                 return this.convertMaybeFunction(value, {target, field});
             }
             if (COLUMN_MAYBE_FUNCTIONS[target]) {
@@ -372,7 +372,12 @@ export default class DashAgGrid extends Component {
                 return this.convertMaybeFunctionNoParams(value);
             }
             if (COLUMN_ARRAY_NESTED_FUNCTIONS[target] && Array.isArray(value)) {
-                return value.map(this.convertCol);
+                return value.map((c) => {
+                    if (typeof c === 'object') {
+                        return this.convertCol(c);
+                    }
+                    return c;
+                });
             }
             if (COLUMN_NESTED_FUNCTIONS[target] && typeof value === 'object') {
                 return this.convertCol(value);
