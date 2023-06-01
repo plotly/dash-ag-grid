@@ -1,7 +1,6 @@
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output, State
 import plotly.express as px
-import dash_bootstrap_components as dbc
 from . import utils
 
 df = px.data.medals_wide()
@@ -91,7 +90,7 @@ def test_cv001_cell_value_changed(dash_duo):
     grid.get_cell(1, 2).click()
 
     hist.wait_for_rendered_rows(1)
-    
+
     ## twice for good measure
     hist.element_click_cell_checkbox(0, 0)
     hist.wait_for_rendered_rows(0)
