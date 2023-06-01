@@ -6,13 +6,19 @@ import yfinance as yf
 import dash
 import random
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY],
-           meta_tags=[{'http-equiv': 'content-security-policy',
-                       'content': "default-src 'self'; script-src 'self' 'unsafe-inline';"
-                                  " style-src https://* 'self' 'unsafe-inline'; "
-                                  "font-src data: https://* 'self' 'unsafe-inline';"
-                                  "img-src data: https://* 'self'"}],
-           )
+app = Dash(
+    __name__,
+    external_stylesheets=[dbc.themes.DARKLY],
+    meta_tags=[
+        {
+            "http-equiv": "content-security-policy",
+            "content": "default-src 'self'; script-src 'self' 'unsafe-inline';"
+            " style-src https://* 'self' 'unsafe-inline'; "
+            "font-src data: https://* 'self' 'unsafe-inline';"
+            "img-src data: https://* 'self'",
+        }
+    ],
+)
 
 equities = {
     "AAPL": "Apple",
@@ -43,7 +49,7 @@ data = {
     "quantity": [75, 40, 100, 50, 40, 60, 20, 40],
     "price": [last_close(ticker) for ticker in equities],
     "binary": [False for ticker in equities],
-    "testdate":['2023-02-01' for ticker in equities]
+    "testdate": ["2023-02-01" for ticker in equities],
 }
 df = pd.DataFrame(data)
 
@@ -54,13 +60,13 @@ columnDefs = [
         "type": "textAligned",
         "filter": True,
         "editable": True,
-        "cellRenderer": "stockLink"
+        "cellRenderer": "stockLink",
     },
     {
         "headerName": "Company",
         "field": "company",
         "type": "textAligned",
-        "filter": True
+        "filter": True,
     },
     {
         "headerName": "Shares",
@@ -70,30 +76,25 @@ columnDefs = [
     {
         "headerName": "Last Close Price",
         "field": "price",
-        "valueFormatter": {"function":"""Number(params.value).toFixed(2)"""},
-        "editable":True
+        "valueFormatter": {"function": """Number(params.value).toFixed(2)"""},
+        "editable": True,
     },
     {
         "headerName": "Market Value",
-        "valueGetter": {"function":"Math.floor(params.data.price * params.data.quantity * 100) / 100"},
-        "valueFormatter": {"function":"""d3.format("($,.2f")(params.value)"""},
+        "valueGetter": {
+            "function": "Math.floor(params.data.price * params.data.quantity * 100) / 100"
+        },
+        "valueFormatter": {"function": """d3.format("($,.2f")(params.value)"""},
         "cellRenderer": "agAnimateShowChangeCellRenderer",
     },
+    {"field": "binary", "cellRenderer": "checkbox", "editable": True},
     {
-        "field":"binary",
-        "cellRenderer": "checkbox",
-        "editable":True
+        "field": "testdate",
+        "valueFormatter": {"function": """(d3.timeParse("%Y-%m-%d")(params.value))"""},
+        "type": "date",
+        "filter": "agDateColumnFilter",
     },
-    {
-        "field":"testdate",
-        "valueFormatter": {"function":"""(d3.timeParse("%Y-%m-%d")(params.value))"""},
-        "type":"date",
-        "filter": "agDateColumnFilter"
-    },
-    {
-        "headerName":"testing",
-        "valueGetter": {"function":"params.node.id"}
-    }
+    {"headerName": "testing", "valueGetter": {"function": "params.node.id"}},
 ]
 
 
@@ -107,8 +108,8 @@ defaultColDef = {
 }
 
 df2 = df.copy()
-df2 = df2.to_dict('records')
-df2[0]['quantity'] = 30
+df2 = df2.to_dict("records")
+df2[0]["quantity"] = 30
 
 table = dag.AgGrid(
     id="portfolio-grid",
@@ -119,13 +120,17 @@ table = dag.AgGrid(
     defaultColDef=defaultColDef,
     rowSelection="single",
     getRowId='params.data.ticker + "|" + params.data.company',
-    dashGridOptions={'undoRedoCellEditing':True, 'undoRedoCellEditingLimit': 20},
+    dashGridOptions={"undoRedoCellEditing": True, "undoRedoCellEditingLimit": 20},
     getRowStyle={
-                "styleConditions": [
-                    {"condition": "params.data.quantity > 50", "style": {"color": "orange"}},
-                ]
-            },
-    rowTransaction={'update':[{'ticker':'AAPL', 'company':'Apple', 'quantity':30, 'price':'154.50'}]}
+        "styleConditions": [
+            {"condition": "params.data.quantity > 50", "style": {"color": "orange"}},
+        ]
+    },
+    rowTransaction={
+        "update": [
+            {"ticker": "AAPL", "company": "Apple", "quantity": 30, "price": "154.50"}
+        ]
+    },
 )
 
 header = html.Div("My Portfolio", className="h2 p-2 text-white bg-primary text-center")
@@ -133,13 +138,13 @@ header = html.Div("My Portfolio", className="h2 p-2 text-white bg-primary text-c
 app.layout = dbc.Container(
     [
         header,
-        dbc.Button('Add Row', id='addRow'),
-        dbc.Button('Add BORR', id='addBORR'),
+        dbc.Button("Add Row", id="addRow"),
+        dbc.Button("Add BORR", id="addBORR"),
         # dbc.Button('Update TSLA', id='updateTSLA'),
-        dbc.Button('Sell Selected', id='deleteSelections', color='danger'),
+        dbc.Button("Sell Selected", id="deleteSelections", color="danger"),
         dbc.Row(dbc.Col(table, className="py-4")),
-        dcc.Interval(id='randomize', interval=1, max_intervals=100),
-        html.Div(id='previous')
+        dcc.Interval(id="randomize", interval=1, max_intervals=100),
+        html.Div(id="previous"),
     ],
 )
 
@@ -165,9 +170,9 @@ app.clientside_callback(
     }
     """,
     Output("portfolio-grid", "rowTransaction"),
-    Input("randomize", 'n_intervals'),
+    Input("randomize", "n_intervals"),
     State("portfolio-grid", "rowData"),
-    prevent_initial_call=True
+    prevent_initial_call=True,
 )
 
 app.clientside_callback(

@@ -31,7 +31,7 @@ def test_vr001_virtual_row_data(dash_duo):
                 defaultColDef={
                     "sortable": True,
                     "filter": True,
-                    "floatingFilter": True
+                    "floatingFilter": True,
                 },
             ),
             html.Div(id="data-after-filter"),
@@ -49,34 +49,51 @@ def test_vr001_virtual_row_data(dash_duo):
 
     grid = utils.Grid(dash_duo, "grid")
 
-    dash_duo.wait_for_text_to_equal('#data-after-filter', "[{'make': 'Toyota', 'model': 'Celica', 'price': 35000}, "
-                                                          "{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}, "
-                                                          "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000}]")
+    dash_duo.wait_for_text_to_equal(
+        "#data-after-filter",
+        "[{'make': 'Toyota', 'model': 'Celica', 'price': 35000}, "
+        "{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}, "
+        "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000}]",
+    )
 
     grid.set_filter(0, "F")
 
-    dash_duo.wait_for_text_to_equal('#data-after-filter', "[{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}]")
+    dash_duo.wait_for_text_to_equal(
+        "#data-after-filter", "[{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}]"
+    )
 
     grid.set_filter(0, "")
 
-    dash_duo.wait_for_text_to_equal('#data-after-filter', "[{'make': 'Toyota', 'model': 'Celica', 'price': 35000}, "
-                                                          "{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}, "
-                                                          "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000}]")
+    dash_duo.wait_for_text_to_equal(
+        "#data-after-filter",
+        "[{'make': 'Toyota', 'model': 'Celica', 'price': 35000}, "
+        "{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}, "
+        "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000}]",
+    )
 
     grid.get_header_cell(0).click()
 
-    dash_duo.wait_for_text_to_equal('#data-after-filter', "[{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}, "
-                                                          "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000},"
-                                                          " {'make': 'Toyota', 'model': 'Celica', 'price': 35000}]")
+    dash_duo.wait_for_text_to_equal(
+        "#data-after-filter",
+        "[{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}, "
+        "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000},"
+        " {'make': 'Toyota', 'model': 'Celica', 'price': 35000}]",
+    )
 
     grid.get_header_cell(0).click()
 
-    dash_duo.wait_for_text_to_equal('#data-after-filter', "[{'make': 'Toyota', 'model': 'Celica', 'price': 35000}, "
-                                                          "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000}, "
-                                                          "{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}]")
+    dash_duo.wait_for_text_to_equal(
+        "#data-after-filter",
+        "[{'make': 'Toyota', 'model': 'Celica', 'price': 35000}, "
+        "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000}, "
+        "{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}]",
+    )
 
     grid.get_header_cell(0).click()
 
-    dash_duo.wait_for_text_to_equal('#data-after-filter', "[{'make': 'Toyota', 'model': 'Celica', 'price': 35000}, "
-                                                          "{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}, "
-                                                          "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000}]")
+    dash_duo.wait_for_text_to_equal(
+        "#data-after-filter",
+        "[{'make': 'Toyota', 'model': 'Celica', 'price': 35000}, "
+        "{'make': 'Ford', 'model': 'Mondeo', 'price': 32000}, "
+        "{'make': 'Porsche', 'model': 'Boxster', 'price': 72000}]",
+    )

@@ -3,6 +3,7 @@ from dash import Dash, html, dcc
 from . import utils
 from dash.testing.wait import until
 
+
 def test_cf001_conditional_formatting(dash_duo):
     app = Dash(__name__)
 
@@ -16,7 +17,7 @@ def test_cf001_conditional_formatting(dash_duo):
             "field": "model",
         },
         {"headerName": "Price", "field": "price"},
-        {"field":"changes"}
+        {"field": "changes"},
     ]
 
     rowData = [
@@ -25,14 +26,19 @@ def test_cf001_conditional_formatting(dash_duo):
         {"make": "Porsche", "model": "Boxster", "price": 72000},
     ]
 
-    cellStyle = {"styleConditions": [
-        {"condition": "highlightEdits(params)", "style": {"color": "orange"}},
-    ]}
+    cellStyle = {
+        "styleConditions": [
+            {"condition": "highlightEdits(params)", "style": {"color": "orange"}},
+        ]
+    }
 
-    defaultColDef = {"valueSetter":{"function":"addEdits(params)"}, "editable": True,
-                     "cellStyle": cellStyle}
+    defaultColDef = {
+        "valueSetter": {"function": "addEdits(params)"},
+        "editable": True,
+        "cellStyle": cellStyle,
+    }
 
-    getRowStyle= {
+    getRowStyle = {
         "styleConditions": [
             {"condition": "params.data.make == 'Toyota'", "style": {"color": "blue"}}
         ]
@@ -51,7 +57,7 @@ def test_cf001_conditional_formatting(dash_duo):
                 getRowStyle=getRowStyle,
                 id="grid",
             ),
-            html.Button(id='focus')
+            html.Button(id="focus"),
         ],
         style={"margin": 20},
     )
@@ -63,18 +69,32 @@ def test_cf001_conditional_formatting(dash_duo):
     grid.wait_for_cell_text(0, 0, "Toyota")
 
     ### testing styles
-    grid.get_cell(0,0).click()
-    until(lambda: 'color: blue' in grid.get_row(0).get_attribute('style'), timeout=3)
-    grid.get_cell(0, 0).send_keys('t')
+    grid.get_cell(0, 0).click()
+    until(lambda: "color: blue" in grid.get_row(0).get_attribute("style"), timeout=3)
+    grid.get_cell(0, 0).send_keys("t")
     grid.get_cell(0, 1).click()
-    until(lambda: 'color: orange' in grid.get_cell(0, 0).get_attribute('style'), timeout=3)
-    until(lambda: 'color: blue' not in grid.get_row(0).get_attribute('style'), timeout=3)
-    until(lambda: 'color: orange' not in grid.get_cell(0, 1).get_attribute('style'), timeout=3)
-    grid.get_cell(0, 1).send_keys('t')
-    grid.get_cell(0,2).click()
-    until(lambda: 'color: orange' not in grid.get_cell(0, 2).get_attribute('style'), timeout=3)
-    until(lambda: 'color: orange' in grid.get_cell(0, 1).get_attribute('style'), timeout=3)
-    grid.get_cell(0, 2).send_keys('t')
-    grid.get_cell(0,0).click()
-    until(lambda: 'color: orange' in grid.get_cell(0, 2).get_attribute('style'), timeout=3)
-    assert 'color: orange' in grid.get_cell(0, 0).get_attribute('style')
+    until(
+        lambda: "color: orange" in grid.get_cell(0, 0).get_attribute("style"), timeout=3
+    )
+    until(
+        lambda: "color: blue" not in grid.get_row(0).get_attribute("style"), timeout=3
+    )
+    until(
+        lambda: "color: orange" not in grid.get_cell(0, 1).get_attribute("style"),
+        timeout=3,
+    )
+    grid.get_cell(0, 1).send_keys("t")
+    grid.get_cell(0, 2).click()
+    until(
+        lambda: "color: orange" not in grid.get_cell(0, 2).get_attribute("style"),
+        timeout=3,
+    )
+    until(
+        lambda: "color: orange" in grid.get_cell(0, 1).get_attribute("style"), timeout=3
+    )
+    grid.get_cell(0, 2).send_keys("t")
+    grid.get_cell(0, 0).click()
+    until(
+        lambda: "color: orange" in grid.get_cell(0, 2).get_attribute("style"), timeout=3
+    )
+    assert "color: orange" in grid.get_cell(0, 0).get_attribute("style")
