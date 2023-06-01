@@ -19,6 +19,12 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#174](https://github.com/plotly/dash-ag-grid/pull/174)
   - `Markdown` renderer now displays a blank cell rather than writing `undefined` if there is no value. Fixes [#171](https://github.com/plotly/dash-ag-grid/issues/171)
 
+- [#204](https://github.com/plotly/dash-ag-grid/pull/204)
+  - `filterOptions` now will working with being a regular object
+
+- [#206](https://github.com/plotly/dash-ag-grid/pull/206)
+  - fixes [#195](https://github.com/plotly/dash-ag-grid/issues/195)
+
 ## [2.0.0] - 2023-05-02
 
 ### Removed
