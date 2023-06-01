@@ -373,7 +373,7 @@ export default class DashAgGrid extends Component {
             }
             if (COLUMN_ARRAY_NESTED_FUNCTIONS[target] && Array.isArray(value)) {
                 return value.map((c) => {
-                    if (typeof c !== 'string') {
+                    if (typeof c === 'object') {
                         return this.convertCol(c);
                     }
                     return c;
