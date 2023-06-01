@@ -498,9 +498,14 @@ DashAgGrid.propTypes = {
         rowIndex: PropTypes.number,
 
         /**
+         * Id of the row to scroll to.
+         */
+        rowId: PropTypes.string,
+
+        /**
          * Position of the row in the grid after scrolling. Default `top`.
          */
-        rowIndexPosition: PropTypes.oneOf(['top', 'bottom', 'middle']),
+        rowPosition: PropTypes.oneOf(['top', 'bottom', 'middle']),
 
         /**
          * Column to scroll to, must be equal to one `field` in `columnDefs`.

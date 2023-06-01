@@ -1019,34 +1019,31 @@ export default class DashAgGrid extends Component {
 
     scrollTo(reset = false) {
         const {gridApi} = this.state;
+        const {scrollTo, setProps} = this.props;
         if (!gridApi) {
             return;
         }
-        if (
-            this.props.scrollTo.rowIndex ||
-            this.props.scrollTo.rowIndex === 0
-        ) {
-            const rowIndexPosition =
-                this.props.scrollTo.rowIndexPosition === null
-                    ? 'top'
-                    : this.props.scrollTo.rowIndexPosition;
-            gridApi.ensureIndexVisible(
-                this.props.scrollTo.rowIndex,
-                rowIndexPosition
-            );
+        if (scrollTo.rowIndex || scrollTo.rowIndex === 0) {
+            const rowPosition =
+                scrollTo.rowPosition === null ? 'top' : scrollTo.rowPosition;
+            gridApi.ensureIndexVisible(scrollTo.rowIndex, rowPosition);
         }
-        if (this.props.scrollTo.column) {
+        if (scrollTo.rowId) {
+            const rowPosition =
+                scrollTo.rowPosition === null ? 'top' : scrollTo.rowPosition;
+
+            const node = gridApi.getRowNode(scrollTo.rowId);
+            gridApi.ensureNodeVisible(node, rowPosition);
+        }
+        if (scrollTo.column) {
             const columnPosition =
-                this.props.scrollTo.columnPosition === null
+                scrollTo.columnPosition === null
                     ? 'auto'
-                    : this.props.scrollTo.columnPosition;
-            gridApi.ensureColumnVisible(
-                this.props.scrollTo.column,
-                columnPosition
-            );
+                    : scrollTo.columnPosition;
+            gridApi.ensureColumnVisible(scrollTo.column, columnPosition);
         }
         if (reset) {
-            this.props.setProps({
+            setProps({
                 scrollTo: null,
             });
         }

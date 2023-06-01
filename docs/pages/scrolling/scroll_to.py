@@ -21,11 +21,16 @@ You can use the prop `scrollTo` to scroll to a specific position.
 
 - `rowIndex` (number; optional): rowIndex, typically a row number, to scroll to.
 
-- `rowIndexPosition` ("top" | "bottom" | "middle"; optional):  Default "top".
+- `rowId` (string; optional): Id of the row to scroll to.
+
+- `rowPosition` ("top" | "bottom" | "middle"; optional):  Default "top".
 
 - `column` (number; optional): column to scroll to, must be equal to one `field` in `columnDefs`.
 
 - `columnPosition` ("auto" | "start" | "middle" | "end"; optional): position of the column in the grid after scrolling.  Default "auto".
+
+NOTE: If `rowIndex` and `rowId` are passed to `scrollTo` simultaneously only `rowId` will be used as both of them set the vertical scroll position. 
+           
 """
 
 
@@ -33,6 +38,7 @@ layout = html.Div(
     [
         make_md(text1),
         example_app("examples.scrolling.scroll_to", make_layout=make_tabs),
+        example_app("examples.scrolling.scroll_to_row_id", make_layout=make_tabs),
         # up_next("text"),
     ],
 )

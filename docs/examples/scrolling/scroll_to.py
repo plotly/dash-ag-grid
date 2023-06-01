@@ -1,6 +1,7 @@
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Input, Output, State
 import pandas as pd
+import json
 import dash_bootstrap_components as dbc
 
 app = Dash(__name__)
@@ -30,7 +31,7 @@ app.layout = html.Div(
                         dbc.Label("Position"),
                         dcc.Dropdown(
                             options=["top", "bottom", "middle"],
-                            id="row-index-position",
+                            id="row-position",
                         ),
                     ]
                 ),
@@ -69,23 +70,20 @@ app.layout = html.Div(
     Input("btn", "n_clicks"),
     State("row-index", "value"),
     State("column", "value"),
-    State("row-index-position", "value"),
+    State("row-position", "value"),
     State("column-position", "value"),
 )
-def scroll_to_row_and_col(
-    clicks, row_index, column, row_index_position, column_position
-):
+def scroll_to_row_and_col(clicks, row_index, column, row_position, column_position):
     if clicks:
         scroll_to = {}
         if row_index or row_index == 0:
             scroll_to["rowIndex"] = row_index
         if column:
             scroll_to["column"] = column
-        if row_index_position:
-            scroll_to["rowIndexPosition"] = row_index_position
+        if row_position:
+            scroll_to["rowPosition"] = row_position
         if column_position:
             scroll_to["columnPosition"] = column_position
-        scroll_to["columnPosition"] = None
         return scroll_to
 
 
