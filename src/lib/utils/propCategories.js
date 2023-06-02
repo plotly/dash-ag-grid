@@ -161,6 +161,7 @@ export const GRID_NESTED_FUNCTIONS = {
  **/
 export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
     cellEditor: 1,
+    cellRenderer: 1,
 
     // Columns: Sort
     comparator: 1,
