@@ -30,6 +30,7 @@ def test_cu001_custom_components(dash_duo):
             "sell": {"children": "sell", "className": "btn btn-danger"},
             "action": "buy",
             "test": {"className": "btn btn-warning"},
+            "test2": {"className": "btn btn-warning"},
         }
     ]
 
@@ -69,6 +70,7 @@ def test_cu001_custom_components(dash_duo):
             },
         },
         {"field": "test", "cellRenderer": "myCustomButton2"},
+        {"field": "test2", "cellRenderer": {"function": "myCustomButton2"}},
     ]
 
     defaultColDef = {
@@ -149,6 +151,7 @@ def test_cu001_custom_components(dash_duo):
         'ren": "buy", "className": "btn btn-success"}, "sell":'
         ' {"children": "sell", "className": "btn btn-danger", '
         '"n_clicks": null}, "action": "sell", "test": '
+        '{"className": "btn btn-warning"}, "test2": '
         '{"className": "btn btn-warning"}}, "oldValue": "bu'
         'y", "value": "sell", "colId": "action"'
         in dash_duo.find_element("#cellValueChanged").get_attribute("innerText"),
@@ -156,3 +159,17 @@ def test_cu001_custom_components(dash_duo):
     )
     grid.element_click_cell_button(0, 8)
     dash_duo.wait_for_text_to_equal("#cellRendererData", '{"data": "updated"}')
+
+    grid.element_click_cell_button(0, 9)
+    until(
+        lambda: '"rowIndex": 0, "rowId": "0", "data": {"ticker": '
+                '"AAPL", "company": "Apple", "price": 154.98500061035'
+                '156, "volume": "Low", "binary": false, "buy": {"child'
+                'ren": "buy", "className": "btn btn-success"}, "sell":'
+                ' {"children": "sell", "className": "btn btn-danger", '
+                '"n_clicks": null}, "action": "sell", "test": '
+                '{"className": "btn btn-warning"}, "test2": "updated"'
+                '}, "oldValue": {"className": "btn btn-warning"}, "value": "updated", "colId": "test2"'
+                in dash_duo.find_element("#cellValueChanged").get_attribute("innerText"),
+        timeout=3,
+    )

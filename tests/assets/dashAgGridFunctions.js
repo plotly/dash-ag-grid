@@ -172,3 +172,35 @@ function monthToComparableNumber(date) {
   const dayNumber = parseInt(date.split('/')[0]);
   return yearNumber * 10000 + monthNumber * 100 + dayNumber;
 }
+
+dagfuncs.myCustomButton2 = class {
+    init(params) {
+        var props = params
+        console.log(params)
+
+        this.eGui = document.createElement('div')
+        this.eGui.style = {'width':'100%','height':'100%'}
+        if (!props.value) {
+            ReactDom.render(React.createElement('button'), this.eGui)
+        } else {
+
+            var onClick = () => {
+                props.setValue('updated')
+            }
+
+            const id = JSON.stringify({'index': props.rowIndex, 'type':'customButton'})
+            ReactDOM.render(React.createElement('div',
+            {style: {'width':'100%','height':'100%', 'padding':'5px', 'display':'flex',
+             'justifyContent':'center', 'alignItems':'center'}},
+            React.createElement('button', {
+                onClick: onClick,
+                id: props.value.id,
+                className: props.value.className,
+
+            }, 'test cellRendererData')), this.eGui)
+        }
+    }
+    getGui() {
+        return this.eGui
+    }
+}
