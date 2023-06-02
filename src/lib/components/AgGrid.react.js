@@ -505,7 +505,7 @@ DashAgGrid.propTypes = {
         /**
          * Data of the row to scroll to.
          */
-        rowData: PropTypes.object,
+        data: PropTypes.object,
 
         /**
          * Position of the row in the grid after scrolling. Default `top`.

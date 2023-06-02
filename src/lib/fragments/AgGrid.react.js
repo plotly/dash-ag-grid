@@ -1023,28 +1023,22 @@ export default class DashAgGrid extends Component {
         if (!gridApi) {
             return;
         }
+        const rowPosition = scrollTo.rowPosition ? 'top' : scrollTo.rowPosition;
         if (scrollTo.rowIndex || scrollTo.rowIndex === 0) {
-            const rowPosition =
-                scrollTo.rowPosition === null ? 'top' : scrollTo.rowPosition;
             gridApi.ensureIndexVisible(scrollTo.rowIndex, rowPosition);
         } else if (scrollTo.rowId) {
-            const rowPosition =
-                scrollTo.rowPosition === null ? 'top' : scrollTo.rowPosition;
-
             const node = gridApi.getRowNode(scrollTo.rowId);
             gridApi.ensureNodeVisible(node, rowPosition);
-        } else if (scrollTo.rowData) {
-            console.log(dashGridOptions.getRowId({data: scrollTo.rowData}));
-            console.log(getRowId());
-            const rowId = getRowId({data: scrollTo.rowData});
-            const node = gridApi.getRowNode(rowId);
-            gridApi.ensureNodeVisible(node, rowPosition);
+        } else if (scrollTo.data) {
+            gridApi.forEachNode((node) => {
+                if (includes(node.data, [scrollTo.data]))
+                    gridApi.ensureNodeVisible(node, rowPosition);
+            });
         }
         if (scrollTo.column) {
-            const columnPosition =
-                scrollTo.columnPosition === null
-                    ? 'auto'
-                    : scrollTo.columnPosition;
+            const columnPosition = scrollTo.columnPosition
+                ? 'auto'
+                : scrollTo.columnPosition;
             gridApi.ensureColumnVisible(scrollTo.column, columnPosition);
         }
         if (reset) {

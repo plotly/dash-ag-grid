@@ -26,7 +26,13 @@ app.layout = html.Div(
                     [
                         dbc.Label("Row"),
                         dcc.Dropdown(
-                            options=[json.dumps(r) for r in rowData],
+                            options=[
+                                {
+                                    "label": f"Row # {i}: {json.dumps(r)[:30]} ...",
+                                    "value": json.dumps(r),
+                                }
+                                for i, r in enumerate(rowData)
+                            ],
                             id="row-data",
                         ),
                         dbc.Label("Position"),
@@ -63,9 +69,8 @@ def scroll_to_row_data(clicks, row_data, row_position):
     if clicks:
         scroll_to = {}
         if row_data:
-            scroll_to["rowData"] = json.loads(row_data)
-        if row_position:
-            scroll_to["rowPosition"] = row_position
+            scroll_to["data"] = json.loads(row_data)
+        scroll_to["rowPosition"] = row_position
         return scroll_to
 
 

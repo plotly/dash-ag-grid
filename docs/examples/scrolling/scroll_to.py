@@ -85,14 +85,10 @@ def show_scroll(scroll):
 def scroll_to_row_and_col(clicks, row_index, column, row_position, column_position):
     if clicks:
         scroll_to = {}
-        if row_index or row_index == 0:
-            scroll_to["rowIndex"] = row_index
-        if column:
-            scroll_to["column"] = column
-        if row_position:
-            scroll_to["rowPosition"] = row_position
-        if column_position:
-            scroll_to["columnPosition"] = column_position
+        scroll_to["rowIndex"] = row_index
+        scroll_to["column"] = column
+        scroll_to["rowPosition"] = row_position
+        scroll_to["columnPosition"] = column_position
         return scroll_to
 
 
