@@ -1027,12 +1027,17 @@ export default class DashAgGrid extends Component {
             const rowPosition =
                 scrollTo.rowPosition === null ? 'top' : scrollTo.rowPosition;
             gridApi.ensureIndexVisible(scrollTo.rowIndex, rowPosition);
-        }
-        if (scrollTo.rowId) {
+        } else if (scrollTo.rowId) {
             const rowPosition =
                 scrollTo.rowPosition === null ? 'top' : scrollTo.rowPosition;
 
             const node = gridApi.getRowNode(scrollTo.rowId);
+            gridApi.ensureNodeVisible(node, rowPosition);
+        } else if (scrollTo.rowData) {
+            console.log(dashGridOptions.getRowId({data: scrollTo.rowData}));
+            console.log(getRowId());
+            const rowId = getRowId({data: scrollTo.rowData});
+            const node = gridApi.getRowNode(rowId);
             gridApi.ensureNodeVisible(node, rowPosition);
         }
         if (scrollTo.column) {

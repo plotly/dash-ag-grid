@@ -38,6 +38,7 @@ layout = html.Div(
     [
         make_md(text1),
         example_app("examples.scrolling.scroll_to", make_layout=make_tabs),
+        example_app("examples.scrolling.scroll_to_row_data", make_layout=make_tabs),
         example_app("examples.scrolling.scroll_to_row_id", make_layout=make_tabs),
         # up_next("text"),
     ],
