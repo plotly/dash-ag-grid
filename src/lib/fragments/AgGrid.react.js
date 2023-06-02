@@ -112,6 +112,7 @@ export default class DashAgGrid extends Component {
         this.onGridReady = this.onGridReady.bind(this);
         this.onSelectionChanged = this.onSelectionChanged.bind(this);
         this.onCellClicked = this.onCellClicked.bind(this);
+        this.onCellDoubleClicked = this.onCellDoubleClicked.bind(this);
         this.onCellValueChanged = this.onCellValueChanged.bind(this);
         this.onRowDataUpdated = this.onRowDataUpdated.bind(this);
         this.onFilterChanged = this.onFilterChanged.bind(this);
@@ -814,6 +815,19 @@ export default class DashAgGrid extends Component {
         });
     }
 
+    onCellDoubleClicked({value, column: {colId}, rowIndex, node}) {
+        const timestamp = Date.now();
+        this.props.setProps({
+            cellDoubleClicked: {
+                value,
+                colId,
+                rowIndex,
+                rowId: node.id,
+                timestamp,
+            },
+        });
+    }
+
     onCellValueChanged({
         oldValue,
         value,
@@ -1250,6 +1264,7 @@ export default class DashAgGrid extends Component {
                     onGridReady={this.onGridReady}
                     onSelectionChanged={this.onSelectionChanged}
                     onCellClicked={this.onCellClicked}
+                    onCellDoubleClicked={this.onCellDoubleClicked}
                     onCellValueChanged={this.onCellValueChanged}
                     onFilterChanged={this.onFilterChanged}
                     onSortChanged={this.onSortChanged}

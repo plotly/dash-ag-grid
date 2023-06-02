@@ -9,7 +9,6 @@ register_page(
     order=0,
     description=app_description,
     title="Dash AG Grid - Cell Selection",
-
 )
 
 text1 = """
@@ -45,10 +44,18 @@ You can also trigger Dash callback with custom components.  For more information
 """
 
 
+text3 = """
+### Cell selection with Double click
+
+In the same way you can use the prop `cellDoubleClicked` to select cells double clicking
+
+"""
 layout = html.Div(
     [
         make_md(text1),
         example_app("examples.getting_started.quickstart", make_layout=make_tabs),
+        make_md(text3),
+        example_app("examples.selection.double_clicked_cell", make_layout=make_tabs),
         # up_next("text"),
     ],
 )
