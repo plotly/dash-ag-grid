@@ -6,9 +6,8 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
-### Removed
-
 ### Added
+- [#201](https://github.com/plotly/dash-ag-grid/pull/201) Add `cellDoubleClicked` prop, which works exactly like `cellClicked`
 
 ### Updated
 - [#174](https://github.com/plotly/dash-ag-grid/pull/174)
@@ -16,14 +15,11 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - `columnDefs` trumps `columnState` if it is pushed in a callback without a `columnState`
 
 ### Fixed
-- [#174](https://github.com/plotly/dash-ag-grid/pull/174)
-  - `Markdown` renderer now displays a blank cell rather than writing `undefined` if there is no value. Fixes [#171](https://github.com/plotly/dash-ag-grid/issues/171)
+- [#174](https://github.com/plotly/dash-ag-grid/pull/174) Fix [#171](https://github.com/plotly/dash-ag-grid/issues/171): `Markdown` renderer now displays a blank cell rather than writing `undefined` if there is no value
 
-- [#204](https://github.com/plotly/dash-ag-grid/pull/204)
-  - `filterOptions` now will working with being a regular object
+- [#204](https://github.com/plotly/dash-ag-grid/pull/204) `filterOptions` will now work as a regular object
 
-- [#206](https://github.com/plotly/dash-ag-grid/pull/206)
-  - fixes [#195](https://github.com/plotly/dash-ag-grid/issues/195) where if the user was to redo the exact same action causing the grid to not trigger the `cellValueChanged` another subsequent time
+- [#206](https://github.com/plotly/dash-ag-grid/pull/206) Fix [#195](https://github.com/plotly/dash-ag-grid/issues/195) where if the user was to redo the exact same action, callbacks on `cellValueChanged` would not trigger again. Fix by adding `timestamp` into the object, as we have in other event-type props to make them unique.
 
 ## [2.0.0] - 2023-05-02
 
