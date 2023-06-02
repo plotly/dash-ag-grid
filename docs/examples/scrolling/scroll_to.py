@@ -60,9 +60,18 @@ app.layout = html.Div(
             columnSize="autoSize",
             defaultColDef={"resizable": True, "sortable": True},
         ),
+        html.Div(id="out"),
     ],
     style={"margin": 20},
 )
+
+
+@app.callback(
+    Output("out", "children"),
+    Input("grid", "scrollTo"),
+)
+def show_scroll(scroll):
+    return str(scroll)
 
 
 @app.callback(
