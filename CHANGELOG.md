@@ -14,6 +14,8 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - `columnState` floats during grid interaction and only gets pushed when sent in a callback
   - `columnDefs` trumps `columnState` if it is pushed in a callback without a `columnState`
 
+- [#207](https://github.com/plotly/dash-ag-grid/pull/207) Update AG Grid from 29.3.3 to 29.3.5, with a few minor bugfixes, see their changelog for [29.3.4](https://www.ag-grid.com/changelog/?fixVersion=29.3.4) and [29.3.5](https://www.ag-grid.com/changelog/?fixVersion=29.3.5). Also other minor dependency updates.
+
 ### Fixed
 - [#174](https://github.com/plotly/dash-ag-grid/pull/174) Fix [#171](https://github.com/plotly/dash-ag-grid/issues/171): `Markdown` renderer now displays a blank cell rather than writing `undefined` if there is no value
 
