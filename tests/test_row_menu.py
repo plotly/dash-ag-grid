@@ -2,6 +2,7 @@ import dash_ag_grid as dag
 from dash import Dash, html, Input, Output
 from . import utils
 
+
 def test_rm001_row_menu(dash_duo):
     app = Dash(__name__)
 
@@ -10,7 +11,7 @@ def test_rm001_row_menu(dash_duo):
             dag.AgGrid(
                 id="grid",
                 columnSize="sizeToFit",
-                getRowId='params.data.make',
+                getRowId="params.data.make",
                 columnDefs=[
                     {"headerName": "Make", "field": "make", "sortable": True},
                     {"headerName": "Model", "field": "model"},
@@ -66,7 +67,7 @@ def test_rm001_row_menu(dash_duo):
     )
     def show_click_data(data):
         if data:
-            assert 'timestamp' in data
+            assert "timestamp" in data
             return "You selected option {} from the colId {}, rowIndex {}, rowId {}.".format(
                 data["value"],
                 data["colId"],
@@ -83,7 +84,11 @@ def test_rm001_row_menu(dash_duo):
 
     ### testing components
     grid.element_click_cell_button(0, 3)
-    assert 'opacity: 1' in dash_duo.find_element('.MuiMenu-paper').get_attribute('style')
-    dash_duo.find_elements('.MuiMenu-paper .MuiMenu-list .MuiMenuItem-root')[1].click()
-    dash_duo.wait_for_text_to_equal('#click-data',
-                                    'You selected option 2 from the colId menu, rowIndex 0, rowId Toyota.')
+    assert "opacity: 1" in dash_duo.find_element(".MuiMenu-paper").get_attribute(
+        "style"
+    )
+    dash_duo.find_elements(".MuiMenu-paper .MuiMenu-list .MuiMenuItem-root")[1].click()
+    dash_duo.wait_for_text_to_equal(
+        "#click-data",
+        "You selected option 2 from the colId menu, rowIndex 0, rowId Toyota.",
+    )

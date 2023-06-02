@@ -9,6 +9,7 @@ from . import utils
 from dash.testing.wait import until
 import time
 
+
 def test_rf001_recursive_functions(dash_duo):
     app = Dash(__name__)
     masterColumnDefs = [
@@ -22,19 +23,38 @@ def test_rf001_recursive_functions(dash_duo):
     ]
 
     detailColumnDefs = [
-        {"headerName": "City", "field": "city", "valueFormatter": {"function": "1+2"}, 'cellStyle': {'color': 'red'}},
+        {
+            "headerName": "City",
+            "field": "city",
+            "valueFormatter": {"function": "1+2"},
+            "cellStyle": {"color": "red"},
+        },
         {"headerName": "Pop. (City proper)", "field": "population_city"},
         {"headerName": "Pop. (Metro area)", "field": "population_metro"},
-        {"headerName": "testFun", "children": [
-            {"headerName": "Pop. (Metro area)", "field": "population_metro", "valueFormatter": {"function": "1+2"}},
-            {"headerName": "testing", "children": [
-                {"headerName": "So Much Fun", "field": "population_metro", "valueFormatter": {"function": "3+5"}},
-            ]}
-        ]}
+        {
+            "headerName": "testFun",
+            "children": [
+                {
+                    "headerName": "Pop. (Metro area)",
+                    "field": "population_metro",
+                    "valueFormatter": {"function": "1+2"},
+                },
+                {
+                    "headerName": "testing",
+                    "children": [
+                        {
+                            "headerName": "So Much Fun",
+                            "field": "population_metro",
+                            "valueFormatter": {"function": "3+5"},
+                        },
+                    ],
+                },
+            ],
+        },
     ]
 
     nextLevel = detailColumnDefs.copy()
-    nextLevel[0]['cellRenderer'] = 'agGroupCellRenderer'
+    nextLevel[0]["cellRenderer"] = "agGroupCellRenderer"
 
     rowData = [
         {
@@ -42,8 +62,16 @@ def test_rf001_recursive_functions(dash_duo):
             "region": "Asia",
             "population": 1411778724,
             "cities": [
-                {"city": "Shanghai", "population_city": 24870895, "population_metro": "NA"},
-                {"city": "Beijing", "population_city": 21893095, "population_metro": "NA"},
+                {
+                    "city": "Shanghai",
+                    "population_city": 24870895,
+                    "population_metro": "NA",
+                },
+                {
+                    "city": "Beijing",
+                    "population_city": 21893095,
+                    "population_metro": "NA",
+                },
                 {
                     "city": "Chongqing",
                     "population_city": 32054159,
@@ -76,7 +104,7 @@ def test_rf001_recursive_functions(dash_duo):
                             "population_city": 4496694,
                             "population_metro": 14035959,
                         },
-                    ]
+                    ],
                 },
                 {
                     "city": "Mumbai",
@@ -126,16 +154,18 @@ def test_rf001_recursive_functions(dash_duo):
         },
     ]
 
-    cellStyle = {'styleConditions': [
-        {'condition': 'params.data.city=="Delhi"', 'style': {'color': 'orange'}}
-    ]}
+    cellStyle = {
+        "styleConditions": [
+            {"condition": 'params.data.city=="Delhi"', "style": {"color": "orange"}}
+        ]
+    }
 
     app.layout = html.Div(
         [
             dag.AgGrid(
                 id="grid",
                 columnDefs=masterColumnDefs,
-                defaultColDef={'cellStyle': cellStyle},
+                defaultColDef={"cellStyle": cellStyle},
                 rowData=rowData,
                 columnSize="sizeToFit",
                 enableEnterpriseModules=True,
@@ -143,23 +173,21 @@ def test_rf001_recursive_functions(dash_duo):
                 detailCellRendererParams={
                     "detailGridOptions": {
                         "columnDefs": nextLevel,
-                        "defaultColDef": {'cellStyle': cellStyle},
+                        "defaultColDef": {"cellStyle": cellStyle},
                         "detailCellRendererParams": {
                             "detailGridOptions": {
                                 "columnDefs": detailColumnDefs,
-                                "defaultColDef": {'cellStyle': cellStyle},
+                                "defaultColDef": {"cellStyle": cellStyle},
                             },
                             "detailColName": "cities",
                             "suppressCallback": True,
                         },
-                        "masterDetail": True
+                        "masterDetail": True,
                     },
                     "detailColName": "cities",
                     "suppressCallback": True,
                 },
-                dashGridOptions={
-                    'detailRowAutoHeight': True
-                },
+                dashGridOptions={"detailRowAutoHeight": True},
             )
         ]
     )
@@ -169,31 +197,58 @@ def test_rf001_recursive_functions(dash_duo):
     grid = utils.Grid(dash_duo, "grid")
     grid.wait_for_cell_text(0, 0, "China")
 
-    grid.get_cell_expandable(1,0).click()
+    grid.get_cell_expandable(1, 0).click()
 
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]', '3')
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]', '3')
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]', '8')
-    assert 'color: red' in dash_duo.find_element('#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid [row-index="0"] [aria-colindex="2"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]').get_attribute('style')
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]', "3"
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]', "3"
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]', "8"
+    )
+    assert "color: red" in dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="2"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]'
+    ).get_attribute("style")
 
-    dash_duo.find_element('#grid .ag-details-grid [row-index="0"] [aria-colindex="1"] .ag-group-contracted').click()
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"]', '3')
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]', '3')
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]', '8')
-    assert 'color: red' in dash_duo.find_element(
-        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="2"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]').get_attribute('style')
+    dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"] .ag-group-contracted'
+    ).click()
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"]',
+        "3",
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]',
+        "3",
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]',
+        "8",
+    )
+    assert "color: red" in dash_duo.find_element(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="2"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]'
+    ).get_attribute("style")
+
 
 def test_rf002_recursive_functions_server(dash_duo):
     app = Dash(__name__)
@@ -208,19 +263,38 @@ def test_rf002_recursive_functions_server(dash_duo):
     ]
 
     detailColumnDefs = [
-        {"headerName": "City", "field": "city", "valueFormatter": {"function": "1+2"}, 'cellStyle': {'color': 'red'}},
+        {
+            "headerName": "City",
+            "field": "city",
+            "valueFormatter": {"function": "1+2"},
+            "cellStyle": {"color": "red"},
+        },
         {"headerName": "Pop. (City proper)", "field": "population_city"},
         {"headerName": "Pop. (Metro area)", "field": "population_metro"},
-        {"headerName": "testFun", "children": [
-            {"headerName": "Pop. (Metro area)", "field": "population_metro", "valueFormatter": {"function": "1+2"}},
-            {"headerName": "testing", "children": [
-                {"headerName": "So Much Fun", "field": "population_metro", "valueFormatter": {"function": "3+5"}},
-            ]}
-        ]}
+        {
+            "headerName": "testFun",
+            "children": [
+                {
+                    "headerName": "Pop. (Metro area)",
+                    "field": "population_metro",
+                    "valueFormatter": {"function": "1+2"},
+                },
+                {
+                    "headerName": "testing",
+                    "children": [
+                        {
+                            "headerName": "So Much Fun",
+                            "field": "population_metro",
+                            "valueFormatter": {"function": "3+5"},
+                        },
+                    ],
+                },
+            ],
+        },
     ]
 
     nextLevel = detailColumnDefs.copy()
-    nextLevel[0]['cellRenderer'] = 'agGroupCellRenderer'
+    nextLevel[0]["cellRenderer"] = "agGroupCellRenderer"
 
     rowData = [
         {
@@ -228,8 +302,16 @@ def test_rf002_recursive_functions_server(dash_duo):
             "region": "Asia",
             "population": 1411778724,
             "cities": [
-                {"city": "Shanghai", "population_city": 24870895, "population_metro": "NA"},
-                {"city": "Beijing", "population_city": 21893095, "population_metro": "NA"},
+                {
+                    "city": "Shanghai",
+                    "population_city": 24870895,
+                    "population_metro": "NA",
+                },
+                {
+                    "city": "Beijing",
+                    "population_city": 21893095,
+                    "population_metro": "NA",
+                },
                 {
                     "city": "Chongqing",
                     "population_city": 32054159,
@@ -262,7 +344,7 @@ def test_rf002_recursive_functions_server(dash_duo):
                             "population_city": 4496694,
                             "population_metro": 14035959,
                         },
-                    ]
+                    ],
                 },
                 {
                     "city": "Mumbai",
@@ -312,16 +394,18 @@ def test_rf002_recursive_functions_server(dash_duo):
         },
     ]
 
-    cellStyle = {'styleConditions': [
-        {'condition': 'params.data.city=="Delhi"', 'style': {'color': 'orange'}}
-    ]}
+    cellStyle = {
+        "styleConditions": [
+            {"condition": 'params.data.city=="Delhi"', "style": {"color": "orange"}}
+        ]
+    }
 
     app.layout = html.Div(
         [
             dag.AgGrid(
                 id="grid",
                 columnDefs=masterColumnDefs,
-                defaultColDef={'cellStyle': cellStyle},
+                defaultColDef={"cellStyle": cellStyle},
                 rowData=rowData,
                 columnSize="sizeToFit",
                 enableEnterpriseModules=True,
@@ -329,21 +413,19 @@ def test_rf002_recursive_functions_server(dash_duo):
                 detailCellRendererParams={
                     "detailGridOptions": {
                         "columnDefs": nextLevel,
-                        "defaultColDef": {'cellStyle': cellStyle},
+                        "defaultColDef": {"cellStyle": cellStyle},
                         "detailCellRendererParams": {
                             "detailGridOptions": {
                                 "columnDefs": detailColumnDefs,
-                                "defaultColDef": {'cellStyle': cellStyle},
+                                "defaultColDef": {"cellStyle": cellStyle},
                             },
                             "suppressCallback": False,
                         },
-                        "masterDetail": True
+                        "masterDetail": True,
                     },
                     "suppressCallback": False,
                 },
-                dashGridOptions={
-                    'detailRowAutoHeight': True
-                },
+                dashGridOptions={"detailRowAutoHeight": True},
             )
         ]
     )
@@ -361,28 +443,54 @@ def test_rf002_recursive_functions_server(dash_duo):
     grid = utils.Grid(dash_duo, "grid")
     grid.wait_for_cell_text(0, 0, "China")
 
-    grid.get_cell_expandable(1,0).click()
+    grid.get_cell_expandable(1, 0).click()
 
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]', '3')
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]', '3')
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]', '8')
-    assert 'color: red' in dash_duo.find_element('#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid [row-index="0"] [aria-colindex="2"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]').get_attribute('style')
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]', "3"
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]', "3"
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]', "8"
+    )
+    assert "color: red" in dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="2"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]'
+    ).get_attribute("style")
 
-    dash_duo.find_element('#grid .ag-details-grid [row-index="0"] [aria-colindex="1"] .ag-group-contracted').click()
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"]', '3')
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]', '3')
-    dash_duo.wait_for_text_to_equal('#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]', '8')
-    assert 'color: red' in dash_duo.find_element(
-        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="2"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]').get_attribute('style')
-    assert 'color: orange' in dash_duo.find_element(
-        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]').get_attribute('style')
+    dash_duo.find_element(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"] .ag-group-contracted'
+    ).click()
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"]',
+        "3",
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]',
+        "3",
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]',
+        "8",
+    )
+    assert "color: red" in dash_duo.find_element(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="2"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]'
+    ).get_attribute("style")
+    assert "color: orange" in dash_duo.find_element(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]'
+    ).get_attribute("style")

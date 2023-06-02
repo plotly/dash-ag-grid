@@ -20,6 +20,7 @@ df = px.data.election()
 # Set default columns to display
 default_display_cols = ["district_id", "district", "winner"]
 
+
 # Function for generating a row of checkboxes for filtering the given column of the dataframe
 def checklist(colname):
     unique_values = list(df[colname].unique())
@@ -101,13 +102,13 @@ app.layout = ddk.App(
     ]
 )
 
+
 # Callback to hide/show selected columns
 @app.callback(
     Output("col-display-data-table", "columnDefs"),
     Input("col-display-checklist", "value"),
 )
 def hide_show_cols(display_cols):
-
     column_defs = [
         {
             "headerName": col.capitalize(),

@@ -677,6 +677,11 @@ DashAgGrid.propTypes = {
          * column where the cell was changed
          */
         colId: PropTypes.any,
+
+        /**
+         * Timestamp of when the event was fired
+         */
+        timestamp: PropTypes.any,
     }),
 
     /**
