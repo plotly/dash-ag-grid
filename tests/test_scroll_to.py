@@ -20,7 +20,7 @@ def df():
     "scroll_to_input,row,column,y,x",
     [
         ({"rowIndex": 100, "rowPosition": "bottom"}, 100, 0, 58, 9),
-        ({"column": "age", "columnPosition": "start"}, 0, 1, 58, 209),
+        ({"column": "age", "columnPosition": "start"}, 0, 1, 58, 9),
         ({"rowId": 200, "rowPosition": "bottom"}, 200, 0, 58, 9),
         ({"rowIndex": 300, "rowId": 500}, 300, 0, 365, 9),
         (
@@ -36,7 +36,18 @@ def df():
             58,
             209,
         ),
-        ({"rowIndex": 100, "rowId": 200, "column": "age"}, 100, 1, 365, 209),
+        (
+            {
+                "rowIndex": 100,
+                "rowId": 200,
+                "column": "age",
+                "columnPosition": "start",
+            },
+            100,
+            1,
+            365,
+            9,
+        ),
         (
             {
                 "data": {
@@ -52,11 +63,12 @@ def df():
                     "total": 3,
                 },
                 "column": "age",
+                "columnPosition": "start",
             },
             100,
             1,
             365,
-            209,
+            9,
         ),
         (
             {
@@ -75,11 +87,12 @@ def df():
                     "total": 2,
                 },
                 "column": "age",
+                "columnPosition": "start",
             },
             100,
             1,
             365,
-            209,
+            9,
         ),
     ],
 )
