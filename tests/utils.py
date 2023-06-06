@@ -193,3 +193,14 @@ class Grid:
             f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"] .ag-checkbox-input'
         )
         chk.click()
+
+    def cell_in_viewport(self, row, col):
+        grid_viewport = self.dash_duo.find_element(
+            f'#{self.id} .ag-body-viewport')
+        cell = self.dash_duo.find_element(
+            f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"]'
+        )
+        return (cell.location['x'] >= grid_viewport.location['x']
+                and cell.location['y'] >= grid_viewport.location['y']
+                and cell.location['y'] < (grid_viewport.location['y'] + grid_viewport.size['height'])
+                and cell.location['x'] < (grid_viewport.location['x'] + grid_viewport.size['width'] - 20))
