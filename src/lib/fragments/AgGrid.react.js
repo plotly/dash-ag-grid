@@ -1023,7 +1023,7 @@ export default class DashAgGrid extends Component {
         if (!gridApi) {
             return;
         }
-        const rowPosition = scrollTo.rowPosition ? 'top' : scrollTo.rowPosition;
+        const rowPosition = scrollTo.rowPosition ? scrollTo.rowPosition : 'top';
         if (scrollTo.rowIndex || scrollTo.rowIndex === 0) {
             gridApi.ensureIndexVisible(scrollTo.rowIndex, rowPosition);
         } else if (scrollTo.rowId) {
@@ -1038,8 +1038,8 @@ export default class DashAgGrid extends Component {
         }
         if (scrollTo.column) {
             const columnPosition = scrollTo.columnPosition
-                ? 'auto'
-                : scrollTo.columnPosition;
+                ? scrollTo.columnPosition
+                : 'auto';
             gridApi.ensureColumnVisible(scrollTo.column, columnPosition);
         }
         if (reset) {
