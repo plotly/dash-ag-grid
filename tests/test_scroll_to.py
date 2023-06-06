@@ -19,16 +19,17 @@ def df():
 @pytest.fixture
 def scroll_to_inputs():
     return [
-        {"rowIndex": 100, "rowPosition": "bottom"},
-        {"column": "bronze", "columnPosition": "end"},
-        {"rowId": 200, "rowPosition": "top"},
-        {"rowIndex": 300, "rowId": 500},
+        {"rowIndex": 100, "rowPosition": "bottom", "cell": (100, 0)},
+        {"column": "bronze", "columnPosition": "end", "cell": (100, 8)},
+        {"rowId": 200, "rowPosition": "top", "cell": (200, 8)},
+        {"rowIndex": 300, "rowId": 500, "cell": (300, 8)},
         {
             "rowIndex": 400,
             "rowId": 500,
-            "column": "age",
+            "column": "athlete",
             "rowPosition": "bottom",
             "columnPosition": "start",
+            "cell": (400, 0),
         },
         {
             "data": {
@@ -45,6 +46,7 @@ def scroll_to_inputs():
             },
             "column": "bronze",
             "columnPosition": "end",
+            "cell": (100, 8),
         },
         {
             "rowIndex": 2000,
@@ -63,12 +65,12 @@ def scroll_to_inputs():
             },
             "column": "age",
             "columnPosition": "start",
+            "cell": (2000, 1),
         },
     ]
 
 
 def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
-    dash_duo.driver.set_window_size(500, 1000)
     app = Dash()
 
     # basic columns definition with column defaults
@@ -111,116 +113,103 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
     # Check that the grid has been loaded successfully
     until(lambda: "Michael Phelps" == grid.get_cell(0, 0).text, timeout=3)
 
-    # Get the location and size of the grid to later check which cells are visible
-    grid_location = dash_duo.find_element("#grid").location
-    grid_size = dash_duo.find_element("#grid").size
+    # get grid dims
+    grid_loc = dash_duo.find_element("#grid .ag-body-viewport").location
+    grid_size = dash_duo.find_element("#grid .ag-body-viewport").size
 
-    dash_duo.find_element("#btn").click()  # Sets scrollTo as scroll_to_inputs[0]
-    dash_duo.wait_for_text_to_equal(
-        "#scrollTo-output", json.dumps(scroll_to_inputs[0]), timeout=5
-    )
+    for i in range(len(scroll_to_inputs)):
+        info = scroll_to_inputs[i]
 
-    # As rowPosition is set to 'bottom' the next cell should be out of the grid
-    next_cell_y = grid.get_cell(101, 0).location["y"]
-    until(
-        lambda: grid.get_cell(100, 0).is_displayed()
-        and next_cell_y >= grid_location["y"] + grid_size["height"] - 1,
-        timeout=3,
-    )
+        y, x = info["cell"]
+        dash_duo.find_element("#btn").click()
+        dash_duo.wait_for_text_to_equal("#scrollTo-output", json.dumps(info), timeout=5)
+        until(lambda: grid.get_cell(y, x).is_displayed(), timeout=3)
 
-    dash_duo.find_element("#btn").click()  # Sets scrollTo as scroll_to_inputs[1]
-    dash_duo.wait_for_text_to_equal(
-        "#scrollTo-output", json.dumps(scroll_to_inputs[1]), timeout=5
-    )
-    # The vertical scroll should't changed so cell 101 should remain out of the grid.
-    # As columnPosition is set to 'end' the next column should be out of the grid
-    next_cell_location = grid.get_cell(101, 9).location
-    until(
-        lambda: grid.get_cell(100, 8).is_displayed()
-        and next_cell_location["x"] >= grid_location["x"] + grid_size["width"] - 1
-        and next_cell_location["y"] >= grid_location["y"] + grid_size["height"] - 1,
-        timeout=3,
-    )
+        # row testing
+        if "rowPosition" in info:
+            if info["rowPosition"] == "bottom":
+                assert grid.get_cell(y + 1, x).location["y"] >= (
+                    grid_loc["y"] + grid_size["height"]
+                )
+                assert (
+                    grid.get_cell(y - 1, x).location["y"]
+                    < (grid_loc["y"] + grid_size["height"])
+                    and grid.get_cell(y - 1, x).location["y"] > grid_loc["y"]
+                )
+            elif info["rowPosition"] == "middle":
+                assert (
+                    grid.get_cell(y + 1, x).location["y"]
+                    < (grid_loc["y"] + grid_size["height"])
+                    and grid.get_cell(y + 1, x).location["y"] > grid_loc["y"]
+                )
+                assert (
+                    grid.get_cell(y - 1, x).location["y"]
+                    < (grid_loc["y"] + grid_size["height"])
+                    and grid.get_cell(y - 1, x).location["y"] > grid_loc["y"]
+                )
+            else:
+                assert (
+                    grid.get_cell(y + 1, x).location["y"]
+                    < (grid_loc["y"] + grid_size["height"])
+                    and grid.get_cell(y + 1, x).location["y"] > grid_loc["y"]
+                )
+                assert grid.get_cell(y - 1, x).location["y"] < grid_loc["y"]
+        elif "rowIndex" in info or "rowId" in info or "data" in info:
+            assert (
+                grid.get_cell(y + 1, x).location["y"]
+                < (grid_loc["y"] + grid_size["height"])
+                and grid.get_cell(y + 1, x).location["y"] > grid_loc["y"]
+            )
+            assert grid.get_cell(y - 1, x).location["y"] < grid_loc["y"]
 
-    dash_duo.find_element("#btn").click()  # Sets scrollTo as scroll_to_inputs[2]
-    dash_duo.wait_for_text_to_equal(
-        "#scrollTo-output", json.dumps(scroll_to_inputs[2]), timeout=5
-    )
-    # The horizontal scroll hasn't changed so the column number 9 should remain out of the grid
-    # As the rowPosition is set to 'top' the previous row should be out of the grid
-    prev_cell_location = grid.get_cell(199, 8).location
-    until(
-        lambda: grid.get_cell(200, 8).is_displayed()
-        and grid.get_cell(200, 9).location["x"]
-        >= grid_location["x"] + grid_size["width"] - 1
-        and grid.get_cell(199, 8).location["y"]
-        <= grid_location["y"] + grid.get_cell(199, 8).size["height"] + 1,
-        timeout=3,
-    )
-
-    dash_duo.find_element("#btn").click()  # Sets scrollTo as scroll_to_inputs[3]
-    dash_duo.wait_for_text_to_equal(
-        "#scrollTo-output", json.dumps(scroll_to_inputs[3]), timeout=5
-    )
-    # The horizontal scroll hasn't changed so the column number 9 should remain out of the grid
-    # rowIndex has priority over rowId so the grid should scroll to the row 300 on top
-    until(
-        lambda: grid.get_cell(300, 8).is_displayed()
-        and grid.get_cell(300, 9).location["x"]
-        >= grid_location["x"] + grid_size["width"] - 1
-        and grid.get_cell(299, 8).location["y"]
-        <= grid_location["y"] + grid.get_cell(299, 8).size["height"] + 1,
-        timeout=3,
-    )
-
-    dash_duo.find_element("#btn").click()  # Sets scrollTo as scroll_to_inputs[4]
-    dash_duo.wait_for_text_to_equal(
-        "#scrollTo-output", json.dumps(scroll_to_inputs[4]), timeout=5
-    )
-    # columnPosition is set to "start" so the position of the first column should be on the left of the grid
-    # rowIndex has priority over rowId so the grid should scroll to the row 400 at the bottom
-    next_cell_location = grid.get_cell(401, 0).location
-    until(
-        lambda: grid.get_cell(400, 1).is_displayed()
-        and next_cell_location["x"] <= grid_location["x"]
-        and next_cell_location["y"] >= grid_location["y"] + grid_size["height"] - 1,
-        timeout=3,
-    )
-
-    dash_duo.find_element("#btn").click()  # Sets scrollTo as scroll_to_inputs[5]
-    dash_duo.wait_for_text_to_equal(
-        "#scrollTo-output", json.dumps(scroll_to_inputs[5]), timeout=5
-    )
-
-    # data will search for the row number 100 an scroll to there
-    # the column 9 should be out of the grid
-    prev_cell_location = grid.get_cell(99, 8).location
-    until(
-        lambda: grid.get_cell(100, 8).is_displayed()
-        and grid.get_cell(100, 9).location["x"]
-        >= grid_location["x"] + grid_size["width"] - 1
-        and prev_cell_location["y"]
-        <= grid_location["y"] + grid.get_cell(99, 8).size["height"] + 1,
-        timeout=3,
-    )
-
-    dash_duo.find_element("#btn").click()  # Sets scrollTo as scroll_to_inputs[6]
-    dash_duo.wait_for_text_to_equal(
-        "#scrollTo-output", json.dumps(scroll_to_inputs[6]), timeout=5
-    )
-    # rowIndex has priority over rowId and data so it should scroll to the row number 2000
-    prev_cell_location = grid.get_cell(1999, 1).location
-    until(
-        lambda: grid.get_cell(2000, 1).is_displayed()
-        and grid.get_cell(2000, 0).location["x"] <= grid_location["x"]
-        and prev_cell_location["y"]
-        <= grid_location["y"] + grid.get_cell(1999, 1).size["height"] + 1,
-        timeout=3,
-    )
+        # column testing
+        if "column" in info:
+            if "columnPosition" in info:
+                if info["columnPosition"] == "end":
+                    if x + 1 < len(df.columns):
+                        assert grid.get_cell(y, x + 1).location["x"] >= (
+                            grid_loc["x"] + grid_size["width"] - 20
+                        )
+                    if x - 1 >= 0:
+                        assert (
+                            grid.get_cell(y, x - 1).location["x"]
+                            < (grid_loc["x"] + grid_size["width"] - 20)
+                            and grid.get_cell(y, x - 1).location["x"] > grid_loc["x"]
+                        )
+                elif info["columnPosition"] == "middle":
+                    if x + 1 < len(df.columns):
+                        assert (
+                            grid.get_cell(y, x + 1).location["x"]
+                            < (grid_loc["x"] + grid_size["width"] - 20)
+                            and grid.get_cell(y, x + 1).location["x"] > grid_loc["x"]
+                        )
+                    if x - 1 >= 0:
+                        assert (
+                            grid.get_cell(y, x - 1).location["x"]
+                            < (grid_loc["x"] + grid_size["width"] - 20)
+                            and grid.get_cell(y, x - 1).location["x"] > grid_loc["x"]
+                        )
+                else:
+                    if x + 1 < len(df.columns):
+                        assert (
+                            grid.get_cell(y, x + 1).location["x"]
+                            < (grid_loc["x"] + grid_size["width"])
+                            and grid.get_cell(y, x + 1).location["x"] >= grid_loc["x"]
+                        )
+                    if x - 1 >= 0:
+                        assert grid.get_cell(y, x - 1).location["x"] < grid_loc["x"]
+            else:
+                if x + 1 < len(df.columns):
+                    assert (
+                        grid.get_cell(y, x + 1).location["x"]
+                        < (grid_loc["x"] + grid_size["width"])
+                        and grid.get_cell(y, x + 1).location["x"] >= grid_loc["x"]
+                    )
+                if x - 1 >= 0:
+                    assert grid.get_cell(y, x - 1).location["x"] < grid_loc["x"]
 
 
 def test_st002_initial_scroll_to(dash_duo, df):
-    dash_duo.driver.set_window_size(500, 1000)
     app = Dash()
 
     # basic columns definition with column defaults
@@ -247,15 +236,32 @@ def test_st002_initial_scroll_to(dash_duo, df):
 
     grid = utils.Grid(dash_duo, "grid")
     until(lambda: "1" == grid.get_cell(2000, 9).text, timeout=3)
-    # Get the location and size of the grid to later check which cells are visible
-    grid_location = dash_duo.find_element("#grid").location
-    grid_size = dash_duo.find_element("#grid").size
+
+    y = 2000
+    x = 8
 
     until(
-        lambda: grid.get_cell(2000, 8).is_displayed()
-        and grid.get_cell(2000, 9).location["x"]
-        >= grid_location["x"] + grid_size["width"] - 1
-        and grid.get_cell(1999, 8).location["y"]
-        <= grid_location["y"] + grid.get_cell(1999, 8).size["height"] + 1,
+        lambda: grid.get_cell(y, x).is_displayed(),
         timeout=3,
+    )
+
+    # get grid dims
+    grid_loc = dash_duo.find_element("#grid .ag-body-viewport").location
+    grid_size = dash_duo.find_element("#grid .ag-body-viewport").size
+
+    # row testing
+    assert (
+        grid.get_cell(y + 1, x).location["y"] < (grid_loc["y"] + grid_size["height"])
+        and grid.get_cell(y + 1, x).location["y"] > grid_loc["y"]
+    )
+    assert grid.get_cell(y - 1, x).location["y"] < grid_loc["y"]
+
+    # column testing
+    assert grid.get_cell(y, x + 1).location["x"] >= (
+        grid_loc["x"] + grid_size["width"] - 20
+    )
+    assert (
+        grid.get_cell(y, x - 1).location["x"]
+        < (grid_loc["x"] + grid_size["width"] - 20)
+        and grid.get_cell(y, x - 1).location["x"] > grid_loc["x"]
     )
