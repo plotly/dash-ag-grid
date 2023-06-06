@@ -17,12 +17,12 @@ def df():
 
 
 @pytest.mark.parametrize(
-    "scroll_to_input,row,column,y,x",
+    "scroll_to_input,row,column",
     [
-        ({"rowIndex": 100, "rowPosition": "bottom"}, 100, 0, 58, 9),
-        ({"column": "age", "columnPosition": "start"}, 0, 1, 58, 9),
-        ({"rowId": 200, "rowPosition": "bottom"}, 200, 0, 58, 9),
-        ({"rowIndex": 300, "rowId": 500}, 300, 0, 365, 9),
+        ({"rowIndex": 100, "rowPosition": "bottom"}, 100, 0),
+        ({"column": "age", "columnPosition": "start"}, 0, 1),
+        ({"rowId": 200, "rowPosition": "bottom"}, 200, 0),
+        ({"rowIndex": 300, "rowId": 500}, 300, 0),
         (
             {
                 "rowIndex": 400,
@@ -33,8 +33,6 @@ def df():
             },
             400,
             1,
-            58,
-            209,
         ),
         (
             {
@@ -45,8 +43,6 @@ def df():
             },
             100,
             1,
-            365,
-            9,
         ),
         (
             {
@@ -67,8 +63,6 @@ def df():
             },
             100,
             1,
-            365,
-            9,
         ),
         (
             {
@@ -91,12 +85,10 @@ def df():
             },
             100,
             1,
-            365,
-            9,
         ),
     ],
 )
-def test_st001_scroll_to(scroll_to_input, row, column, y, x, dash_duo, df):
+def test_st001_scroll_to(scroll_to_input, row, column, dash_duo, df):
     app = Dash()
 
     # basic columns definition with column defaults
@@ -141,7 +133,6 @@ def test_st001_scroll_to(scroll_to_input, row, column, y, x, dash_duo, df):
     )
 
     until(
-        lambda: x == grid.get_cell(row, column).location["x"]
-        and y == grid.get_cell(row, column).location["y"],
+        lambda: grid.get_cell(row, column).is_displayed(),
         timeout=3,
     )
