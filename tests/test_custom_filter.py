@@ -7,28 +7,45 @@ from . import utils
 
 
 df = px.data.election()
-default_display_cols = ["district_id", "district", "winner"]
+default_display_cols = ["district_id"]
+other_cols = ["district", "winner"]
 
-df = pd.concat([df, pd.DataFrame({'district': ['test']})])
-
+df = pd.concat([df, pd.DataFrame({"district": ["test"]})])
 
 
 def test_fi002_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    app.layout = html.Div([
-        dag.AgGrid(
-            id="grid",
-            rowData=df.to_dict("records"),
-            columnDefs=[
-                {"headerName": col.capitalize(), "field": col,
-                 'filterParams': {'function': 'filterParams()'},
-                 'filter': 'agNumberColumnFilter'}
-                for col in default_display_cols
-            ],
-            defaultColDef={"floatingFilter": True}
-        )
-    ])
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid",
+                rowData=df.to_dict("records"),
+                columnDefs=[
+                    {
+                        "headerName": col.capitalize(),
+                        "field": col,
+                        "filterParams": {"function": "filterParams()"},
+                        "filter": "agNumberColumnFilter",
+                    }
+                    for col in default_display_cols
+                ]
+                + [
+                    {
+                        "headerName": col.capitalize(),
+                        "field": col,
+                        "filterParams": {
+                            "filterOptions": ["contains", "startsWith", "endsWith"],
+                            "defaultOption": "endsWith",
+                        },
+                        "filter": True,
+                    }
+                    for col in other_cols
+                ],
+                defaultColDef={"floatingFilter": True},
+            )
+        ]
+    )
 
     dash_duo.start_server(app)
 
@@ -40,3 +57,11 @@ def test_fi002_custom_filter(dash_duo):
 
     grid.wait_for_cell_text(0, 1, "11-Sault-au-Récollet")
     grid.wait_for_rendered_rows(2)
+
+    grid.set_filter(0, "")
+    grid.wait_for_cell_text(0, 1, "101-Bois-de-Liesse")
+
+    grid.set_filter(1, "t")
+    grid.set_filter(2, "e")
+    grid.wait_for_cell_text(0, 1, "11-Sault-au-Récollet")
+    grid.wait_for_rendered_rows(8)

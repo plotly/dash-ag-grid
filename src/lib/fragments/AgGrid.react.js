@@ -112,6 +112,7 @@ export default class DashAgGrid extends Component {
         this.onGridReady = this.onGridReady.bind(this);
         this.onSelectionChanged = this.onSelectionChanged.bind(this);
         this.onCellClicked = this.onCellClicked.bind(this);
+        this.onCellDoubleClicked = this.onCellDoubleClicked.bind(this);
         this.onCellValueChanged = this.onCellValueChanged.bind(this);
         this.onRowDataUpdated = this.onRowDataUpdated.bind(this);
         this.onFilterChanged = this.onFilterChanged.bind(this);
@@ -170,6 +171,7 @@ export default class DashAgGrid extends Component {
             openGroups: {},
             gridApi: null,
             gridColumnApi: null,
+            columnState_push: true,
         };
 
         this.selectionEventFired = false;
@@ -347,7 +349,6 @@ export default class DashAgGrid extends Component {
         if (typeof columnDef === 'function') {
             return columnDef;
         }
-        const field = columnDef.field || columnDef.headerName;
 
         return mapObjIndexed((value, target) => {
             if (
@@ -363,6 +364,7 @@ export default class DashAgGrid extends Component {
                 // the second argument tells convertMaybeFunction
                 // that a plain string is dangerous,
                 // and provides the context for error reporting
+                const field = columnDef.field || columnDef.headerName;
                 return this.convertMaybeFunction(value, {target, field});
             }
             if (COLUMN_MAYBE_FUNCTIONS[target]) {
@@ -372,7 +374,12 @@ export default class DashAgGrid extends Component {
                 return this.convertMaybeFunctionNoParams(value);
             }
             if (COLUMN_ARRAY_NESTED_FUNCTIONS[target] && Array.isArray(value)) {
-                return value.map(this.convertCol);
+                return value.map((c) => {
+                    if (typeof c === 'object') {
+                        return this.convertCol(c);
+                    }
+                    return c;
+                });
             }
             if (COLUMN_NESTED_FUNCTIONS[target] && typeof value === 'object') {
                 return this.convertCol(value);
@@ -515,7 +522,7 @@ export default class DashAgGrid extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const {gridColumnApi, gridApi} = this.state;
+        const {gridApi} = this.state;
         const {columnState, filterModel, selectedRows} = nextProps;
 
         if (
@@ -536,14 +543,7 @@ export default class DashAgGrid extends Component {
         }
         if (gridApi) {
             if (columnState) {
-                if (
-                    !equals(
-                        columnState,
-                        JSON.parse(
-                            JSON.stringify(gridColumnApi.getColumnState())
-                        )
-                    )
-                ) {
+                if (columnState !== this.props.columnState) {
                     return true;
                 }
             }
@@ -581,6 +581,15 @@ export default class DashAgGrid extends Component {
             paginationGoTo,
             scrollTo,
         } = this.props;
+
+        if (this.state.gridColumnApi && this.props.loading_state.is_loading) {
+            if (
+                this.props.columnState !== prevProps.columnState &&
+                !this.state.columnState_push
+            ) {
+                this.setState({columnState_push: true});
+            }
+        }
 
         if (id !== prevProps.id) {
             if (id) {
@@ -667,7 +676,11 @@ export default class DashAgGrid extends Component {
             }
             // Hydrate virtualRowData
             this.onFilterChanged(true);
-            this.setState({mounted: true, openGroups: groups});
+            this.setState({
+                mounted: true,
+                openGroups: groups,
+                columnState_push: false,
+            });
             this.updateColumnState();
         }
 
@@ -809,6 +822,19 @@ export default class DashAgGrid extends Component {
         });
     }
 
+    onCellDoubleClicked({value, column: {colId}, rowIndex, node}) {
+        const timestamp = Date.now();
+        this.props.setProps({
+            cellDoubleClicked: {
+                value,
+                colId,
+                rowIndex,
+                rowId: node.id,
+                timestamp,
+            },
+        });
+    }
+
     onCellValueChanged({
         oldValue,
         value,
@@ -817,6 +843,7 @@ export default class DashAgGrid extends Component {
         data,
         node,
     }) {
+        const timestamp = Date.now();
         const virtualRowData = [];
         if (this.props.rowModelType === 'clientSide' && this.state.gridApi) {
             this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
@@ -831,6 +858,7 @@ export default class DashAgGrid extends Component {
                 oldValue,
                 value,
                 colId,
+                timestamp,
             },
             virtualRowData,
         });
@@ -970,10 +998,14 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi || this.props.updateColumnState) {
             return;
         }
-        this.state.gridColumnApi.applyColumnState({
-            state: this.props.columnState,
-            applyOrder: true,
-        });
+
+        if (this.state.columnState_push) {
+            this.state.gridColumnApi.applyColumnState({
+                state: this.props.columnState,
+                applyOrder: true,
+            });
+            this.setState({columnState_push: false});
+        }
     }
 
     // Event actions that reset
@@ -1110,10 +1142,12 @@ export default class DashAgGrid extends Component {
             return;
         }
 
+        var columnState = JSON.parse(
+            JSON.stringify(this.state.gridColumnApi.getColumnState())
+        );
+
         this.props.setProps({
-            columnState: JSON.parse(
-                JSON.stringify(this.state.gridColumnApi.getColumnState())
-            ),
+            columnState,
             updateColumnState: false,
         });
     }
@@ -1274,6 +1308,7 @@ export default class DashAgGrid extends Component {
                     onGridReady={this.onGridReady}
                     onSelectionChanged={this.onSelectionChanged}
                     onCellClicked={this.onCellClicked}
+                    onCellDoubleClicked={this.onCellDoubleClicked}
                     onCellValueChanged={this.onCellValueChanged}
                     onFilterChanged={this.onFilterChanged}
                     onSortChanged={this.onSortChanged}

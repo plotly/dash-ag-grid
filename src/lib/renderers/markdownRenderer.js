@@ -34,7 +34,7 @@ export default function MarkdownRenderer(props) {
             }}
             className="agGrid-Markdown"
             rehypePlugins={rehypePlugins}
-            children={String(value)}
+            children={value ? String(value) : null}
         />
     );
 }

@@ -54,12 +54,6 @@
     background: #ddd;
 }
 
-/* Used in the row spanning example */
-.cell-span {
-    background-color: #00e5ff;
-}
-
-
 /* Used in Column Spanning Simple example */
 .colSpanning .ag-body-viewport [col-id='country'] {
     background-color: #a6e1ec;

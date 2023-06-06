@@ -4,6 +4,27 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
+## [UNRELEASED]
+
+## [2.1.0] - 2023-06-02
+
+### Added
+- [#201](https://github.com/plotly/dash-ag-grid/pull/201) Add `cellDoubleClicked` prop, which works exactly like `cellClicked`
+
+### Updated
+- [#174](https://github.com/plotly/dash-ag-grid/pull/174)
+  - `columnState` floats during grid interaction and only gets pushed when sent in a callback
+  - `columnDefs` trumps `columnState` if it is pushed in a callback without a `columnState`
+
+- [#207](https://github.com/plotly/dash-ag-grid/pull/207) Update AG Grid from 29.3.3 to 29.3.5, with a few minor bugfixes, see their changelog for [29.3.4](https://www.ag-grid.com/changelog/?fixVersion=29.3.4) and [29.3.5](https://www.ag-grid.com/changelog/?fixVersion=29.3.5). Also other minor dependency updates.
+
+### Fixed
+- [#174](https://github.com/plotly/dash-ag-grid/pull/174) Fix [#171](https://github.com/plotly/dash-ag-grid/issues/171): `Markdown` renderer now displays a blank cell rather than writing `undefined` if there is no value
+
+- [#204](https://github.com/plotly/dash-ag-grid/pull/204) `filterOptions` will now work as a regular object
+
+- [#206](https://github.com/plotly/dash-ag-grid/pull/206) Fix [#195](https://github.com/plotly/dash-ag-grid/issues/195) where if the user was to redo the exact same action, callbacks on `cellValueChanged` would not trigger again. Fix by adding `timestamp` into the object, as we have in other event-type props to make them unique.
+
 ## [2.0.0] - 2023-05-02
 
 ### Removed

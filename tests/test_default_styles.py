@@ -3,13 +3,18 @@ from dash import Dash, html
 from . import utils
 from dash.testing.wait import until
 
+
 def test_ds001_default_styles(dash_duo):
     app = Dash(__name__)
 
     columnDefs = [
         {"headerName": "Make", "field": "make"},
         {"headerName": "Model", "field": "model"},
-        {"headerName": "Price", "field": "price", 'cellStyle': {'defaultStyle': {'color': 'green'}}},
+        {
+            "headerName": "Price",
+            "field": "price",
+            "cellStyle": {"defaultStyle": {"color": "green"}},
+        },
     ]
 
     rowData = [
@@ -29,7 +34,7 @@ def test_ds001_default_styles(dash_duo):
                     resizable=True,
                     cellStyle={"defaultStyle": {"color": "blue"}},
                 ),
-                id='grid'
+                id="grid",
             ),
             html.Hr(),
         ]
@@ -44,5 +49,9 @@ def test_ds001_default_styles(dash_duo):
     grid.wait_for_cell_text(0, 0, "Toyota")
 
     ### testing styles
-    until(lambda: 'color: blue' in grid.get_cell(0, 0).get_attribute('style'), timeout=3)
-    until(lambda: 'color: green' in grid.get_cell(0, 2).get_attribute('style'), timeout=3)
+    until(
+        lambda: "color: blue" in grid.get_cell(0, 0).get_attribute("style"), timeout=3
+    )
+    until(
+        lambda: "color: green" in grid.get_cell(0, 2).get_attribute("style"), timeout=3
+    )

@@ -5,113 +5,112 @@ import time
 from dash.testing.wait import until
 import json
 
+
 def test_td001_tree_data(dash_duo):
     app = Dash(__name__)
 
     rowData = [
         {
-            "orgHierarchy": ['Erica Rogers'],
-            "jobTitle": 'CEO',
-            "employmentType": 'Permanent',
+            "orgHierarchy": ["Erica Rogers"],
+            "jobTitle": "CEO",
+            "employmentType": "Permanent",
         },
         {
-            "orgHierarchy": ['Erica Rogers', 'Malcolm Barrett'],
-            "jobTitle": 'Exec. Vice President',
-            "employmentType": 'Permanent',
-        },
-
-        {
-            "orgHierarchy": ['Erica Rogers', 'Malcolm Barrett', 'Esther Baker'],
-            "jobTitle": 'Director of Operations',
-            "employmentType": 'Permanent',
+            "orgHierarchy": ["Erica Rogers", "Malcolm Barrett"],
+            "jobTitle": "Exec. Vice President",
+            "employmentType": "Permanent",
         },
         {
-            "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Esther Baker',
-                'Brittany Hanson',
-            ],
-            "jobTitle": 'Fleet Coordinator',
-            "employmentType": 'Permanent',
+            "orgHierarchy": ["Erica Rogers", "Malcolm Barrett", "Esther Baker"],
+            "jobTitle": "Director of Operations",
+            "employmentType": "Permanent",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Esther Baker',
-                'Brittany Hanson',
-                'Leah Flowers',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Esther Baker",
+                "Brittany Hanson",
             ],
-            "jobTitle": 'Parts Technician',
-            "employmentType": 'Contract',
+            "jobTitle": "Fleet Coordinator",
+            "employmentType": "Permanent",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Esther Baker',
-                'Brittany Hanson',
-                'Tammy Sutton',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Esther Baker",
+                "Brittany Hanson",
+                "Leah Flowers",
             ],
-            "jobTitle": 'Service Technician',
-            "employmentType": 'Contract',
+            "jobTitle": "Parts Technician",
+            "employmentType": "Contract",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Esther Baker',
-                'Derek Paul',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Esther Baker",
+                "Brittany Hanson",
+                "Tammy Sutton",
             ],
-            "jobTitle": 'Inventory Control',
-            "employmentType": 'Permanent',
-        },
-
-        {
-            "orgHierarchy": ['Erica Rogers', 'Malcolm Barrett', 'Francis Strickland'],
-            "jobTitle": 'VP Sales',
-            "employmentType": 'Permanent',
+            "jobTitle": "Service Technician",
+            "employmentType": "Contract",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Francis Strickland',
-                'Morris Hanson',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Esther Baker",
+                "Derek Paul",
             ],
-            "jobTitle": 'Sales Manager',
-            "employmentType": 'Permanent',
+            "jobTitle": "Inventory Control",
+            "employmentType": "Permanent",
+        },
+        {
+            "orgHierarchy": ["Erica Rogers", "Malcolm Barrett", "Francis Strickland"],
+            "jobTitle": "VP Sales",
+            "employmentType": "Permanent",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Francis Strickland',
-                'Todd Tyler',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Francis Strickland",
+                "Morris Hanson",
             ],
-            "jobTitle": 'Sales Executive',
-            "employmentType": 'Contract',
+            "jobTitle": "Sales Manager",
+            "employmentType": "Permanent",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Francis Strickland',
-                'Bennie Wise',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Francis Strickland",
+                "Todd Tyler",
             ],
-            "jobTitle": 'Sales Executive',
-            "employmentType": 'Contract',
+            "jobTitle": "Sales Executive",
+            "employmentType": "Contract",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Francis Strickland',
-                'Joel Cooper',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Francis Strickland",
+                "Bennie Wise",
             ],
-            "jobTitle": 'Sales Executive',
-            "employmentType": 'Permanent',
+            "jobTitle": "Sales Executive",
+            "employmentType": "Contract",
+        },
+        {
+            "orgHierarchy": [
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Francis Strickland",
+                "Joel Cooper",
+            ],
+            "jobTitle": "Sales Executive",
+            "employmentType": "Permanent",
         },
     ]
 
@@ -120,26 +119,27 @@ def test_td001_tree_data(dash_duo):
             dag.AgGrid(
                 columnDefs=[
                     # we're using the auto group column by default!
-                    {'field': 'jobTitle'},
-                    {'field': 'employmentType'},
+                    {"field": "jobTitle"},
+                    {"field": "employmentType"},
                 ],
                 defaultColDef={
                     "flex": 1,
                 },
-                dashGridOptions={"autoGroupColumnDef": {
-                    "headerName": 'Organisation Hierarchy',
-                    "minWidth": 300,
-                    "cellRendererParams": {
-                        "suppressCount": True,
+                dashGridOptions={
+                    "autoGroupColumnDef": {
+                        "headerName": "Organisation Hierarchy",
+                        "minWidth": 300,
+                        "cellRendererParams": {
+                            "suppressCount": True,
+                        },
                     },
-                },
                     "groupDefaultExpanded": -1,
                     "getDataPath": {"function": "getDataPath(params)"},
-                    "treeData": True
+                    "treeData": True,
                 },
                 rowData=rowData,
                 enableEnterpriseModules=True,
-                id='grid'
+                id="grid",
             ),
             html.Hr(),
         ]
@@ -165,113 +165,112 @@ def test_td001_tree_data(dash_duo):
     grid.get_cell_expandable(2, 0).click()
     grid.wait_for_cell_text(3, 0, "Brittany Hanson")
 
+
 def test_td002_tree_data(dash_duo):
     app = Dash(__name__)
 
     rowData = [
         {
-            "orgHierarchy": ['Erica Rogers'],
-            "jobTitle": 'CEO',
-            "employmentType": 'Permanent',
+            "orgHierarchy": ["Erica Rogers"],
+            "jobTitle": "CEO",
+            "employmentType": "Permanent",
         },
         {
-            "orgHierarchy": ['Erica Rogers', 'Malcolm Barrett'],
-            "jobTitle": 'Exec. Vice President',
-            "employmentType": 'Permanent',
-        },
-
-        {
-            "orgHierarchy": ['Erica Rogers', 'Malcolm Barrett', 'Esther Baker'],
-            "jobTitle": 'Director of Operations',
-            "employmentType": 'Permanent',
+            "orgHierarchy": ["Erica Rogers", "Malcolm Barrett"],
+            "jobTitle": "Exec. Vice President",
+            "employmentType": "Permanent",
         },
         {
-            "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Esther Baker',
-                'Brittany Hanson',
-            ],
-            "jobTitle": 'Fleet Coordinator',
-            "employmentType": 'Permanent',
+            "orgHierarchy": ["Erica Rogers", "Malcolm Barrett", "Esther Baker"],
+            "jobTitle": "Director of Operations",
+            "employmentType": "Permanent",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Esther Baker',
-                'Brittany Hanson',
-                'Leah Flowers',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Esther Baker",
+                "Brittany Hanson",
             ],
-            "jobTitle": 'Parts Technician',
-            "employmentType": 'Contract',
+            "jobTitle": "Fleet Coordinator",
+            "employmentType": "Permanent",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Esther Baker',
-                'Brittany Hanson',
-                'Tammy Sutton',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Esther Baker",
+                "Brittany Hanson",
+                "Leah Flowers",
             ],
-            "jobTitle": 'Service Technician',
-            "employmentType": 'Contract',
+            "jobTitle": "Parts Technician",
+            "employmentType": "Contract",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Esther Baker',
-                'Derek Paul',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Esther Baker",
+                "Brittany Hanson",
+                "Tammy Sutton",
             ],
-            "jobTitle": 'Inventory Control',
-            "employmentType": 'Permanent',
-        },
-
-        {
-            "orgHierarchy": ['Erica Rogers', 'Malcolm Barrett', 'Francis Strickland'],
-            "jobTitle": 'VP Sales',
-            "employmentType": 'Permanent',
+            "jobTitle": "Service Technician",
+            "employmentType": "Contract",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Francis Strickland',
-                'Morris Hanson',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Esther Baker",
+                "Derek Paul",
             ],
-            "jobTitle": 'Sales Manager',
-            "employmentType": 'Permanent',
+            "jobTitle": "Inventory Control",
+            "employmentType": "Permanent",
+        },
+        {
+            "orgHierarchy": ["Erica Rogers", "Malcolm Barrett", "Francis Strickland"],
+            "jobTitle": "VP Sales",
+            "employmentType": "Permanent",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Francis Strickland',
-                'Todd Tyler',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Francis Strickland",
+                "Morris Hanson",
             ],
-            "jobTitle": 'Sales Executive',
-            "employmentType": 'Contract',
+            "jobTitle": "Sales Manager",
+            "employmentType": "Permanent",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Francis Strickland',
-                'Bennie Wise',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Francis Strickland",
+                "Todd Tyler",
             ],
-            "jobTitle": 'Sales Executive',
-            "employmentType": 'Contract',
+            "jobTitle": "Sales Executive",
+            "employmentType": "Contract",
         },
         {
             "orgHierarchy": [
-                'Erica Rogers',
-                'Malcolm Barrett',
-                'Francis Strickland',
-                'Joel Cooper',
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Francis Strickland",
+                "Bennie Wise",
             ],
-            "jobTitle": 'Sales Executive',
-            "employmentType": 'Permanent',
+            "jobTitle": "Sales Executive",
+            "employmentType": "Contract",
+        },
+        {
+            "orgHierarchy": [
+                "Erica Rogers",
+                "Malcolm Barrett",
+                "Francis Strickland",
+                "Joel Cooper",
+            ],
+            "jobTitle": "Sales Executive",
+            "employmentType": "Permanent",
         },
     ]
 
@@ -280,32 +279,33 @@ def test_td002_tree_data(dash_duo):
             dag.AgGrid(
                 columnDefs=[
                     # we're using the auto group column by default!
-                    {'field': 'jobTitle'},
-                    {'field': 'employmentType'},
+                    {"field": "jobTitle"},
+                    {"field": "employmentType"},
                 ],
                 defaultColDef={
                     "flex": 1,
                 },
-                dashGridOptions={"autoGroupColumnDef": {
-                    "headerName": 'Organisation Hierarchy',
-                    "minWidth": 300,
-                    "cellRendererParams": {
-                        "suppressCount": True,
+                dashGridOptions={
+                    "autoGroupColumnDef": {
+                        "headerName": "Organisation Hierarchy",
+                        "minWidth": 300,
+                        "cellRendererParams": {
+                            "suppressCount": True,
+                        },
                     },
-                },
                     "getDataPath": {"function": "getDataPath(params)"},
-                    "treeData": True
+                    "treeData": True,
                 },
                 rowData=rowData,
                 enableEnterpriseModules=True,
-                id='grid'
+                id="grid",
             ),
             html.Hr(),
-            html.Button(id='reset')
+            html.Button(id="reset"),
         ]
     )
 
-    @app.callback(Output('grid', 'rowData'), Input('reset', 'n_clicks'))
+    @app.callback(Output("grid", "rowData"), Input("reset", "n_clicks"))
     def resetRowData(n):
         if n:
             return rowData
@@ -330,6 +330,6 @@ def test_td002_tree_data(dash_duo):
     grid.wait_for_cell_text(2, 0, "Esther Baker")
     grid.get_cell_expandable(2, 0).click()
     grid.wait_for_cell_text(3, 0, "Brittany Hanson")
-    dash_duo.find_element('#reset').click()
+    dash_duo.find_element("#reset").click()
 
     grid.wait_for_cell_text(3, 0, "Brittany Hanson")

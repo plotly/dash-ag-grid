@@ -636,6 +636,36 @@ DashAgGrid.propTypes = {
     }),
 
     /**
+     * Cell is double clicked.
+     */
+    cellDoubleClicked: PropTypes.shape({
+        /**
+         * value of the double-clicked cell
+         */
+        value: PropTypes.any,
+
+        /**
+         * column where the cell was double-clicked
+         */
+        colId: PropTypes.any,
+
+        /**
+         * rowIndex, typically a row number
+         */
+        rowIndex: PropTypes.number,
+
+        /**
+         * Row Id from the grid, this could be a number automatically, or set via getRowId
+         */
+        rowId: PropTypes.any,
+
+        /**
+         * timestamp of last action
+         */
+        timestamp: PropTypes.any,
+    }),
+
+    /**
      * The actively selected rows from the grid (may include filtered rows)
      * Can take one of three forms:
      * (1) an array of row objects - if you have defined `getRowId`, you only need the fields it uses.
@@ -682,6 +712,11 @@ DashAgGrid.propTypes = {
          * column where the cell was changed
          */
         colId: PropTypes.any,
+
+        /**
+         * Timestamp of when the event was fired
+         */
+        timestamp: PropTypes.any,
     }),
 
     /**

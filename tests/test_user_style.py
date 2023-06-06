@@ -40,16 +40,23 @@ def test_us001_user_style(dash_duo):
                 columnDefs=columnDefs,
                 defaultColDef=defaultColDef,
                 rowData=rowData,
-                style={'height': '500px', 'width':'500px'},
+                style={"height": "500px", "width": "500px"},
             ),
         ]
     )
-
 
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
 
     grid.wait_for_cell_text(0, 0, "Toyota")
-    until(lambda: "height: 500px" in dash_duo.find_element('div.ag-theme-alpine').get_attribute('style'), timeout=3)
-    until(lambda: "width: 500px" in dash_duo.find_element('div.ag-theme-alpine').get_attribute('style'), timeout=3)
+    until(
+        lambda: "height: 500px"
+        in dash_duo.find_element("div.ag-theme-alpine").get_attribute("style"),
+        timeout=3,
+    )
+    until(
+        lambda: "width: 500px"
+        in dash_duo.find_element("div.ag-theme-alpine").get_attribute("style"),
+        timeout=3,
+    )
