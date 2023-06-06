@@ -113,10 +113,6 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
     # Check that the grid has been loaded successfully
     until(lambda: "Michael Phelps" == grid.get_cell(0, 0).text, timeout=3)
 
-    # get grid dims
-    grid_loc = dash_duo.find_element("#grid .ag-body-viewport").location
-    grid_size = dash_duo.find_element("#grid .ag-body-viewport").size
-
     for i in range(len(scroll_to_inputs)):
         info = scroll_to_inputs[i]
 
@@ -128,85 +124,41 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
         # row testing
         if "rowPosition" in info:
             if info["rowPosition"] == "bottom":
-                assert grid.get_cell(y + 1, x).location["y"] >= (
-                    grid_loc["y"] + grid_size["height"]
-                )
-                assert (
-                    grid.get_cell(y - 1, x).location["y"]
-                    < (grid_loc["y"] + grid_size["height"])
-                    and grid.get_cell(y - 1, x).location["y"] > grid_loc["y"]
-                )
+                assert not grid.cell_in_viewport(y + 1, x)
+                assert grid.cell_in_viewport(y - 1, x)
             elif info["rowPosition"] == "middle":
-                assert (
-                    grid.get_cell(y + 1, x).location["y"]
-                    < (grid_loc["y"] + grid_size["height"])
-                    and grid.get_cell(y + 1, x).location["y"] > grid_loc["y"]
-                )
-                assert (
-                    grid.get_cell(y - 1, x).location["y"]
-                    < (grid_loc["y"] + grid_size["height"])
-                    and grid.get_cell(y - 1, x).location["y"] > grid_loc["y"]
-                )
+                assert grid.cell_in_viewport(y + 1, x)
+                assert grid.cell_in_viewport(y - 1, x)
             else:
-                assert (
-                    grid.get_cell(y + 1, x).location["y"]
-                    < (grid_loc["y"] + grid_size["height"])
-                    and grid.get_cell(y + 1, x).location["y"] > grid_loc["y"]
-                )
-                assert grid.get_cell(y - 1, x).location["y"] < grid_loc["y"]
+                assert grid.cell_in_viewport(y + 1, x)
+                assert not grid.cell_in_viewport(y - 1, x)
         elif "rowIndex" in info or "rowId" in info or "data" in info:
-            assert (
-                grid.get_cell(y + 1, x).location["y"]
-                < (grid_loc["y"] + grid_size["height"])
-                and grid.get_cell(y + 1, x).location["y"] > grid_loc["y"]
-            )
-            assert grid.get_cell(y - 1, x).location["y"] < grid_loc["y"]
+            assert grid.cell_in_viewport(y + 1, x)
+            assert not grid.cell_in_viewport(y - 1, x)
 
         # column testing
         if "column" in info:
             if "columnPosition" in info:
                 if info["columnPosition"] == "end":
                     if x + 1 < len(df.columns):
-                        assert grid.get_cell(y, x + 1).location["x"] >= (
-                            grid_loc["x"] + grid_size["width"] - 20
-                        )
+                        assert not grid.cell_in_viewport(y, x+1)
                     if x - 1 >= 0:
-                        assert (
-                            grid.get_cell(y, x - 1).location["x"]
-                            < (grid_loc["x"] + grid_size["width"] - 20)
-                            and grid.get_cell(y, x - 1).location["x"] > grid_loc["x"]
-                        )
+                        assert grid.cell_in_viewport(y, x-1)
                 elif info["columnPosition"] == "middle":
                     if x + 1 < len(df.columns):
-                        assert (
-                            grid.get_cell(y, x + 1).location["x"]
-                            < (grid_loc["x"] + grid_size["width"] - 20)
-                            and grid.get_cell(y, x + 1).location["x"] > grid_loc["x"]
-                        )
+                        assert grid.cell_in_viewport(y, x+1)
                     if x - 1 >= 0:
-                        assert (
-                            grid.get_cell(y, x - 1).location["x"]
-                            < (grid_loc["x"] + grid_size["width"] - 20)
-                            and grid.get_cell(y, x - 1).location["x"] > grid_loc["x"]
-                        )
+                        assert grid.cell_in_viewport(y, x-1)
                 else:
                     if x + 1 < len(df.columns):
-                        assert (
-                            grid.get_cell(y, x + 1).location["x"]
-                            < (grid_loc["x"] + grid_size["width"])
-                            and grid.get_cell(y, x + 1).location["x"] >= grid_loc["x"]
-                        )
+                        assert grid.cell_in_viewport(y, x+1)
                     if x - 1 >= 0:
-                        assert grid.get_cell(y, x - 1).location["x"] < grid_loc["x"]
+                        assert not grid.cell_in_viewport(y, x-1)
             else:
                 if x + 1 < len(df.columns):
-                    assert (
-                        grid.get_cell(y, x + 1).location["x"]
-                        < (grid_loc["x"] + grid_size["width"])
-                        and grid.get_cell(y, x + 1).location["x"] >= grid_loc["x"]
-                    )
+                    assert grid.cell_in_viewport(y, x+1)
                 if x - 1 >= 0:
-                    assert grid.get_cell(y, x - 1).location["x"] < grid_loc["x"]
+                    assert not grid.cell_in_viewport(y, x-1)
 
 
 def test_st002_initial_scroll_to(dash_duo, df):
@@ -245,23 +197,10 @@ def test_st002_initial_scroll_to(dash_duo, df):
         timeout=3,
     )
 
-    # get grid dims
-    grid_loc = dash_duo.find_element("#grid .ag-body-viewport").location
-    grid_size = dash_duo.find_element("#grid .ag-body-viewport").size
-
     # row testing
-    assert (
-        grid.get_cell(y + 1, x).location["y"] < (grid_loc["y"] + grid_size["height"])
-        and grid.get_cell(y + 1, x).location["y"] > grid_loc["y"]
-    )
-    assert grid.get_cell(y - 1, x).location["y"] < grid_loc["y"]
+    assert grid.cell_in_viewport(y + 1, x)
+    assert not grid.cell_in_viewport(y - 1, x)
 
     # column testing
-    assert grid.get_cell(y, x + 1).location["x"] >= (
-        grid_loc["x"] + grid_size["width"] - 20
-    )
-    assert (
-        grid.get_cell(y, x - 1).location["x"]
-        < (grid_loc["x"] + grid_size["width"] - 20)
-        and grid.get_cell(y, x - 1).location["x"] > grid_loc["x"]
-    )
+    assert not grid.cell_in_viewport(y, x + 1)
+    assert grid.cell_in_viewport(y, x - 1)
