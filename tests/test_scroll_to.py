@@ -68,6 +68,7 @@ def scroll_to_inputs():
 
 
 def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
+    dash_duo.driver.set_window_size(500, 1000)
     app = Dash()
 
     # basic columns definition with column defaults
@@ -219,6 +220,7 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
 
 
 def test_st002_initial_scroll_to(dash_duo, df):
+    dash_duo.driver.set_window_size(500, 1000)
     app = Dash()
 
     # basic columns definition with column defaults
