@@ -136,3 +136,30 @@ def test_st001_scroll_to(scroll_to_input, row, column, dash_duo, df):
         lambda: grid.get_cell(row, column).is_displayed(),
         timeout=3,
     )
+
+
+def test_st002_initial_scroll_to(dash_duo, df):
+    app = Dash()
+
+    # basic columns definition with column defaults
+    columnDefs = [{"field": c} for c in df.columns]
+
+    app.layout = html.Div(
+        [
+            AgGrid(
+                id="grid",
+                columnDefs=columnDefs,
+                rowData=df.to_dict("records"),
+                defaultColDef={"resizable": True, "sortable": True, "filter": True},
+                scrollTo={"rowIndex": 2000, "column": "total"},
+            ),
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+    until(
+        lambda: grid.get_cell(2000, 9).is_displayed(),
+        timeout=3,
+    )
