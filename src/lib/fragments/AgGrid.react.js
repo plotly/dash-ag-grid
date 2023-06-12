@@ -1294,6 +1294,26 @@ export default class DashAgGrid extends Component {
     }
 }
 
+export const getApi = (id) => {
+    var grid = agGridRefs[stringifyId(id)];
+    if (grid?.api) {
+        return grid.api;
+    }
+    throw new Error(
+        `no grid found, or grid is not initialized yet, with id: ${id}`
+    );
+};
+
+export const getColumnApi = (id) => {
+    var grid = agGridRefs[stringifyId(id)];
+    if (grid?.columnApi) {
+        return grid.columnApi;
+    }
+    throw new Error(
+        `no grid found, or grid is not initialized yet, with id: ${id}`
+    );
+};
+
 DashAgGrid.defaultProps = _defaultProps;
 DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
 
