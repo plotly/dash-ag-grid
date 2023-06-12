@@ -204,3 +204,37 @@ dagfuncs.myCustomButton2 = class {
         return this.eGui
     }
 }
+
+dagfuncs.bit = class {
+
+     init(params) {
+        var props = params
+
+        var onKeyDown = () => {
+            if (event.key == " " || event.keyCode == 32) {
+                event.stopPropagation();
+                props.setValue(!props.data[props.column.colId]);
+                event.preventDefault();
+            }
+        }
+
+        // adds event listener to renderers parent cell (prevents stacking events)
+        if (!props.eGridCell.getAttribute('keydownadded')) {
+            props.eGridCell.addEventListener('keydown', onKeyDown)
+            props.eGridCell.setAttribute('keydownadded', true)
+        }
+
+        var checkedHandler = () => {
+            const checked = event.target.checked;
+            props.setValue(checked);
+        }
+
+        this.eGui = document.createElement('div');
+
+        ReactDOM.render(React.createElement('input', {checked: props.value, type: 'checkbox',
+        onChange: checkedHandler, onKeyDown}), this.eGui)
+     }
+     getGui() {
+        return this.eGui
+     }
+}

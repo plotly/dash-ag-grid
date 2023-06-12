@@ -138,3 +138,35 @@ dagcomponentfuncs.myCustomButton2 = function (props) {
 
     }, 'test cellRendererData'))
 }
+
+dagcomponentfuncs.bit = (props) => {
+
+    var value = props.value;
+
+    onKeyDown = () => {
+        if (event.key == " " || event.keyCode == 32) {
+            event.stopPropagation();
+            const colId = props.column.colId;
+            props.node.setDataValue(colId, !value);
+            event.preventDefault();
+            value = !value
+        }
+    }
+
+    // adds event listener to renderers parent cell (prevents stacking events)
+    if (!props.eGridCell.getAttribute('keydownadded')) {
+        props.eGridCell.addEventListener('keydown', onKeyDown)
+        props.eGridCell.setAttribute('keydownadded', true)
+    }
+
+    checkedHandler = () => {
+        const checked = event.target.checked;
+        const colId = props.column.colId;
+        props.node.setDataValue(colId, checked);
+    }
+
+    newElement = React.createElement('input', {checked: props.value, type: 'checkbox',
+    onChange: checkedHandler})
+
+    return newElement
+}
