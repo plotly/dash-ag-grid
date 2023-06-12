@@ -5,7 +5,7 @@ from . import utils
 from dash.testing.wait import until
 
 
-def test_cr001_class_rules(dash_duo):
+def test_ga001_grid_apis(dash_duo):
     app = Dash(
         __name__,
         meta_tags=[
