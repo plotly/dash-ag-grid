@@ -110,4 +110,5 @@ def test_ga001_grid_apis(dash_duo):
     until(lambda: json.loads(dash_duo.find_element('#virtualRowData').text) == rowData, timeout=3)
 
     dash_duo.find_element("#hidePrice").click()
+    until(lambda: dash_duo.find_element('#columnState').text != '', timeout=3)
     until(lambda: json.loads(dash_duo.find_element('#columnState').text)[2]['hide'], timeout=3)
