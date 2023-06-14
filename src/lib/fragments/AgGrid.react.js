@@ -1063,7 +1063,7 @@ export default class DashAgGrid extends Component {
             gridApi.ensureNodeVisible(node, rowPosition);
         } else if (scrollTo.data) {
             gridApi.forEachNode((node) => {
-                if (includes(node.data, [scrollTo.data])) {
+                if (equals(node.data, scrollTo.data)) {
                     gridApi.ensureNodeVisible(node, rowPosition);
                 }
             });
