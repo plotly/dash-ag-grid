@@ -17,6 +17,7 @@ import {
 import {
     propTypes as _propTypes,
     defaultProps as _defaultProps,
+    apiGetters,
 } from '../components/AgGrid.react';
 import {
     COLUMN_DANGEROUS_FUNCTIONS,
@@ -73,6 +74,9 @@ const xssMessage = (context) => {
 const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
 
 const agGridRefs = {};
+
+apiGetters.getApi = (id) => agGridRefs[stringifyId(id)]?.api;
+apiGetters.getColumnApi = (id) => agGridRefs[stringifyId(id)]?.columnApi;
 
 const eventBus = {
     listeners: {},
@@ -1293,26 +1297,6 @@ export default class DashAgGrid extends Component {
         );
     }
 }
-
-export const getApi = (id) => {
-    var grid = agGridRefs[stringifyId(id)];
-    if (grid?.api) {
-        return grid.api;
-    }
-    throw new Error(
-        `no grid found, or grid is not initialized yet, with id: ${id}`
-    );
-};
-
-export const getColumnApi = (id) => {
-    var grid = agGridRefs[stringifyId(id)];
-    if (grid?.columnApi) {
-        return grid.columnApi;
-    }
-    throw new Error(
-        `no grid found, or grid is not initialized yet, with id: ${id}`
-    );
-};
 
 DashAgGrid.defaultProps = _defaultProps;
 DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};

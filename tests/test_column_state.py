@@ -248,7 +248,7 @@ def test_cs001_column_state(dash_duo):
     )
 
     time.sleep(
-        0.2
+        1
     )  ### pause to emulate user clicking, if no pause column state doesnt trigger properly
     dash_duo.find_element("#load-column-defs").click()
     until(
@@ -259,7 +259,7 @@ def test_cs001_column_state(dash_duo):
     grid.wait_for_cell_text(0, 0, "32000")
 
     time.sleep(
-        0.2
+        1
     )  ### pause to emulate user clicking, if no pause column state doesnt trigger properly
     dash_duo.find_element("#load-column-state-defs-button").click()
     until(
