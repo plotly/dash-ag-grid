@@ -1058,7 +1058,7 @@ export default class DashAgGrid extends Component {
         const rowPosition = scrollTo.rowPosition ? scrollTo.rowPosition : 'top';
         if (scrollTo.rowIndex || scrollTo.rowIndex === 0) {
             gridApi.ensureIndexVisible(scrollTo.rowIndex, rowPosition);
-        } else if (scrollTo.rowId) {
+        } else if (scrollTo.rowId !== undefined) {
             const node = gridApi.getRowNode(scrollTo.rowId);
             gridApi.ensureNodeVisible(node, rowPosition);
         } else if (scrollTo.data) {
