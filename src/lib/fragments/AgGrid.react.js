@@ -1051,7 +1051,7 @@ export default class DashAgGrid extends Component {
 
     scrollTo(reset = false) {
         const {gridApi} = this.state;
-        const {scrollTo, setProps} = this.props;
+        const {scrollTo, setProps, getRowId} = this.props;
         if (!gridApi) {
             return;
         }
@@ -1062,13 +1062,23 @@ export default class DashAgGrid extends Component {
             const node = gridApi.getRowNode(scrollTo.rowId);
             gridApi.ensureNodeVisible(node, rowPosition);
         } else if (scrollTo.data) {
-            let scrolled = false;
-            gridApi.forEachNodeAfterFilterAndSort((node) => {
-                if (!scrolled && equals(node.data, scrollTo.data)) {
-                    gridApi.ensureNodeVisible(node, rowPosition);
-                    scrolled = true;
-                }
-            });
+            if (getRowId) {
+                const parsedCondition = esprima.parse(
+                    getRowId.replaceAll('params.data.', '')
+                ).body[0].expression;
+                const node = gridApi.getRowNode(
+                    evaluate(parsedCondition, scrollTo.data)
+                );
+                gridApi.ensureNodeVisible(node, rowPosition);
+            } else {
+                let scrolled = false;
+                gridApi.forEachNodeAfterFilterAndSort((node) => {
+                    if (!scrolled && equals(node.data, scrollTo.data)) {
+                        gridApi.ensureNodeVisible(node, rowPosition);
+                        scrolled = true;
+                    }
+                });
+            }
         }
         if (scrollTo.column) {
             const columnPosition = scrollTo.columnPosition

@@ -21,11 +21,11 @@ def scroll_to_inputs():
     return [
         {"rowIndex": 100, "rowPosition": "bottom", "cell": (100, 0)},
         {"column": "bronze", "columnPosition": "end", "cell": (100, 8)},
-        {"rowId": 200, "rowPosition": "top", "cell": (200, 8)},
+        {"rowId": "Elizabeth Beisel12/8/2012", "rowPosition": "top", "cell": (200, 8)},
         {"rowIndex": 300, "rowId": 500, "cell": (300, 8)},
         {
             "rowIndex": 400,
-            "rowId": 500,
+            "rowId": "Ryan Bayley29/08/2004",
             "column": "athlete",
             "rowPosition": "bottom",
             "columnPosition": "start",
@@ -50,7 +50,7 @@ def scroll_to_inputs():
         },
         {
             "rowIndex": 2000,
-            "rowId": 200,
+            "rowId": "Elizabeth Beisel12/8/2012",
             "data": {
                 "athlete": "Elizabeth Beisel",
                 "age": 19,
@@ -83,6 +83,7 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
                 columnDefs=columnDefs,
                 rowData=df.to_dict("records"),
                 defaultColDef={"resizable": True, "sortable": True, "filter": True},
+                getRowId="params.data.athlete+params.data.date",
             ),
             html.Button(id="btn"),
             html.Div(id="scrollTo-output"),
@@ -141,24 +142,24 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
             if "columnPosition" in info:
                 if info["columnPosition"] == "end":
                     if x + 1 < len(df.columns):
-                        assert not grid.cell_in_viewport(y, x+1)
+                        assert not grid.cell_in_viewport(y, x + 1)
                     if x - 1 >= 0:
-                        assert grid.cell_in_viewport(y, x-1)
+                        assert grid.cell_in_viewport(y, x - 1)
                 elif info["columnPosition"] == "middle":
                     if x + 1 < len(df.columns):
-                        assert grid.cell_in_viewport(y, x+1)
+                        assert grid.cell_in_viewport(y, x + 1)
                     if x - 1 >= 0:
-                        assert grid.cell_in_viewport(y, x-1)
+                        assert grid.cell_in_viewport(y, x - 1)
                 else:
                     if x + 1 < len(df.columns):
-                        assert grid.cell_in_viewport(y, x+1)
+                        assert grid.cell_in_viewport(y, x + 1)
                     if x - 1 >= 0:
-                        assert not grid.cell_in_viewport(y, x-1)
+                        assert not grid.cell_in_viewport(y, x - 1)
             else:
                 if x + 1 < len(df.columns):
-                    assert grid.cell_in_viewport(y, x+1)
+                    assert grid.cell_in_viewport(y, x + 1)
                 if x - 1 >= 0:
-                    assert not grid.cell_in_viewport(y, x-1)
+                    assert not grid.cell_in_viewport(y, x - 1)
 
 
 def test_st002_initial_scroll_to(dash_duo, df):
