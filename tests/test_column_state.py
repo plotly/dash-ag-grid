@@ -2,6 +2,7 @@ from dash import Dash, html, Output, Input, no_update, State, ctx
 import dash_ag_grid as dag
 import plotly.express as px
 import json
+import time
 
 from . import utils
 from dash.testing.wait import until
@@ -245,8 +246,10 @@ def test_cs001_column_state(dash_duo):
         in dash_duo.find_element("#reset-column-state-grid-pre").text,
         timeout=3,
     )
-    grid.wait_for_all_header_texts(['Price', 'Model', 'Make'])
+    grid.wait_for_all_header_texts(["Price", "Model", "Make"])
     grid.wait_for_cell_text(0, 0, "32000")
+
+    time.sleep(0.2)  # pausing to emulate separation because user inputs
 
     dash_duo.find_element("#load-column-state-defs-button").click()
     until(
@@ -254,4 +257,4 @@ def test_cs001_column_state(dash_duo):
         in dash_duo.find_element("#reset-column-state-grid-pre").text,
         timeout=3,
     )
-    grid.wait_for_all_header_texts(['Make', 'Price', 'Model'])
+    grid.wait_for_all_header_texts(["Make", "Price", "Model"])
