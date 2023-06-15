@@ -249,7 +249,7 @@ def test_cs001_column_state(dash_duo):
     grid.wait_for_all_header_texts(["Price", "Model", "Make"])
     grid.wait_for_cell_text(0, 0, "32000")
 
-    time.sleep(0.2)  # pausing to emulate separation because user inputs
+    time.sleep(0.5)  # pausing to emulate separation because user inputs
 
     dash_duo.find_element("#load-column-state-defs-button").click()
     until(
