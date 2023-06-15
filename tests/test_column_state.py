@@ -245,6 +245,7 @@ def test_cs001_column_state(dash_duo):
         in dash_duo.find_element("#reset-column-state-grid-pre").text,
         timeout=3,
     )
+    grid.wait_for_all_header_texts(['Price', 'Model', 'Make'])
     grid.wait_for_cell_text(0, 0, "32000")
 
     dash_duo.find_element("#load-column-state-defs-button").click()
