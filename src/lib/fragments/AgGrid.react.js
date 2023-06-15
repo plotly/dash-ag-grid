@@ -582,11 +582,14 @@ export default class DashAgGrid extends Component {
             deleteSelectedRows,
             filterModel,
             columnState,
+            columnSize,
             paginationGoTo,
             scrollTo,
+            rowTransaction,
+            updateColumnState,
         } = this.props;
 
-        if (this.state.gridColumnApi && this.props.loading_state.is_loading) {
+        if (this.state.gridApi && prevProps.loading_state.is_loading) {
             if (
                 this.props.columnState !== prevProps.columnState &&
                 !this.state.columnState_push
@@ -708,6 +711,57 @@ export default class DashAgGrid extends Component {
             !this.selectionEventFired
         ) {
             this.setSelection(selectedRows);
+        }
+
+        if (this.state.gridApi && this.state.gridApi === prevState.gridApi) {
+            if (filterModel) {
+                if (this.state.gridApi) {
+                    if (this.state.gridApi.getFilterModel() !== filterModel) {
+                        this.state.gridApi.setFilterModel(filterModel);
+                    }
+                }
+            }
+
+            if (paginationGoTo || paginationGoTo === 0) {
+                this.paginationGoTo();
+            }
+
+            if (scrollTo) {
+                this.scrollTo();
+            }
+
+            if (columnSize) {
+                this.updateColumnWidths();
+            }
+
+            if (resetColumnState) {
+                this.resetColumnState();
+            }
+
+            if (exportDataAsCsv) {
+                this.exportDataAsCsv(csvExportParams);
+            }
+
+            if (selectAll) {
+                this.selectAll(selectAll);
+            }
+
+            if (deselectAll) {
+                this.deselectAll();
+            }
+
+            if (deleteSelectedRows) {
+                this.deleteSelectedRows();
+            }
+
+            if (rowTransaction) {
+                this.rowTransaction(rowTransaction);
+            }
+            if (updateColumnState) {
+                this.updateColumnState();
+            } else if (this.state.columnState_push) {
+                this.setColumnState();
+            }
         }
 
         // Reset selection event flag
@@ -1210,76 +1264,14 @@ export default class DashAgGrid extends Component {
     }
 
     render() {
-        const {
-            id,
-            style,
-            className,
-            resetColumnState,
-            exportDataAsCsv,
-            selectAll,
-            deselectAll,
-            deleteSelectedRows,
-            rowTransaction,
-            updateColumnState,
-            csvExportParams,
-            dashGridOptions,
-            filterModel,
-            columnState,
-            paginationGoTo,
-            columnSize,
-            scrollTo,
-            ...restProps
-        } = this.props;
+        const {id, style, className, dashGridOptions, ...restProps} =
+            this.props;
 
         const passingProps = pick(PASSTHRU_PROPS, restProps);
 
         const convertedProps = this.convertAllProps(
             omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
         );
-
-        if (filterModel) {
-            if (this.state.gridApi) {
-                if (this.state.gridApi.getFilterModel() !== filterModel) {
-                    this.state.gridApi.setFilterModel(filterModel);
-                }
-            }
-        }
-
-        if (paginationGoTo || paginationGoTo === 0) {
-            this.paginationGoTo();
-        }
-
-        if (scrollTo) {
-            this.scrollTo();
-        }
-
-        if (columnSize) {
-            this.updateColumnWidths();
-        }
-
-        if (resetColumnState) {
-            this.resetColumnState();
-        }
-
-        if (exportDataAsCsv) {
-            this.exportDataAsCsv(csvExportParams);
-        }
-
-        if (selectAll) {
-            this.selectAll(selectAll);
-        }
-
-        if (deselectAll) {
-            this.deselectAll();
-        }
-
-        if (deleteSelectedRows) {
-            this.deleteSelectedRows();
-        }
-
-        if (rowTransaction) {
-            this.rowTransaction(rowTransaction);
-        }
 
         let alignedGrids;
         if (dashGridOptions) {
@@ -1304,12 +1296,6 @@ export default class DashAgGrid extends Component {
                     addGrid(dashGridOptions.alignedGrids);
                 }
             }
-        }
-
-        if (updateColumnState) {
-            this.updateColumnState();
-        } else if (columnState && !this.props.loading_state.is_loading) {
-            this.setColumnState();
         }
 
         return (

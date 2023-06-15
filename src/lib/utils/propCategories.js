@@ -296,6 +296,19 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'getDetailResponse',
     'dangerously_allow_code',
     'alignedGrids',
+    'resetColumnState',
+    'exportDataAsCsv',
+    'selectAll',
+    'deselectAll',
+    'deleteSelectedRows',
+    'rowTransaction',
+    'updateColumnState',
+    'csvExportParams',
+    'filterModel',
+    'columnState',
+    'paginationGoTo',
+    'columnSize',
+    'scrollTo',
 ];
 
 /**
@@ -317,9 +330,4 @@ export const OMIT_PROP_RENDER = [
 /**
  * States to not trigger a render update
  */
-export const OMIT_STATE_RENDER = [
-    'gridColumnApi',
-    'mounted',
-    'openGroups',
-    'columnState_push',
-];
+export const OMIT_STATE_RENDER = ['gridColumnApi', 'mounted', 'openGroups'];
