@@ -727,3 +727,19 @@ DashAgGrid.propTypes = {
 
 export const propTypes = DashAgGrid.propTypes;
 export const defaultProps = DashAgGrid.defaultProps;
+
+export const apiGetters = {};
+
+const _get = (flavor) => (id) => {
+    // optional chaining so before the fragment exists it'll just return undefined
+    // which does the right thing because clearly no grid is initialized yet!
+    const api = apiGetters[flavor]?.(id);
+    if (api) {
+        return api;
+    }
+    throw new Error(
+        `no grid found, or grid is not initialized yet, with id: ${id}`
+    );
+};
+export const getApi = _get('getApi');
+export const getColumnApi = _get('getColumnApi');

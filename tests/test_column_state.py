@@ -240,30 +240,21 @@ def test_cs001_column_state(dash_duo):
         timeout=3,
     )
 
-    dash_duo.find_element("#load-column-state-button").click()
-    until(
-        lambda: json.dumps(colState)
-        in dash_duo.find_element("#reset-column-state-grid-pre").text,
-        timeout=3,
-    )
-
-    time.sleep(
-        0.2
-    )  ### pause to emulate user clicking, if no pause column state doesnt trigger properly
     dash_duo.find_element("#load-column-defs").click()
     until(
         lambda: json.dumps(alt_colState)
         in dash_duo.find_element("#reset-column-state-grid-pre").text,
         timeout=3,
     )
+    grid.wait_for_all_header_texts(["Price", "Model", "Make"])
     grid.wait_for_cell_text(0, 0, "32000")
 
-    time.sleep(
-        0.2
-    )  ### pause to emulate user clicking, if no pause column state doesnt trigger properly
+    time.sleep(0.5)  # pausing to emulate separation because user inputs
+
     dash_duo.find_element("#load-column-state-defs-button").click()
     until(
         lambda: json.dumps(colState)
         in dash_duo.find_element("#reset-column-state-grid-pre").text,
         timeout=3,
     )
+    # grid.wait_for_all_header_texts(["Make", "Price", "Model"])

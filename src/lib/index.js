@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-import AgGrid from './components/AgGrid.react';
+import AgGrid, {getApi, getColumnApi} from './components/AgGrid.react';
 
-export {AgGrid};
+export {AgGrid, getApi, getColumnApi};
