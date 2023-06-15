@@ -8,10 +8,6 @@ from dash.testing.wait import until
 from . import utils
 
 
-df = px.data.election()
-default_display_cols = ["district_id", "district", "winner"]
-
-
 def test_pa001_pagination(dash_duo):
     app = Dash(__name__)
 

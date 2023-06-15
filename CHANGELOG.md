@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## [UNRELEASED]
+### Added
+- [#199](https://github.com/plotly/dash-ag-grid/pull/199) Add `scrollTo` prop which allows scrolling to rows and columns.
 
 ## [2.1.0] - 2023-06-02
 

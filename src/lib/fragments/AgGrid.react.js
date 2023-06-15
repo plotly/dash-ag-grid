@@ -142,6 +142,7 @@ export default class DashAgGrid extends Component {
         this.onAsyncTransactionsFlushed =
             this.onAsyncTransactionsFlushed.bind(this);
         this.onPaginationChanged = this.onPaginationChanged.bind(this);
+        this.scrollTo = this.scrollTo.bind(this);
 
         // Additional Exposure
         this.selectAll = this.selectAll.bind(this);
@@ -582,6 +583,7 @@ export default class DashAgGrid extends Component {
             filterModel,
             columnState,
             paginationGoTo,
+            scrollTo,
         } = this.props;
 
         if (this.state.gridColumnApi && this.props.loading_state.is_loading) {
@@ -641,6 +643,11 @@ export default class DashAgGrid extends Component {
             if (paginationGoTo || paginationGoTo === 0) {
                 this.paginationGoTo(false);
                 propsToSet.paginationGoTo = null;
+            }
+
+            if (scrollTo) {
+                this.scrollTo(scrollTo);
+                propsToSet.scrollTo = null;
             }
 
             if (resetColumnState) {
@@ -1046,6 +1053,50 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    scrollTo(reset = false) {
+        const {gridApi} = this.state;
+        const {scrollTo, setProps, getRowId} = this.props;
+        if (!gridApi) {
+            return;
+        }
+        const rowPosition = scrollTo.rowPosition ? scrollTo.rowPosition : 'top';
+        if (scrollTo.rowIndex || scrollTo.rowIndex === 0) {
+            gridApi.ensureIndexVisible(scrollTo.rowIndex, rowPosition);
+        } else if (typeof scrollTo.rowId !== 'undefined') {
+            const node = gridApi.getRowNode(scrollTo.rowId);
+            gridApi.ensureNodeVisible(node, rowPosition);
+        } else if (scrollTo.data) {
+            if (getRowId) {
+                const parsedCondition = esprima.parse(
+                    getRowId.replaceAll('params.data.', '')
+                ).body[0].expression;
+                const node = gridApi.getRowNode(
+                    evaluate(parsedCondition, scrollTo.data)
+                );
+                gridApi.ensureNodeVisible(node, rowPosition);
+            } else {
+                let scrolled = false;
+                gridApi.forEachNodeAfterFilterAndSort((node) => {
+                    if (!scrolled && equals(node.data, scrollTo.data)) {
+                        gridApi.ensureNodeVisible(node, rowPosition);
+                        scrolled = true;
+                    }
+                });
+            }
+        }
+        if (scrollTo.column) {
+            const columnPosition = scrollTo.columnPosition
+                ? scrollTo.columnPosition
+                : 'auto';
+            gridApi.ensureColumnVisible(scrollTo.column, columnPosition);
+        }
+        if (reset) {
+            setProps({
+                scrollTo: null,
+            });
+        }
+    }
+
     resetColumnState(reset = true) {
         if (!this.state.gridApi) {
             return;
@@ -1176,6 +1227,7 @@ export default class DashAgGrid extends Component {
             columnState,
             paginationGoTo,
             columnSize,
+            scrollTo,
             ...restProps
         } = this.props;
 
@@ -1195,6 +1247,10 @@ export default class DashAgGrid extends Component {
 
         if (paginationGoTo || paginationGoTo === 0) {
             this.paginationGoTo();
+        }
+
+        if (scrollTo) {
+            this.scrollTo();
         }
 
         if (columnSize) {
