@@ -4,19 +4,17 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## [UNRELEASED]
+## [2.2.0] - 2023-06-20
+
 ### Added
 - [#199](https://github.com/plotly/dash-ag-grid/pull/199) Add `scrollTo` prop which allows scrolling to rows and columns.
-- [#209](https://github.com/plotly/dash-ag-grid/pull/209)
-  - Added `getApi` and `getColumnApi` to `dash_ag_grid` namespace to allow for JS functions to call the grid's API directly
+- [#209](https://github.com/plotly/dash-ag-grid/pull/209) Add `getApi` and `getColumnApi` to `dash_ag_grid` namespace to allow for JS functions to call the grid's API directly
 
 ### Fixed
-- [210](https://github.com/plotly/dash-ag-grid/pull/210)
-  - fixed issue where `columnState` wasnt being applied with React 18
+- [210](https://github.com/plotly/dash-ag-grid/pull/210) Fix issue with `columnState` and React 18
 
 ### Updated
-- [210](https://github.com/plotly/dash-ag-grid/pull/210)
-  - migrated props that use `setProps` from the `render()` to `componentDidUpdate`
+- [210](https://github.com/plotly/dash-ag-grid/pull/210) Migrate props that use `setProps` from the `render()` to `componentDidUpdate`
 
 ## [2.1.0] - 2023-06-02
 
