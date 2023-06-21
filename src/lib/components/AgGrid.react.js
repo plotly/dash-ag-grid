@@ -730,6 +730,9 @@ export const defaultProps = DashAgGrid.defaultProps;
 
 export const apiGetters = {};
 
+const DEFAULTTRYCOUNT = 20;
+const DEFAULTPAUSE = 200;
+
 const _get = (flavor) => (id) => {
     // optional chaining so before the fragment exists it'll just return undefined
     // which does the right thing because clearly no grid is initialized yet!
@@ -741,5 +744,30 @@ const _get = (flavor) => (id) => {
         `no grid found, or grid is not initialized yet, with id: ${id}`
     );
 };
+const _getAsync =
+    (flavor) =>
+    async (id, trycount = DEFAULTTRYCOUNT) => {
+        // optional chaining so before the fragment exists it'll just return undefined
+        // which does the right thing because clearly no grid is initialized yet!
+        var api = apiGetters[flavor]?.(id);
+        const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+        let count = 0;
+        while (!api) {
+            await delay(DEFAULTPAUSE);
+            api = apiGetters[flavor]?.(id);
+            count++;
+            if (count > trycount) {
+                break;
+            }
+        }
+        if (api) {
+            return api;
+        }
+        throw new Error(
+            `no grid found, or grid is not initialized yet, with id: ${id}`
+        );
+    };
 export const getApi = _get('getApi');
 export const getColumnApi = _get('getColumnApi');
+export const getApiAsync = _getAsync('getApi');
+export const getColumnApiAsync = _getAsync('getColumnApi');
