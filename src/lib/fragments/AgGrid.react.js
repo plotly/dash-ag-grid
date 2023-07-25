@@ -459,7 +459,9 @@ export default class DashAgGrid extends Component {
         if (rowModelType === 'clientSide') {
             const virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
-                virtualRowData.push(node.data);
+                if (node.data) {
+                    virtualRowData.push(node.data);
+                }
             });
             propsToSet.virtualRowData = virtualRowData;
         }
@@ -469,9 +471,16 @@ export default class DashAgGrid extends Component {
 
     getRowData() {
         const newRowData = [];
-        this.state.gridApi.forEachNode((node) => {
-            newRowData.push(node.data);
-        });
+        const {openGroups} = this.state;
+        if (!isEmpty(openGroups)) {
+            this.state.gridApi.forEachLeafNode((node) => {
+                newRowData.push(node.data);
+            });
+        } else {
+            this.state.gridApi.forEachNode((node) => {
+                newRowData.push(node.data);
+            });
+        }
         return newRowData;
     }
 
@@ -481,11 +490,14 @@ export default class DashAgGrid extends Component {
             const virtualRowData = [];
             if (rowModelType === 'clientSide') {
                 this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
-                    virtualRowData.push(node.data);
+                    if (node.data) {
+                        virtualRowData.push(node.data);
+                    }
                 });
             }
-            if (rowData !== this.getRowData()) {
-                setProps({rowData: this.getRowData(), virtualRowData});
+            const newRowData = this.getRowData();
+            if (rowData !== newRowData) {
+                setProps({rowData: newRowData, virtualRowData});
             } else {
                 setProps({virtualRowData});
             }
@@ -498,7 +510,9 @@ export default class DashAgGrid extends Component {
         if (rowModelType === 'clientSide') {
             const virtualRowData = [];
             this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
-                virtualRowData.push(node.data);
+                if (node.data) {
+                    virtualRowData.push(node.data);
+                }
             });
 
             propsToSet.virtualRowData = virtualRowData;
@@ -781,7 +795,9 @@ export default class DashAgGrid extends Component {
             if (rowData && rowModelType === 'clientSide') {
                 const virtualRowData = [];
                 gridApi.forEachNodeAfterFilterAndSort((node) => {
-                    virtualRowData.push(node.data);
+                    if (node.data) {
+                        virtualRowData.push(node.data);
+                    }
                 });
 
                 setProps({virtualRowData});
@@ -905,7 +921,9 @@ export default class DashAgGrid extends Component {
         const virtualRowData = [];
         if (this.props.rowModelType === 'clientSide' && this.state.gridApi) {
             this.state.gridApi.forEachNodeAfterFilterAndSort((node) => {
-                virtualRowData.push(node.data);
+                if (node.data) {
+                    virtualRowData.push(node.data);
+                }
             });
         }
         this.props.setProps({
@@ -1201,8 +1219,8 @@ export default class DashAgGrid extends Component {
         if (reset) {
             this.props.setProps({
                 deleteSelectedRows: false,
-                rowData: this.getRowData(),
             });
+            this.syncRowData();
         }
     }
     // end event actions
@@ -1243,8 +1261,8 @@ export default class DashAgGrid extends Component {
                 this.applyRowTransaction(data);
                 this.props.setProps({
                     rowTransaction: null,
-                    rowData: this.getRowData(),
                 });
+                this.syncRowData();
             } else {
                 this.setState({
                     rowTransaction: rowTransaction
