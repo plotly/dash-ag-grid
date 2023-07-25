@@ -12,9 +12,9 @@ def test_ga001_grid_apis(dash_duo):
             {
                 "http-equiv": "content-security-policy",
                 "content": "default-src 'self'; script-src 'self' 'unsafe-inline';"
-                " style-src https://* 'self' 'unsafe-inline'; "
-                "font-src data: https://* 'self' 'unsafe-inline';"
-                "img-src data: https://* 'self'",
+                           " style-src https://* 'self' 'unsafe-inline'; "
+                           "font-src data: https://* 'self' 'unsafe-inline';"
+                           "img-src data: https://* 'self'",
             }
         ],
     )
@@ -53,12 +53,14 @@ def test_ga001_grid_apis(dash_duo):
                     "row-red": "params.data.model == 'Boxster'",
                     "row-blue": "params.data.model == 'Celica'",
                 },
-                dashGridOptions={"getRowClass": {"function": "rowTest(params)"}},
+                dashGridOptions={"getRowClass": {"function": "rowTest(params)"},
+                                 "preventDefaultOnContextMenu": True},
             ),
             html.Button(id='addRow', children='add_row', n_clicks=0),
             html.Button(id='hidePrice', n_clicks=0),
             html.Div(id='virtualRowData'),
-            html.Div(id='columnState')
+            html.Div(id='columnState'),
+            html.Div(id='cellContext')
         ]
     )
 
@@ -82,6 +84,17 @@ def test_ga001_grid_apis(dash_duo):
         """function (d) {
             return JSON.stringify(d)
         }""", Output('columnState', 'children'), Input('grid', 'columnState')
+    )
+
+    app.clientside_callback(
+        """async function (id) {
+            grid = await dash_ag_grid.getApiAsync(id)
+            grid.addEventListener('cellContextMenu', (params) => {
+                    document.getElementById('cellContext').innerText = params.value;
+                })
+            return window.dash_clientside.no_update
+        }""",
+        Output('grid', 'id'), Input('grid', 'id')
     )
 
     app.clientside_callback(
@@ -112,3 +125,7 @@ def test_ga001_grid_apis(dash_duo):
     dash_duo.find_element("#hidePrice").click()
     until(lambda: dash_duo.find_element('#columnState').text != '', timeout=3)
     until(lambda: json.loads(dash_duo.find_element('#columnState').text)[2]['hide'], timeout=3)
+
+    action = utils.ActionChains(dash_duo.driver)
+    action.context_click(grid.get_cell(0,0)).perform()
+    until(lambda: dash_duo.find_element('#cellContext').text == 'Toyota', timeout=3)
