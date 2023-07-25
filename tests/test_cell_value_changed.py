@@ -37,12 +37,6 @@ def test_cv001_cell_value_changed(dash_duo):
     )
 
     app.clientside_callback(
-        """function (n){if (n) {return true} return window.dash_clientside.no_update}""",
-        Output("show_history", "is_open"),
-        Input("viewHistory", "n_clicks"),
-    )
-
-    app.clientside_callback(
         """function addToHistory(data) {
             if (data) {
                 reloadData = {...data.data}

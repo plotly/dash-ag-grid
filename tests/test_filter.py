@@ -23,7 +23,7 @@ def test_fi001_floating_filter(dash_duo):
                 ],
                 defaultColDef={"filter": True, "floatingFilter": True},
                 filterModel={
-                    "district_id": {
+                    "district": {
                         "filterType": "text",
                         "type": "contains",
                         "filter": "12",
@@ -62,12 +62,12 @@ def test_fi001_floating_filter(dash_duo):
     grid.set_filter(0, "12")
     dash_duo.wait_for_text_to_equal(
         "#filterModel",
-        '{"district_id": {"filterType": "text",'
-        ' "type": "contains", "filter": "12"}}',
+        '{"district_id": {"filterType": "number",'
+        ' "type": "equals", "filter": 12}}',
     )
 
-    grid.wait_for_cell_text(0, 1, "112-DeLorimier")
-    grid.wait_for_rendered_rows(5)
+    grid.wait_for_cell_text(0, 1, "12-Saint-Sulpice")
+    grid.wait_for_rendered_rows(1)
 
     dash_duo.find_element("#resetFilters").click()
     grid.wait_for_cell_text(0, 1, "101-Bois-de-Liesse")

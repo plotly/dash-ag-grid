@@ -203,33 +203,27 @@ export default class DashAgGrid extends Component {
         const {getRowId} = this.props;
         if (gridApi && selection) {
             this.setState({pauseSelections: true});
+            const nodeData = [];
             if (has('function', selection)) {
-                // keeps grid from rendering display unnecessarily
-                gridApi.deselectAll();
                 const test = this.parseFunction(selection.function);
+
                 gridApi.forEachNode((node) => {
                     if (test(node)) {
-                        node.setSelected(true);
+                        nodeData.push(node);
                     }
                 });
             } else if (has('ids', selection)) {
-                // keeps grid from rendering display unnecessarily
-                gridApi.deselectAll();
                 const mapId = {};
                 selection.ids.forEach((id) => {
                     mapId[id] = true;
                 });
                 gridApi.forEachNode((node) => {
                     if (mapId[node.id]) {
-                        node.setSelected(true);
+                        nodeData.push(node);
                     }
                 });
             } else {
-                if (!selection.length) {
-                    gridApi.deselectAll();
-                } else {
-                    // keeps grid from rendering display unnecessarily
-                    gridApi.deselectAll();
+                if (selection.length) {
                     if (getRowId) {
                         const parsedCondition = esprima.parse(
                             getRowId.replaceAll('params.data.', '')
@@ -240,18 +234,20 @@ export default class DashAgGrid extends Component {
                         });
                         gridApi.forEachNode((node) => {
                             if (mapId[node.id]) {
-                                node.setSelected(true);
+                                nodeData.push(node);
                             }
                         });
                     } else {
                         gridApi.forEachNode((node) => {
                             if (includes(node.data, selection)) {
-                                node.setSelected(true);
+                                nodeData.push(node);
                             }
                         });
                     }
                 }
             }
+            gridApi.deselectAll();
+            gridApi.setNodesSelected({nodes: nodeData, newValue: true});
             this.setState({pauseSelections: false});
         }
     }

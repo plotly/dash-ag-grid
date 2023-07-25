@@ -123,7 +123,7 @@ export const GRID_MAYBE_FUNCTIONS = {
  * https://www.ag-grid.com/react-data-grid/grid-options/
  **/
 export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
-    frameworkComponents: 1,
+    components: 1,
 };
 
 /**

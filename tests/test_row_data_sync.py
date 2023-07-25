@@ -155,13 +155,13 @@ def test_rs001_rowdata_sync(dash_duo):
             "#data",
             '[{"make": "t", "model": "Celica", "price": 35000}, '
             '{"make": "Ford", "model": "t", "price": 32000}, '
-            '{"make": "Porsche", "model": "Boxster", "price": "t"}]',
+            '{"make": "Porsche", "model": "Boxster", "price": null}]',
         )
         dash_duo.wait_for_text_to_equal(
             "#virtualData",
             '[{"make": "t", "model": "Celica", "price": 35000}, '
             '{"make": "Ford", "model": "t", "price": 32000}, '
-            '{"make": "Porsche", "model": "Boxster", "price": "t"}]',
+            '{"make": "Porsche", "model": "Boxster", "price": null}]',
         )
         dash_duo.find_element("#reset").click()
         dash_duo.wait_for_text_to_equal("#data", base + "]")
