@@ -731,7 +731,6 @@ export const defaultProps = DashAgGrid.defaultProps;
 export const apiGetters = {};
 
 const DEFAULTTRYCOUNT = 20;
-const DEFAULTPAUSE = 200;
 
 const _get = (flavor) => (id) => {
     // optional chaining so before the fragment exists it'll just return undefined
@@ -753,9 +752,10 @@ const _getAsync =
         const delay = (ms) => new Promise((res) => setTimeout(res, ms));
         let count = 0;
         let pause = 1;
+        const increase = 1.5;
         while (!api) {
             await delay(pause);
-            pause *= 1.5;
+            pause *= increase;
             api = apiGetters[flavor]?.(id);
             count++;
             if (count > trycount) {
