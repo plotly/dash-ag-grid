@@ -752,8 +752,10 @@ const _getAsync =
         var api = apiGetters[flavor]?.(id);
         const delay = (ms) => new Promise((res) => setTimeout(res, ms));
         let count = 0;
+        let pause = 1;
         while (!api) {
-            await delay(DEFAULTPAUSE);
+            await delay(pause);
+            pause *= 1.5;
             api = apiGetters[flavor]?.(id);
             count++;
             if (count > trycount) {
