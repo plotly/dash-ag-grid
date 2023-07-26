@@ -471,16 +471,9 @@ export default class DashAgGrid extends Component {
 
     getRowData() {
         const newRowData = [];
-        const {openGroups} = this.state;
-        if (!isEmpty(openGroups)) {
-            this.state.gridApi.forEachLeafNode((node) => {
-                newRowData.push(node.data);
-            });
-        } else {
-            this.state.gridApi.forEachNode((node) => {
-                newRowData.push(node.data);
-            });
-        }
+        this.state.gridApi.forEachLeafNode((node) => {
+            newRowData.push(node.data);
+        });
         return newRowData;
     }
 
