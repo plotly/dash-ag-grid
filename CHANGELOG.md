@@ -4,9 +4,10 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## [Unreleased] -
+## [2.3.0] - 2023-07-27
+
 ### Added
-- [#212](https://github.com/plotly/dash-ag-grid/pull/212) Async function for `getApiAsync` and `getColumnApiAsync` for use with grid initializing 
+- [#212](https://github.com/plotly/dash-ag-grid/pull/212) Async function for `getApiAsync` and `getColumnApiAsync` for use with grid initializing
 
 ### Fixed
 - [#226](https://github.com/plotly/dash-ag-grid/pull/226) Fixed issue when using grouped rows with `rowData` and `virtualRowData` populating incorrectly. [#215](https://github.com/plotly/dash-ag-grid/issues/215)
