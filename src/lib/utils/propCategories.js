@@ -271,6 +271,14 @@ export const COLUMN_ARRAY_NESTED_FUNCTIONS = {
 };
 
 /**
+ * Container object of objects inside a property that may have functions
+ * inside them, listed in other categories
+ */
+export const OBJ_MAP_MAYBE_FUNCTIONS = {
+    dataTypeDefinitions: 1,
+};
+
+/**
  * Props to pass straight from Dash to AG Grid with no caching or conversion
  */
 export const PASSTHRU_PROPS = ['rowData'];

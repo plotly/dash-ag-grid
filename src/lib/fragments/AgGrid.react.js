@@ -37,6 +37,7 @@ import {
     GRID_DANGEROUS_FUNCTIONS,
     OMIT_PROP_RENDER,
     OMIT_STATE_RENDER,
+    OBJ_MAP_MAYBE_FUNCTIONS,
 } from '../utils/propCategories';
 import debounce from '../utils/debounce';
 
@@ -381,6 +382,15 @@ export default class DashAgGrid extends Component {
                     return c;
                 });
             }
+            if (OBJ_MAP_MAYBE_FUNCTIONS[target]) {
+                Object.keys(value).map((c) => {
+                    console.log(c);
+                    if (typeof value[c] === 'object') {
+                        value[c] = this.convertCol(value[c]);
+                    }
+                });
+                return value;
+            }
             if (COLUMN_NESTED_FUNCTIONS[target] && typeof value === 'object') {
                 return this.convertCol(value);
             }
@@ -402,6 +412,15 @@ export default class DashAgGrid extends Component {
             }
             if (GRID_COLUMN_CONTAINERS[target]) {
                 return this.convertCol(value);
+            }
+            if (OBJ_MAP_MAYBE_FUNCTIONS[target]) {
+                Object.keys(value).map((c) => {
+                    console.log(c);
+                    if (typeof value[c] === 'object') {
+                        value[c] = this.convertCol(value[c]);
+                    }
+                });
+                return value;
             }
             if (GRID_NESTED_FUNCTIONS[target]) {
                 if ('suppressCallback' in value) {
