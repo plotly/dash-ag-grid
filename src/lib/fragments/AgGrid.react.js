@@ -1290,7 +1290,7 @@ export default class DashAgGrid extends Component {
                 }
             }
         }
-        
+
         return (
             <div
                 id={id}
