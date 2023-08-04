@@ -1292,7 +1292,7 @@ export default class DashAgGrid extends Component {
         }
 
         let defaultHeight = '400px';
-        if ('alignedGrids' in dashGridOptions) {
+        if ('domLayout' in dashGridOptions) {
             if (dashGridOptions.domLayout === 'autoHeight') {
                 defaultHeight = null;
             }
