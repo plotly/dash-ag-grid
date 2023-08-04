@@ -1291,11 +1291,18 @@ export default class DashAgGrid extends Component {
             }
         }
 
+        let defaultHeight = '400px';
+        if ('alignedGrids' in dashGridOptions) {
+            if (dashGridOptions.domLayout === 'autoHeight') {
+                defaultHeight = null;
+            }
+        }
+
         return (
             <div
                 id={id}
                 className={className}
-                style={{height: '400px', width: '100%', ...style}}
+                style={{height: defaultHeight, width: '100%', ...style}}
             >
                 <AgGridReact
                     ref={this.reference}
