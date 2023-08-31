@@ -414,7 +414,7 @@ export default class DashAgGrid extends Component {
                         : this.callbackGetDetail;
                 }
                 if ('detailGridOptions' in value) {
-                    value['detailGridOptions']['components'] = this.state.components
+                    value.detailGridOptions.components = this.state.components;
                 }
                 return this.convertAllProps(value);
             }
