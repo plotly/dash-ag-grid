@@ -26,8 +26,11 @@ def test_rf001_recursive_functions(dash_duo):
         {
             "headerName": "City",
             "field": "city",
-            "valueFormatter": {"function": "1+2"},
+            "valueGetter": {"function": "`**${1+2}**`"},
             "cellStyle": {"color": "red"},
+            "cellRendererParams": {
+                "innerRenderer": "markdown"
+            }
         },
         {"headerName": "Pop. (City proper)", "field": "population_city"},
         {"headerName": "Pop. (Metro area)", "field": "population_metro"},
@@ -37,7 +40,8 @@ def test_rf001_recursive_functions(dash_duo):
                 {
                     "headerName": "Pop. (Metro area)",
                     "field": "population_metro",
-                    "valueFormatter": {"function": "1+2"},
+                    "valueGetter": {"function": "`**${1+2}**`"},
+                    "cellRenderer": "markdown"
                 },
                 {
                     "headerName": "testing",
@@ -203,7 +207,13 @@ def test_rf001_recursive_functions(dash_duo):
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]', "3"
     )
     dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"] strong', "3"
+    )
+    dash_duo.wait_for_text_to_equal(
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]', "3"
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"] strong', "3"
     )
     dash_duo.wait_for_text_to_equal(
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]', "8"
@@ -229,7 +239,15 @@ def test_rf001_recursive_functions(dash_duo):
         "3",
     )
     dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"] strong',
+        "3",
+    )
+    dash_duo.wait_for_text_to_equal(
         '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]',
+        "3",
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"] strong',
         "3",
     )
     dash_duo.wait_for_text_to_equal(
@@ -266,7 +284,8 @@ def test_rf002_recursive_functions_server(dash_duo):
         {
             "headerName": "City",
             "field": "city",
-            "valueFormatter": {"function": "1+2"},
+            "valueGetter": {"function": "`**${1+2}**`"},
+            "cellRendererParams": {"innerRenderer": "markdown"},
             "cellStyle": {"color": "red"},
         },
         {"headerName": "Pop. (City proper)", "field": "population_city"},
@@ -277,7 +296,8 @@ def test_rf002_recursive_functions_server(dash_duo):
                 {
                     "headerName": "Pop. (Metro area)",
                     "field": "population_metro",
-                    "valueFormatter": {"function": "1+2"},
+                    "valueGetter": {"function": "`**${1+2}**`"},
+                    "cellRenderer": "markdown"
                 },
                 {
                     "headerName": "testing",
@@ -449,7 +469,13 @@ def test_rf002_recursive_functions_server(dash_duo):
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"]', "3"
     )
     dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="1"] strong', "3"
+    )
+    dash_duo.wait_for_text_to_equal(
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"]', "3"
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="4"] strong', "3"
     )
     dash_duo.wait_for_text_to_equal(
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="5"]', "8"
@@ -475,7 +501,15 @@ def test_rf002_recursive_functions_server(dash_duo):
         "3",
     )
     dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="1"] strong',
+        "3",
+    )
+    dash_duo.wait_for_text_to_equal(
         '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"]',
+        "3",
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="4"] strong',
         "3",
     )
     dash_duo.wait_for_text_to_equal(
