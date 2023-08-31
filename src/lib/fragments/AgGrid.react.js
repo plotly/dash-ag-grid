@@ -13,6 +13,7 @@ import {
     omit,
     includes,
     assoc,
+    assocPath,
 } from 'ramda';
 import {
     propTypes as _propTypes,
@@ -408,15 +409,23 @@ export default class DashAgGrid extends Component {
                 return this.convertCol(value);
             }
             if (GRID_NESTED_FUNCTIONS[target]) {
+                let adjustedVal = value;
                 if ('suppressCallback' in value) {
-                    value.getDetailRowData = value.suppressCallback
-                        ? this.suppressGetDetail(value.detailColName)
-                        : this.callbackGetDetail;
+                    adjustedVal = {
+                        ...adjustedVal,
+                        getDetailRowData: value.suppressCallback
+                            ? this.suppressGetDetail(value.detailColName)
+                            : this.callbackGetDetail,
+                    };
                 }
                 if ('detailGridOptions' in value) {
-                    value.detailGridOptions.components = this.state.components;
+                    adjustedVal = assocPath(
+                        ['detailGridOptions', 'components'],
+                        this.state.components,
+                        adjustedVal
+                    );
                 }
-                return this.convertAllProps(value);
+                return this.convertAllProps(adjustedVal);
             }
             if (GRID_DANGEROUS_FUNCTIONS[target]) {
                 return this.convertMaybeFunctionNoParams(value, {prop: target});
