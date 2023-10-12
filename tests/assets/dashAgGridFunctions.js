@@ -172,3 +172,51 @@ function monthToComparableNumber(date) {
   const dayNumber = parseInt(date.split('/')[0]);
   return yearNumber * 10000 + monthNumber * 100 + dayNumber;
 }
+
+const [useImperativeHandle, useState, useEffect, forwardRef] = [React.useImperativeHandle, React.useState, React.useEffect, React.forwardRef]
+
+dagfuncs.YearFilter = forwardRef((props, ref) => {
+   const [year, setYear] = useState('All');
+
+   useImperativeHandle(ref, () => {
+       return {
+           doesFilterPass(params) {
+               return params.data.year >= 2010;
+           },
+
+           isFilterActive() {
+               return year === '2010'
+           },
+
+           // this example isn't using getModel() and setModel(),
+           // so safe to just leave these empty. don't do this in your code!!!
+           getModel() {
+           },
+
+           setModel() {
+           }
+       }
+   });
+
+   useEffect(() => {
+       props.filterChangedCallback()
+   }, [year]);
+
+    setProps = (props) => {
+        if (props.value) {
+            setYear(props.value)
+        }
+    }
+
+    return React.createElement(
+        window.dash_core_components.RadioItems,
+        {
+            options:[
+                {'label': 'All', 'value': 'All'},
+                {'label': 'Since 2010', 'value': '2010'},
+            ],
+            value: year,
+            setProps
+        }
+        )
+});
