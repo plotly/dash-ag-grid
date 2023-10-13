@@ -175,6 +175,11 @@ function monthToComparableNumber(date) {
 
 const {useImperativeHandle, useState, useEffect, forwardRef} = React;
 
+// This example was adapted from https://www.ag-grid.com/react-data-grid/component-filter/
+// The only differences are:
+// - React.createElement instead of JSX
+// - setProps, which all Dash components use to report user interactions,
+//     instead of a plain js event handler
 dagfuncs.YearFilter = forwardRef((props, ref) => {
    const [year, setYear] = useState('All');
 
