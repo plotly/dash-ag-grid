@@ -338,3 +338,20 @@ dagfuncs.DMC_Select = class {
         this.prevFocus.focus();
     }
 };
+
+dagfuncs.contextTest = (params) => {
+    var result = [
+      {
+        // custom item
+        name: 'Alert ' + params.value,
+        action: () => {
+          window.alert('Alerting about ' + params.value);
+        },
+        cssClasses: ['redFont', 'bold'],
+      },
+      'copy',
+      'separator',
+      'chartRange',
+    ];
+    return result;
+};
