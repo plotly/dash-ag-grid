@@ -56,7 +56,12 @@ export const GRID_MAYBE_FUNCTIONS = {
     processDataFromClipboard: 1,
 
     // Exporting
+    getCustomContentBelowRow: 1,
     shouldRowBeSkipped: 1,
+    processCellCallback: 1,
+    processHeaderCallback: 1,
+    processGroupHeaderCallback: 1,
+    processRowGroupCallback: 1,
 
     // Filtering
     isExternalFilterPresent: 1,
@@ -156,6 +161,8 @@ export const GRID_COLUMN_CONTAINERS = {
 export const GRID_NESTED_FUNCTIONS = {
     detailCellRendererParams: 1,
     detailGridOptions: 1,
+    csvExportParams: 1,
+    defaultCsvExportParams: 1,
 };
 
 /**
