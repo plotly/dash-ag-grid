@@ -55,6 +55,9 @@ export const GRID_MAYBE_FUNCTIONS = {
     sendToClipboard: 1,
     processDataFromClipboard: 1,
 
+    // Exporting
+    shouldRowBeSkipped: 1,
+
     // Filtering
     isExternalFilterPresent: 1,
     doesExternalFilterPass: 1,
@@ -124,6 +127,8 @@ export const GRID_MAYBE_FUNCTIONS = {
  **/
 export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
     frameworkComponents: 1,
+    setPopupParent: 1,
+    popupParent: 1,
 };
 
 /**

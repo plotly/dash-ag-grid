@@ -3,3 +3,5 @@
 # pip install -r requirements.txt
 
 dash[ci,dev,testing]>=2.0
+
+dash_mantine_components=0.12.1
