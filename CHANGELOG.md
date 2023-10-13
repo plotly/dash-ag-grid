@@ -14,7 +14,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ### Fixed
 - [#237](https://github.com/plotly/dash-ag-grid/pull/237) Fixed issue with grid components not being passed down to the detail grids
-- [#232](https://github.com/plotly/dash-ag-grid/pull/232) Fixed height style to unassign automatically if `domLayout` = 'autoHeight', addresses [#231](https://github.com/plotly/dash-ag-grid/issue/231)
+- [#232](https://github.com/plotly/dash-ag-grid/pull/232) Fixed height style to unassign automatically if `domLayout` = 'autoHeight', addresses [#231](https://github.com/plotly/dash-ag-grid/issues/231)
 
 ## [2.3.0] - 2023-07-27
 
