@@ -46,6 +46,7 @@ export const GRID_MAYBE_FUNCTIONS = {
     // Accessories
     getMainMenuItems: 1,
     postProcessPopup: 1,
+    getContextMenuItems: 1,
 
     // Clipboard
     processCellForClipboard: 1,
@@ -82,6 +83,7 @@ export const GRID_MAYBE_FUNCTIONS = {
 
     // Miscellaneous
     getDocument: 1,
+    isRowMaster: 1,
 
     // Pagination
     paginationNumberFormatter: 1,
