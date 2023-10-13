@@ -1295,13 +1295,14 @@ export default class DashAgGrid extends Component {
             <div
                 id={id}
                 className={className}
-                style={{height:
+                style={{
+                    height:
                         convertedProps.domLayout === 'autoHeight'
                             ? null
                             : '400px',
-                       width: '100%',
-                       ...style
-                      }}
+                    width: '100%',
+                    ...style,
+                }}
             >
                 <AgGridReact
                     ref={this.reference}
