@@ -173,7 +173,7 @@ function monthToComparableNumber(date) {
   return yearNumber * 10000 + monthNumber * 100 + dayNumber;
 }
 
-const [useImperativeHandle, useState, useEffect, forwardRef] = [React.useImperativeHandle, React.useState, React.useEffect, React.forwardRef]
+const {useImperativeHandle, useState, useEffect, forwardRef} = React;
 
 dagfuncs.YearFilter = forwardRef((props, ref) => {
    const [year, setYear] = useState('All');
