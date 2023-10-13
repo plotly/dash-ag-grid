@@ -207,9 +207,9 @@ dagfuncs.YearFilter = forwardRef((props, ref) => {
        props.filterChangedCallback()
    }, [year]);
 
-    setProps = (props) => {
-        if (props.value) {
-            setYear(props.value)
+    setProps = ({value}) => {
+        if (value) {
+            setYear(value)
         }
     }
 
