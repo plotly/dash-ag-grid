@@ -1076,7 +1076,9 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi) {
             return;
         }
-        this.state.gridApi.exportDataAsCsv(csvExportParams);
+        this.state.gridApi.exportDataAsCsv(
+            this.convertAllProps(csvExportParams)
+        );
         if (reset) {
             this.props.setProps({
                 exportDataAsCsv: false,
