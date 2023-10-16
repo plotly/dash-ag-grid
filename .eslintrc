@@ -1,8 +1,14 @@
 {
   "extends": ["eslint:recommended", "prettier"],
-  "parser": "babel-eslint",
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 6,
+    "requireConfigFile": false,
     "sourceType": "module",
     "ecmaFeatures": {
       "arrowFunctions": true,
@@ -58,7 +64,7 @@
     "no-extend-native": ["error"],
     "no-extra-bind": ["error"],
     "no-extra-boolean-cast": ["error"],
-    "no-inline-comments": ["error"],
+    "no-inline-comments": ["off"],
     "no-implicit-coercion": ["error"],
     "no-implied-eval": ["error"],
     "no-inner-declarations": ["off"],

@@ -1,0 +1,81 @@
+.header1 .ag-header-cell-label {
+    /*Necessary to allow for text to grow vertically*/
+    height: 100%;
+    padding: 0 !important;
+}
+
+.header1 .ag-header-group-cell {
+    font-size: 50px;
+}
+
+.header1 .ag-header-cell-label .ag-header-cell-text {
+    /*Force the width corresponding at how much width
+      we need once the text is laid out vertically*/
+    width: 55px;
+    writing-mode: vertical-lr;
+    -ms-writing-mode: tb-lr;
+    line-height: 2em;
+    margin-top: 60px;
+}
+
+.header3 .ag-header-group-cell-with-group {
+    background-color: #00e7b1 !important;
+}
+
+/* Used in Column Groups page for Group Changes example*/
+.participant-group {
+    background-color: #00e7b1 !important;
+}
+
+.medals-group {
+    background-color: #5b9bd5 !important;
+}
+
+/* Used in Column Sizing page for Resizing Groups example*/
+.fixed-size-header {
+    background-color: #ffdddd !important;
+}
+
+.resizable-header {
+    background-color: #ddffdd !important;
+}
+
+/* Used in Column Moving page for Suppress Movable & Lock Position example*/
+.locked-col {
+    background: #ddd;
+}
+
+.suppress-movable-col {
+    background: #f5f5dc;
+}
+
+/* Used in Column Pinning page for Column Dragging and Lock Pinned example*/
+.lock-pinned {
+    background: #ddd;
+}
+
+/* Used in Column Spanning Simple example */
+.colSpanning .ag-body-viewport [col-id='country'] {
+    background-color: #a6e1ec;
+}
+
+/* Used in Column Spanning Complex example */
+.header-cell {
+    background-color: #a6e1ec;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.quarters-cell {
+    background-color: #5bc0de;
+    font-weight: bold;
+}
+
+
+/* For centered columns example */
+.center-header .ag-header-cell-label {
+    justify-content: center;
+}
+
+

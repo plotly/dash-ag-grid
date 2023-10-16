@@ -58,7 +58,6 @@ module.exports = (env, argv) => {
             rules: [
                 {
                     test: /\.jsx?$/,
-                    exclude: /node_modules/,
                     use: {
                       loader: 'babel-loader',
                       options: {
@@ -68,17 +67,7 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.css$/,
-                    use: [
-                        {
-                            loader: 'style-loader',
-                            options: {
-                                insertAt: 'top'
-                            }
-                        },
-                        {
-                            loader: 'css-loader',
-                        },
-                    ],
+                    use: ['style-loader', 'css-loader'],
                 },
             ],
         },

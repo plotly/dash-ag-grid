@@ -2,11 +2,18 @@
 .vscode/
 
 # Build artifacts
+dash_ag_grid/*
+!dash_ag_grid/__init__.py
+R/
 deps/
 man/
 inst/
 DESCRIPTION
+NAMESPACE
 Project.toml
+src/*.jl
+src/jl/*.jl
+lib/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### VisualStudioCode template

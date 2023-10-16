@@ -1,4 +1,8 @@
 export default {
     agGrid: () =>
-        import(/* webpackChunkName: "dashaggrid" */ './fragments/AgGrid.react'),
+        import(/* webpackChunkName: "community" */ './fragments/AgGrid.react'),
+    agGridEnterprise: () =>
+        import(
+            /* webpackChunkName: "enterprise" */ './fragments/AgGridEnterprise.react'
+        ),
 };

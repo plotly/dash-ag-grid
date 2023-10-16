@@ -1,13 +1,14 @@
 import React, {useCallback, useState} from 'react';
+import PropTypes from 'prop-types';
 
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function RowMenuRenderer(props) {
     const [anchorEl, setAnchorEl] = useState(null);
-    const {setProps, data} = props;
+    const {setData, data} = props;
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -19,14 +20,12 @@ export default function RowMenuRenderer(props) {
                 target: {value},
             } = e;
 
-            if (setProps && value) {
-                setProps({
-                    clickData: {value, data},
-                });
+            if (setData && value) {
+                setData(value);
             }
             setAnchorEl(null);
         },
-        [setProps, data]
+        [setData, data]
     );
 
     return (
@@ -55,3 +54,9 @@ export default function RowMenuRenderer(props) {
         </div>
     );
 }
+
+RowMenuRenderer.propTypes = {
+    setData: PropTypes.func,
+    data: PropTypes.any,
+    value: PropTypes.any,
+};

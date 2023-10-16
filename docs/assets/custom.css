@@ -1,0 +1,34 @@
+
+
+
+blockquote {
+    border-left: 4px var(--bs-primary) solid;
+    padding: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: 0rem;
+    background-color: var(--bs-light)
+}
+
+
+a.navbar-brand {
+  font-size : 40px;
+  font-weight: bold
+}
+
+
+.ag-theme-alpine.ag-theme-busybee {
+    --ag-odd-row-background-color: #F7CE87;
+    --ag-header-background-color: silver;
+    --ag-header-cell-hover-background-color: #c7c4bf;
+}
+
+
+.ag-theme-alpine.ag-theme-busybee .ag-pinned-left-cols-container, .ag-theme-busybee .ag-pinned-right-cols-container {
+    --ag-odd-row-background-color: rgb(215,215,215);
+    --ag-background-color: rgb(230,230,230);
+}
+
+
+
+
