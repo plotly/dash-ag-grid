@@ -46,6 +46,7 @@ export const GRID_MAYBE_FUNCTIONS = {
     // Accessories
     getMainMenuItems: 1,
     postProcessPopup: 1,
+    getContextMenuItems: 1,
 
     // Clipboard
     processCellForClipboard: 1,
@@ -54,6 +55,14 @@ export const GRID_MAYBE_FUNCTIONS = {
     processCellFromClipboard: 1,
     sendToClipboard: 1,
     processDataFromClipboard: 1,
+
+    // Exporting
+    getCustomContentBelowRow: 1,
+    shouldRowBeSkipped: 1,
+    processCellCallback: 1,
+    processHeaderCallback: 1,
+    processGroupHeaderCallback: 1,
+    processRowGroupCallback: 1,
 
     // Filtering
     isExternalFilterPresent: 1,
@@ -74,6 +83,7 @@ export const GRID_MAYBE_FUNCTIONS = {
 
     // Miscellaneous
     getDocument: 1,
+    isRowMaster: 1,
 
     // Pagination
     paginationNumberFormatter: 1,
@@ -124,6 +134,9 @@ export const GRID_MAYBE_FUNCTIONS = {
  **/
 export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
     components: 1,
+    frameworkComponents: 1,
+    setPopupParent: 1,
+    popupParent: 1,
 };
 
 /**
@@ -151,6 +164,8 @@ export const GRID_COLUMN_CONTAINERS = {
 export const GRID_NESTED_FUNCTIONS = {
     detailCellRendererParams: 1,
     detailGridOptions: 1,
+    csvExportParams: 1,
+    defaultCsvExportParams: 1,
 };
 
 /**
@@ -161,6 +176,7 @@ export const GRID_NESTED_FUNCTIONS = {
  **/
 export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
     cellEditor: 1,
+    filter: 1,
 
     // Columns: Sort
     comparator: 1,

@@ -13,6 +13,7 @@ import {
     omit,
     includes,
     assoc,
+    assocPath,
 } from 'ramda';
 import {
     propTypes as _propTypes,
@@ -423,12 +424,23 @@ export default class DashAgGrid extends Component {
                 return value;
             }
             if (GRID_NESTED_FUNCTIONS[target]) {
+                let adjustedVal = value;
                 if ('suppressCallback' in value) {
-                    value.getDetailRowData = value.suppressCallback
-                        ? this.suppressGetDetail(value.detailColName)
-                        : this.callbackGetDetail;
+                    adjustedVal = {
+                        ...adjustedVal,
+                        getDetailRowData: value.suppressCallback
+                            ? this.suppressGetDetail(value.detailColName)
+                            : this.callbackGetDetail,
+                    };
                 }
-                return this.convertAllProps(value);
+                if ('detailGridOptions' in value) {
+                    adjustedVal = assocPath(
+                        ['detailGridOptions', 'components'],
+                        this.state.components,
+                        adjustedVal
+                    );
+                }
+                return this.convertAllProps(adjustedVal);
             }
             if (GRID_DANGEROUS_FUNCTIONS[target]) {
                 return this.convertMaybeFunctionNoParams(value, {prop: target});
@@ -1079,7 +1091,9 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi) {
             return;
         }
-        this.state.gridApi.exportDataAsCsv(csvExportParams);
+        this.state.gridApi.exportDataAsCsv(
+            this.convertAllProps(csvExportParams)
+        );
         if (reset) {
             this.props.setProps({
                 exportDataAsCsv: false,
@@ -1310,7 +1324,14 @@ export default class DashAgGrid extends Component {
             <div
                 id={id}
                 className={className}
-                style={{height: '400px', width: '100%', ...style}}
+                style={{
+                    height:
+                        convertedProps.domLayout === 'autoHeight'
+                            ? null
+                            : '400px',
+                    width: '100%',
+                    ...style,
+                }}
             >
                 <AgGridReact
                     ref={this.reference}

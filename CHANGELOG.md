@@ -4,6 +4,18 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
+## [Unreleased]
+
+### Added
+- [#243](https://github.com/plotly/dash-ag-grid/pull/243) Added function support for:
+  - `getContextMenuItems`, `isRowMaster`, `setPopupParent`, `popupParent`, `filter`
+  - iterate through `csvExportParams` and `defaultCsvExportParams` for functions:
+    - `getCustomContextBelowRow`, `shouldRowBeSkipped`, `processCellCallback`, `processHeaderCallback`, `processGroupHeaderCallback`, `processRowGroupCallback`
+
+### Fixed
+- [#237](https://github.com/plotly/dash-ag-grid/pull/237) Fixed issue with grid components not being passed down to the detail grids
+- [#232](https://github.com/plotly/dash-ag-grid/pull/232) Fixed height style to unassign automatically if `domLayout` = 'autoHeight', addresses [#231](https://github.com/plotly/dash-ag-grid/issues/231)
+
 ## [2.3.0] - 2023-07-27
 
 ### Added

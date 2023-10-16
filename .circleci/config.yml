@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  browser-tools: circleci/browser-tools@1.4.3
+  browser-tools: circleci/browser-tools@1.4.4
 
 jobs:
   test: &test
@@ -12,8 +12,9 @@ jobs:
           password: $DASH_PAT_DOCKERHUB
     steps:
       - checkout
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      - browser-tools/install-browser-tools:
+          chrome-version: 116.0.5845.96
+          firefox-version: 116.0.3
       - run:
           name: Install Python deps
           command: |
