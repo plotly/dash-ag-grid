@@ -29,8 +29,8 @@
     "dependencies": {
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
-        "@mui/icons-material": "^5.14.13",
-        "@mui/material": "^5.14.13",
+        "@mui/icons-material": "^5.14.14",
+        "@mui/material": "^5.14.14",
         "ag-grid-community": "^29.3.5",
         "ag-grid-enterprise": "^29.3.5",
         "ag-grid-react": "^29.3.5",
@@ -41,7 +41,7 @@
         "ramda": "^0.29.1",
         "react-markdown": "^8.0.7",
         "rehype-raw": "^7.0.0",
-        "remark-gfm": "^4.0.0",
+        "remark-gfm": "^3.0.1",
         "static-eval": "^2.1.0"
     },
     "devDependencies": {
