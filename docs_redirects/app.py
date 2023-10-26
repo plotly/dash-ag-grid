@@ -120,7 +120,6 @@ app.layout =  html.Div("no layout")
 
 @app.server.before_request
 def redirect():
-    print(flask.request.path)
     return flask.redirect(redirect_map.get(flask.request.path, base))
 
 
