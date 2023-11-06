@@ -8,11 +8,11 @@ import flask
 
 base = "https://dash.plotly.com/dash-ag-grid/"
 redirect_map = {
-    "/" : base ,
+    "/": base,
     "/clientside-data/overview": base + "client-side-data",
     "/clientside-data/updating-data": base + "client-side-data-updating",
 
-    "/columns/column-definitions" : base + "column-definitions",
+    "/columns/column-definitions": base + "column-definitions",
     "/columns/column-groups": base + "column-groups",
     "/columns/column-headers": base + "column-headers",
     "/columns/column-moving": base + "column-moving",
@@ -34,7 +34,7 @@ redirect_map = {
     "/editing/editing-callbacks": base + "editing-and-callbacks",
     "/editing/full-row": base + "editing-full-row",
     "/editing/overview": base + "cell-editing",
-    "/editing/provided-cell-editors" : base + " provided-cell-editors",
+    "/editing/provided-cell-editors": base + " provided-cell-editors",
     "/editing/start-stop-editing": base + "start-stop-editing",
     "/editing/undo-redo": base + "undo-redo-edits",
 
@@ -75,9 +75,9 @@ redirect_map = {
     "/layout/selections": base + "styling-selections",
     "/layout/themes": base + "styling-themes",
 
-    "/other-examples/crossfilter": base + "",                     # This page doesn't exist yet in dash-docs
+    "/other-examples/crossfilter": base + "crossfilter",
     "/other-examples/popup-from-cell-click": base + "popups",
-    "/other-examples/virtual-row-data": base + "",                 # This page doesn't exist yet in dash-docs
+    "/other-examples/virtual-row-data": base + "virtual-row-data",
 
     "/persistence/persistence": base + "persistence",
 
@@ -98,16 +98,16 @@ redirect_map = {
     "/scrolling/infinite-scroll": base + "infinite-scroll",
     "/scrolling/pagination": base + "pagination",
     "/scrolling/scroll-to": base + "scroll-to",
-    "/scrolling/scrolling-performance" : base + "pagination",      # This page doesn't exist yet in dash-docs
+    "/scrolling/scrolling-performance": base + "scrolling-performance",
 
     "/selection/cell-selection": base + "cell-selection",
     "/selection/range-selection": base + "enterprise-ag-grid",
-    "/selection/select-everything-or-filtered" : base + "",        # This page doesn't exist yet in dash-docs
-    "/selection/selection-checkbox": base + "",
+    "/selection/select-everything-or-filtered": base + "checkbox-row-selection#header-checkbox-using-filters-and-pagination",
+    "/selection/selection-checkbox": base + "checkbox-row-selection",
     "/selection/selection-multiple-click": base + "row-selection-multiple-on-click",
     "/selection/selection-multiple": base + "row-selection-multiple",
     "/selection/selection-single": base + "row-selection-single",
-    "/selection/text-selection": base + "",
+    "/selection/text-selection": base + "text-selection",
 
     "/serverside-data/infinite-row-model": base + "infinite-row-model",
     "/serverside-data/row-models": base + "row-models",
@@ -116,7 +116,8 @@ redirect_map = {
 
 app = Dash(__name__)
 
-app.layout =  html.Div("no layout")
+app.layout = html.Div("no layout")
+
 
 @app.server.before_request
 def redirect():
