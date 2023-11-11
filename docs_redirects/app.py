@@ -34,7 +34,7 @@ redirect_map = {
     "/editing/editing-callbacks": base + "editing-and-callbacks",
     "/editing/full-row": base + "editing-full-row",
     "/editing/overview": base + "cell-editing",
-    "/editing/provided-cell-editors": base + " provided-cell-editors",
+    "/editing/provided-cell-editors": base + "provided-cell-editors",
     "/editing/start-stop-editing": base + "start-stop-editing",
     "/editing/undo-redo": base + "undo-redo-edits",
 
