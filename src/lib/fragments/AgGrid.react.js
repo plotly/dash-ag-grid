@@ -78,7 +78,6 @@ const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
 const agGridRefs = {};
 
 apiGetters.getApi = (id) => agGridRefs[stringifyId(id)]?.api;
-apiGetters.getColumnApi = (id) => agGridRefs[stringifyId(id)]?.columnApi;
 
 const eventBus = {
     listeners: {},
@@ -176,7 +175,6 @@ export default class DashAgGrid extends Component {
             rerender: 0,
             openGroups: {},
             gridApi: null,
-            gridColumnApi: null,
             columnState_push: true,
         };
 
@@ -187,7 +185,7 @@ export default class DashAgGrid extends Component {
     onPaginationChanged() {
         const {setProps} = this.props;
         const {gridApi} = this.state;
-        if (gridApi) {
+        if (gridApi && !gridApi?.isDestroyed()) {
             setProps({
                 paginationInfo: {
                     isLastPageFound: gridApi.paginationIsLastPageFound(),
@@ -203,7 +201,7 @@ export default class DashAgGrid extends Component {
     setSelection(selection) {
         const {gridApi} = this.state;
         const {getRowId} = this.props;
-        if (gridApi && selection) {
+        if (gridApi && selection && !gridApi?.isDestroyed()) {
             this.setState({pauseSelections: true});
             const nodeData = [];
             if (has('function', selection)) {
@@ -532,7 +530,7 @@ export default class DashAgGrid extends Component {
             propsToSet.virtualRowData = this.virtualRowData();
         }
         propsToSet.columnState = JSON.parse(
-            JSON.stringify(this.state.gridColumnApi.getColumnState())
+            JSON.stringify(this.state.gridApi.getColumnState())
         );
         setProps(propsToSet);
     }
@@ -546,7 +544,7 @@ export default class DashAgGrid extends Component {
     }
 
     componentWillUnmount() {
-        this.setState({mounted: false, gridApi: null, gridColumnApi: null});
+        this.setState({mounted: false, gridApi: null});
         if (this.props.id) {
             delete agGridRefs[this.props.id];
             eventBus.remove(this.props.id);
@@ -573,7 +571,7 @@ export default class DashAgGrid extends Component {
         ) {
             return true;
         }
-        if (gridApi) {
+        if (gridApi && !gridApi?.isDestroyed()) {
             if (columnState) {
                 if (columnState !== this.props.columnState) {
                     return true;
@@ -802,7 +800,7 @@ export default class DashAgGrid extends Component {
             this.props;
         const {openGroups, gridApi} = this.state;
 
-        if (gridApi) {
+        if (gridApi && !gridApi?.isDestroyed()) {
             // Call the API to select rows
             this.setSelection(selectedRows);
 
@@ -894,7 +892,6 @@ export default class DashAgGrid extends Component {
 
         this.setState({
             gridApi: params.api,
-            gridColumnApi: params.columnApi,
         });
     }
 
@@ -969,8 +966,8 @@ export default class DashAgGrid extends Component {
 
     updateColumnWidths(setColumns = true) {
         const {columnSize, columnSizeOptions, setProps} = this.props;
-        const {gridApi, gridColumnApi} = this.state;
-        if (gridApi || gridColumnApi) {
+        const {gridApi} = this.state;
+        if (gridApi && !gridApi?.isDestroyed()) {
             const {
                 keys,
                 skipHeader,
@@ -980,9 +977,9 @@ export default class DashAgGrid extends Component {
             } = columnSizeOptions || {};
             if (columnSize === 'autoSize') {
                 if (keys) {
-                    gridColumnApi.autoSizeColumns(keys, skipHeader);
+                    gridApi.autoSizeColumns(keys, skipHeader);
                 } else {
-                    gridColumnApi.autoSizeAllColumns(skipHeader);
+                    gridApi.autoSizeAllColumns(skipHeader);
                 }
             } else if (
                 columnSize === 'sizeToFit' ||
@@ -1078,7 +1075,7 @@ export default class DashAgGrid extends Component {
         }
 
         if (this.state.columnState_push) {
-            this.state.gridColumnApi.applyColumnState({
+            this.state.gridApi.applyColumnState({
                 state: this.props.columnState,
                 applyOrder: true,
             });
@@ -1177,7 +1174,7 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi) {
             return;
         }
-        this.state.gridColumnApi.resetColumnState();
+        this.state.gridApi.resetColumnState();
         if (reset) {
             this.props.setProps({
                 resetColumnState: false,
@@ -1235,7 +1232,7 @@ export default class DashAgGrid extends Component {
         }
 
         var columnState = JSON.parse(
-            JSON.stringify(this.state.gridColumnApi.getColumnState())
+            JSON.stringify(this.state.gridApi.getColumnState())
         );
 
         this.props.setProps({
@@ -1257,7 +1254,7 @@ export default class DashAgGrid extends Component {
     rowTransaction(data) {
         const {rowTransaction, gridApi, mounted} = this.state;
         if (mounted) {
-            if (gridApi) {
+            if (gridApi && !gridApi?.isDestroyed()) {
                 if (rowTransaction) {
                     rowTransaction.forEach(this.applyRowTransaction);
                     this.setState({rowTransaction: null});
