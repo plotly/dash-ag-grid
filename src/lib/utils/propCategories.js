@@ -128,8 +128,9 @@ export const GRID_MAYBE_FUNCTIONS = {
 };
 
 /**
- * Functions from top-level grid props. Props in this list can ONLY be
- * functions, so we accept a string and eval it safely
+ * Possible functions from top-level grid props
+ * Props in this list can be string constants (NOT eval'd by AG Grid) or functions,
+ * in which case we require {function: <string>} and we will eval them safely
  * https://www.ag-grid.com/react-data-grid/grid-options/
  **/
 export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
