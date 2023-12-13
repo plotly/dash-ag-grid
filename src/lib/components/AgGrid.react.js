@@ -64,6 +64,7 @@ DashAgGrid.defaultProps = {
     deselectAll: false,
     enableEnterpriseModules: false,
     updateColumnState: false,
+    updateColumnGroupState: false,
     persisted_props: ['selectedRows'],
     persistence_type: 'local',
     suppressDragLeaveHidesColumns: true,
@@ -170,6 +171,11 @@ DashAgGrid.propTypes = {
     updateColumnState: PropTypes.bool,
 
     /**
+     * If true, the internal method updateColumnGroupState() will be called
+     */
+    updateColumnGroupState: PropTypes.bool,
+
+    /**
      * If true, the internal method deleteSelectedRows() will be called
      */
     deleteSelectedRows: PropTypes.bool,
@@ -195,6 +201,11 @@ DashAgGrid.propTypes = {
      * Current state of the columns
      */
     columnState: PropTypes.array,
+
+    /**
+     * Current state of the column groups
+     */
+    columnGroupState: PropTypes.array,
 
     /**
      * Object with properties to pass to the exportDataAsCsv() method

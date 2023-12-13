@@ -126,6 +126,7 @@ export default class DashAgGrid extends Component {
         this.onDisplayedColumnsChanged =
             this.onDisplayedColumnsChanged.bind(this);
         this.onColumnResized = this.onColumnResized.bind(this);
+        this.onColumnGroupOpened = this.onColumnGroupOpened.bind(this);
         this.onGridSizeChanged = this.onGridSizeChanged.bind(this);
         this.updateColumnWidths = this.updateColumnWidths.bind(this);
         this.handleDynamicStyle = this.handleDynamicStyle.bind(this);
@@ -149,6 +150,7 @@ export default class DashAgGrid extends Component {
         this.selectAll = this.selectAll.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
         this.updateColumnState = this.updateColumnState.bind(this);
+        this.updateColumnGroupState = this.updateColumnGroupState.bind(this);
         this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
         this.rowTransaction = this.rowTransaction.bind(this);
         this.getRowData = this.getRowData.bind(this);
@@ -177,6 +179,7 @@ export default class DashAgGrid extends Component {
             gridApi: null,
             gridColumnApi: null,
             columnState_push: true,
+            columnGroupState_push: true,
         };
 
         this.selectionEventFired = false;
@@ -595,11 +598,13 @@ export default class DashAgGrid extends Component {
             deleteSelectedRows,
             filterModel,
             columnState,
+            columnGroupState,
             columnSize,
             paginationGoTo,
             scrollTo,
             rowTransaction,
             updateColumnState,
+            updateColumnGroupState,
         } = this.props;
 
         if (this.state.gridApi && prevProps.loading_state.is_loading) {
@@ -608,6 +613,12 @@ export default class DashAgGrid extends Component {
                 !this.state.columnState_push
             ) {
                 this.setState({columnState_push: true});
+            }
+            if (
+                this.props.columnGroupState !== prevProps.columnGroupState &&
+                !this.state.columnGroupState_push
+            ) {
+                this.setState({columnGroupState_push: true});
             }
         }
 
@@ -656,6 +667,10 @@ export default class DashAgGrid extends Component {
                 this.setColumnState();
             }
 
+            if (columnGroupState) {
+                this.setColumnGroupState();
+            }
+
             if (paginationGoTo || paginationGoTo === 0) {
                 this.paginationGoTo(false);
                 propsToSet.paginationGoTo = null;
@@ -700,6 +715,7 @@ export default class DashAgGrid extends Component {
                 mounted: true,
                 openGroups: groups,
                 columnState_push: false,
+                columnGroupState_push: false,
             });
             this.updateColumnState();
         }
@@ -774,6 +790,11 @@ export default class DashAgGrid extends Component {
                 this.updateColumnState();
             } else if (this.state.columnState_push) {
                 this.setColumnState();
+            }
+            if (updateColumnGroupState) {
+                this.updateColumnGroupState();
+            } else if (this.state.columnGroupState_push) {
+                this.setColumnGroupState();
             }
         }
 
@@ -946,6 +967,11 @@ export default class DashAgGrid extends Component {
         }
     }
 
+    onColumnGroupOpened() {
+        console.log('onColumnGroupOpened');
+        this.updateColumnGroupState();
+    }
+
     onGridSizeChanged() {
         if (this.props.columnSize === 'responsiveSizeToFit') {
             this.updateColumnWidths();
@@ -1068,6 +1094,23 @@ export default class DashAgGrid extends Component {
                 applyOrder: true,
             });
             this.setState({columnState_push: false});
+        }
+    }
+
+    setColumnGroupState() {
+        if (!this.state.gridApi || this.props.updateColumnGroupState) {
+            return;
+        }
+
+        if (this.state.columnGroupState_push) {
+            console.log('push:');
+            console.log(this.props.columnGroupState);
+            this.state.gridColumnApi.setColumnGroupState(
+                this.props.columnGroupState
+            );
+            console.log('new state:');
+            console.log(this.state.gridColumnApi.getColumnGroupState());
+            this.setState({columnGroupState_push: false});
         }
     }
 
@@ -1229,6 +1272,21 @@ export default class DashAgGrid extends Component {
         });
     }
 
+    updateColumnGroupState() {
+        console.log('updateColumnGroupState');
+        if (!this.state.gridApi || !this.state.mounted) {
+            return;
+        }
+
+        var columnGroupState = JSON.parse(
+            JSON.stringify(this.state.gridColumnApi.getColumnGroupState())
+        );
+        console.log(columnGroupState);
+        this.props.setProps({
+            columnGroupState,
+        });
+    }
+
     buildArray(arr1, arr2) {
         if (arr1) {
             if (!arr1.includes(arr2)) {
@@ -1339,6 +1397,7 @@ export default class DashAgGrid extends Component {
                         this.onColumnResized,
                         COL_RESIZE_DEBOUNCE_MS
                     )}
+                    onColumnGroupOpened={this.onColumnGroupOpened}
                     onAsyncTransactionsFlushed={this.onAsyncTransactionsFlushed}
                     onPaginationChanged={this.onPaginationChanged}
                     onGridSizeChanged={debounce(
