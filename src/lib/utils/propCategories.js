@@ -138,6 +138,7 @@ export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
     frameworkComponents: 1,
     setPopupParent: 1,
     popupParent: 1,
+    dataTypeDefinitions: 1,
 };
 
 /**
@@ -181,6 +182,7 @@ export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
 
     // Columns: Sort
     comparator: 1,
+    dataTypeMatcher: 1,
 };
 
 /**
