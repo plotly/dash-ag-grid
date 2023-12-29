@@ -294,7 +294,7 @@ export const COLUMN_ARRAY_NESTED_FUNCTIONS = {
  * inside them, listed in other categories
  */
 export const OBJ_MAP_MAYBE_FUNCTIONS = {
-    dataTypeDefinitions: 1,
+//    dataTypeDefinitions: 1,
 };
 
 /**
