@@ -682,7 +682,7 @@ DashAgGrid.propTypes = {
     /**
      * Value has changed after editing.
      */
-    cellValueChanged: PropTypes.shape({
+    cellValueChanged: PropTypes.arrayOf(PropTypes.shape({
         /**
          * rowIndex, typically a row number
          */
@@ -717,7 +717,7 @@ DashAgGrid.propTypes = {
          * Timestamp of when the event was fired
          */
         timestamp: PropTypes.any,
-    }),
+    })),
 
     /**
      * Other ag-grid options
