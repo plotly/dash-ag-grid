@@ -113,8 +113,8 @@ function stringifyId(id) {
     return '{' + parts.join(',') + '}';
 }
 
-function is_undefined_or_null(obj){
-    return typeof obj === 'undefined' || obj === null
+function is_undefined_or_null(obj) {
+    return typeof obj === 'undefined' || obj === null;
 }
 
 export default class DashAgGrid extends Component {
@@ -932,8 +932,7 @@ export default class DashAgGrid extends Component {
             timestamp,
         };
         // Append it to current change session.
-        if(is_undefined_or_null(this.pendingCellValueChanges
-        )) {
+        if (is_undefined_or_null(this.pendingCellValueChanges)) {
             this.pendingCellValueChanges = [newChange];
         } else {
             this.pendingCellValueChanges.push(newChange);
@@ -942,7 +941,7 @@ export default class DashAgGrid extends Component {
 
     afterCellValueChanged() {
         // Guard against multiple invocations of the same change session.
-        if(is_undefined_or_null(this.pendingCellValueChanges)) {
+        if (is_undefined_or_null(this.pendingCellValueChanges)) {
             return;
         }
         // Send update(s) for current change session to Dash.
