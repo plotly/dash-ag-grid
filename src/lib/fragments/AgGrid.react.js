@@ -932,7 +932,8 @@ export default class DashAgGrid extends Component {
             timestamp,
         };
         // Append it to current change session.
-        if(is_undefined_or_null(this.pendingCellValueChanges)) {
+        if(is_undefined_or_null(this.pendingCellValueChanges
+        )) {
             this.pendingCellValueChanges = [newChange];
         } else {
             this.pendingCellValueChanges.push(newChange);
