@@ -928,7 +928,10 @@ export default class DashAgGrid extends Component {
             timestamp,
         };
         // Append it to current change session.
-        if (typeof this.pendingChanges === 'undefined' || this.pendingChanges === null) {
+        if (
+            typeof this.pendingChanges === 'undefined' ||
+            this.pendingChanges === null
+        ) {
             this.pendingChanges = [newChange];
         } else {
             this.pendingChanges.push(newChange);
