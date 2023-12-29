@@ -925,22 +925,22 @@ export default class DashAgGrid extends Component {
             value,
             colId,
             timestamp,
-        }
+        };
         // Append it to current change session.
         let pendingChanges = this.state.cellValueChanged;
-        if(pendingChanges === undefined){
-            pendingChanges = [newChange]
+        if(typeof pendingChanges === 'undefined' || pendingChanges === null){
+            pendingChanges = [newChange];
         }
         else{
-            pendingChanges.push(newChange)
+            pendingChanges.push(newChange);
         }
-        this.setState({cellValueChanged: pendingChanges})
+        this.setState({cellValueChanged: pendingChanges});
     }
 
     afterCellValueChanged() {
-        const cellValueChanged = this.state.cellValueChanged;
+        const {cellValueChanged} = this.state;
         // Guard against multiple invocations of the same change session.
-        if(cellValueChanged === undefined){
+        if(typeof cellValueChanged === 'undefined' || cellValueChanged === null){
             return;
         }
         // Send update(s) for current change session to Dash.
@@ -951,7 +951,7 @@ export default class DashAgGrid extends Component {
         });
         this.syncRowData();
         // Mark current change session as ended.
-        this.setState({cellValueChanged: undefined})
+        this.setState({cellValueChanged: null});
     }
 
     onDisplayedColumnsChanged() {
@@ -1353,7 +1353,7 @@ export default class DashAgGrid extends Component {
                     onCellDoubleClicked={this.onCellDoubleClicked}
                     onCellValueChanged={debounce(
                         this.afterCellValueChanged,
-                        CELL_VALUE_CHANGED_DEBOUNCE_MS, // FIXME: SET VARIABLE(!)
+                        CELL_VALUE_CHANGED_DEBOUNCE_MS,
                         this.onCellValueChanged,
                     )}
                     onFilterChanged={this.onFilterChanged}
