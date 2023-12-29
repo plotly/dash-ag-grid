@@ -45,11 +45,14 @@ def test_cv001_cell_value_changed(dash_duo):
     app.clientside_callback(
         """function addToHistory(changes) {
             if (changes) {
-                data = changes[0];
-                reloadData = {...data.data}
-                reloadData[data.colId] = data.oldValue
-                newData = [{Key: data.rowId, Column: data.colId, OldValue: data.oldValue, NewValue: data.value,
-                    reloadData}]
+                newData = []
+                for (let i = 0; i < changes.length; i++) {
+                    data = changes[i];
+                    reloadData = {...data.data};
+                    reloadData[data.colId] = data.oldValue;
+                    newData.push({Key: data.rowId, Column: data.colId, OldValue: data.oldValue, 
+                    NewValue: data.value, reloadData});
+                }
                 return {'add': newData}
             }
             return window.dash_clientside.no_update
@@ -76,28 +79,25 @@ def test_cv001_cell_value_changed(dash_duo):
 
     grid = utils.Grid(dash_duo, "information")
     hist = utils.Grid(dash_duo, "history")
-
     grid.wait_for_cell_text(0, 0, "South Korea")
 
-    ### testing history
+    # Test history.
     grid.get_cell(0, 1).send_keys("50")
     grid.get_cell(1, 2).click()
-
     hist.wait_for_rendered_rows(1)
 
+    # Test single event.
     hist.element_click_cell_checkbox(0, 0)
     hist.wait_for_rendered_rows(0)
-
     grid.get_cell(0, 1).send_keys("50")
     grid.get_cell(1, 2).click()
-
     hist.wait_for_rendered_rows(1)
 
-    ## twice for good measure
+    # Test multiple events (here 3).
     hist.element_click_cell_checkbox(0, 0)
     hist.wait_for_rendered_rows(0)
-
     grid.get_cell(0, 1).send_keys("50")
+    grid.get_cell(0, 2).send_keys("50")
+    grid.get_cell(0, 3).send_keys("50")
     grid.get_cell(1, 2).click()
-
-    hist.wait_for_rendered_rows(1)
+    hist.wait_for_rendered_rows(3)
