@@ -43,8 +43,9 @@ def test_cv001_cell_value_changed(dash_duo):
     )
 
     app.clientside_callback(
-        """function addToHistory(data) {
-            if (data) {
+        """function addToHistory(changes) {
+            if (changes) {
+                data = changes[0];
                 reloadData = {...data.data}
                 reloadData[data.colId] = data.oldValue
                 newData = [{Key: data.rowId, Column: data.colId, OldValue: data.oldValue, NewValue: data.value,
