@@ -117,6 +117,7 @@ def test_cv001_cell_value_changed_multi(dash_duo):
                 defaultColDef={"editable": True},
                 id="grid",
                 getRowId="params.data.nation",
+                dashGridOptions={'editType':'fullRow'}
             ),
             html.Div(id="log")
         ]
@@ -138,12 +139,12 @@ def test_cv001_cell_value_changed_multi(dash_duo):
     grid.wait_for_cell_text(0, 0, "South Korea")
 
     # Test single event.
-    grid.get_cell(0, 1).send_keys("X")
+    grid.get_cell(0, 1).send_keys("50")
     grid.get_cell(1, 2).click()
     dash_duo.wait_for_text_to_equal('#log', "1")
 
     # Test multi event.
-    grid.get_cell(0, 1).send_keys("Y")
-    grid.get_cell(0, 2).send_keys("Y")
+    grid.get_cell(0, 1).send_keys("20")
+    grid.get_cell_editing_input(0, 2).send_keys("20")
     grid.get_cell(1, 2).click()
     dash_duo.wait_for_text_to_equal('#log', "2")
