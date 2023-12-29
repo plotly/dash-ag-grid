@@ -66,7 +66,7 @@ const RESIZE_DEBOUNCE_MS = 200;
 const COL_RESIZE_DEBOUNCE_MS = 500;
 
 // Time between syncing cell value changes with Dash
-const CELL_VALUE_CHANGED_DEBOUNCE_MS = 10;
+const CELL_VALUE_CHANGED_DEBOUNCE_MS = 100;
 
 const xssMessage = (context) => {
     console.error(
