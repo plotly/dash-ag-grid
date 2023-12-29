@@ -29,7 +29,7 @@ def test_cv001_cell_value_changed(dash_duo):
             dag.AgGrid(
                 id="history",
                 columnDefs=[{"field": "Key", "checkboxSelection": True}]
-                + [{"field": i} for i in ["Column", "OldValue", "NewValue"]],
+                           + [{"field": i} for i in ["Column", "OldValue", "NewValue"]],
                 rowData=[],
             ),
         ],
@@ -79,25 +79,71 @@ def test_cv001_cell_value_changed(dash_duo):
 
     grid = utils.Grid(dash_duo, "information")
     hist = utils.Grid(dash_duo, "history")
+
     grid.wait_for_cell_text(0, 0, "South Korea")
 
-    # Test history.
+    ### testing history
     grid.get_cell(0, 1).send_keys("50")
     grid.get_cell(1, 2).click()
+
     hist.wait_for_rendered_rows(1)
+
+    hist.element_click_cell_checkbox(0, 0)
+    hist.wait_for_rendered_rows(0)
+
+    grid.get_cell(0, 1).send_keys("50")
+    grid.get_cell(1, 2).click()
+
+    hist.wait_for_rendered_rows(1)
+
+    ## twice for good measure
+    hist.element_click_cell_checkbox(0, 0)
+    hist.wait_for_rendered_rows(0)
+
+    grid.get_cell(0, 1).send_keys("50")
+    grid.get_cell(1, 2).click()
+
+    hist.wait_for_rendered_rows(1)
+
+
+def test_cv001_cell_value_changed_multi(dash_duo):
+    app = Dash(__name__)
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                columnDefs=columnDefs,
+                rowData=df.to_dict("records"),
+                columnSize="sizeToFit",
+                defaultColDef={"editable": True},
+                id="grid",
+                getRowId="params.data.nation",
+            ),
+            html.Div(id="log")
+        ]
+    )
+
+    app.clientside_callback(
+        """function countEvents(changes) {
+            console.log("FIRE");
+            return changes? changes.length : 0;
+        }""",
+        Output("log", "children"),
+        Input("grid", "cellValueChanged"),
+        prevent_initial_call=True,
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(0, 0, "South Korea")
 
     # Test single event.
-    hist.element_click_cell_checkbox(0, 0)
-    hist.wait_for_rendered_rows(0)
-    grid.get_cell(0, 1).send_keys("50")
+    grid.get_cell(0, 1).send_keys("X")
     grid.get_cell(1, 2).click()
-    hist.wait_for_rendered_rows(1)
+    dash_duo.wait_for_text_to_equal('#log', "1")
 
-    # Test multiple events (here 3).
-    hist.element_click_cell_checkbox(0, 0)
-    hist.wait_for_rendered_rows(0)
-    grid.get_cell(0, 1).send_keys("50")
-    grid.get_cell(0, 2).send_keys("50")
-    grid.get_cell(0, 3).send_keys("50")
+    # Test multi event.
+    grid.get_cell(0, 1).send_keys("Y")
+    grid.get_cell(0, 2).send_keys("Y")
     grid.get_cell(1, 2).click()
-    hist.wait_for_rendered_rows(3)
+    dash_duo.wait_for_text_to_equal('#log', "2")
