@@ -113,6 +113,8 @@ function stringifyId(id) {
     return '{' + parts.join(',') + '}';
 }
 
+let pendingChanges;
+
 export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
@@ -939,7 +941,6 @@ export default class DashAgGrid extends Component {
             timestamp,
         };
         // Append it to current change session.
-        let pendingChanges = this.state.cellValueChanged;
         if (typeof pendingChanges === 'undefined' || pendingChanges === null) {
             pendingChanges = [newChange];
         } else {
@@ -966,6 +967,7 @@ export default class DashAgGrid extends Component {
         this.syncRowData();
         // Mark current change session as ended.
         this.setState({cellValueChanged: null});
+        pendingChanges = null;
     }
 
     onDisplayedColumnsChanged() {
