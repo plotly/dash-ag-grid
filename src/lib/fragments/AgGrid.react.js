@@ -928,10 +928,9 @@ export default class DashAgGrid extends Component {
         };
         // Append it to current change session.
         let pendingChanges = this.state.cellValueChanged;
-        if(typeof pendingChanges === 'undefined' || pendingChanges === null){
+        if (typeof pendingChanges === 'undefined' || pendingChanges === null) {
             pendingChanges = [newChange];
-        }
-        else{
+        } else {
             pendingChanges.push(newChange);
         }
         this.setState({cellValueChanged: pendingChanges});
@@ -940,7 +939,10 @@ export default class DashAgGrid extends Component {
     afterCellValueChanged() {
         const {cellValueChanged} = this.state;
         // Guard against multiple invocations of the same change session.
-        if(typeof cellValueChanged === 'undefined' || cellValueChanged === null){
+        if (
+            typeof cellValueChanged === 'undefined' ||
+            cellValueChanged === null
+        ) {
             return;
         }
         // Send update(s) for current change session to Dash.
@@ -1354,7 +1356,7 @@ export default class DashAgGrid extends Component {
                     onCellValueChanged={debounce(
                         this.afterCellValueChanged,
                         CELL_VALUE_CHANGED_DEBOUNCE_MS,
-                        this.onCellValueChanged,
+                        this.onCellValueChanged
                     )}
                     onFilterChanged={this.onFilterChanged}
                     onSortChanged={this.onSortChanged}

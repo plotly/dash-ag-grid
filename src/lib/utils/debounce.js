@@ -7,7 +7,7 @@ export default function debounce(fn, wait, onDebounce) {
         const delay = Math.min(now - lastTimestamp, wait);
 
         if (onDebounce) {
-            onDebounce(...args)
+            onDebounce(...args);
         }
         if (handle) {
             clearTimeout(handle);

@@ -682,42 +682,44 @@ DashAgGrid.propTypes = {
     /**
      * Value has changed after editing.
      */
-    cellValueChanged: PropTypes.arrayOf(PropTypes.shape({
-        /**
-         * rowIndex, typically a row number
-         */
-        rowIndex: PropTypes.number,
+    cellValueChanged: PropTypes.arrayOf(
+        PropTypes.shape({
+            /**
+             * rowIndex, typically a row number
+             */
+            rowIndex: PropTypes.number,
 
-        /**
-         * Row Id from the grid, this could be a number automatically, or set via getRowId
-         */
-        rowId: PropTypes.any,
+            /**
+             * Row Id from the grid, this could be a number automatically, or set via getRowId
+             */
+            rowId: PropTypes.any,
 
-        /**
-         * data, data object from the row
-         */
-        data: PropTypes.object,
+            /**
+             * data, data object from the row
+             */
+            data: PropTypes.object,
 
-        /**
-         * old value of the cell
-         */
-        oldValue: PropTypes.any,
+            /**
+             * old value of the cell
+             */
+            oldValue: PropTypes.any,
 
-        /**
-         * new value of the cell
-         */
-        newValue: PropTypes.any,
+            /**
+             * new value of the cell
+             */
+            newValue: PropTypes.any,
 
-        /**
-         * column where the cell was changed
-         */
-        colId: PropTypes.any,
+            /**
+             * column where the cell was changed
+             */
+            colId: PropTypes.any,
 
-        /**
-         * Timestamp of when the event was fired
-         */
-        timestamp: PropTypes.any,
-    })),
+            /**
+             * Timestamp of when the event was fired
+             */
+            timestamp: PropTypes.any,
+        })
+    ),
 
     /**
      * Other ag-grid options
