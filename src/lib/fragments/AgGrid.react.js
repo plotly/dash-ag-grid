@@ -184,7 +184,7 @@ export default class DashAgGrid extends Component {
 
         this.selectionEventFired = false;
         this.reference = React.createRef();
-        this.pendingChanges;
+        this.pendingChanges = null;
     }
 
     onPaginationChanged() {
@@ -940,7 +940,10 @@ export default class DashAgGrid extends Component {
             timestamp,
         };
         // Append it to current change session.
-        if (typeof this.pendingChanges === 'undefined' || this.pendingChanges === null) {
+        if (
+            typeof this.pendingChanges === 'undefined' ||
+            this.pendingChanges === null
+        ) {
             this.pendingChanges = [newChange];
         } else {
             this.pendingChanges.push(newChange);
