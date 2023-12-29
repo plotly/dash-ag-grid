@@ -4,7 +4,7 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## [Unreleased]
+## [2.4.0] - 2023-10-17
 
 ### Added
 - [#243](https://github.com/plotly/dash-ag-grid/pull/243) Added function support for:

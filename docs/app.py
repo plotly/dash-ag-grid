@@ -1,3 +1,11 @@
+"""
+This app was the preliminary dash-ag-grid docs and was hosted at https://dashaggrid.pythonanywhere.com
+
+The site now redirects to the dash-docs using the app in /docs_redirects/app.py
+"""
+
+
+
 import dash
 from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
