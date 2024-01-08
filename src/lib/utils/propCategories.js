@@ -210,6 +210,8 @@ export const COLUMN_MAYBE_FUNCTIONS = {
 
     // Columns: Filter
     getQuickFilterText: 1,
+    textFormatter: 1,
+    textMatcher: 1,
 
     // Columns: Headers
     suppressHeaderKeyboardEvent: 1,
