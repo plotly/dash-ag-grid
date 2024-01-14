@@ -67,6 +67,7 @@ export const GRID_MAYBE_FUNCTIONS = {
     // Filtering
     isExternalFilterPresent: 1,
     doesExternalFilterPass: 1,
+    quickFilterParser: 1,
 
     // Integrated Charts
     getChartToolbarItems: 1,
@@ -139,6 +140,7 @@ export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
     setPopupParent: 1,
     popupParent: 1,
     dataTypeDefinitions: 1,
+    quickFilterMatcher: 1,
 };
 
 /**
@@ -183,6 +185,9 @@ export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
     // Columns: Sort
     comparator: 1,
     dataTypeMatcher: 1,
+
+    // filter params custom option
+    predicate: 1,
 };
 
 /**
@@ -212,6 +217,8 @@ export const COLUMN_MAYBE_FUNCTIONS = {
     getQuickFilterText: 1,
     textFormatter: 1,
     textMatcher: 1,
+    numberFormatter: 1,
+    numberParser: 1,
 
     // Columns: Headers
     suppressHeaderKeyboardEvent: 1,
@@ -257,9 +264,8 @@ export const COLUMN_MAYBE_FUNCTIONS = {
     // Header Group Component Parameters
     setExpanded: 1,
 
-    // In filterParams or filterParams.filterOptions[]
+    // In filterParams
     filterPlaceholder: 1,
-    predicate: 1,
 };
 
 /**

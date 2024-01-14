@@ -390,5 +390,21 @@ dagfuncs.myTextMatcher = ({value, filterText}) => {
   const literalMatch = contains(value, filterText || "");
   return literalMatch || contains(value, aliases[filterText || ""]);
 }
+
+dagfuncs.myNumberParser = (text) => {
+  return text === null ? null : parseFloat(text.replace(",", ".").replace("$", ""));
+}
+dagfuncs.myNumberFormatter = (value) => {
+  return value === null ? null : value.toString().replace(".", ",");
+}
+dagfuncs.startWith = ([filterValues], cellValue) => {
+    const name = cellValue ? cellValue.split(" ")[1] : ""
+    return name && name.toLowerCase().indexOf(filterValues.toLowerCase()) === 0
+}
 // END test_custom_filter.py
 
+// FOR test_quick_filter.py
+dagfuncs.quickFilterMatcher = (quickFilterParts, rowQuickFilterAggregateText) => {
+    return quickFilterParts.every(part => rowQuickFilterAggregateText.match(part));
+}
+// END test_custom_filter.py
