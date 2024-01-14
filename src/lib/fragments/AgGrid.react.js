@@ -922,7 +922,14 @@ export default class DashAgGrid extends Component {
         });
     }
 
-    onCellValueChanged({oldValue, value, column: {colId}, rowIndex, data, node}) {
+    onCellValueChanged({
+        oldValue,
+        value,
+        column: {colId},
+        rowIndex,
+        data,
+        node,
+    }) {
         const timestamp = Date.now();
         // Collect new change.
         const newChange = {
