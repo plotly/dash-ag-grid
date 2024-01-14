@@ -1,4 +1,6 @@
-# Example to test textFormatter and filterParams functions in filterParams
+"""
+Example to test filterParams.textFormatter and filterParams.textMatcher functions
+"""
 
 import dash_ag_grid as dag
 from dash import Dash, html

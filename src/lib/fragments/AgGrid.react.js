@@ -53,11 +53,13 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 // d3 imports
 import * as d3Format from 'd3-format';
 import * as d3Time from 'd3-time';
 import * as d3TimeFormat from 'd3-time-format';
+
 const d3 = {...d3Format, ...d3Time, ...d3TimeFormat};
 
 // Rate-limit for resizing columns when grid div is resized
@@ -1256,6 +1258,7 @@ export default class DashAgGrid extends Component {
             this.syncRowData();
         }
     }
+
     // end event actions
 
     updateColumnState() {
