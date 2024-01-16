@@ -389,20 +389,23 @@ export default class DashAgGrid extends Component {
                 });
             }
             if (OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS[target]) {
-                if (Object.keys(value).includes('function')) {
-                    return this.convertMaybeFunctionNoParams(value)
-                } else {
-                    Object.keys(value).map((c) => {
-                        if (typeof value[c] === 'object') {
-                            if (Object.keys(value[c]).includes('function')) {
-                                value[c] = this.convertMaybeFunctionNoParams(value[c])
-                            } else {
-                                value[c] = this.convertCol(value[c]);
-                            }
-                        }
-                    });
+                if ('functin' in value) {
+                    if (typeof value.function === 'string') {
+                        return this.convertMaybeFunctionNoParams(value);
+                    }
                 }
-                return value;
+                return mapObjIndexed((v) => {
+                    if (typeof v === 'object') {
+                        if ('functin' in v) {
+                            if (typeof v.function === 'string') {
+                                return this.convertMaybeFunctionNoParams(v);
+                            }
+                        } else {
+                            return this.convertCol(v);
+                        }
+                    }
+                    return v;
+                }, value);
             }
             if (COLUMN_NESTED_FUNCTIONS[target] && typeof value === 'object') {
                 return this.convertCol(value);
@@ -427,20 +430,23 @@ export default class DashAgGrid extends Component {
                 return this.convertCol(value);
             }
             if (OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS[target]) {
-                if (Object.keys(value).includes('function')) {
-                    return this.convertMaybeFunctionNoParams(value)
-                } else {
-                    Object.keys(value).map((c) => {
-                        if (typeof value[c] === 'object') {
-                            if (Object.keys(value[c]).includes('function')) {
-                                value[c] = this.convertMaybeFunctionNoParams(value[c])
-                            } else {
-                                value[c] = this.convertCol(value[c]);
-                            }
-                        }
-                    });
+                if ('functin' in value) {
+                    if (typeof value.function === 'string') {
+                        return this.convertMaybeFunctionNoParams(value);
+                    }
                 }
-                return value;
+                return mapObjIndexed((v) => {
+                    if (typeof v === 'object') {
+                        if ('functin' in v) {
+                            if (typeof v.function === 'string') {
+                                return this.convertMaybeFunctionNoParams(v);
+                            }
+                        } else {
+                            return this.convertCol(v);
+                        }
+                    }
+                    return v;
+                }, value);
             }
             if (GRID_NESTED_FUNCTIONS[target]) {
                 let adjustedVal = value;
