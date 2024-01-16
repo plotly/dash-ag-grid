@@ -389,14 +389,14 @@ export default class DashAgGrid extends Component {
                 });
             }
             if (OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS[target]) {
-                if ('functin' in value) {
+                if ('function' in value) {
                     if (typeof value.function === 'string') {
                         return this.convertMaybeFunctionNoParams(value);
                     }
                 }
                 return mapObjIndexed((v) => {
                     if (typeof v === 'object') {
-                        if ('functin' in v) {
+                        if ('function' in v) {
                             if (typeof v.function === 'string') {
                                 return this.convertMaybeFunctionNoParams(v);
                             }
@@ -430,14 +430,14 @@ export default class DashAgGrid extends Component {
                 return this.convertCol(value);
             }
             if (OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS[target]) {
-                if ('functin' in value) {
+                if ('function' in value) {
                     if (typeof value.function === 'string') {
                         return this.convertMaybeFunctionNoParams(value);
                     }
                 }
                 return mapObjIndexed((v) => {
                     if (typeof v === 'object') {
-                        if ('functin' in v) {
+                        if ('function' in v) {
                             if (typeof v.function === 'string') {
                                 return this.convertMaybeFunctionNoParams(v);
                             }
