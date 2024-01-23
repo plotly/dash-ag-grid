@@ -394,15 +394,12 @@ export default class DashAgGrid extends Component {
                         return this.convertMaybeFunctionNoParams(value);
                     }
                 }
-                return mapObjIndexed((v) => {
+                return map((v) => {
                     if (typeof v === 'object') {
-                        if ('function' in v) {
-                            if (typeof v.function === 'string') {
-                                return this.convertMaybeFunctionNoParams(v);
-                            }
-                        } else {
-                            return this.convertCol(v);
+                        if (typeof v.function === 'string') {
+                            return this.convertMaybeFunctionNoParams(v);
                         }
+                        return this.convertCol(v);
                     }
                     return v;
                 }, value);

@@ -408,7 +408,7 @@ dagfuncs.startWith = ([filterValues], cellValue) => {
 dagfuncs.quickFilterMatcher = (quickFilterParts, rowQuickFilterAggregateText) => {
     return quickFilterParts.every(part => rowQuickFilterAggregateText.match(part));
 }
-// END test_custom_filter.py
+// END test_quick_filter.py
 
 // FOR test_cell_data_type_override.py
 dagfuncs.dataTypeDefinitions = {
