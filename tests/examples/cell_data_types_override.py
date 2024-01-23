@@ -26,9 +26,11 @@ dataTypeDefinitions = {
     "dateString": {
         "baseDataType": 'dateString',
         "extendsDataType": 'dateString',
-        "valueParser": {"function": "valueParser(params)"},
-        "valueFormatter": {"function": "valueFormatter(params)"},
-        "dataTypeMatcher": {"function": "dataTypeMatcher(params)"},
+        "valueParser": {
+            "function": r"params.newValue != null && !!params.newValue.match(/\d{2}\/\d{2}\/\d{4}/) ? params.newValue : null"
+            },
+        "valueFormatter": {"function": "params.value == null ? '' : params.value"},
+        "dataTypeMatcher": {"function": r"params != null && !!params.match(/\d{2}\/\d{2}\/\d{4}/)"},
         "dateParser": {"function": "dateParser(params)"},
         "dateFormatter": {"function": "dateFormatter(params)"},
     },
@@ -49,24 +51,3 @@ app.layout = html.Div(
 if __name__ == "__main__":
     app.run(debug=True)
 
-
-#     dash_duo.driver.implicitly_wait(4000)
-#     action = utils.ActionChains(dash_duo.driver)
-#     action.double_click(grid.get_cell(0, 0)).perform()
-#     until(
-#         lambda: "January"
-#         in dash_duo.find_element(".ui-datepicker-month").get_attribute("innerText"),
-#         timeout=3,
-#     )
-#     until(
-#         lambda: "2023"
-#         in dash_duo.find_element(".ui-datepicker-year").get_attribute("innerText"),
-#         timeout=3,
-#     )
-#     until(
-#         lambda: "1"
-#         in dash_duo.find_element(".ui-state-active").get_attribute("innerText"),
-#         timeout=3,
-#     )
-#     grid.get_cell(2, 1).send_keys("50")
-#     grid.get_cell(2, 2).click()

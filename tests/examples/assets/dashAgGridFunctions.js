@@ -57,15 +57,6 @@ dagfuncs.quickFilterMatcher = (quickFilterParts, rowQuickFilterAggregateText) =>
     return quickFilterParts.every(part => rowQuickFilterAggregateText.match(part));
 }
 
-dagfuncs.valueParser = (params) => {
-    return params.newValue != null && params.newValue.match('\\d{2}/\\d{2}/\\d{4}')
-        ? params.newValue
-        : null
-}
-dagfuncs.valueFormatter = (params) => params.value == null ? '' : params.value
-
-dagfuncs.dataTypeMatcher = (value) => typeof value === 'string' && !!value.match('\\d{2}/\\d{2}/\\d{4}')
-
 dagfuncs.dateParser = (value) => {
     if (value == null || value === '') {
         return undefined;
@@ -102,7 +93,7 @@ dagfuncs.dataTypeDefinitions = {
         extendsDataType: 'dateString',
         valueParser: (params) => {
             return params.newValue != null &&
-            params.newValue.match('\\d{2}/\\d{2}/\\d{4}')
+            !!params.newValue.match(/\d{2}\/\d{2}\/\d{4}/)
                 ? params.newValue
                 : null
         },
@@ -110,7 +101,7 @@ dagfuncs.dataTypeDefinitions = {
             return params.value == null ? '' : params.value
         },
         dataTypeMatcher: (value) => {
-            return typeof value === 'string' && !!value.match('\\d{2}/\\d{2}/\\d{4}')
+            return typeof value === 'string' && !!value.match(/\d{2}\/\d{2}\/\d{4}/)
         },
         dateParser: (value) => {
             if (value == null || value === '') {

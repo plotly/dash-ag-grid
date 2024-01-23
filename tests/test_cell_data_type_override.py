@@ -1,11 +1,8 @@
 from selenium.webdriver import Keys
 
 import dash_ag_grid as dag
-from dash import Dash, html, dcc
+from dash import Dash, html
 from . import utils
-from dash.testing.wait import until
-import pandas as pd
-import time
 
 
 def test_cd001_cell_data_types_override(dash_duo):
@@ -35,9 +32,11 @@ def test_cd001_cell_data_types_override(dash_duo):
         "dateString": {
             "baseDataType": 'dateString',
             "extendsDataType": 'dateString',
-            "valueParser": {"function": "valueParser(params)"},
-            "valueFormatter": {"function": "valueFormatter(params)"},
-            "dataTypeMatcher": {"function": "dataTypeMatcher(params)"},
+            "valueParser": {
+                "function": r"params.newValue != null && !!params.newValue.match(/\d{2}\/\d{2}\/\d{4}/) ? params.newValue : null"
+            },
+            "valueFormatter": {"function": "params.value == null ? '' : params.value"},
+            "dataTypeMatcher": {"function": r"params != null && !!params.match(/\d{2}\/\d{2}\/\d{4}/)"},
             "dateParser": {"function": "dateParser(params)"},
             "dateFormatter": {"function": "dateFormatter(params)"},
         },
