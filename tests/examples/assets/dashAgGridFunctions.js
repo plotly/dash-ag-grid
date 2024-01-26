@@ -56,3 +56,75 @@ dagfuncs.startWith = ([filterValues], cellValue) => {
 dagfuncs.quickFilterMatcher = (quickFilterParts, rowQuickFilterAggregateText) => {
     return quickFilterParts.every(part => rowQuickFilterAggregateText.match(part));
 }
+
+dagfuncs.dateParser = (value) => {
+    if (value == null || value === '') {
+        return undefined;
+    }
+    const dateParts = value.split('/');
+    return dateParts.length === 3
+        ? new Date(
+            parseInt(dateParts[2]),
+            parseInt(dateParts[1]) - 1,
+            parseInt(dateParts[0])
+        )
+        : undefined;
+}
+dagfuncs.dateFormatter = (value) => {
+    if (value == null) {
+        return undefined;
+    }
+    const date = String(value.getDate());
+    const month = String(value.getMonth() + 1);
+    return `${date.length === 1 ? '0' + date : date}/${
+        month.length === 1 ? '0' + month : month
+    }/${value.getFullYear()}`;
+}
+
+dagfuncs.dataTypeDefinitions = {
+    percentage: {
+        baseDataType: "number",
+        extendsDataType: "number",
+        valueFormatter: (params) => params.value == null ? '' : (Math.round(params.value * 1000) / 10).toFixed(1) + '%'
+    },
+
+    dateString: {
+        baseDataType: 'dateString',
+        extendsDataType: 'dateString',
+        valueParser: (params) => {
+            return params.newValue != null &&
+            !!params.newValue.match(/\d{2}\/\d{2}\/\d{4}/)
+                ? params.newValue
+                : null
+        },
+        valueFormatter: (params) => {
+            return params.value == null ? '' : params.value
+        },
+        dataTypeMatcher: (value) => {
+            return typeof value === 'string' && !!value.match(/\d{2}\/\d{2}\/\d{4}/)
+        },
+        dateParser: (value) => {
+            if (value == null || value === '') {
+                return undefined;
+            }
+            const dateParts = value.split('/');
+            return dateParts.length === 3
+                ? new Date(
+                    parseInt(dateParts[2]),
+                    parseInt(dateParts[1]) - 1,
+                    parseInt(dateParts[0])
+                )
+                : undefined;
+        },
+        dateFormatter: (value) => {
+            if (value == null) {
+                return undefined;
+            }
+            const date = String(value.getDate());
+            const month = String(value.getMonth() + 1);
+            return `${date.length === 1 ? '0' + date : date}/${
+                month.length === 1 ? '0' + month : month
+            }/${value.getFullYear()}`;
+        },
+    },
+};

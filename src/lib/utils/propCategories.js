@@ -13,6 +13,8 @@ export const COLUMN_DANGEROUS_FUNCTIONS = {
     filterValueGetter: 1,
     headerValueGetter: 1,
     template: 1,
+    dateParser: 1,
+    dateFormatter: 1,
 };
 
 /**
@@ -183,7 +185,6 @@ export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
 
     // Columns: Sort
     comparator: 1,
-    dataTypeMatcher: 1,
 
     // filter params custom option
     predicate: 1,
@@ -265,6 +266,9 @@ export const COLUMN_MAYBE_FUNCTIONS = {
 
     // In filterParams
     filterPlaceholder: 1,
+
+    // In dataTypeDefinitions
+    dataTypeMatcher: 1,
 };
 
 /**
