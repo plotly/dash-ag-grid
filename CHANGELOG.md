@@ -8,7 +8,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ### Changed 
 
-- The `cellValueChanged` property has changed been changed from a (single) event object to a _list_ of event objects. For multi-cell edits, the list will contain an element per change. In other cases, the list will contain a single element. Fixes [#262](https://github.com/plotly/dash-ag-grid/issues/262) 
+- [#261](https://github.com/plotly/dash-ag-grid/pull/261) The `cellValueChanged` property has changed been changed from a (single) event object to a _list_ of event objects. For multi-cell edits, the list will contain an element per change. In other cases, the list will contain a single element. Fixes [#262](https://github.com/plotly/dash-ag-grid/issues/262) 
 
 ## [2.4.0] - 2023-10-17
 
