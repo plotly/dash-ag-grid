@@ -27,6 +27,7 @@ jobs:
             . venv/bin/activate
             npm ci
             npm run build
+          no_output_timeout: 20m
       - run:
           name: Lint
           command: |
