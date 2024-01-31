@@ -16,7 +16,7 @@
         "build:js": "webpack --mode production",
         "build:backends": "dash-generate-components ./src/lib/components dash_ag_grid -p package-info.json --r-prefix '' --jl-prefix ''",
         "build": "run-s prepublishOnly build:js build:backends",
-        "postbuild": "es-check es2015 dash_ag_grid/*.js",
+        "postbuild": "es-check es2017 dash_ag_grid/*.js",
         "private::format.eslint": "eslint --quiet --fix src",
         "private::format.prettier": "prettier --write src --ignore-path=.prettierignore",
         "format": "run-s private::format.*",
