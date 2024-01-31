@@ -65,6 +65,9 @@ const RESIZE_DEBOUNCE_MS = 200;
 // Rate-limit for updating columnState when interacting with the grid
 const COL_RESIZE_DEBOUNCE_MS = 500;
 
+// Time between syncing cell value changes with Dash
+const CELL_VALUE_CHANGED_DEBOUNCE_MS = 1;
+
 const xssMessage = (context) => {
     console.error(
         context,
@@ -119,6 +122,7 @@ export default class DashAgGrid extends Component {
         this.onCellClicked = this.onCellClicked.bind(this);
         this.onCellDoubleClicked = this.onCellDoubleClicked.bind(this);
         this.onCellValueChanged = this.onCellValueChanged.bind(this);
+        this.afterCellValueChanged = this.afterCellValueChanged.bind(this);
         this.onRowDataUpdated = this.onRowDataUpdated.bind(this);
         this.onFilterChanged = this.onFilterChanged.bind(this);
         this.onSortChanged = this.onSortChanged.bind(this);
@@ -181,6 +185,7 @@ export default class DashAgGrid extends Component {
 
         this.selectionEventFired = false;
         this.reference = React.createRef();
+        this.pendingChanges = null;
     }
 
     onPaginationChanged() {
@@ -912,20 +917,38 @@ export default class DashAgGrid extends Component {
         node,
     }) {
         const timestamp = Date.now();
+        // Collect new change.
+        const newChange = {
+            rowIndex,
+            rowId: node.id,
+            data,
+            oldValue,
+            value,
+            colId,
+            timestamp,
+        };
+        // Append it to current change session.
+        if (!this.pendingCellValueChanges) {
+            this.pendingCellValueChanges = [newChange];
+        } else {
+            this.pendingCellValueChanges.push(newChange);
+        }
+    }
+
+    afterCellValueChanged() {
+        // Guard against multiple invocations of the same change session.
+        if (!this.pendingCellValueChanges) {
+            return;
+        }
+        // Send update(s) for current change session to Dash.
         const virtualRowData = this.virtualRowData();
         this.props.setProps({
-            cellValueChanged: {
-                rowIndex,
-                rowId: node.id,
-                data,
-                oldValue,
-                value,
-                colId,
-                timestamp,
-            },
+            cellValueChanged: this.pendingCellValueChanges,
             virtualRowData,
         });
         this.syncRowData();
+        // Mark current change session as ended.
+        this.pendingCellValueChanges = null;
     }
 
     onDisplayedColumnsChanged() {
@@ -1325,7 +1348,11 @@ export default class DashAgGrid extends Component {
                     onSelectionChanged={this.onSelectionChanged}
                     onCellClicked={this.onCellClicked}
                     onCellDoubleClicked={this.onCellDoubleClicked}
-                    onCellValueChanged={this.onCellValueChanged}
+                    onCellValueChanged={debounce(
+                        this.afterCellValueChanged,
+                        CELL_VALUE_CHANGED_DEBOUNCE_MS,
+                        this.onCellValueChanged
+                    )}
                     onFilterChanged={this.onFilterChanged}
                     onSortChanged={this.onSortChanged}
                     onRowDragEnd={this.onSortChanged}
