@@ -69,7 +69,7 @@ const RESIZE_DEBOUNCE_MS = 200;
 const COL_RESIZE_DEBOUNCE_MS = 500;
 
 // Time between syncing cell value changes with Dash
-const CELL_VALUE_CHANGED_DEBOUNCE_MS = 100;
+const CELL_VALUE_CHANGED_DEBOUNCE_MS = 1;
 
 const xssMessage = (context) => {
     console.error(
@@ -959,36 +959,27 @@ export default class DashAgGrid extends Component {
             timestamp,
         };
         // Append it to current change session.
-        if (
-            typeof this.pendingChanges === 'undefined' ||
-            this.pendingChanges === null
-        ) {
-            this.pendingChanges = [newChange];
+        if (!this.pendingCellValueChanges) {
+            this.pendingCellValueChanges = [newChange];
         } else {
-            this.pendingChanges.push(newChange);
+            this.pendingCellValueChanges.push(newChange);
         }
-        this.setState({cellValueChanged: this.pendingChanges});
     }
 
     afterCellValueChanged() {
-        const {cellValueChanged} = this.state;
         // Guard against multiple invocations of the same change session.
-        if (
-            typeof cellValueChanged === 'undefined' ||
-            cellValueChanged === null
-        ) {
+        if (!this.pendingCellValueChanges) {
             return;
         }
         // Send update(s) for current change session to Dash.
         const virtualRowData = this.virtualRowData();
         this.props.setProps({
-            cellValueChanged: cellValueChanged,
+            cellValueChanged: this.pendingCellValueChanges,
             virtualRowData,
         });
         this.syncRowData();
         // Mark current change session as ended.
-        this.setState({cellValueChanged: null});
-        this.pendingChanges = null;
+        this.pendingCellValueChanges = null;
     }
 
     onDisplayedColumnsChanged() {
