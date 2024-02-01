@@ -18,6 +18,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 ### Changed
 - [#261](https://github.com/plotly/dash-ag-grid/pull/261) The `cellValueChanged` property has changed been changed from a (single) event object to a _list_ of event objects. For multi-cell edits, the list will contain an element per change. In other cases, the list will contain a single element. Fixes [#262](https://github.com/plotly/dash-ag-grid/issues/262) 
 - [#246](https://github.com/plotly/dash-ag-grid/pull/246/)
+  - updating underlying grid version from AG Grid v29 -> v31, with this change, Dash AG Grid will reflect a similar version number to underlying Grid version.
   - `dataTypeDefinitions` now supports full js, partial python with full definitions in js of an object, and objects have parts that are js
   - `columnSize` and `columnState` cannot be currently passed together when grid initializes, the `columnSize` will trump the `columnState`
 
