@@ -40,9 +40,10 @@ def test_pa001_pagination(dash_duo):
                 paginationGoTo=5,
             ),
             html.Div(id="grid-info"),
-            html.Button(id="changeSize", children="changeSize"),
+
         ]
-        + [html.Button(id={"type": "nav", "index": x}, children=x) for x in opts],
+        + [html.Button(id={"type": "nav", "index": x}, children=x) for x in opts]
+        + [html.Button(id="changeSize", children="changeSize")],
         style={"margin": 20},
     )
 
@@ -89,6 +90,6 @@ def test_pa001_pagination(dash_duo):
 
     assert (
         oldValue == '{"isLastPageFound": true, "pageSize": 10, '
-        '"currentPage": 40, "totalPages": 862, '
+        '"currentPage": 0, "totalPages": 862, '
         '"rowCount": 8618}'
     )

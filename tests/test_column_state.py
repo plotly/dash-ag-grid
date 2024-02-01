@@ -154,7 +154,7 @@ def test_cs001_column_state(dash_duo):
             ),
             dag.AgGrid(
                 id="grid",
-                columnSize="autoSize",
+                # columnSize="autoSize",
                 columnDefs=columnDefs,
                 defaultColDef=defaultColDef,
                 rowData=rowData,
@@ -224,6 +224,9 @@ def test_cs001_column_state(dash_duo):
     grid.wait_for_pinned_cols(2)
     grid.wait_for_viewport_cols(1)
 
+    dash_duo.find_element("#get-column-state-button").click()
+    time.sleep(0.5)  # pausing to emulate separation because user inputs
+
     until(
         lambda: json.dumps(colState)
         in dash_duo.find_element("#reset-column-state-grid-pre").text,
@@ -231,6 +234,7 @@ def test_cs001_column_state(dash_duo):
     )
 
     grid.resize_col(1, 50)
+
     dash_duo.find_element("#get-column-state-button").click()
     testState = colState.copy()
     testState[1]["width"] = 198

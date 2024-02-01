@@ -772,6 +772,4 @@ const _getAsync =
         );
     };
 export const getApi = _get('getApi');
-export const getColumnApi = _get('getColumnApi');
 export const getApiAsync = _getAsync('getApi');
-export const getColumnApiAsync = _getAsync('getColumnApi');

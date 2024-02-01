@@ -1,6 +1,6 @@
 {
     "name": "dash-ag-grid",
-    "version": "2.4.0",
+    "version": "31.0.2rc5",
     "description": "Dash wrapper around AG Grid, the best interactive data grid for the web.",
     "repository": {
         "type": "git",
@@ -12,10 +12,11 @@
     "homepage": "https://github.com/plotly/dash-ag-grid",
     "main": "dash_ag_grid/dash_ag_grid.min.js",
     "scripts": {
+        "pre-flight-version": "python test_version.py",
         "prepublishOnly": "rimraf -rf lib && babel src --out-dir lib --copy-files --config-file ./.babelrc && rimraf --glob -rf lib/jl/ lib/*.jl",
         "build:js": "webpack --mode production",
         "build:backends": "dash-generate-components ./src/lib/components dash_ag_grid -p package-info.json --r-prefix '' --jl-prefix ''",
-        "build": "run-s prepublishOnly build:js build:backends",
+        "build": "run-s pre-flight-version && run-s prepublishOnly build:js build:backends",
         "postbuild": "es-check es2017 dash_ag_grid/*.js",
         "private::format.eslint": "eslint --quiet --fix src",
         "private::format.prettier": "prettier --write src --ignore-path=.prettierignore",
@@ -29,11 +30,11 @@
     "dependencies": {
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
+        "ag-grid-community": "31.0.3",
+        "ag-grid-enterprise": "31.0.3",
+        "ag-grid-react": "31.0.3",
         "@mui/icons-material": "^5.14.14",
         "@mui/material": "^5.14.14",
-        "ag-grid-community": "^29.3.5",
-        "ag-grid-enterprise": "^29.3.5",
-        "ag-grid-react": "^29.3.5",
         "d3-format": "^3.1.0",
         "d3-time": "^3.1.0",
         "d3-time-format": "^4.1.0",

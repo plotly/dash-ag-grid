@@ -13,6 +13,8 @@ export const COLUMN_DANGEROUS_FUNCTIONS = {
     filterValueGetter: 1,
     headerValueGetter: 1,
     template: 1,
+    dateParser: 1,
+    dateFormatter: 1,
 };
 
 /**
@@ -67,6 +69,7 @@ export const GRID_MAYBE_FUNCTIONS = {
     // Filtering
     isExternalFilterPresent: 1,
     doesExternalFilterPass: 1,
+    quickFilterParser: 1,
 
     // Integrated Charts
     getChartToolbarItems: 1,
@@ -128,14 +131,17 @@ export const GRID_MAYBE_FUNCTIONS = {
 };
 
 /**
- * Functions from top-level grid props. Props in this list can ONLY be
- * functions, so we accept a string and eval it safely
+ * Possible functions from top-level grid props
+ * Props in this list can be string constants (NOT eval'd by AG Grid) or functions,
+ * in which case we require {function: <string>} and we will eval them safely
  * https://www.ag-grid.com/react-data-grid/grid-options/
  **/
 export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
+    components: 1,
     frameworkComponents: 1,
     setPopupParent: 1,
     popupParent: 1,
+    quickFilterMatcher: 1,
 };
 
 /**
@@ -179,6 +185,9 @@ export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
 
     // Columns: Sort
     comparator: 1,
+
+    // filter params custom option
+    predicate: 1,
 };
 
 /**
@@ -206,6 +215,10 @@ export const COLUMN_MAYBE_FUNCTIONS = {
 
     // Columns: Filter
     getQuickFilterText: 1,
+    textFormatter: 1,
+    textMatcher: 1,
+    numberFormatter: 1,
+    numberParser: 1,
 
     // Columns: Headers
     suppressHeaderKeyboardEvent: 1,
@@ -251,9 +264,11 @@ export const COLUMN_MAYBE_FUNCTIONS = {
     // Header Group Component Parameters
     setExpanded: 1,
 
-    // In filterParams or filterParams.filterOptions[]
+    // In filterParams
     filterPlaceholder: 1,
-    predicate: 1,
+
+    // In dataTypeDefinitions
+    dataTypeMatcher: 1,
 };
 
 /**
@@ -283,6 +298,14 @@ export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS = {
 export const COLUMN_ARRAY_NESTED_FUNCTIONS = {
     children: 1,
     filterOptions: 1,
+};
+
+/**
+ * Container function, object of functions, or object of objects inside a property that may have functions
+ * inside them, listed in other categories
+ */
+export const OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS = {
+    dataTypeDefinitions: 1,
 };
 
 /**
