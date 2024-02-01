@@ -23,7 +23,7 @@ with open(_filepath) as f:
 
 package_name = package['name'].replace(' ', '_').replace('-', '_')
 __version__ = package['version']
-get_grid_version = package['dependencies']['ag-grid-community'].lstrip('^')
+grid_version = package['dependencies']['ag-grid-community'].lstrip('^')
 
 _current_path = _os.path.dirname(_os.path.abspath(__file__))
 
