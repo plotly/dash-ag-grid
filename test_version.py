@@ -16,7 +16,7 @@ for pk in ['ag-grid-community', 'ag-grid-enterprise', 'ag-grid-react']:
                 errors.append(f"{pk} - {package['dependencies'][pk]} doesnt equal other version of {prev_version},"
                               f" if AG Grid becomes out of sync with itself, disable this line: `test_version.py:16-17`")
         prev_version = package['dependencies'][pk]
-        assert re.match("^\d+[.]\d+[.]\d+$", package['dependencies'][pk])
+        assert re.match(r"^\d+[.]\d+[.]\d+$", package['dependencies'][pk])
     except:
         errors.append(f"{pk} - {package['dependencies'][pk]}")
 if errors:

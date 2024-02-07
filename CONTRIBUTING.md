@@ -27,6 +27,12 @@ In development mode, Python uses the files in this directory when you import the
 
 ### Create a production build
 
+Update the package version is correct in `package.json` and `CHANGELOG.md` and the changelog lists all the important updates. Then reinstall (so `package-lock.json` gets the new version) and rebuild:
+```
+npm i
+npm run build
+```
+
 Create source and wheel distributions in the generated `dist/` folder, after emptying out any previous builds:
 ```
 rm -rf dist build
