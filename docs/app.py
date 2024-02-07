@@ -76,6 +76,13 @@ for k in example_apps:
     app._callback_list.extend(new_callback_list)
 
 
+alert = dbc.Alert([
+    html.H1("Great News!  Dash AG Grid docs are now available at:", className="p-5" ),
+    html.H3(" https://dash.plotly.com/dash-ag-grid"),
+    html.H5("Please use the official dash-docs as this site is no longer being updated.  ")
+], className="text-center", dismissable=True )
+
+
 app.layout = dbc.Container(
     [
         dbc.Row(dbc.Col(alert, className="mx-auto")),
