@@ -97,29 +97,7 @@ Here are a few of the features available in AG Grid Enterprise.  See the AG Grid
 
 <img src="https://github.com/AnnMarieW/dash-ag-grid-examples/assets/72614349/0c7319e4-0ebd-437a-bbdc-1091ec7ae325" width="1000"/>
 
+### Contributing 
 
-### Contributing
+We welcome contributions to `dash-ag-grid`.  Please see our [contributing guide](https://github.com/plotly/dash-ag-grid/blob/main/CONTRIBUTING.md) for more information.
 
-Dash AG Grid welcomes community contributions!
-
-If you have identified a bug or have an idea for a new feature, it's best to start with a GitHub issue. First look at existing issues at https://github.com/plotly/dash-ag-grid/issues to make sure this is not a duplicate. Then create a new issue. Bug reports should be accompanied by a small example app that someone else can copy and run to reproduce the problem.
-
-If you have questions, please ask on the [Dash Community Forum](https://community.plotly.com/). rather than using GitHub issues.
-
-
-### Developing in this repo
-
-Make sure you have Dash installed with dev and testing extras:
-```
-pip install dash[dev,testing]
-```
-Build the component (from the root of this repo):
-```
-npm i
-npm run build
-```
-Now install the component in development mode:
-```
-$ pip install -e .
-```
-In development mode, Python uses the files in this directory when you import the package. So you can write a testing app in another folder, and whenever you change some code and rebuild the component here it will update in your testing app.
