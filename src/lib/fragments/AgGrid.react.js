@@ -915,11 +915,14 @@ export default class DashAgGrid extends Component {
         }
 
         if (eventListeners) {
-            Object.entries(eventListeners).map(([key, v]) =>
-                {
-                    v.map((func) => {params.api.addEventListener(key, this.parseFunctionEvent(func))})
-                }
-            )
+            Object.entries(eventListeners).map(([key, v]) => {
+                v.map((func) => {
+                    params.api.addEventListener(
+                        key,
+                        this.parseFunctionEvent(func)
+                    );
+                });
+            });
         }
 
         this.setState({
@@ -1066,7 +1069,7 @@ export default class DashAgGrid extends Component {
             d3,
             ...customFunctions,
             ...window.dashAgGridFunctions,
-            setGridProps: this.props.setProps
+            setGridProps: this.props.setProps,
         };
         return (params) => evaluate(parsedCondition, {params, ...context});
     });
