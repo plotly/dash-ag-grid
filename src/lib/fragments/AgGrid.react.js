@@ -908,10 +908,18 @@ export default class DashAgGrid extends Component {
     onGridReady(params) {
         // Applying Infinite Row Model
         // see: https://www.ag-grid.com/javascript-grid/infinite-scrolling/
-        const {rowModelType} = this.props;
+        const {rowModelType, eventListeners} = this.props;
 
         if (rowModelType === 'infinite') {
             params.api.setDatasource(this.getDatasource());
+        }
+
+        if (eventListeners) {
+            Object.entries(eventListeners).map(([key, v]) =>
+                {
+                    v.map((func) => {params.api.addEventListener(key, this.parseFunctionEvent(func))})
+                }
+            )
         }
 
         this.setState({
@@ -1048,6 +1056,17 @@ export default class DashAgGrid extends Component {
             d3,
             ...customFunctions,
             ...window.dashAgGridFunctions,
+        };
+        return (params) => evaluate(parsedCondition, {params, ...context});
+    });
+
+    parseFunctionEvent = memoizeWith(String, (funcString) => {
+        const parsedCondition = esprima.parse(funcString).body[0].expression;
+        const context = {
+            d3,
+            ...customFunctions,
+            ...window.dashAgGridFunctions,
+            setGridProps: this.props.setProps
         };
         return (params) => evaluate(parsedCondition, {params, ...context});
     });

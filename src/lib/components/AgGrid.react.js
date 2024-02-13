@@ -523,6 +523,11 @@ DashAgGrid.propTypes = {
         columnPosition: PropTypes.oneOf(['auto', 'start', 'middle', 'end']),
     }),
 
+    /**
+     * Object of Eventlisteners to add upon grid ready.
+     */
+    eventListeners: PropTypes.objectOf(PropTypes.array),
+
     /********************************
      * GRID PROPS
      *******************************/
