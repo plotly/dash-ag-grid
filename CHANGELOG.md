@@ -4,7 +4,11 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## UNRELEASED
+## [31.0.1] - 2024-02-07
+
+- [#266](https://github.com/plotly/dash-ag-grid/pull/266) Updated README
+
+## [31.0.0] - 2024-02-01
 
 ### Added
 - [#246](https://github.com/plotly/dash-ag-grid/pull/246/)
@@ -16,7 +20,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#246](https://github.com/plotly/dash-ag-grid/pull/246/) dropped `getColumnApi` and `getColmunApiAsync` as these are deprecated from the underlying grid.
 
 ### Changed
-- [#261](https://github.com/plotly/dash-ag-grid/pull/261) The `cellValueChanged` property has changed been changed from a (single) event object to a _list_ of event objects. For multi-cell edits, the list will contain an element per change. In other cases, the list will contain a single element. Fixes [#262](https://github.com/plotly/dash-ag-grid/issues/262) 
+- [#261](https://github.com/plotly/dash-ag-grid/pull/261) The `cellValueChanged` property has changed been changed from a (single) event object to a _list_ of event objects. For multi-cell edits, the list will contain an element per change. In other cases, the list will contain a single element. Fixes [#262](https://github.com/plotly/dash-ag-grid/issues/262)
 - [#246](https://github.com/plotly/dash-ag-grid/pull/246/)
   - updating underlying grid version from AG Grid v29 -> v31, with this change, Dash AG Grid will reflect a similar version number to underlying Grid version.
   - `dataTypeDefinitions` now supports full js, partial python with full definitions in js of an object, and objects have parts that are js

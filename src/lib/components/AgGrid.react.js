@@ -9,6 +9,9 @@ function getGrid(enable) {
     return enable ? RealAgGridEnterprise : RealAgGrid;
 }
 
+/**
+ * Dash interface to AG Grid, a powerful tabular data component.
+ */
 export default class DashAgGrid extends Component {
     constructor(props) {
         super(props);
