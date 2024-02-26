@@ -483,3 +483,13 @@ dagfuncs.dateFormatter = (value) => {
     }/${value.getFullYear()}`;
 }
 // END test_cell_data_type_override.py
+
+// BEGIN test_event_listeners.py
+
+dagfuncs.showOutput = (params, setGridProps) => {
+    const {colId, rowId, rowIndex, value} = params
+    cellClicked = {colId, rowId, rowIndex, timestamp: Date.now(), value, contextMenu: true}
+    setGridProps({'cellClicked': cellClicked})
+}
+
+// END test_event_listeners.py
