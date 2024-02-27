@@ -75,6 +75,7 @@ DashAgGrid.defaultProps = {
     dashGridOptions: {},
     filterModel: {},
     paginationGoTo: null,
+    selectedRows: [],
 };
 DashAgGrid.propTypes = {
     /********************************
@@ -525,6 +526,12 @@ DashAgGrid.propTypes = {
          */
         columnPosition: PropTypes.oneOf(['auto', 'start', 'middle', 'end']),
     }),
+
+    /**
+     * Object of Eventlisteners to add upon grid ready. These listeners are only added upon grid ready.
+     * To add or remove an event listener after this point, please utilize the `getApi` or `getApiAsync` methods.
+     */
+    eventListeners: PropTypes.objectOf(PropTypes.array),
 
     /********************************
      * GRID PROPS

@@ -347,6 +347,7 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'paginationGoTo',
     'columnSize',
     'scrollTo',
+    'eventListeners',
 ];
 
 /**
