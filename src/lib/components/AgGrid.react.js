@@ -528,7 +528,8 @@ DashAgGrid.propTypes = {
     }),
 
     /**
-     * Object of Eventlisteners to add upon grid ready.
+     * Object of Eventlisteners to add upon grid ready. These listeners are only added upon grid ready,
+     * to add or remove an event listener after this point, please utilize the `getApi` or `getApiAsync` methods.
      */
     eventListeners: PropTypes.objectOf(PropTypes.array),
 
