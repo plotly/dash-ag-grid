@@ -753,33 +753,31 @@ const _get = (flavor) => (id) => {
         `no grid found, or grid is not initialized yet, with id: ${id}`
     );
 };
-const _getAsync =
-    (flavor) =>
-    async (id) => {
-        // optional chaining so before the fragment exists it'll just return undefined
-        // which does the right thing because clearly no grid is initialized yet!
-        var api = apiGetters[flavor]?.(id);
-        const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-        const startTime = Date.now();
-        const maxDelay = 120000;
-        let maxIncrement = 1000;
-        let pause = 1;
-        const increase = 1.5;
-        while (!api) {
-            await delay(pause);
-            pause *= increase;
-            pause = Math.min(pause, maxIncrement)
-            api = apiGetters[flavor]?.(id);
-            if (Date.now() > startTime + maxDelay) {
-                break;
-            }
+const _getAsync = (flavor) => async (id) => {
+    // optional chaining so before the fragment exists it'll just return undefined
+    // which does the right thing because clearly no grid is initialized yet!
+    var api = apiGetters[flavor]?.(id);
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+    const startTime = Date.now();
+    const maxDelay = 120000;
+    const maxIncrement = 1000;
+    let pause = 1;
+    const increase = 1.5;
+    while (!api) {
+        await delay(pause);
+        pause *= increase;
+        pause = Math.min(pause, maxIncrement);
+        api = apiGetters[flavor]?.(id);
+        if (Date.now() > startTime + maxDelay) {
+            break;
         }
-        if (api) {
-            return api;
-        }
-        throw new Error(
-            `no grid found, or grid is not initialized yet, with id: ${id}`
-        );
-    };
+    }
+    if (api) {
+        return api;
+    }
+    throw new Error(
+        `no grid found, or grid is not initialized yet, with id: ${id}`
+    );
+};
 export const getApi = _get('getApi');
 export const getApiAsync = _getAsync('getApi');
