@@ -762,15 +762,16 @@ const _getAsync =
         // which does the right thing because clearly no grid is initialized yet!
         var api = apiGetters[flavor]?.(id);
         const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-        let count = 0;
+        const startTime = Date.now();
+        const maxDelay = 120000;
         let pause = 1;
         const increase = 1.5;
         while (!api) {
             await delay(pause);
             pause *= increase;
+            pause = Math.min(pause, 1000)
             api = apiGetters[flavor]?.(id);
-            count++;
-            if (count > trycount) {
+            if (Date.now() > startTime + maxDelay) {
                 break;
             }
         }
