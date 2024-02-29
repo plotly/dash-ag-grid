@@ -6,6 +6,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## unreleased
 
+### Changed
+ - [#273](https://github.com/plotly/dash-ag-grid/pull/273) increased the timeout for `getApiAsync` to 2 minutes.
+
 ### Added
   - [#270](https://github.com/plotly/dash-ag-grid/pull/270)
     - support for `eventListeners` to be added to the grid that get loaded upon `gridReady`
