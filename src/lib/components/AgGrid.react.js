@@ -528,8 +528,8 @@ DashAgGrid.propTypes = {
     }),
 
     /**
-     * Object of Eventlisteners to add upon grid ready. These listeners are only added upon grid ready,
-     * to add or remove an event listener after this point, please utilize the `getApi` or `getApiAsync` methods.
+     * Object of Eventlisteners to add upon grid ready. These listeners are only added upon grid ready.
+     * To add or remove an event listener after this point, please utilize the `getApi` or `getApiAsync` methods.
      */
     eventListeners: PropTypes.objectOf(PropTypes.array),
 
@@ -742,8 +742,6 @@ export const defaultProps = DashAgGrid.defaultProps;
 
 export const apiGetters = {};
 
-const DEFAULTTRYCOUNT = 20;
-
 const _get = (flavor) => (id) => {
     // optional chaining so before the fragment exists it'll just return undefined
     // which does the right thing because clearly no grid is initialized yet!
@@ -755,31 +753,31 @@ const _get = (flavor) => (id) => {
         `no grid found, or grid is not initialized yet, with id: ${id}`
     );
 };
-const _getAsync =
-    (flavor) =>
-    async (id, trycount = DEFAULTTRYCOUNT) => {
-        // optional chaining so before the fragment exists it'll just return undefined
-        // which does the right thing because clearly no grid is initialized yet!
-        var api = apiGetters[flavor]?.(id);
-        const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-        let count = 0;
-        let pause = 1;
-        const increase = 1.5;
-        while (!api) {
-            await delay(pause);
-            pause *= increase;
-            api = apiGetters[flavor]?.(id);
-            count++;
-            if (count > trycount) {
-                break;
-            }
+const _getAsync = (flavor) => async (id) => {
+    // optional chaining so before the fragment exists it'll just return undefined
+    // which does the right thing because clearly no grid is initialized yet!
+    var api = apiGetters[flavor]?.(id);
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+    const startTime = Date.now();
+    const maxDelay = 120000;
+    const maxIncrement = 1000;
+    let pause = 1;
+    const increase = 1.5;
+    while (!api) {
+        await delay(pause);
+        pause *= increase;
+        pause = Math.min(pause, maxIncrement);
+        api = apiGetters[flavor]?.(id);
+        if (Date.now() > startTime + maxDelay) {
+            break;
         }
-        if (api) {
-            return api;
-        }
-        throw new Error(
-            `no grid found, or grid is not initialized yet, with id: ${id}`
-        );
-    };
+    }
+    if (api) {
+        return api;
+    }
+    throw new Error(
+        `no grid found, or grid is not initialized yet, with id: ${id}`
+    );
+};
 export const getApi = _get('getApi');
 export const getApiAsync = _getAsync('getApi');
