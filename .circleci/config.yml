@@ -36,7 +36,7 @@ jobs:
           command: |
             . venv/bin/activate
             pip uninstall -y pytest
-            pip install pytest<8.1.0
+            pip install 'pytest<8.1.0'
             pytest --headless
   test-react-18:
     <<: *test
