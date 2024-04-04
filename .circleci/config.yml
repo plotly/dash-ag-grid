@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       - browser-tools/install-browser-tools:
-          chrome-version: 123.0.6312.88
+          chrome-version: 120.0.6099.304
       - run:
           name: Install Python deps
           command: |
