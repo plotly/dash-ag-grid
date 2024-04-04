@@ -6,7 +6,7 @@ orbs:
 jobs:
   test: &test
     docker:
-      - image: cimg/python:3.12.1-node
+      - image: cimg/python:3.9.9-node
         auth:
           username: dashautomation
           password: $DASH_PAT_DOCKERHUB
@@ -35,7 +35,8 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            pip install pytest
+            pip uninstall -y pytest
+            pip install pytest<8.1.0
             pytest --headless
   test-react-18:
     <<: *test
