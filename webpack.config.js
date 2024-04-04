@@ -3,6 +3,7 @@ const packagejson = require('./package.json');
 
 const dashLibraryName = packagejson.name.replace(/-/g, '_');
 const WebpackDashDynamicImport = require('@plotly/webpack-dash-dynamic-import');
+const { EsbuildPlugin } = require('esbuild-loader');
 
 module.exports = (env, argv) => {
 
@@ -57,12 +58,15 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
+                    exclude: /node_modules/,
                     test: /\.jsx?$/,
                     use: {
-                      loader: 'babel-loader',
-                      options: {
-                        presets: ['@babel/preset-env']
-                      }
+                        loader: 'esbuild-loader',
+                        options: {
+                            // JavaScript version to compile to
+                            target: 'es2017',
+                            loader: 'jsx'
+                        }
                     },
                 },
                 {
@@ -72,6 +76,11 @@ module.exports = (env, argv) => {
             ],
         },
         optimization: {
+            minimizer: [
+                 new EsbuildPlugin({
+                     target: 'es2017'  // Syntax to compile
+                  })
+            ],
             splitChunks: {
                 name: '[name].js',
                 cacheGroups: {
