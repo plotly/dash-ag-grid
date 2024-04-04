@@ -35,6 +35,7 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
+            pip install pytest
             pytest --headless
   test-react-18:
     <<: *test
