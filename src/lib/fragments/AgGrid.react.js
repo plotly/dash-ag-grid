@@ -176,7 +176,6 @@ export default class DashAgGrid extends Component {
                 markdown: this.generateRenderer(MarkdownRenderer),
                 ...newComponents,
             },
-            pauseSelections: false,
             rerender: 0,
             openGroups: {},
             gridApi: null,
@@ -184,8 +183,10 @@ export default class DashAgGrid extends Component {
         };
 
         this.selectionEventFired = false;
+        this.pauseSelections = false;
         this.reference = React.createRef();
         this.pendingChanges = null;
+        this.dataUpdates = false;
     }
 
     onPaginationChanged() {
@@ -204,11 +205,10 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    setSelection(selection) {
-        const {gridApi} = this.state;
+    setSelection(selection, gridApi = this.state?.gridApi) {
         const {getRowId} = this.props;
         if (gridApi && selection && !gridApi?.isDestroyed()) {
-            this.setState({pauseSelections: true});
+            this.pauseSelections = true;
             const nodeData = [];
             if (has('function', selection)) {
                 const test = this.parseFunction(selection.function);
@@ -254,7 +254,9 @@ export default class DashAgGrid extends Component {
             }
             gridApi.deselectAll();
             gridApi.setNodesSelected({nodes: nodeData, newValue: true});
-            this.setState({pauseSelections: false});
+            setTimeout(() => {
+                this.pauseSelections = false;
+            }, 1);
         }
     }
 
@@ -759,8 +761,17 @@ export default class DashAgGrid extends Component {
             !equals(selectedRows, prevProps.selectedRows) &&
             !this.selectionEventFired
         ) {
-            this.setSelection(selectedRows);
+            if (!this.dataUpdates) {
+                setTimeout(() => {
+                    if (!this.dataUpdates) {
+                        this.pauseSelections = true;
+                        this.setSelection(selectedRows);
+                    }
+                }, 10);
+            }
         }
+
+        this.dataUpdates = false;
 
         if (this.state.gridApi && this.state.gridApi === prevState.gridApi) {
             if (filterModel) {
@@ -824,7 +835,8 @@ export default class DashAgGrid extends Component {
         const {openGroups, gridApi} = this.state;
 
         if (gridApi && !gridApi?.isDestroyed()) {
-            // Call the API to select rows
+            this.dataUpdates = true;
+            this.pauseSelections = true;
             this.setSelection(selectedRows);
 
             if (rowData && rowModelType === 'clientSide') {
@@ -861,12 +873,14 @@ export default class DashAgGrid extends Component {
     }
 
     onSelectionChanged() {
-        if (!this.state.pauseSelections) {
-            // Flag that the selection event was fired
-            this.selectionEventFired = true;
-            const selectedRows = this.state.gridApi.getSelectedRows();
-            this.props.setProps({selectedRows});
-        }
+        setTimeout(() => {
+            if (!this.pauseSelections) {
+                // Flag that the selection event was fired
+                this.selectionEventFired = true;
+                const selectedRows = this.state.gridApi.getSelectedRows();
+                this.props.setProps({selectedRows});
+            }
+        }, 1);
     }
 
     isDatasourceLoadedForInfiniteScrolling() {
