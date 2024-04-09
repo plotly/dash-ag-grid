@@ -87,7 +87,7 @@ def test_cs001_column_state(dash_duo):
     alt_colState = [
         {
             "colId": "price",
-            "width": 198,
+            "width": 199,
             "hide": False,
             "pinned": None,
             "sort": "asc",
@@ -237,7 +237,7 @@ def test_cs001_column_state(dash_duo):
 
     dash_duo.find_element("#get-column-state-button").click()
     testState = colState.copy()
-    testState[1]["width"] = 198
+    testState[1]["width"] = 199
     until(
         lambda: json.dumps(testState)
         in dash_duo.find_element("#reset-column-state-grid-pre").text,
