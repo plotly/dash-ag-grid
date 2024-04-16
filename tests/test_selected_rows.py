@@ -106,13 +106,14 @@ def test_sr2_selected_rows_rowdata(dash_duo):
 
     app.layout = html.Div([
         html.Button('Update Table', id='update-button', n_clicks=0),
+        html.Button('Select Two', id='select-two', n_clicks=0),
         dag.AgGrid(
             id='grid',
             columnSize="sizeToFit",
             dashGridOptions={
                 "rowHeight": None,
                 "domLayout": "normal",
-                "rowSelection": "single",
+                "rowSelection": "multiple",
                 "filter": True,
             },
             style={"maxHeight": "200px", "overflow": "auto"},
@@ -142,8 +143,10 @@ def test_sr2_selected_rows_rowdata(dash_duo):
         Input('grid', 'selectedRows')
     )
     def update_selected_row_info(selected_rows):
-        selected_row_info = f"Selected Row: {selected_rows[0]}" if selected_rows else "No row selected"
-        return selected_row_info
+        if isinstance(selected_rows, list):
+            selected_row_info = f"Selected Row: {selected_rows[-1]}" if selected_rows else "No row selected"
+            return selected_row_info
+        return no_update
 
     dash_duo.start_server(app)
 
@@ -169,3 +172,115 @@ def test_sr2_selected_rows_rowdata(dash_duo):
     time.sleep(1)  ## delay to make sure the selection sticks
 
     assert 'ag-row-selected' in grid.get_row(0).get_attribute('class')
+
+def test_sr3_selected_rows_modes(dash_duo):
+    app = Dash(__name__)
+
+    # Placeholder DataFrame
+    df = pd.DataFrame()
+
+    app.layout = html.Div([
+        html.Button('Update Table', id='update-button', n_clicks=0),
+        html.Button('Select Ids', id='select-ids', n_clicks=0),
+        html.Button('Select Function', id='select-function', n_clicks=0),
+        dag.AgGrid(
+            id='grid',
+            columnSize="sizeToFit",
+            dashGridOptions={
+                "rowHeight": None,
+                "domLayout": "normal",
+                "rowSelection": "multiple",
+                "filter": True,
+            },
+            style={"maxHeight": "200px", "overflow": "auto"},
+            getRowId='params.data.A'
+        ),
+        html.Div(id='selected-row-info')  # Div to display selected row information
+    ])
+
+    @app.callback(
+        Output('grid', 'columnDefs'),
+        Output('grid', 'rowData'),
+        Output('grid', 'selectedRows'),
+        Input('update-button', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def update_data(n_clicks):
+        df = pd.DataFrame({
+            "A": [1, 2, 3],
+            "B": [4, 5, 6]
+        })
+        column_defs = [{"headerName": col, "field": col, "filter": "agTextColumnFilter"} for col in df.columns]
+        row_data = df.to_dict("records")
+        selected_rows = df.head(1).to_dict("records")
+        return column_defs, row_data, selected_rows
+
+    @app.callback(
+        Output('grid', 'selectedRows', allow_duplicate=True),
+        Input('select-ids', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def select_ids(n_clicks):
+        return {'ids': ['1', '2']}
+
+    @app.callback(
+        Output('grid', 'selectedRows', allow_duplicate=True),
+        Input('select-function', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def select_ids(n_clicks):
+        return {'function': 'params.data.A > 2'}
+
+    @app.callback(
+        Output('selected-row-info', 'children'),
+        Input('grid', 'selectedRows')
+    )
+    def update_selected_row_info(selected_rows):
+        if isinstance(selected_rows, list):
+            selected_row_info = f"Selected Row: {selected_rows[-1]}" if selected_rows else "No row selected"
+            return selected_row_info
+        return no_update
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+
+    dash_duo.find_element('#update-button').click()
+
+    grid.wait_for_cell_text(0, 0, "1")
+
+    dash_duo.wait_for_text_to_equal(
+        "#selected-row-info", "Selected Row: {'A': 1, 'B': 4}"
+    )
+
+    assert 'ag-row-selected' in grid.get_row(0).get_attribute('class')
+    assert 'ag-row-selected' not in grid.get_row(1).get_attribute('class')
+    assert 'ag-row-selected' not in grid.get_row(2).get_attribute('class')
+
+    dash_duo.find_element('#select-ids').click()
+
+    time.sleep(1)  ## delay to make sure the selection sticks
+
+    dash_duo.wait_for_text_to_equal(
+        "#selected-row-info", "Selected Row: {'A': 2, 'B': 5}"
+    )
+
+    time.sleep(1)  ## delay to make sure the selection sticks
+
+    assert 'ag-row-selected' in grid.get_row(0).get_attribute('class')
+    assert 'ag-row-selected' in grid.get_row(1).get_attribute('class')
+    assert 'ag-row-selected' not in grid.get_row(2).get_attribute('class')
+
+    dash_duo.find_element('#select-function').click()
+
+    time.sleep(1)  ## delay to make sure the selection sticks
+
+    dash_duo.wait_for_text_to_equal(
+        "#selected-row-info", "Selected Row: {'A': 3, 'B': 6}"
+    )
+
+    time.sleep(1)  ## delay to make sure the selection sticks
+
+    assert 'ag-row-selected' not in grid.get_row(0).get_attribute('class')
+    assert 'ag-row-selected' not in grid.get_row(1).get_attribute('class')
+    assert 'ag-row-selected' in grid.get_row(2).get_attribute('class')
