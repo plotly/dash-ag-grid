@@ -17,12 +17,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@1.0.0
-
-      - name: Install ChromeDriver
-        uses: browser-actions/setup-chromedriver@1.0.0
-
+      - name: 'Setup Chrome and chromedriver'
+        uses: nanasess/setup-chromedriver@v2
+      - name: 'Setup chromedriver environment'
+        run: |
+            export DISPLAY=:99
+            chromedriver --url-base=/wd/hub &
+      - name: Start XVFB
+        run: Xvfb :99 &
+        
       - name: Install dependencies
         run: |
           python -m venv venv
@@ -30,7 +33,6 @@ jobs:
           pip install --upgrade pip
           pip install wheel
           pip install ".[dev]"
-
       - name: Build package
         run: |
           . venv/bin/activate
@@ -56,8 +58,16 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: 3.12
-      - uses: browser-actions/setup-chrome@1.0.0
-      - uses: browser-actions/setup-chromedriver@1.0.0
+      - name: 'Setup Chrome and chromedriver'
+        uses: nanasess/setup-chromedriver@v2
+
+      - name: 'Setup chromedriver environment'
+        run: |
+            export DISPLAY=:99
+            chromedriver --url-base=/wd/hub &
+      - name: Start XVFB
+        run: Xvfb :99 &
+      - name: Install package
       - run: |
           python -m venv venv
           . venv/bin/activate
