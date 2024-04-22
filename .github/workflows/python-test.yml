@@ -39,7 +39,7 @@ jobs:
           uv pip install ".[dev]"
       - name: Build package
         run: |
-          . venv/bin/activate
+          source .venv/bin/activate
           npm ci
           npm i
           npm run build
@@ -50,7 +50,7 @@ jobs:
 
       - name: Run tests
         run: |
-          . venv/bin/activate
+          source .venv/bin/activate
           pytest --headless
 
   test-react:
@@ -92,5 +92,5 @@ jobs:
         timeout-minutes: 20
       - run: npm run lint
       - run: |
-          . venv/bin/activate
+          source .venv/bin/activate
           pytest --headless
