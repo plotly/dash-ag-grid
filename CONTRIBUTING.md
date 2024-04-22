@@ -44,11 +44,14 @@ for more information. At this point you can test the build. The best way is to m
 cd ../my_test
 python -m venv venv
 . venv/bin/activate
-pip install ../dash-ag-grid/dist/dash_ag_grid-31.0.1-py3-none-any.whl
-pip install -r ../dash-ag-grid/docs/requirements.txt
-cp ../dash-ag-grid/docs/demo_stock_portfolio.py .
-python demo_stock_portfolio.py
+pip install -e ".[dev, docs]"
 ```
+
+And run the tests:
+```
+pytest
+```
+
 It doesn't need to be tested extensively, just enough to know that the table loads with no errors and you've built the right version of the code. If the app looks good, use [`twine`](https://pypi.org/project/twine/) to upload these to PyPI:
 ```
 # back in the dash-ag-grid directory
