@@ -1,0 +1,72 @@
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: cimg/python:3.9.9-node
+      credentials:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@1.0.0
+
+      - name: Install ChromeDriver
+        uses: browser-actions/setup-chromedriver@1.0.0
+
+      - name: Install Python dependencies
+        run: |
+          python -m venv venv && . venv/bin/activate
+          pip install --upgrade pip wheel
+          pip install ".[dev]"
+
+      - name: Build package
+        run: |
+          . venv/bin/activate
+          npm ci
+          npm run build
+        timeout-minutes: 20
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run tests
+        run: |
+          . venv/bin/activate
+          pytest --headless
+
+  test-react-18:
+    runs-on: ubuntu-latest
+    container:
+      image: cimg/python:3.9.9-node
+      credentials:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      env:
+        REACT_VERSION: "18.2.0"
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: browser-actions/setup-chrome@1.0.0
+      - uses: browser-actions/setup-chromedriver@1.0.0
+      - run: |
+          python -m venv venv && . venv/bin/activate
+          pip install --upgrade pip wheel
+          pip install ".[dev]"
+      - run: |
+          . venv/bin/activate
+          npm ci
+          npm run build
+        timeout-minutes: 20
+      - run: npm run lint
+      - run: |
+          . venv/bin/activate
+          pytest --headless
+
