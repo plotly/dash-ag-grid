@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  browser-tools: circleci/browser-tools@1.4.4
+  browser-tools: circleci/browser-tools@1.4.8
 
 jobs:
   test: &test
@@ -12,9 +12,8 @@ jobs:
           password: $DASH_PAT_DOCKERHUB
     steps:
       - checkout
-      - browser-tools/install-browser-tools:
-          chrome-version: 116.0.5845.96
-          firefox-version: 116.0.3
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - run:
           name: Install Python deps
           command: |
@@ -36,6 +35,8 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
+            pip uninstall -y pytest
+            pip install 'pytest<8.1.0'
             pytest --headless
   test-react-18:
     <<: *test
