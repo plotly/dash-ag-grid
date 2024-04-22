@@ -25,14 +25,18 @@ jobs:
             chromedriver --url-base=/wd/hub &
       - name: Start XVFB
         run: Xvfb :99 &
-        
+
+      - name: Setup uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv venv
+
       - name: Install dependencies
         run: |
-          python -m venv venv
-          . venv/bin/activate
-          pip install --upgrade pip
-          pip install wheel
-          pip install ".[dev]"
+          source .venv/bin/activate
+          uv pip install --upgrade pip
+          uv pip install wheel
+          uv pip install ".[dev]"
       - name: Build package
         run: |
           . venv/bin/activate
@@ -67,13 +71,18 @@ jobs:
             chromedriver --url-base=/wd/hub &
       - name: Start XVFB
         run: Xvfb :99 &
+
+      - name: Setup uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv venv
+
       - name: Install package
       - run: |
-          python -m venv venv
-          . venv/bin/activate
-          pip install --upgrade pip
-          pip install wheel
-          pip install ".[dev]"
+          source .venv/bin/activate
+          uv pip install --upgrade pip
+          uv pip install wheel
+          uv pip install ".[dev]"
           echo "Using React version ${{ matrix.react-version }}"
           npm ci
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
