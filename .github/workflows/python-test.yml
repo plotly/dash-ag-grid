@@ -41,6 +41,7 @@ jobs:
         run: |
           . venv/bin/activate
           npm ci
+          npm i
           npm run build
         timeout-minutes: 20
 
@@ -86,6 +87,7 @@ jobs:
           echo "Using React version ${{ matrix.react-version }}"
           npm ci
           npm install react@${{ matrix.react-version }} react-dom@${{ matrix.react-version }}
+          npm i
           npm run build
         timeout-minutes: 20
       - run: npm run lint
