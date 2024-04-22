@@ -19,7 +19,7 @@ jobs:
           command: |
             python -m venv venv && . venv/bin/activate
             pip install --upgrade pip wheel
-            pip install -r tests/requirements.txt
+            pip install -r requires-dev.txt
       - run:
           name: Build package
           command: |
