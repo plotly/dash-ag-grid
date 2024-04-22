@@ -19,7 +19,7 @@ jobs:
           command: |
             python -m venv venv && . venv/bin/activate
             pip install --upgrade pip wheel
-            pip install -r requires-dev.txt
+            pip install ".[dev]"
       - run:
           name: Build package
           command: |
@@ -35,8 +35,6 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            pip uninstall -y pytest
-            pip install 'pytest<8.1.0'
             pytest --headless
   test-react-18:
     <<: *test
