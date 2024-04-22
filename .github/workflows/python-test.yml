@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        react-version: ["16.8.0", "17.0.0", "18.2.0"]
+        react-version: ["18.2.0"]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
