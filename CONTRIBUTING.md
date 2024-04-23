@@ -52,6 +52,11 @@ And run the tests:
 pytest
 ```
 
+Create a new distribution with:
+```
+npm run dist
+```
+
 It doesn't need to be tested extensively, just enough to know that the table loads with no errors and you've built the right version of the code. If the app looks good, use [`twine`](https://pypi.org/project/twine/) to upload these to PyPI:
 ```
 # back in the dash-ag-grid directory
