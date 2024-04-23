@@ -28,6 +28,7 @@ jobs:
           source .venv/bin/activate
           npm i
           npm run dist
+          npm pack && mv *.tgz dist/
         shell: bash
       - uses: ncipollo/release-action@v1
         with:
