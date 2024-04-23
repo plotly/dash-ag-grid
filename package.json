@@ -23,7 +23,8 @@
         "format": "run-s private::format.*",
         "private::lint.eslint": "eslint src",
         "private::lint.prettier": "prettier src --list-different --ignore-path=.prettierignore",
-        "lint": "run-s private::lint.*"
+        "lint": "run-s private::lint.*",
+        "dist": "npm run build && python setup.py sdist bdist_wheel"
     },
     "author": "Plotly <chris@plot.ly>",
     "license": "MIT",
