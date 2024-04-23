@@ -94,7 +94,6 @@ export const GRID_MAYBE_FUNCTIONS = {
     // Pivot and Aggregation
     processPivotResultColDef: 1,
     processPivotResultColGroupDef: 1,
-    aggFuncs: 1,
     getGroupRowAgg: 1,
 
     // Rendering
@@ -306,6 +305,7 @@ export const COLUMN_ARRAY_NESTED_FUNCTIONS = {
  */
 export const OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS = {
     dataTypeDefinitions: 1,
+    aggFuncs: 1,
 };
 
 /**

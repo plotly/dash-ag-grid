@@ -8,6 +8,13 @@ with open("package.json") as f:
 with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
 
+
+def read_req_file(req_type):
+    with open(f"requires-{req_type}.txt", encoding="utf-8") as fp:
+        requires = (line.strip() for line in fp)
+        return [req for req in requires if req and not req.startswith("#")]
+
+
 package_name = package["name"].replace(" ", "_").replace("-", "_")
 
 setup(
@@ -20,7 +27,11 @@ setup(
     description=package.get("description", package_name),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=["dash>=2"],
+    install_requires=read_req_file("install"),
+    extras_require={
+        "dev": read_req_file("dev"),
+        "docs": read_req_file("docs"),
+    },
     python_requires=">=3.6",
     url="https://dash.plotly.com/dash-ag-grid",
     project_urls={
@@ -28,7 +39,7 @@ setup(
         "Source": "https://github.com/plotly/dash-ag-grid",
         "Issue Tracker": "https://github.com/plotly/dash-ag-grid/issues",
     },
-    classifiers = [
+    classifiers=[
         "Framework :: Dash",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
