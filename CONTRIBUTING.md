@@ -25,6 +25,20 @@ $ pip install -e .
 ```
 In development mode, Python uses the files in this directory when you import the package. So you can write a testing app in another folder, and whenever you change some code and rebuild the component here it will update in your testing app.
 
+### Versioning
+We follow a strict versioning system aligned with the underlying Ag Grid version, but also reserving the
+patch number for updates to the Dash grid.
+
+Specifically, Dash Ag Grid will always have the same _major_ and _minor_ version number as the Javascript Ag Grid package it is bundling, but it may not always have the same patch number.
+
+Ag Grid releases new major versions every 6-8 months, and minor versions every 4-6 weeks. Sometimes, Dash Ag Grid may introduce new changes that warrant a minor release according to [semver](https://semver.org/): For example, exposing a functional property of Ag Grid as a declarative property in Dash Ag Grid. In this case, we would wait for a new minor release of Ag Grid and bump the versions together.
+
+We may release out-of-band of Ag Grid when there are patches that we want to make available.
+
+As a user, you can always check the underlying Ag Grid version with `dash_ag_grid.grid_version` and the underlying Dash Ag Grid version with `dash_ag_grid.__version__`.
+
+For maintainers, when issuing new releases ensure that the version bump of Dash Ag Grid follows this convention.
+
 ### Create a production build
 
 Update the package version in `package.json` and `CHANGELOG.md` and ensure the changelog lists all the important updates. Then reinstall (so `package-lock.json` gets the new version) and rebuild:
