@@ -924,7 +924,7 @@ export default class DashAgGrid extends Component {
         const {rowModelType, eventListeners} = this.props;
 
         if (rowModelType === 'infinite') {
-            params.api.setDatasource(this.getDatasource());
+            params.api.setGridOption('datasource', this.getDatasource());
         }
 
         if (eventListeners) {
