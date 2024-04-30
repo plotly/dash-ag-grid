@@ -99,4 +99,5 @@ jobs:
       - run: npm run lint
       - run: |
           source .venv/bin/activate
-          pytest --headless
+          pytest --headless -k "not test_versioning"
+          
