@@ -27,6 +27,7 @@ jobs:
       - name: Generate distribution
         run: |
           source .venv/bin/activate
+          uv pip install -r requires-dev.txt -r requires-install.txt
           npm i
           npm run dist
           npm pack && mv *.tgz dist/
