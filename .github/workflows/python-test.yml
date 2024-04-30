@@ -97,7 +97,8 @@ jobs:
           npm run build
         timeout-minutes: 20
       - run: npm run lint
-      - run: |
+      - name: Run tests
+        run: |
           source .venv/bin/activate
           pytest --headless -k "not test_versioning"
-          
+
