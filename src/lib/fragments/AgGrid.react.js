@@ -1324,7 +1324,6 @@ export default class DashAgGrid extends Component {
                 updateColumnState: false,
             });
         }
-
     }
 
     buildArray(arr1, arr2) {
