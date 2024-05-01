@@ -1310,7 +1310,7 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi || !this.state.mounted) {
             return;
         }
-        if (!this.state.gridApi.isDestroyed) {
+        if (!this.state.gridApi.isDestroyed()) {
             var columnState = JSON.parse(
                 JSON.stringify(this.state.gridApi.getColumnState())
             );
