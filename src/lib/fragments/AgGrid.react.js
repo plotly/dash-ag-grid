@@ -554,9 +554,11 @@ export default class DashAgGrid extends Component {
         if (rowModelType === 'clientSide') {
             propsToSet.virtualRowData = this.virtualRowData();
         }
-        propsToSet.columnState = JSON.parse(
-            JSON.stringify(this.state.gridApi.getColumnState())
-        );
+        if (!this.state.gridApi.isDestroyed()) {
+            propsToSet.columnState = JSON.parse(
+                JSON.stringify(this.state.gridApi.getColumnState())
+            );
+        }
         setProps(propsToSet);
     }
 
@@ -1308,15 +1310,21 @@ export default class DashAgGrid extends Component {
         if (!this.state.gridApi || !this.state.mounted) {
             return;
         }
+        if (!this.state.gridApi.isDestroyed) {
+            var columnState = JSON.parse(
+                JSON.stringify(this.state.gridApi.getColumnState())
+            );
 
-        var columnState = JSON.parse(
-            JSON.stringify(this.state.gridApi.getColumnState())
-        );
+            this.props.setProps({
+                columnState,
+                updateColumnState: false,
+            });
+        } else {
+            this.props.setProps({
+                updateColumnState: false,
+            });
+        }
 
-        this.props.setProps({
-            columnState,
-            updateColumnState: false,
-        });
     }
 
     buildArray(arr1, arr2) {
