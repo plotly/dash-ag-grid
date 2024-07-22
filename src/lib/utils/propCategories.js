@@ -365,7 +365,7 @@ export const OMIT_PROP_RENDER = [
     'cellClicked',
     'paginationInfo',
     'cellRendererData',
-    'cellDoubleClicked'
+    'cellDoubleClicked',
 ];
 
 /**
