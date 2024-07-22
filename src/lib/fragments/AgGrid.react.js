@@ -1203,7 +1203,7 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    scrollTo(reset = false) {
+    scrollTo(reset = true) {
         const {gridApi} = this.state;
         const {scrollTo, setProps, getRowId} = this.props;
         if (!gridApi) {
