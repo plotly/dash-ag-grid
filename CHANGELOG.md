@@ -9,6 +9,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
  - [#314](https://github.com/plotly/dash-ag-grid/pull/314)
    - locking selenium for tests that were failing due to missing import
 
+
 ## [31.2.0] - 2024-02-25
 
 ### Changed
