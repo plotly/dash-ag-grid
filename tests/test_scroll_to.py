@@ -1,10 +1,11 @@
-from dash import Dash, html, Input, Output
+from dash import Dash, html, Input, Output, Patch, State
 from dash_ag_grid import AgGrid
 import plotly.express as px
 import json
 from dash.testing.wait import until
 import pandas as pd
 import pytest
+import time
 
 from . import utils
 
@@ -20,9 +21,9 @@ def df():
 def scroll_to_inputs():
     return [
         {"rowIndex": 100, "rowPosition": "bottom", "cell": (100, 0)},
-        {"column": "bronze", "columnPosition": "end", "cell": (100, 8)},
-        {"rowId": "Elizabeth Beisel12/8/2012", "rowPosition": "top", "cell": (200, 8)},
-        {"rowIndex": 300, "rowId": 500, "cell": (300, 8)},
+        {"rowIndex": 100, "column": "bronze", "columnPosition": "end", "cell": (100, 8)},
+        {"rowId": "Elizabeth Beisel12/8/2012", "column": "bronze", "columnPosition": "end", "rowPosition": "top", "cell": (200, 8)},
+        {"rowIndex": 300, "column": "bronze", "columnPosition": "end", "cell": (300, 8)},
         {
             "rowIndex": 400,
             "rowId": "Ryan Bayley29/08/2004",
@@ -86,6 +87,7 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
                 getRowId="params.data.athlete+params.data.date",
             ),
             html.Button(id="btn"),
+            html.Button(id="btn_columnState"),
             html.Div(id="scrollTo-output"),
             html.Div(id="scrollTo-input"),
         ]
@@ -97,7 +99,19 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
         Input("grid", "scrollTo"),
     )
     def display_scrollTo(scroll_to):
-        return json.dumps(scroll_to)
+        if scroll_to:
+            return json.dumps(scroll_to)
+
+    @app.callback(
+        Output('grid', 'columnState'),
+        Input('btn_columnState', 'n_clicks'),
+        State('grid', 'columnState'),
+        prevent_initial_call=True
+    )
+    def reset_columnState(n, s):
+        state = Patch()
+        state[0]['width'] = s[0]['width'] - n+1
+        return state
 
     # On click sets up a new value for scrollTo from the fixture scroll_to_inputs
     @app.callback(
@@ -111,6 +125,8 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
     dash_duo.start_server(app)
     grid = utils.Grid(dash_duo, "grid")
 
+    action = utils.ActionChains(dash_duo.driver)
+
     # Check that the grid has been loaded successfully
     until(lambda: "Michael Phelps" == grid.get_cell(0, 0).text, timeout=3)
 
@@ -119,7 +135,8 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
 
         y, x = info["cell"]
         dash_duo.find_element("#btn").click()
-        dash_duo.wait_for_text_to_equal("#scrollTo-output", json.dumps(info), timeout=5)
+        # removing as this no longer works due to resetting the value, [#313](https://github.com/plotly/dash-ag-grid/pull/313)
+        # dash_duo.wait_for_text_to_equal("#scrollTo-output", json.dumps(info), timeout=5)
         until(lambda: grid.get_cell(y, x).is_displayed(), timeout=3)
 
         # row testing
@@ -160,6 +177,22 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
                     assert grid.cell_in_viewport(y, x + 1)
                 if x - 1 >= 0:
                     assert not grid.cell_in_viewport(y, x - 1)
+
+        # resets the grid
+        dash_duo.driver.execute_script("""
+            dash_ag_grid.getApi('grid').ensureIndexVisible(0);
+            dash_ag_grid.getApi('grid').ensureColumnVisible('athlete');
+         """)
+        until(lambda: grid.get_cell(0, 0).is_displayed(), timeout=3)
+        # make sure grid doesnt change upon double-click
+        action.double_click(grid.get_cell(0, 0)).perform()
+        time.sleep(1)
+        until(lambda: grid.get_cell(0, 0).is_displayed(), timeout=3)
+        # make sure scroll doesnt fire upon triggered reload by columnState
+        dash_duo.find_element("#btn_columnState").click()
+        time.sleep(1)
+        until(lambda: grid.get_cell(0, 0).is_displayed(), timeout=3)
+
 
 
 def test_st002_initial_scroll_to(dash_duo, df):
