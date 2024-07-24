@@ -213,10 +213,22 @@ def test_st002_initial_scroll_to(dash_duo, df):
                     "rowPosition": "top",
                     "column": "bronze",
                     "columnPosition": "end",
-                },
+                }
             ),
+            html.Button(id="btn_columnState"),
         ]
     )
+
+    @app.callback(
+        Output('grid', 'columnState'),
+        Input('btn_columnState', 'n_clicks'),
+        State('grid', 'columnState'),
+        prevent_initial_call=True
+    )
+    def reset_columnState(n, s):
+        state = Patch()
+        state[0]['width'] = s[0]['width'] - n + 1
+        return state
 
     dash_duo.start_server(app)
 
@@ -238,3 +250,20 @@ def test_st002_initial_scroll_to(dash_duo, df):
     # column testing
     assert not grid.cell_in_viewport(y, x + 1)
     assert grid.cell_in_viewport(y, x - 1)
+
+    action = utils.ActionChains(dash_duo.driver)
+
+    # resets the grid
+    dash_duo.driver.execute_script("""
+                dash_ag_grid.getApi('grid').ensureIndexVisible(0);
+                dash_ag_grid.getApi('grid').ensureColumnVisible('athlete');
+             """)
+    until(lambda: grid.get_cell(0, 0).is_displayed(), timeout=3)
+    # make sure grid doesnt change upon double-click
+    action.double_click(grid.get_cell(0, 0)).perform()
+    time.sleep(1)
+    until(lambda: grid.get_cell(0, 0).is_displayed(), timeout=3)
+    # make sure scroll doesnt fire upon triggered reload by columnState
+    dash_duo.find_element("#btn_columnState").click()
+    time.sleep(1)
+    until(lambda: grid.get_cell(0, 0).is_displayed(), timeout=3)

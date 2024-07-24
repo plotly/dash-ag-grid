@@ -700,7 +700,7 @@ export default class DashAgGrid extends Component {
             }
 
             if (scrollTo) {
-                this.scrollTo(scrollTo);
+                this.scrollTo(false);
                 propsToSet.scrollTo = null;
             }
 
