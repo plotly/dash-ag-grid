@@ -8,6 +8,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 ### Fixed
  - [#314](https://github.com/plotly/dash-ag-grid/pull/314)
    - locking selenium for tests that were failing due to missing import
+ - [#313](https://github.com/plotly/dash-ag-grid/pull/313)
+   - [#312](https://github.com/plotly/dash-ag-grid/issues/312) fixing issue where `scrollTo` was defaulting to not reset the value
+     - to maintain scroll position during a grid rerender, be sure to use `getRowId`
+   - fixing side issue where `cellDoubleClicked` was forcing the grid to rerender
 
 
 ## [31.2.0] - 2024-02-25
