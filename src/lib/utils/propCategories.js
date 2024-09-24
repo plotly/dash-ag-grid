@@ -184,6 +184,7 @@ export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
 
     // Columns: Sort
     comparator: 1,
+    pivotComparator: 1,
 
     // filter params custom option
     predicate: 1,
@@ -222,9 +223,6 @@ export const COLUMN_MAYBE_FUNCTIONS = {
     // Columns: Headers
     suppressHeaderKeyboardEvent: 1,
     headerCheckboxSelection: 1,
-
-    // Columns: Pivoting
-    pivotComparator: 1,
 
     // Columns: Rendering and Styling
     cellStyle: 1,

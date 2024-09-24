@@ -493,3 +493,5 @@ dagfuncs.showOutput = (params, setGridProps) => {
 }
 
 // END test_event_listeners.py
+
+dagfuncs.sortColumns = (a, b) => b.localeCompare(a)
