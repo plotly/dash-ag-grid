@@ -128,6 +128,7 @@ def test_cd002_column_drag(dash_duo):
         return no_update
 
     dash_duo.start_server(app)
+    dash_duo.driver.set_window_size(1000, 1000)
 
     grid = utils.Grid(dash_duo, "topGrid")
     botGrid = utils.Grid(dash_duo, "bottomGrid")
