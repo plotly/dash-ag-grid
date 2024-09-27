@@ -328,6 +328,7 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'virtualRowData',
     'cellValueChanged',
     'cellClicked',
+    'cellDoubleClicked',
     'getRowRequest',
     'getRowResponse',
     'getDetailRequest',
@@ -364,6 +365,7 @@ export const OMIT_PROP_RENDER = [
     'cellClicked',
     'paginationInfo',
     'cellRendererData',
+    'cellDoubleClicked',
 ];
 
 /**
