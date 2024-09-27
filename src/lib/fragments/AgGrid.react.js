@@ -700,7 +700,7 @@ export default class DashAgGrid extends Component {
             }
 
             if (scrollTo) {
-                this.scrollTo(scrollTo);
+                this.scrollTo(false);
                 propsToSet.scrollTo = null;
             }
 
@@ -924,7 +924,7 @@ export default class DashAgGrid extends Component {
         const {rowModelType, eventListeners} = this.props;
 
         if (rowModelType === 'infinite') {
-            params.api.setDatasource(this.getDatasource());
+            params.api.setGridOption('datasource', this.getDatasource());
         }
 
         if (eventListeners) {
@@ -1203,7 +1203,7 @@ export default class DashAgGrid extends Component {
         }
     }
 
-    scrollTo(reset = false) {
+    scrollTo(reset = true) {
         const {gridApi} = this.state;
         const {scrollTo, setProps, getRowId} = this.props;
         if (!gridApi) {

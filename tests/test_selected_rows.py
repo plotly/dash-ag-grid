@@ -110,6 +110,7 @@ def test_sr2_selected_rows_rowdata(dash_duo):
         dag.AgGrid(
             id='grid',
             columnSize="sizeToFit",
+            columnDefs=[{'field': 'A'}],
             dashGridOptions={
                 "rowHeight": None,
                 "domLayout": "normal",
@@ -152,6 +153,8 @@ def test_sr2_selected_rows_rowdata(dash_duo):
 
     grid = utils.Grid(dash_duo, "grid")
 
+    grid.wait_for_header_text(0, 'A')
+
     dash_duo.find_element('#update-button').click()
 
     grid.wait_for_cell_text(0, 0, "1")
@@ -186,6 +189,7 @@ def test_sr3_selected_rows_modes(dash_duo):
         dag.AgGrid(
             id='grid',
             columnSize="sizeToFit",
+            columnDefs=[{'field': 'A'}],
             dashGridOptions={
                 "rowHeight": None,
                 "domLayout": "normal",
@@ -244,6 +248,8 @@ def test_sr3_selected_rows_modes(dash_duo):
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
+
+    grid.wait_for_header_text(0, 'A')
 
     dash_duo.find_element('#update-button').click()
 

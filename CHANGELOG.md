@@ -5,15 +5,36 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## unreleased
+### Fixed
+ - [#314](https://github.com/plotly/dash-ag-grid/pull/314)
+   - locking selenium for tests that were failing due to missing import
+ - [#313](https://github.com/plotly/dash-ag-grid/pull/313)
+   - [#312](https://github.com/plotly/dash-ag-grid/issues/312) fixing issue where `scrollTo` was defaulting to not reset the value
+     - to maintain scroll position during a grid rerender, be sure to use `getRowId`
+   - fixing side issue where `cellDoubleClicked` was forcing the grid to rerender
+
+
+## [31.2.0] - 2024-02-25
 
 ### Changed
  - [#273](https://github.com/plotly/dash-ag-grid/pull/273) increased the timeout for `getApiAsync` to 2 minutes.
+ - [#281](https://github.com/plotly/dash-ag-grid/pull/281) webpack is now designed to build quicker, excludes `node_modules` and uses a different parser
+ - [#287](https://github.com/plotly/dash-ag-grid/pull/287) bumping to v`31.2.1` for the grid
 
 ### Added
   - [#270](https://github.com/plotly/dash-ag-grid/pull/270)
     - support for `eventListeners` to be added to the grid that get loaded upon `gridReady`
     - `eventListeners` are added upon `gridReady` only, if you need to add or remove other event listeners, please use the `getApi` or `getApiAsync` methods
     - added default for `selectedRows` to be `[]`
+
+### Fixed
+  - [#283](https://github.com/plotly/dash-ag-grid/pull/283)
+    - `selectedRows` can now be passed along with the `rowData`
+      - fixes [#274](https://github.com/plotly/dash-ag-grid/issues/274)
+      - fixes [#282](https://github.com/plotly/dash-ag-grid/issues/282)
+  - [#287](https://github.com/plotly/dash-ag-grid/pull/287)
+    - `aggFuncs` can now be passes as an object from the grid to be mapped to functions
+    - fixes [#278](https://github.com/plotly/dash-ag-grid/issues/278)
 
 
 ## [31.0.1] - 2024-02-07
