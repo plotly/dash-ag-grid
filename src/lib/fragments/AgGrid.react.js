@@ -572,6 +572,7 @@ export default class DashAgGrid extends Component {
 
     componentWillUnmount() {
         this.setState({mounted: false, gridApi: null});
+        this.props.setProps = () => {};
         if (this.props.id) {
             delete agGridRefs[this.props.id];
             eventBus.remove(this.props.id);
