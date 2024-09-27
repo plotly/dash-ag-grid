@@ -285,7 +285,7 @@ def test_cs002_column_state(dash_duo):
 
     app.clientside_callback(
         """async ()=> {
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 400));
             return []
         }""",
         Output('grid-holder', 'children', allow_duplicate=True),
@@ -300,16 +300,16 @@ def test_cs002_column_state(dash_duo):
     )
     def make_grid(n):
         return dag.AgGrid(
-                id="grid",
+                id=f"grid_{n}",
                 columnDefs=columnDefs,
                 defaultColDef=defaultColDef,
                 rowData=rowData,
-                columnState=colState,
+                columnSize='Auto'
             )
 
     dash_duo.start_server(app)
 
-    dash_duo.find_element("#add-grid").click()
-    time.sleep(2)  # pausing to emulate separation because user inputs
-
+    for x in range(10):
+        dash_duo.find_element("#add-grid").click()
+        time.sleep(2)  # pausing to emulate separation because user inputs
     assert list(filter(lambda i: i.get("level") != "WARNING", dash_duo.get_logs())) == []
