@@ -6,7 +6,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## unreleased
 ### Fixed
- - [#325](https://github.com/plotly/dash-ag-grid/pull/325).  Fixes issue #324 where `pivotComparator` functions were not sorting columns correctly.
+ - [#325](https://github.com/plotly/dash-ag-grid/pull/325).  Fixes issue #324 where `pivotComparator` functions were not sorting columns correctly because they were only being passed `params`.
  - [#314](https://github.com/plotly/dash-ag-grid/pull/314)
    - locking selenium for tests that were failing due to missing import
  - [#313](https://github.com/plotly/dash-ag-grid/pull/313)

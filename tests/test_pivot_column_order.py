@@ -41,11 +41,17 @@ def test_pi001_pivot_column_order(dash_duo):
         prevent_initial_call=True,
     )
     def display_state(col_state):
+
+        # Pivot columns are identified in `columnState` by `colId`.
+        # If not specified by the user, the `colId` is auto-generated with a `pivot_{field name}` prefix.
+
         pivot_columns = [
             c["colId"] for c in col_state if c["colId"].startswith("pivot_sport")
         ]
 
-        # Check if pivot_columns are in descending order
+        # By default, the columns are sorted in ascending order.
+        # This app uses a custom `pivotComparator` function to sort the columns in descending order.
+        # The following check verifies if the columns are correctly sorted in descending order.
         descending = pivot_columns == sorted(pivot_columns, reverse=True)
         return f"pivot columns sorted in reverse order? {descending}"
 
