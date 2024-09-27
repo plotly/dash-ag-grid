@@ -4,6 +4,12 @@ Dash AG Grid is a Dash component wrapper for the AG Grid JavaScript package, ena
 
 The underlying AG Grid JavaScript package is a third-party software component developed by [AG Grid Ltd](http://www.ag-grid.com/). Many features are available for free in the AG Grid [Community version](https://github.com/ag-grid/ag-grid). Some features require a paid subscription to the AG Grid Enterprise version ([more info available here](https://www.ag-grid.com/license-pricing.php)). Both the community and enterprise versions are included in this component, but the enterprise features require you to provide a valid AG Grid license key. The demos which use Enterprise features are clearly marked.
 
+<div align="center">
+  <a href="https://dash.plotly.com/project-maintenance">
+    <img src="https://dash.plotly.com/assets/images/maintained-by-plotly.png" width="400px" alt="Maintained by Plotly">
+  </a>
+</div>
+
 
 ### Documentation
 Please see the [Plotly Dash AG Grid Documentation](https://dash.plotly.com/dash-ag-grid).
