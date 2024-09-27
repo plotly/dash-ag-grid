@@ -11,123 +11,125 @@ from dash.testing.wait import until
 df = px.data.election()
 default_display_cols = ["district_id", "district", "winner"]
 
-
-def test_cs001_column_state(dash_duo):
-    app = Dash(__name__)
-    columnDefs = [
+columnDefs = [
         {"headerName": "Make", "field": "make"},
         {"headerName": "Model", "field": "model"},
         {"headerName": "Price", "field": "price"},
     ]
 
-    alt_columnDefs = [
-        {"field": "price", "pinned": False, "sort": "asc"},
-        {"field": "model", "pinned": False},
-        {"field": "make", "pinned": False},
-    ]
+alt_columnDefs = [
+    {"field": "price", "pinned": False, "sort": "asc"},
+    {"field": "model", "pinned": False},
+    {"field": "make", "pinned": False},
+]
 
-    defaultColDef = {
-        "initialWidth": 150,
-        "sortable": True,
-        "resizable": True,
-        "filter": True,
-    }
+defaultColDef = {
+    "initialWidth": 150,
+    "sortable": True,
+    "resizable": True,
+    "filter": True,
+}
 
-    rowData = [
-        {"make": "Toyota", "model": "Celica", "price": 35000},
-        {"make": "Ford", "model": "Mondeo", "price": 32000},
-        {"make": "Porsche", "model": "Boxster", "price": 72000},
-    ]
+rowData = [
+    {"make": "Toyota", "model": "Celica", "price": 35000},
+    {"make": "Ford", "model": "Mondeo", "price": 32000},
+    {"make": "Porsche", "model": "Boxster", "price": 72000},
+]
 
-    colState = [
-        {
-            "colId": "make",
-            "width": 150,
-            "hide": False,
-            "pinned": "left",
-            "sort": None,
-            "sortIndex": None,
-            "aggFunc": None,
-            "rowGroup": False,
-            "rowGroupIndex": None,
-            "pivot": False,
-            "pivotIndex": None,
-            "flex": None,
-        },
-        {
-            "colId": "price",
-            "width": 150,
-            "hide": False,
-            "pinned": "left",
-            "sort": None,
-            "sortIndex": None,
-            "aggFunc": None,
-            "rowGroup": False,
-            "rowGroupIndex": None,
-            "pivot": False,
-            "pivotIndex": None,
-            "flex": None,
-        },
-        {
-            "colId": "model",
-            "width": 150,
-            "hide": False,
-            "pinned": None,
-            "sort": None,
-            "sortIndex": None,
-            "aggFunc": None,
-            "rowGroup": False,
-            "rowGroupIndex": None,
-            "pivot": False,
-            "pivotIndex": None,
-            "flex": None,
-        },
-    ]
+colState = [
+    {
+        "colId": "make",
+        "width": 150,
+        "hide": False,
+        "pinned": "left",
+        "sort": None,
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+    {
+        "colId": "price",
+        "width": 150,
+        "hide": False,
+        "pinned": "left",
+        "sort": None,
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+    {
+        "colId": "model",
+        "width": 150,
+        "hide": False,
+        "pinned": None,
+        "sort": None,
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+]
 
-    alt_colState = [
-        {
-            "colId": "price",
-            "width": 198,
-            "hide": False,
-            "pinned": None,
-            "sort": "asc",
-            "sortIndex": None,
-            "aggFunc": None,
-            "rowGroup": False,
-            "rowGroupIndex": None,
-            "pivot": False,
-            "pivotIndex": None,
-            "flex": None,
-        },
-        {
-            "colId": "model",
-            "width": 150,
-            "hide": False,
-            "pinned": None,
-            "sort": None,
-            "sortIndex": None,
-            "aggFunc": None,
-            "rowGroup": False,
-            "rowGroupIndex": None,
-            "pivot": False,
-            "pivotIndex": None,
-            "flex": None,
-        },
-        {
-            "colId": "make",
-            "width": 150,
-            "hide": False,
-            "pinned": None,
-            "sort": None,
-            "sortIndex": None,
-            "aggFunc": None,
-            "rowGroup": False,
-            "rowGroupIndex": None,
-            "pivot": False,
-            "pivotIndex": None,
-            "flex": None,
-        },
-    ]
+alt_colState = [
+    {
+        "colId": "price",
+        "width": 198,
+        "hide": False,
+        "pinned": None,
+        "sort": "asc",
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+    {
+        "colId": "model",
+        "width": 150,
+        "hide": False,
+        "pinned": None,
+        "sort": None,
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+    {
+        "colId": "make",
+        "width": 150,
+        "hide": False,
+        "pinned": None,
+        "sort": None,
+        "sortIndex": None,
+        "aggFunc": None,
+        "rowGroup": False,
+        "rowGroupIndex": None,
+        "pivot": False,
+        "pivotIndex": None,
+        "flex": None,
+    },
+]
+
+
+def test_cs001_column_state(dash_duo):
+    app = Dash(__name__)
+
 
     app.layout = html.Div(
         [
@@ -262,3 +264,52 @@ def test_cs001_column_state(dash_duo):
         timeout=3,
     )
     grid.wait_for_all_header_texts(["Make", "Price", "Model"])
+
+def test_cs002_column_state(dash_duo):
+    app = Dash(__name__)
+
+    app.layout = html.Div(
+        [
+            html.Div(
+                [
+                    html.Button(
+                        "Add Grid", id="add-grid", n_clicks=0
+                    ),
+                    html.Div(
+                        id='grid-holder'
+                    )
+                ],
+            ),
+        ]
+    )
+
+    app.clientside_callback(
+        """async ()=> {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            return []
+        }""",
+        Output('grid-holder', 'children', allow_duplicate=True),
+        Input('grid-holder', 'children'),
+        prevent_initial_call=True
+    )
+
+    @app.callback(
+        Output('grid-holder', 'children'),
+        Input('add-grid', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def make_grid(n):
+        return dag.AgGrid(
+                id="grid",
+                columnDefs=columnDefs,
+                defaultColDef=defaultColDef,
+                rowData=rowData,
+                columnState=colState,
+            )
+
+    dash_duo.start_server(app)
+
+    dash_duo.find_element("#add-grid").click()
+    time.sleep(2)  # pausing to emulate separation because user inputs
+
+    assert list(filter(lambda i: i.get("level") != "WARNING", dash_duo.get_logs())) == []
