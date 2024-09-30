@@ -1454,5 +1454,5 @@ DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
 export const propTypes = DashAgGrid.propTypes;
 export const defaultProps = DashAgGrid.defaultProps;
 
-var dagfuncs = window.dash_ag_grid = window.dash_ag_grid || {};
+var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
 dagfuncs.useGridFilter = useGridFilter;
