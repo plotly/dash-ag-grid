@@ -46,7 +46,7 @@ import MarkdownRenderer from '../renderers/markdownRenderer';
 import RowMenuRenderer from '../renderers/rowMenuRenderer';
 import {customFunctions} from '../renderers/customFunctions';
 
-import {AgGridReact} from 'ag-grid-react';
+import {AgGridReact, useGridFilter} from 'ag-grid-react';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -1134,7 +1134,7 @@ export default class DashAgGrid extends Component {
                         cellRendererData: {
                             value,
                             colId: props.column.colId,
-                            rowIndex: props.rowIndex,
+                            rowIndex: props.node.sourceRowIndex,
                             rowId: props.node.id,
                             timestamp: Date.now(),
                         },
@@ -1453,3 +1453,6 @@ DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
 
 export const propTypes = DashAgGrid.propTypes;
 export const defaultProps = DashAgGrid.defaultProps;
+
+var dagfuncs = window.dash_ag_grid = window.dash_ag_grid || {};
+dagfuncs.useGridFilter = useGridFilter;
