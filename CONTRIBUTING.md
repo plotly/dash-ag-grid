@@ -37,7 +37,7 @@ We may release out-of-band of Ag Grid when there are patches that we want to mak
 
 As a user, you can always check the underlying Ag Grid version with `dash_ag_grid.grid_version` and the underlying Dash Ag Grid version with `dash_ag_grid.__version__`.
 
-For maintainers, when issuing new releases ensure that the version bump of Dash Ag Grid follows this convention.
+For maintainers, when issuing new releases ensure that the version bump of Dash Ag Grid follows this convention. This can be verified after a build by using `npm run pre-flight-dag-version` or `python test_versioning.py`.
 
 ### Create a production build
 
@@ -49,8 +49,7 @@ npm run build
 
 Commit this - either via a PR or directly to the main branch. Then you can create source and wheel distributions in the generated `dist/` folder, after emptying out any previous builds:
 ```
-rm -rf dist build
-python setup.py sdist bdist_wheel
+npm run dist
 ```
 See [PyPA](https://packaging.python.org/guides/distributing-packages-using-setuptools/#packaging-your-project)
 for more information. At this point you can test the build. The best way is to make a virtual env in another directory, install the wheel you just built, and run one of the demo apps, something like:
@@ -71,7 +70,7 @@ Create a new distribution with:
 npm run dist
 ```
 
-It doesn't need to be tested extensively, just enough to know that the table loads with no errors and you've built the right version of the code. If the app looks good, use [`twine`](https://pypi.org/project/twine/) to upload these to PyPI:
+It doesn't need to be tested extensively, just enough to know that the grid loads with no errors and you've built the right version of the code. If the app looks good, use [`twine`](https://pypi.org/project/twine/) to upload these to PyPI:
 ```
 # back in the dash-ag-grid directory
 twine upload dist/*
