@@ -37,7 +37,7 @@ We may release out-of-band of Ag Grid when there are patches that we want to mak
 
 As a user, you can always check the underlying Ag Grid version with `dash_ag_grid.grid_version` and the underlying Dash Ag Grid version with `dash_ag_grid.__version__`.
 
-For maintainers, when issuing new releases ensure that the version bump of Dash Ag Grid follows this convention. This can be verified after a build by using `npm run pre-flight-dag-version` or `python test_versioning.py`.
+For maintainers, when issuing new releases ensure that the version bump of Dash Ag Grid follows this convention. This can be verified after a build by using `npm run pre-flight-dag-version` or `python test_versioning.py`. This is automatically done during the `npm run dist`
 
 ### Create a production build
 
