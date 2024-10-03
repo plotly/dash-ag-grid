@@ -79,6 +79,8 @@ const xssMessage = (context) => {
 
 const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
 
+const dash_clientside = window.dash_clientside || {}
+
 const agGridRefs = {};
 
 apiGetters.getApi = (id) => agGridRefs[stringifyId(id)]?.api;
@@ -1073,6 +1075,7 @@ export default class DashAgGrid extends Component {
         const parsedCondition = esprima.parse(funcString).body[0].expression;
         const context = {
             d3,
+            dash_clientside,
             ...customFunctions,
             ...window.dashAgGridFunctions,
         };
@@ -1083,6 +1086,7 @@ export default class DashAgGrid extends Component {
         const parsedCondition = esprima.parse(funcString).body[0].expression;
         const context = {
             d3,
+            dash_clientside,
             ...customFunctions,
             ...window.dashAgGridFunctions,
             setGridProps: this.props.setProps,
