@@ -79,7 +79,7 @@ const xssMessage = (context) => {
 
 const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
 
-const dash_clientside = window.dash_clientside || {}
+const dash_clientside = window.dash_clientside || {};
 
 const agGridRefs = {};
 
