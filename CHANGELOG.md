@@ -17,7 +17,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ### Added
  - [#330](https://github.com/plotly/dash-ag-grid/pull/330) Added `dash_clientside` to available functions for easier on-liner functions, esp. `eventListeners`.
-   - requested [#303](https://github.com/plotly/dash-ag-grid/issues/303)
+   - requested [#303](https://github.com/plotly/dash-ag-grid/issues/303) 
 
 
 ## [31.2.0] - 2024-02-25
