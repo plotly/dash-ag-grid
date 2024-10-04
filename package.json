@@ -13,6 +13,7 @@
     "main": "dash_ag_grid/dash_ag_grid.min.js",
     "scripts": {
         "pre-flight-version": "python test_version.py",
+        "pre-flight-dag-version": "python test_versioning.py",
         "prepublishOnly": "rimraf -rf lib && babel src --out-dir lib --copy-files --config-file ./.babelrc && rimraf --glob -rf lib/jl/ lib/*.jl",
         "build:js": "webpack --mode production",
         "build:backends": "dash-generate-components ./src/lib/components dash_ag_grid -p package-info.json --r-prefix '' --jl-prefix ''",
@@ -24,7 +25,7 @@
         "private::lint.eslint": "eslint src",
         "private::lint.prettier": "prettier src --list-different --ignore-path=.prettierignore",
         "lint": "run-s private::lint.*",
-        "dist": "npm run build && python setup.py sdist bdist_wheel"
+        "dist": "npm run build && run-s pre-flight-dag-version &&  python setup.py sdist bdist_wheel"
     },
     "author": "Plotly <chris@plot.ly>",
     "license": "MIT",
