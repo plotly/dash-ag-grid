@@ -906,7 +906,7 @@ export default class DashAgGrid extends Component {
         return {
             getRows(params) {
                 self.getRowsParams = params;
-                this.customSetProps({getRowsRequest: params});
+                self.customSetProps({getRowsRequest: params});
             },
 
             destroy() {
