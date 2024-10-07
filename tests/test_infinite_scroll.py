@@ -155,3 +155,96 @@ def test_is001_infinite_scroll(dash_duo):
     grid.wait_for_cell_text(1, 0, "3600")
     grid.get_header_cell(1).click()
     grid.wait_for_cell_text(0, 0, "7263")
+
+
+def test_is002_infinite_scroll_styling(dash_duo):
+    app = Dash(__name__)
+
+    df = pd.read_csv(
+        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+        # "data.csv"
+    )
+
+    crimson_palette = ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a'][::-1]
+    getRowStyle = {
+        "styleConditions": [
+            {
+                "condition": "params.data['athlete'].includes('Michael')",
+                "style": {
+                    "backgroundColor": crimson_palette[0],
+                    'color': 'whitesmoke'
+                },
+            },
+            {
+                "condition": "params.data['athlete'].includes('Ryan')",
+                "style": {
+                    "backgroundColor": crimson_palette[1],
+                    # 'color': 'whitesmoke'
+                },
+            },
+        ]
+    }
+
+    columnDefs = [
+        # this row shows the row index, doesn't use any data from the row
+        {
+            "headerName": "ID",
+            "maxWidth": 100,
+            # it is important to have node.id here, so that when the id changes (which happens when the row is loaded)
+            # then the cell is refreshed.
+            "valueGetter": {"function": "params.node.id"},
+        },
+        {"field": "athlete", "minWidth": 150},
+        {"field": "country", "minWidth": 150},
+        {"field": "year"},
+        {"field": "sport", "minWidth": 150},
+        {"field": "total"},
+    ]
+
+    defaultColDef = {
+        "flex": 1,
+        "minWidth": 150,
+        "sortable": False,
+        "resizable": True,
+    }
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="infinite-row-no-sort",
+                columnDefs=columnDefs,
+                defaultColDef=defaultColDef,
+                rowModelType="infinite",
+                getRowStyle=getRowStyle,
+            ),
+            html.Button('scroll', id='scroll')
+        ],
+    )
+
+    @app.callback(
+        Output("infinite-row-no-sort", "getRowsResponse"),
+        Input("infinite-row-no-sort", "getRowsRequest"),
+    )
+    def infinite_scroll(request):
+        if request is None:
+            return no_update
+        partial = df.iloc[request["startRow"]: request["endRow"]]
+        return {"rowData": partial.to_dict("records"), "rowCount": len(df.index)}
+
+    @app.callback(
+        Output("infinite-row-no-sort", "scrollTo"),
+        Input('scroll', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def scroll(n):
+        return {'rowIndex': n*1000+n}
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "infinite-row-no-sort")
+    grid.wait_for_cell_text(0, 0, "0")
+    time.sleep(5)
+    for x in range(8):
+        dash_duo.find_element("#scroll").click()
+        time.sleep(3)  # pausing to emulate separation because user inputs
+    assert list(filter(lambda i: i.get("level") != "WARNING", dash_duo.get_logs())) == []

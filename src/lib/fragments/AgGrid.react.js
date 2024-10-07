@@ -1120,8 +1120,12 @@ export default class DashAgGrid extends Component {
             }));
             return (params) => {
                 for (const {test, style} of tests) {
-                    if (test(params)) {
-                        return style;
+                    if (params) {
+                        if (params.data) {
+                            if (test(params)) {
+                                return style;
+                            }
+                        }
                     }
                 }
                 return _defaultStyle;
