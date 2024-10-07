@@ -168,6 +168,12 @@ export default class DashAgGrid extends Component {
 
         const customComponents = window.dashAgGridComponentFunctions || {};
         const newComponents = map(this.generateRenderer, customComponents);
+        this.active = true
+        this.customSetProps = (propsToSet) => {
+            if (this.active) {
+                this.props.setProps(propsToSet)
+            }
+        }
 
         this.convertedPropCache = {};
 
@@ -192,10 +198,9 @@ export default class DashAgGrid extends Component {
     }
 
     onPaginationChanged() {
-        const {setProps} = this.props;
         const {gridApi} = this.state;
         if (gridApi && !gridApi?.isDestroyed()) {
-            setProps({
+            this.customSetProps({
                 paginationInfo: {
                     isLastPageFound: gridApi.paginationIsLastPageFound(),
                     pageSize: gridApi.paginationGetPageSize(),
@@ -347,12 +352,11 @@ export default class DashAgGrid extends Component {
     }
 
     callbackGetDetail = (params) => {
-        const {setProps} = this.props;
         const {data} = params;
         this.getDetailParams = params;
         // Adding the current time in ms forces Dash to trigger a callback
         // when the same row is closed and re-opened.
-        setProps({getDetailRequest: {data: data, requestTime: Date.now()}});
+        this.customSetProps({getDetailRequest: {data: data, requestTime: Date.now()}});
     };
 
     convertCol(columnDef) {
@@ -502,7 +506,7 @@ export default class DashAgGrid extends Component {
     }
 
     onFilterChanged() {
-        const {setProps, rowModelType} = this.props;
+        const {rowModelType} = this.props;
         if (!this.state.gridApi) {
             return;
         }
@@ -512,7 +516,7 @@ export default class DashAgGrid extends Component {
             propsToSet.virtualRowData = this.virtualRowData();
         }
 
-        setProps(propsToSet);
+        this.customSetProps(propsToSet);
     }
 
     getRowData() {
@@ -538,20 +542,20 @@ export default class DashAgGrid extends Component {
     }
 
     syncRowData() {
-        const {rowData, setProps} = this.props;
+        const {rowData} = this.props;
         if (rowData) {
             const virtualRowData = this.virtualRowData();
             const newRowData = this.getRowData();
             if (rowData !== newRowData) {
-                setProps({rowData: newRowData, virtualRowData});
+                this.customSetProps({rowData: newRowData, virtualRowData});
             } else {
-                setProps({virtualRowData});
+                this.customSetProps({virtualRowData});
             }
         }
     }
 
     onSortChanged() {
-        const {setProps, rowModelType} = this.props;
+        const {rowModelType} = this.props;
         const propsToSet = {};
         if (rowModelType === 'clientSide') {
             propsToSet.virtualRowData = this.virtualRowData();
@@ -561,7 +565,7 @@ export default class DashAgGrid extends Component {
                 JSON.stringify(this.state.gridApi.getColumnState())
             );
         }
-        setProps(propsToSet);
+        this.customSetProps(propsToSet);
     }
 
     componentDidMount() {
@@ -574,7 +578,7 @@ export default class DashAgGrid extends Component {
 
     componentWillUnmount() {
         this.setState({mounted: false, gridApi: null});
-        this.props.setProps = () => {};
+        this.active = false
         if (this.props.id) {
             delete agGridRefs[this.props.id];
             eventBus.remove(this.props.id);
@@ -628,7 +632,6 @@ export default class DashAgGrid extends Component {
             getDetailResponse,
             detailCellRendererParams,
             masterDetail,
-            setProps,
             id,
             resetColumnState,
             csvExportParams,
@@ -735,7 +738,7 @@ export default class DashAgGrid extends Component {
             }
 
             if (!isEmpty(propsToSet)) {
-                setProps(propsToSet);
+                this.customSetProps(propsToSet);
             }
             // Hydrate virtualRowData
             this.onFilterChanged(true);
@@ -750,7 +753,7 @@ export default class DashAgGrid extends Component {
         if (this.isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = this.props.getRowsResponse;
             this.getRowsParams.successCallback(rowData, rowCount);
-            setProps({getRowsResponse: null});
+            this.customSetProps({getRowsResponse: null});
         }
 
         if (
@@ -759,7 +762,7 @@ export default class DashAgGrid extends Component {
             getDetailResponse
         ) {
             this.getDetailParams.successCallback(getDetailResponse);
-            setProps({getDetailResponse: null});
+            this.customSetProps({getDetailResponse: null});
         }
         // Call the API to select rows unless the update was triggered by a selection made in the UI
         if (
@@ -835,7 +838,7 @@ export default class DashAgGrid extends Component {
 
     onRowDataUpdated() {
         // Handles preserving existing selections when rowData is updated in a callback
-        const {selectedRows, setProps, rowData, rowModelType, filterModel} =
+        const {selectedRows, rowData, rowModelType, filterModel} =
             this.props;
         const {openGroups, gridApi} = this.state;
 
@@ -847,7 +850,7 @@ export default class DashAgGrid extends Component {
             if (rowData && rowModelType === 'clientSide') {
                 const virtualRowData = this.virtualRowData();
 
-                setProps({virtualRowData});
+                this.customSetProps({virtualRowData});
             }
 
             // When the rowData is updated, reopen any row groups if they previously existed in the table
@@ -883,7 +886,7 @@ export default class DashAgGrid extends Component {
                 // Flag that the selection event was fired
                 this.selectionEventFired = true;
                 const selectedRows = this.state.gridApi.getSelectedRows();
-                this.props.setProps({selectedRows});
+                this.customSetProps({selectedRows});
             }
         }, 1);
     }
@@ -902,7 +905,7 @@ export default class DashAgGrid extends Component {
         return {
             getRows(params) {
                 self.getRowsParams = params;
-                self.props.setProps({getRowsRequest: params});
+                this.customSetProps({getRowsRequest: params});
             },
 
             destroy() {
@@ -950,14 +953,14 @@ export default class DashAgGrid extends Component {
 
     onCellClicked({value, column: {colId}, rowIndex, node}) {
         const timestamp = Date.now();
-        this.props.setProps({
+        this.customSetProps({
             cellClicked: {value, colId, rowIndex, rowId: node.id, timestamp},
         });
     }
 
     onCellDoubleClicked({value, column: {colId}, rowIndex, node}) {
         const timestamp = Date.now();
-        this.props.setProps({
+        this.customSetProps({
             cellDoubleClicked: {
                 value,
                 colId,
@@ -1002,7 +1005,7 @@ export default class DashAgGrid extends Component {
         }
         // Send update(s) for current change session to Dash.
         const virtualRowData = this.virtualRowData();
-        this.props.setProps({
+        this.customSetProps({
             cellValueChanged: this.pendingCellValueChanges,
             virtualRowData,
         });
@@ -1036,7 +1039,7 @@ export default class DashAgGrid extends Component {
     }
 
     updateColumnWidths(setColumns = true) {
-        const {columnSize, columnSizeOptions, setProps} = this.props;
+        const {columnSize, columnSizeOptions} = this.props;
         const {gridApi} = this.state;
         if (gridApi && !gridApi?.isDestroyed()) {
             const {
@@ -1063,7 +1066,7 @@ export default class DashAgGrid extends Component {
                 });
             }
             if (columnSize !== 'responsiveSizeToFit') {
-                setProps({columnSize: null});
+                this.customSetProps({columnSize: null});
             }
             if (setColumns) {
                 this.updateColumnState();
@@ -1089,7 +1092,7 @@ export default class DashAgGrid extends Component {
             dash_clientside,
             ...customFunctions,
             ...window.dashAgGridFunctions,
-            setGridProps: this.props.setProps,
+            setGridProps: this.customSetProps,
         };
         return (params) => evaluate(parsedCondition, {params, ...context});
     });
@@ -1132,12 +1135,12 @@ export default class DashAgGrid extends Component {
     }
 
     generateRenderer(Renderer) {
-        const {setProps, dangerously_allow_code} = this.props;
+        const {dangerously_allow_code} = this.props;
 
         return (props) => (
             <Renderer
                 setData={(value) => {
-                    setProps({
+                    this.customSetProps({
                         cellRendererData: {
                             value,
                             colId: props.column.colId,
@@ -1176,7 +1179,7 @@ export default class DashAgGrid extends Component {
             this.convertAllProps(csvExportParams)
         );
         if (reset) {
-            this.props.setProps({
+            this.customSetProps({
                 exportDataAsCsv: false,
             });
         }
@@ -1204,7 +1207,7 @@ export default class DashAgGrid extends Component {
                 gridApi.paginationGoToPage(this.props.paginationGoTo);
         }
         if (reset) {
-            this.props.setProps({
+            this.customSetProps({
                 paginationGoTo: null,
             });
         }
@@ -1212,7 +1215,7 @@ export default class DashAgGrid extends Component {
 
     scrollTo(reset = true) {
         const {gridApi} = this.state;
-        const {scrollTo, setProps, getRowId} = this.props;
+        const {scrollTo, getRowId} = this.props;
         if (!gridApi) {
             return;
         }
@@ -1248,7 +1251,7 @@ export default class DashAgGrid extends Component {
             gridApi.ensureColumnVisible(scrollTo.column, columnPosition);
         }
         if (reset) {
-            setProps({
+            this.customSetProps({
                 scrollTo: null,
             });
         }
@@ -1260,7 +1263,7 @@ export default class DashAgGrid extends Component {
         }
         this.state.gridApi.resetColumnState();
         if (reset) {
-            this.props.setProps({
+            this.customSetProps({
                 resetColumnState: false,
             });
             this.updateColumnState();
@@ -1277,7 +1280,7 @@ export default class DashAgGrid extends Component {
             this.state.gridApi.selectAll();
         }
         if (reset) {
-            this.props.setProps({
+            this.customSetProps({
                 selectAll: false,
             });
         }
@@ -1289,7 +1292,7 @@ export default class DashAgGrid extends Component {
         }
         this.state.gridApi.deselectAll();
         if (reset) {
-            this.props.setProps({
+            this.customSetProps({
                 deselectAll: false,
             });
         }
@@ -1302,7 +1305,7 @@ export default class DashAgGrid extends Component {
         const sel = this.state.gridApi.getSelectedRows();
         this.state.gridApi.applyTransaction({remove: sel});
         if (reset) {
-            this.props.setProps({
+            this.customSetProps({
                 deleteSelectedRows: false,
             });
             this.syncRowData();
@@ -1320,12 +1323,12 @@ export default class DashAgGrid extends Component {
                 JSON.stringify(this.state.gridApi.getColumnState())
             );
 
-            this.props.setProps({
+            this.customSetProps({
                 columnState,
                 updateColumnState: false,
             });
         } else {
-            this.props.setProps({
+            this.customSetProps({
                 updateColumnState: false,
             });
         }
@@ -1350,7 +1353,7 @@ export default class DashAgGrid extends Component {
                     this.setState({rowTransaction: null});
                 }
                 this.applyRowTransaction(data);
-                this.props.setProps({
+                this.customSetProps({
                     rowTransaction: null,
                 });
                 this.syncRowData();
