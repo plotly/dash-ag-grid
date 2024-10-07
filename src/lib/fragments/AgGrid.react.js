@@ -168,12 +168,12 @@ export default class DashAgGrid extends Component {
 
         const customComponents = window.dashAgGridComponentFunctions || {};
         const newComponents = map(this.generateRenderer, customComponents);
-        this.active = true
+        this.active = true;
         this.customSetProps = (propsToSet) => {
             if (this.active) {
-                this.props.setProps(propsToSet)
+                this.props.setProps(propsToSet);
             }
-        }
+        };
 
         this.convertedPropCache = {};
 
@@ -356,7 +356,9 @@ export default class DashAgGrid extends Component {
         this.getDetailParams = params;
         // Adding the current time in ms forces Dash to trigger a callback
         // when the same row is closed and re-opened.
-        this.customSetProps({getDetailRequest: {data: data, requestTime: Date.now()}});
+        this.customSetProps({
+            getDetailRequest: {data: data, requestTime: Date.now()},
+        });
     };
 
     convertCol(columnDef) {
@@ -578,7 +580,7 @@ export default class DashAgGrid extends Component {
 
     componentWillUnmount() {
         this.setState({mounted: false, gridApi: null});
-        this.active = false
+        this.active = false;
         if (this.props.id) {
             delete agGridRefs[this.props.id];
             eventBus.remove(this.props.id);
@@ -838,8 +840,7 @@ export default class DashAgGrid extends Component {
 
     onRowDataUpdated() {
         // Handles preserving existing selections when rowData is updated in a callback
-        const {selectedRows, rowData, rowModelType, filterModel} =
-            this.props;
+        const {selectedRows, rowData, rowModelType, filterModel} = this.props;
         const {openGroups, gridApi} = this.state;
 
         if (gridApi && !gridApi?.isDestroyed()) {
