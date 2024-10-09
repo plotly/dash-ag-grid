@@ -14,6 +14,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
    - [#312](https://github.com/plotly/dash-ag-grid/issues/312) fixing issue where `scrollTo` was defaulting to not reset the value
      - to maintain scroll position during a grid rerender, be sure to use `getRowId`
    - fixing side issue where `cellDoubleClicked` was forcing the grid to rerender
+ - [#331](https://github.com/plotly/dash-ag-grid/pull/331)
+   - adjusted `setProps` -> `customSetProps` which tests if the grid is active in the dash tree and mounted.
+   - [#307](https://github.com/plotly/dash-ag-grid/issues/307) fixes JS console error because `setProps` is no longer called when unmounted.
 
 ### Added
  - [#330](https://github.com/plotly/dash-ag-grid/pull/330) Added `dash_clientside` to available functions for easier on-liner functions, esp. `eventListeners`.
