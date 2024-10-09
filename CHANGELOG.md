@@ -21,7 +21,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ### Changed
  - [#327](https://github.com/plotly/dash-ag-grid/pull/327) bumping to v`31.3.2` for the grid
-
+ - [#332](https://github.com/plotly/dash-ag-grid/pull/332)
+   - `handleDynamicStyle` now checks for `params.data` before attempting to apply the test
+   - [#321](https://github.com/plotly/dash-ag-grid/issues/321) fixes issue with infinite scroll and dynamic row styling
 
 ## [31.2.0] - 2024-02-25
 
