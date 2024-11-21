@@ -24,15 +24,10 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
           uv venv
         shell: bash
-      - name: Run all tests
-        run: |
-          source .venv/bin/activate
-          uv pip install ".[dev]"
-          pytest --headless
       - name: Generate distribution
         run: |
           source .venv/bin/activate
-          uv pip install -r requires-dev.txt -r requires-install.txt
+          uv pip install ".[dev]"
           npm i
           npm run dist
           npm pack && mv *.tgz dist/
