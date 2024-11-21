@@ -29,6 +29,7 @@ jobs:
           source .venv/bin/activate
           uv pip install ".[dev]"
           npm i
+          npm run test
           npm run dist
           npm pack && mv *.tgz dist/
         shell: bash
