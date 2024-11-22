@@ -25,6 +25,7 @@
         "private::lint.eslint": "eslint src",
         "private::lint.prettier": "prettier src --list-different --ignore-path=.prettierignore",
         "lint": "run-s private::lint.*",
+        "test": "pytest --headless",
         "dist": "npm run build && run-s pre-flight-dag-version && rimraf build dist && python setup.py sdist bdist_wheel"
     },
     "author": "Plotly <chris@plot.ly>",

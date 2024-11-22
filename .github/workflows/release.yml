@@ -19,23 +19,36 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-      - name: Setup uv
+      - name: Setup dependencies
+        # Set up the virtual environment and install dev dependencies (JS & Python)
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
           uv venv
-        shell: bash
-      - name: Run all tests
-        run: |
           source .venv/bin/activate
           uv pip install ".[dev]"
-          pytest --headless
-      - name: Generate distribution
+          npm i
+        shell: bash
+      - name: Run tests
+        # Run all tests before generating the distribution
         run: |
           source .venv/bin/activate
-          uv pip install -r requires-dev.txt -r requires-install.txt
-          npm i
+          npm run build
+          npm run test
+        shell: bash
+      - name: Generate distribution
+        # Run setup.py to generate the distribution
+        run: |
+          source .venv/bin/activate
           npm run dist
           npm pack && mv *.tgz dist/
+      - name: Validate distribution
+        # Run tests again using the generated wheel file
+        run: |
+          uv venv test-dist
+          source dist/bin/activate
+          WHL_FILE=$(ls dist/*.whl)
+          uv pip install "${WHL_FILE}[dev]"
+          npm run test
         shell: bash
       - uses: ncipollo/release-action@v1
         with:
