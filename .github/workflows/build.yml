@@ -1,0 +1,52 @@
+name: Build package
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
+      node-version:
+        required: true
+        type: string
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python-version }}
+      - name: Setup dependencies
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv venv
+          source .venv/bin/activate
+          uv pip install ".[dev]"
+          npm i
+        shell: bash
+      - name: Build package
+        run: |
+          source .venv/bin/activate
+          npm run build
+        shell: bash
+      - name: Generate distribution
+        run: |
+          source .venv/bin/activate
+          npm run dist
+          npm pack && mv *.tgz dist/
+        shell: bash
+      - name: Validate distribution
+        run: |
+          uv venv test-dist
+          source test-dist/bin/activate
+          WHL_FILE=$(ls dist/*.whl)
+          uv pip install "${WHL_FILE}[dev]"
+          npm run test
+        shell: bash
