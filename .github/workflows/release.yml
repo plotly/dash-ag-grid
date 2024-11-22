@@ -28,12 +28,10 @@ jobs:
           uv pip install ".[dev]"
           npm i
         shell: bash
-      - name: Run tests
-        # Run all tests before generating the distribution
+      - name: Build package
         run: |
           source .venv/bin/activate
           npm run build
-          npm run test
         shell: bash
       - name: Generate distribution
         # Run setup.py to generate the distribution
@@ -45,7 +43,7 @@ jobs:
         # Run tests again using the generated wheel file
         run: |
           uv venv test-dist
-          source dist/bin/activate
+          source test-dist/bin/activate
           WHL_FILE=$(ls dist/*.whl)
           uv pip install "${WHL_FILE}[dev]"
           npm run test
