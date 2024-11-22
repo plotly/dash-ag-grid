@@ -51,50 +51,19 @@ Commit this - either via a PR or directly to the main branch. Then you can creat
 ```
 npm run dist
 ```
-See [PyPA](https://packaging.python.org/guides/distributing-packages-using-setuptools/#packaging-your-project)
-for more information. At this point you can test the build. The best way is to make a virtual env in another directory, install the wheel you just built, and run one of the demo apps, something like:
-```
-cd ../my_test
-python -m venv venv
-. venv/bin/activate
-pip install -e ".[dev, docs]"
-```
 
-And run the tests:
-```
-pytest
-```
+### Publish a new release
+A Github release with package build files is automatically generated when a new tag starting with `v*` is pushed.
 
-Create a new distribution with:
-```
-npm run dist
-```
+Once a Github release is published, the build is re-generated and pushed to PyPi.
 
-It doesn't need to be tested extensively, just enough to know that the grid loads with no errors and you've built the right version of the code. If the app looks good, use [`twine`](https://pypi.org/project/twine/) to upload these to PyPI:
-```
-# back in the dash-ag-grid directory
-twine upload dist/*
-```
-Now you can go back to the test directory, install from PyPI, ensure you get the expected version, and test again:
-```
-pip uninstall dash-ag-grid
-pip install dash-ag-grid
-python demo_stock_portfolio.py
-```
-
-We also publish the JavaScript build to NPM, so `unpkg` has the bundles if users set `serve_locally=False`. First make a test of the NPM package, verify that its contents are reasonable:
-```
-npm pack
-```
-Then publish:
-```
-npm publish
-```
-Now create a git tag:
+Create a git tag:
 ```
 git tag -a 'v31.0,1' -m 'v31.0.1'
 git push --tags
 ```
-And create a new [GitHub release](https://github.com/plotly/dash-ag-grid/releases) linked to this tag, titled the same as the tag name (`v31.0.1` etc), with the exact changelog entry for this release as the description, and attach the built packages (both files in the `dist/` folder) to the release.
+Wait for the "Generate release" CI job to complete, then check the releases tab to move the release from "Draft" to "Published". Make sure to copy in the Changelog!
 
-Lastly, announce the release in Slack, in both the `#dash-product` and `#community-ag-grid` channels. You're done!
+When the release is published to Github, it's automatically pushed to PyPi as well. You're done 🎉
+
+Finally, announce the release in Slack, in both the `#dash-product` and `#community-ag-grid` channels. You're done!
