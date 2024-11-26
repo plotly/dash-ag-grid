@@ -20,7 +20,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
    - [#307](https://github.com/plotly/dash-ag-grid/issues/307) fixes JS console error because `setProps` is no longer called when unmounted.
 
 ### Added
- - [#330](https://github.com/plotly/dash-ag-grid/pull/330) Added `dash_clientside` to available functions for easier on-liner functions, esp. `eventListeners`.
+ - [#330](https://github.com/plotly/dash-ag-grid/pull/330) Added `dash_clientside` to available functions for easier one-liner functions, esp. `eventListeners`.
    - requested [#303](https://github.com/plotly/dash-ag-grid/issues/303)
 
 ### Changed
