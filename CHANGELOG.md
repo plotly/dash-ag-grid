@@ -4,7 +4,8 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## unreleased
+## [31.3.0] - 2024-11-22
+
 ### Fixed
  - [#300](https://github.com/plotly/dash-ag-grid/pull/300) Fixes issue [#299](https://github.com/plotly/dash-ag-grid/pull/299) where grid was unmounted and trying to update the `columnState`.
  - [#325](https://github.com/plotly/dash-ag-grid/pull/325)  Fixes issue [#324](https://github.com/plotly/dash-ag-grid/pull/324) where `pivotComparator` functions were not sorting columns correctly because they were only being passed `params`.
