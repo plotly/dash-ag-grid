@@ -2,6 +2,7 @@ import dash_ag_grid as dag
 from dash import Dash, html, dcc
 from . import utils
 from dash.testing.wait import until
+import pandas as pd
 
 
 def test_cf001_conditional_formatting(dash_duo):
@@ -98,3 +99,82 @@ def test_cf001_conditional_formatting(dash_duo):
         lambda: "color: orange" in grid.get_cell(0, 2).get_attribute("style"), timeout=3
     )
     assert "color: orange" in grid.get_cell(0, 0).get_attribute("style")
+
+def test_cf002_conditional_formatting_enterprise(dash_duo):
+    app = Dash(__name__)
+
+    df = pd.read_csv(
+        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+    )
+
+    columnDefs = [
+        # Row group by country and by year is enabled.
+        {
+            "field": "country",
+            "rowGroup": True,
+            "hide": True,
+            "suppressColumnsToolPanel": True,
+        },
+        {
+            "field": "gold",
+            "filter": True,
+            "aggFunc": "sum",
+            "valueFormatter": {"function": "d3.format('(,.2f')(params.value)"},
+            "cellStyle": {
+
+                    "styleConditions": [
+
+                        {
+                            "condition": f"params.value < 100",
+                            "style": {"backgroundColor": "lightgreen"},
+                        },
+
+                    ],
+                    "defaultStyle": {"backgroundColor": "yellow"},
+                },
+
+            },
+    ]
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid",
+                columnDefs=columnDefs,
+                rowData=df.to_dict("records"),
+                defaultColDef=dict(
+                    suppressAggFuncInHeader=True
+                ),
+                dashGridOptions={"rowSelection":"multiple", "animateRows": False},
+                enableEnterpriseModules=True,
+                getRowStyle={
+                    "styleConditions": [
+                        {
+                            "condition": "params.node.aggData ? params.node.aggData.gold < 3 : false",
+                            "style": {"backgroundColor": "silver"},
+                        }
+                    ]
+                },
+            ),
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+
+    until(
+        lambda: "United States" in grid.get_cell(0, 0).text, timeout=3
+    )
+
+    ### testing styles
+    until(
+        lambda: "background-color: yellow" in grid.get_cell(0, 2).get_attribute("style"), timeout=3
+    )
+    until(
+        lambda: "background-color: lightgreen" in grid.get_cell(4, 2).get_attribute("style"), timeout=3
+    )
+    until(
+        lambda: "background-color: silver" in grid.get_row(6).get_attribute("style"),
+        timeout=3,
+    )
