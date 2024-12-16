@@ -4,6 +4,12 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
+## [Unreleased]
+
+### Fixed
+ - [#346](https://github.com/plotly/dash-ag-grid/pull/346) Fixes issue [#347](https://github.com/plotly/dash-ag-grid/issues/347) where styling wasnt considering if the grid had rows without `data`. This is related to the alteration in [#332](https://github.com/plotly/dash-ag-grid/pull/332)
+
+
 ## [31.3.0] - 2024-11-22
 
 ### Fixed
