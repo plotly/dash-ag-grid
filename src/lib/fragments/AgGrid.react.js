@@ -176,9 +176,12 @@ export default class DashAgGrid extends Component {
         };
         this.setEventData = (data) => {
             const timestamp = Date.now();
-            this.customSetProps({eventData: {
-                data, timestamp
-            }})
+            this.customSetProps({
+                eventData: {
+                    data,
+                    timestamp,
+                },
+            });
         };
 
         this.convertedPropCache = {};
