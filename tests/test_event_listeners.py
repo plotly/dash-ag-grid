@@ -117,7 +117,7 @@ def test_el003_event_listener(dash_duo):
 
     for i in range(5):
         grid.get_cell(0, 0).click()
-    
+
         # Assert that the output element has children
         until(lambda: len(dash_duo.find_element("#output").find_elements(By.XPATH, "*")) == (i + 1), timeout=3)
 
