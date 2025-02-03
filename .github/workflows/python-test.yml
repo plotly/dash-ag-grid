@@ -62,57 +62,6 @@ jobs:
           source .venv/bin/activate
           pytest --headless
 
-  test-dash2:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: 'Setup Chrome and chromedriver'
-        uses: nanasess/setup-chromedriver@v2
-      - name: 'Setup chromedriver environment'
-        run: |
-            export DISPLAY=:99
-            chromedriver --url-base=/wd/hub &
-      - name: Start XVFB
-        run: Xvfb :99 &
-
-      - name: Setup uv
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv venv
-
-      - name: Install dependencies
-        run: |
-          source .venv/bin/activate
-          uv pip install --upgrade pip
-          uv pip install wheel
-          uv pip install dash<3
-          uv pip install ".[dev]"
-      - name: Build package
-        run: |
-          source .venv/bin/activate
-          npm ci
-          npm i
-          npm run build
-        timeout-minutes: 20
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Run tests
-        run: |
-          source .venv/bin/activate
-          pytest --headless
-
   test-react:
     runs-on: ubuntu-latest
     strategy:
