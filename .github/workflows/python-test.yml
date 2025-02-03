@@ -95,8 +95,8 @@ jobs:
           source .venv/bin/activate
           uv pip install --upgrade pip
           uv pip install wheel
-          uv pip install ".[dev]"
           uv pip install dash<3
+          uv pip install ".[dev]"
       - name: Build package
         run: |
           source .venv/bin/activate
@@ -154,5 +154,5 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          pytest --headless -k "not test_versioning"
+          pytest --headless
 
