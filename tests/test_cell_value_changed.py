@@ -31,6 +31,9 @@ def test_cv001_cell_value_changed(dash_duo):
                 columnDefs=[{"field": "Key", "checkboxSelection": True}]
                            + [{"field": i} for i in ["Column", "OldValue", "NewValue"]],
                 rowData=[],
+                dashGridOptions={
+                    "rowSelection": {"mode": "singleRow"},
+                },
             ),
         ],
         style={"margin": 20},

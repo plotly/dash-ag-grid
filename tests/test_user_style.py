@@ -52,11 +52,11 @@ def test_us001_user_style(dash_duo):
     grid.wait_for_cell_text(0, 0, "Toyota")
     until(
         lambda: "height: 500px"
-        in dash_duo.find_element("div.ag-theme-alpine").get_attribute("style"),
+        in dash_duo.find_element("#grid").get_attribute("style"),
         timeout=3,
     )
     until(
         lambda: "width: 500px"
-        in dash_duo.find_element("div.ag-theme-alpine").get_attribute("style"),
+        in dash_duo.find_element("#grid").get_attribute("style"),
         timeout=3,
     )

@@ -47,12 +47,9 @@ import RowMenuRenderer from '../renderers/rowMenuRenderer';
 import {customFunctions} from '../renderers/customFunctions';
 
 import {AgGridReact} from 'ag-grid-react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import 'ag-grid-community/styles/ag-theme-balham.css';
-import 'ag-grid-community/styles/ag-theme-material.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 // d3 imports
 import * as d3Format from 'd3-format';
@@ -1149,7 +1146,7 @@ export default class DashAgGrid extends Component {
                         cellRendererData: {
                             value,
                             colId: props.column.colId,
-                            rowIndex: props.rowIndex,
+                            rowIndex: props.node.sourceRowIndex,
                             rowId: props.node.id,
                             timestamp: Date.now(),
                         },

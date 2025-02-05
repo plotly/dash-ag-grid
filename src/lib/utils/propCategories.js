@@ -338,6 +338,8 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'selectAll',
     'deselectAll',
     'deleteSelectedRows',
+    'selectedRows',
+    'paginationInfo',
     'rowTransaction',
     'updateColumnState',
     'csvExportParams',
