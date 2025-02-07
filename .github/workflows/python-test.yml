@@ -103,5 +103,5 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          pytest --headless -k "not test_versioning"
+          pytest --headless
 

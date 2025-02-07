@@ -457,3 +457,4 @@ def test_sb004_sizing_buttons(dash_duo):
 
         oldValue = dash_duo.find_element("#columnState").text
         dash_duo.driver.set_window_size(1000, 1000)
+        time.sleep(.2)
