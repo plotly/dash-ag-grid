@@ -657,9 +657,13 @@ export default class DashAgGrid extends Component {
             scrollTo,
             rowTransaction,
             updateColumnState,
+            loading_state,
         } = this.props;
 
-        if (this.state.gridApi && prevProps.loading_state.is_loading) {
+        if (
+            this.state.gridApi &&
+            (!loading_state || prevProps.loading_state?.is_loading)
+        ) {
             if (
                 this.props.columnState !== prevProps.columnState &&
                 !this.state.columnState_push
@@ -778,12 +782,11 @@ export default class DashAgGrid extends Component {
         // Call the API to select rows unless the update was triggered by a selection made in the UI
         if (
             !equals(selectedRows, prevProps.selectedRows) &&
-            !this.selectionEventFired
+            !(loading_state && this.selectionEventFired)
         ) {
             if (!this.dataUpdates) {
                 setTimeout(() => {
                     if (!this.dataUpdates) {
-                        this.pauseSelections = true;
                         this.setSelection(selectedRows);
                     }
                 }, 10);
@@ -879,6 +882,9 @@ export default class DashAgGrid extends Component {
             if (!isEmpty(filterModel)) {
                 gridApi.setFilterModel(filterModel);
             }
+            setTimeout(() => {
+                this.dataUpdates = false;
+            }, 1);
         }
     }
 
