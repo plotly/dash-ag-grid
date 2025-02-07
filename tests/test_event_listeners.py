@@ -1,8 +1,11 @@
 import dash_ag_grid as dag
-from dash import Dash, html, dcc, Input, Output, State
+from dash import Dash, html, dcc, Input, Output, State, Patch
 import plotly.express as px
 from . import utils
 import json
+from selenium.webdriver.common.by import By
+from dash.testing.wait import until
+
 
 df = px.data.medals_wide()
 
@@ -84,3 +87,38 @@ def test_el002_event_listener(dash_duo):
     # Test left click.
     grid.get_cell(1, 2).click()
     assert dash_duo.find_element('#log').text == "rawr"
+
+def test_el003_event_listener(dash_duo):
+    app = Dash(__name__, suppress_callback_exceptions=True)
+    app.layout = html.Div([
+        dag.AgGrid(id='grid',
+                   columnDefs=[{'field': 'test'}],
+                   rowData=[{'test': '1'}],
+                   eventListeners={'cellClicked': ['TestEvent(params, setEventData)']}
+                   ),
+        html.Div(id='output', children=[])
+    ]
+    )
+
+    @app.callback(
+        Output('output', 'children'),
+        Input('grid', 'eventData')
+    )
+    def show_event_data(v):
+        children = Patch()
+        if v:
+            children.append(html.Div(json.dumps(v)))
+        return children
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(0, 0, "1")
+
+    for i in range(5):
+        grid.get_cell(0, 0).click()
+
+        # Assert that the output element has children
+        until(lambda: len(dash_duo.find_element("#output").find_elements(By.XPATH, "*")) == (i + 1), timeout=3)
+
+
