@@ -1,27 +1,28 @@
 name: Generate release
-
 permissions:
   contents: read
-
 on:
   push:
     tags:
       - "v*"
   workflow_dispatch:
-
 jobs:
+  build:
+    uses: ./.github/workflows/build.yml # Build the package artifacts
+    with:
+      python-version: '3.10'
+      node-version: 'v18.16.0'
+
   release:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    needs: build
     steps:
-      - uses: actions/checkout@v4
-      - name: Reuse Build and Validate Workflow
-        uses: ./.github/workflows/build.yml
-        with:
-          python-version: '3.10'
-          node-version: 'v18.16.0'
-      - uses: ncipollo/release-action@v1
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Upload GitHub Release
+        uses: ncipollo/release-action@v1
         with:
           artifacts: "dist/*.whl,dist/*.tar.gz"
-          draft: true
+          draft: true  
