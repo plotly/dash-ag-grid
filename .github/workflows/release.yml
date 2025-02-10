@@ -1,6 +1,6 @@
 name: Generate release
 permissions:
-  contents: read
+  contents: write
 on:
   push:
     tags:
@@ -16,7 +16,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     needs: build
     steps:
       - name: Checkout repo
