@@ -36,11 +36,17 @@ jobs:
           source .venv/bin/activate
           npm run build
         shell: bash
-      - name: Generate distribution
+      - name: Generate Python distribution
         run: |
           source .venv/bin/activate
           npm run dist
-          npm pack && mv *.tgz dist/
+        shell: bash
+      - name: Build npm package
+        run: |
+          source .venv/bin/activate
+          npm pack
+          mkdir -p npm-dist
+          mv *.tgz npm-dist/
         shell: bash
       - name: Validate distribution
         run: |
@@ -50,8 +56,14 @@ jobs:
           uv pip install "${WHL_FILE}[dev]"
           npm run test
         shell: bash
-      - name: Upload built distributions
+      - name: Upload Python distributions
         uses: actions/upload-artifact@v4
         with:
-          name: package-distributions
+          name: python-distributions
           path: dist/
+
+      - name: Upload npm package
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package
+          path: npm-dist/

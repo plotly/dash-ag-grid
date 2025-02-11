@@ -21,13 +21,18 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Download built distributions
+      - name: Download Python distributions
         uses: actions/download-artifact@v4
         with:
-          name: package-distributions
+          name: python-distributions
           path: dist/
+      - name: Download npm package
+        uses: actions/download-artifact@v4
+        with:
+          name: npm-package
+          path: npm-dist/
       - name: Upload GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "dist/*.whl,dist/*.tar.gz"
-          draft: true  
+          artifacts: "dist/*.whl,dist/*.tar.gz,npm-dist/*.tgz"
+          draft: true
