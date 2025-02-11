@@ -23,12 +23,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Download built distributions
+      - name: Download Python distributions
         uses: actions/download-artifact@v4
         with:
-          name: package-distributions
+          name: python-distributions
           path: dist/
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
+      
+      - name: Download npm package
+        uses: actions/download-artifact@v4
+        with:
+          name: npm-package
+          path: npm-dist/
+      - name: Publish to npm
+        run: |
+          npm publish npm-dist/*.tgz --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        shell: bash
