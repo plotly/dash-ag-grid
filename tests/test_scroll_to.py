@@ -123,6 +123,8 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
         return scroll_to_inputs[n_clicks - 1]
 
     dash_duo.start_server(app)
+    dash_duo.driver.set_window_size(1000, 800)
+
     grid = utils.Grid(dash_duo, "grid")
 
     action = utils.ActionChains(dash_duo.driver)
@@ -231,6 +233,7 @@ def test_st002_initial_scroll_to(dash_duo, df):
         return state
 
     dash_duo.start_server(app)
+    dash_duo.driver.set_window_size(1000, 800)
 
     grid = utils.Grid(dash_duo, "grid")
     until(lambda: "1" == grid.get_cell(2000, 9).text, timeout=3)

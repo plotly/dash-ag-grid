@@ -114,7 +114,7 @@ def test_fi003_custom_filter(dash_duo):
 
     grid.wait_for_cell_text(0, 0, "23")
 
-    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] .ag-icon-menu').click()
+    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] .ag-header-cell-filter-button').click()
 
     dash_duo.find_element('.ag-filter label:nth-child(2)').click()
 

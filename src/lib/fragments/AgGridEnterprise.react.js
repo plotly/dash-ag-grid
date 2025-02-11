@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
-import {LicenseManager} from 'ag-grid-enterprise';
+import {
+    LicenseManager,
+    AllEnterpriseModule,
+    ModuleRegistry,
+} from 'ag-grid-enterprise';
 import DashAgGrid, {propTypes} from './AgGrid.react';
+
+ModuleRegistry.registerModules([AllEnterpriseModule]);
 
 export default class DashAgGridEnterprise extends Component {
     render() {
