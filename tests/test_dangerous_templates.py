@@ -74,7 +74,9 @@ def test_dt002_dangerous_templates(dash_duo):
             "field": "company",
         },
         {
-            "headerComponentParams": {"template": "<div>Testing</div>"},
+            "headerComponentParams": {
+                "template": '<div data-ref="eLabel">[<span data-ref="eText"></span>]</div>'
+            },
             "field": "price",
             "valueFormatter": {"function": """d3.format("($,.2f")(params.value)"""},
         },
@@ -122,4 +124,4 @@ def test_dt002_dangerous_templates(dash_duo):
     )
     dash_duo.find_element("#loadBlank").click()
     dash_duo.wait_for_text_to_equal(".ag-overlay-no-rows-wrapper", "whoops no info")
-    assert grid.get_header_cell(2).text == "Testing"
+    assert grid.get_header_cell(2).text == "[Price]"
