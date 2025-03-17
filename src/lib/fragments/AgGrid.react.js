@@ -782,7 +782,9 @@ export default class DashAgGrid extends Component {
         // Call the API to select rows unless the update was triggered by a selection made in the UI
         if (
             !equals(selectedRows, prevProps.selectedRows) &&
-            !(loading_state ? (loading_state && this.selectionEventFired) : this.selectionEventFired)
+            !(loading_state
+                ? loading_state && this.selectionEventFired
+                : this.selectionEventFired)
         ) {
             if (!this.dataUpdates) {
                 setTimeout(() => {
