@@ -13,6 +13,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 ### Added
 - [#352](https://github.com/plotly/dash-ag-grid/pull/352) Adds `eventData` prop for devs to send arbitrary events from the grid events complete with an auto timestamp
 
+### Changed
+- [#362](https://github.com/plotly/dash-ag-grid/pull/362) bumping to v`31.3.4` for the grid
+
 ## [31.3.0] - 2024-11-22
 
 ### Fixed
