@@ -533,6 +533,21 @@ DashAgGrid.propTypes = {
      */
     eventListeners: PropTypes.objectOf(PropTypes.array),
 
+    /**
+     * Object of Event Data from the grid, based upon when a user triggered an event with an event listener.
+     */
+    eventData: PropTypes.shape({
+        /**
+         * Data that the developers passes back
+         */
+        data: PropTypes.any,
+
+        /**
+         * Timestamp of when the event was fired
+         */
+        timestamp: PropTypes.any,
+    }),
+
     /********************************
      * GRID PROPS
      *******************************/

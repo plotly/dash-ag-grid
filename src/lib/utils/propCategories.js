@@ -347,6 +347,7 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'columnSize',
     'scrollTo',
     'eventListeners',
+    'eventData',
 ];
 
 /**
@@ -364,6 +365,7 @@ export const OMIT_PROP_RENDER = [
     'paginationInfo',
     'cellRendererData',
     'cellDoubleClicked',
+    'eventData',
 ];
 
 /**

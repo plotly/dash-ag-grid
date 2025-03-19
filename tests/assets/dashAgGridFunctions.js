@@ -493,3 +493,9 @@ dagfuncs.showOutput = (params, setGridProps) => {
 dagfuncs.sortColumns = (a, b) => b.localeCompare(a)
 
 // BEGIN test_pivot_column_order.py
+
+
+dagfuncs.TestEvent = (params, setEventData) => {
+    console.log(params)
+    setEventData('here I am')
+}

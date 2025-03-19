@@ -1,43 +1,38 @@
 name: Generate release
-
+permissions:
+  contents: write
 on:
   push:
     tags:
       - "v*"
   workflow_dispatch:
-
 jobs:
+  build:
+    uses: ./.github/workflows/build.yml # Build the package artifacts
+    with:
+      python-version: '3.10'
+      node-version: 'v18.16.0'
+
   release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    needs: build
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Download Python distributions
+        uses: actions/download-artifact@v4
         with:
-          node-version: "v18.16.0"
-      - uses: actions/setup-python@v4
+          name: python-distributions
+          path: dist/
+      - name: Download npm package
+        uses: actions/download-artifact@v4
         with:
-          python-version: "3.10"
-      - name: Setup uv
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv venv
-        shell: bash
-      - name: Run all tests
-        run: |
-          source .venv/bin/activate
-          uv pip install ".[dev]"
-          pytest --headless
-      - name: Generate distribution
-        run: |
-          source .venv/bin/activate
-          uv pip install -r requires-dev.txt -r requires-install.txt
-          npm i
-          npm run dist
-          npm pack && mv *.tgz dist/
-        shell: bash
-      - uses: ncipollo/release-action@v1
+          name: npm-package
+          path: npm-dist/
+      - name: Upload GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          artifacts: "dist/*.whl,dist/*.tar.gz"
+          artifacts: "dist/*.whl,dist/*.tar.gz,npm-dist/*.tgz"
           draft: true

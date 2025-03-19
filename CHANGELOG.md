@@ -4,7 +4,20 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## unreleased
+## [31.3.1] - 2025-03-17
+
+### Fixed
+ - [#346](https://github.com/plotly/dash-ag-grid/pull/346) Fixes issue [#347](https://github.com/plotly/dash-ag-grid/issues/347) where styling wasnt considering if the grid had rows without `data`. This is related to the alteration in [#332](https://github.com/plotly/dash-ag-grid/pull/332)
+ - [#353](https://github.com/plotly/dash-ag-grid/pull/353) Adjustments for support of Dash 3
+
+### Added
+- [#352](https://github.com/plotly/dash-ag-grid/pull/352) Adds `eventData` prop for devs to send arbitrary events from the grid events complete with an auto timestamp
+
+### Changed
+- [#362](https://github.com/plotly/dash-ag-grid/pull/362) bumping to v`31.3.4` for the grid
+
+## [31.3.0] - 2024-11-22
+
 ### Fixed
  - [#300](https://github.com/plotly/dash-ag-grid/pull/300) Fixes issue [#299](https://github.com/plotly/dash-ag-grid/pull/299) where grid was unmounted and trying to update the `columnState`.
  - [#325](https://github.com/plotly/dash-ag-grid/pull/325)  Fixes issue [#324](https://github.com/plotly/dash-ag-grid/pull/324) where `pivotComparator` functions were not sorting columns correctly because they were only being passed `params`.
@@ -14,11 +27,19 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
    - [#312](https://github.com/plotly/dash-ag-grid/issues/312) fixing issue where `scrollTo` was defaulting to not reset the value
      - to maintain scroll position during a grid rerender, be sure to use `getRowId`
    - fixing side issue where `cellDoubleClicked` was forcing the grid to rerender
+ - [#331](https://github.com/plotly/dash-ag-grid/pull/331)
+   - adjusted `setProps` -> `customSetProps` which tests if the grid is active in the dash tree and mounted.
+   - [#307](https://github.com/plotly/dash-ag-grid/issues/307) fixes JS console error because `setProps` is no longer called when unmounted.
 
 ### Added
- - [#330](https://github.com/plotly/dash-ag-grid/pull/330) Added `dash_clientside` to available functions for easier on-liner functions, esp. `eventListeners`.
-   - requested [#303](https://github.com/plotly/dash-ag-grid/issues/303) 
+ - [#330](https://github.com/plotly/dash-ag-grid/pull/330) Added `dash_clientside` to available functions for easier one-liner functions, esp. `eventListeners`.
+   - requested [#303](https://github.com/plotly/dash-ag-grid/issues/303)
 
+### Changed
+ - [#327](https://github.com/plotly/dash-ag-grid/pull/327) bumping to v`31.3.2` for the grid
+ - [#332](https://github.com/plotly/dash-ag-grid/pull/332)
+   - `handleDynamicStyle` now checks for `params.data` before attempting to apply the test
+   - [#321](https://github.com/plotly/dash-ag-grid/issues/321) fixes issue with infinite scroll and dynamic row styling
 
 ## [31.2.0] - 2024-02-25
 

@@ -1,0 +1,46 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml # Build the package artifacts
+    with:
+      python-version: '3.10'
+      node-version: 'v18.16.0'
+
+  pypi-publish:
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+    permissions:
+      id-token: write  # Mandatory for trusted publishing
+      contents: read   # Required to access repository files
+    needs: build  # Waits for the build job to finish
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Download Python distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+      
+      - name: Download npm package
+        uses: actions/download-artifact@v4
+        with:
+          name: npm-package
+          path: npm-dist/
+      - name: Publish to npm
+        run: |
+          npm publish npm-dist/*.tgz --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        shell: bash
