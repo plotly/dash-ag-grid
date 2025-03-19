@@ -1,6 +1,6 @@
 {
     "name": "dash-ag-grid",
-    "version": "31.3.1",
+    "version": "32.3.0",
     "description": "Dash wrapper around AG Grid, the best interactive data grid for the web.",
     "repository": {
         "type": "git",
@@ -25,17 +25,16 @@
         "private::lint.eslint": "eslint src",
         "private::lint.prettier": "prettier src --list-different --ignore-path=.prettierignore",
         "lint": "run-s private::lint.*",
-        "test": "pytest --headless",
-        "dist": "npm run build && run-s pre-flight-dag-version && rimraf build dist && python setup.py sdist bdist_wheel"
+        "dist": "npm run build && run-s pre-flight-dag-version &&  python setup.py sdist bdist_wheel"
     },
     "author": "Plotly <chris@plot.ly>",
     "license": "MIT",
     "dependencies": {
         "@emotion/react": "^11.11.3",
         "@emotion/styled": "^11.11.0",
-        "ag-grid-community": "31.3.4",
-        "ag-grid-enterprise": "31.3.4",
-        "ag-grid-react": "31.3.4",
+        "ag-grid-community": "32.3.4",
+        "ag-grid-enterprise": "32.3.4",
+        "ag-grid-react": "32.3.4",
         "@mui/icons-material": "^5.15.7",
         "@mui/material": "^5.15.7",
         "d3-format": "^3.1.0",
