@@ -52,15 +52,13 @@ def test_el001_event_listener(dash_duo):
 
     # Test left click.
     grid.get_cell(1, 2).click()
-    cellClicked = dash_duo.find_element('#log').text
-    assert json.loads(cellClicked).get('value') == 15
+    until(lambda: json.loads(dash_duo.find_element('#log').text).get('value') == 15, timeout=3)
 
     # Test right click
     action = utils.ActionChains(dash_duo.driver)
     action.context_click(grid.get_cell(0, 2)).perform()
-    cellClicked = dash_duo.find_element('#log').text
-    assert json.loads(cellClicked).get('value') == 13
-    assert json.loads(cellClicked).get('contextMenu')
+    until(lambda: json.loads(dash_duo.find_element('#log').text).get('value') == 13, timeout=3)
+    until(lambda: json.loads(dash_duo.find_element('#log').text).get('contextMenu'), timeout=3)
 
 def test_el002_event_listener(dash_duo):
     app = Dash(__name__, suppress_callback_exceptions=True)
@@ -86,7 +84,7 @@ def test_el002_event_listener(dash_duo):
 
     # Test left click.
     grid.get_cell(1, 2).click()
-    assert dash_duo.find_element('#log').text == "rawr"
+    until(lambda: dash_duo.find_element('#log').text == "rawr", timeout=3)
 
 def test_el003_event_listener(dash_duo):
     app = Dash(__name__, suppress_callback_exceptions=True)

@@ -782,7 +782,10 @@ export default class DashAgGrid extends Component {
         // Call the API to select rows unless the update was triggered by a selection made in the UI
         if (
             !equals(selectedRows, prevProps.selectedRows) &&
-            !(loading_state && this.selectionEventFired)
+            // eslint-disable-next-line no-undefined
+            !(typeof loading_state !== 'undefined'
+                ? loading_state && this.selectionEventFired
+                : this.selectionEventFired)
         ) {
             if (!this.dataUpdates) {
                 setTimeout(() => {
@@ -899,10 +902,12 @@ export default class DashAgGrid extends Component {
     onSelectionChanged() {
         setTimeout(() => {
             if (!this.pauseSelections) {
-                // Flag that the selection event was fired
-                this.selectionEventFired = true;
                 const selectedRows = this.state.gridApi.getSelectedRows();
-                this.customSetProps({selectedRows});
+                if (!equals(selectedRows, this.props.selectedRows)) {
+                    // Flag that the selection event was fired
+                    this.selectionEventFired = true;
+                    this.customSetProps({selectedRows});
+                }
             }
         }, 1);
     }

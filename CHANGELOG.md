@@ -4,7 +4,7 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## [31.3.1rc1] - 2025-02-10
+## [31.3.1] - 2025-03-17
 
 ### Fixed
  - [#346](https://github.com/plotly/dash-ag-grid/pull/346) Fixes issue [#347](https://github.com/plotly/dash-ag-grid/issues/347) where styling wasnt considering if the grid had rows without `data`. This is related to the alteration in [#332](https://github.com/plotly/dash-ag-grid/pull/332)
@@ -12,6 +12,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ### Added
 - [#352](https://github.com/plotly/dash-ag-grid/pull/352) Adds `eventData` prop for devs to send arbitrary events from the grid events complete with an auto timestamp
+
+### Changed
+- [#362](https://github.com/plotly/dash-ag-grid/pull/362) bumping to v`31.3.4` for the grid
 
 ## [31.3.0] - 2024-11-22
 
