@@ -604,16 +604,10 @@ export default class DashAgGrid extends Component {
             !equals(
                 {...omit(OMIT_PROP_RENDER, nextProps)},
                 {...omit(OMIT_PROP_RENDER, this.props)}
-            ) && (nextProps?.dashRenderType != 'internal' ||
-            !equals(
-                nextProps.rowData,
-                this.props.rowData
-            ) ||
-            !equals(
-                nextProps.selectedRows,
-                this.props.selectedRows
-            )
-            )
+            ) &&
+            (nextProps?.dashRenderType !== 'internal' ||
+                !equals(nextProps.rowData, this.props.rowData) ||
+                !equals(nextProps.selectedRows, this.props.selectedRows))
         ) {
             return true;
         }
@@ -626,7 +620,7 @@ export default class DashAgGrid extends Component {
             return true;
         }
         if (gridApi && !gridApi?.isDestroyed()) {
-            if (nextProps?.dashRenderType != 'internal') {
+            if (nextProps?.dashRenderType !== 'internal') {
                 if (columnState) {
                     if (columnState !== this.props.columnState) {
                         return true;

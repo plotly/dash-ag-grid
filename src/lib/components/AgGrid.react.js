@@ -752,15 +752,15 @@ DashAgGrid.propTypes = {
     dashGridOptions: PropTypes.object,
 
     /**
-    * dashRenderType to determine why grid is rendering
-    */
+     * dashRenderType to determine why grid is rendering
+     */
     dashRenderType: PropTypes.string,
 };
 
 export const propTypes = DashAgGrid.propTypes;
 export const defaultProps = DashAgGrid.defaultProps;
 
-DashAgGrid.dashRenderType = true
+DashAgGrid.dashRenderType = true;
 export default DashAgGrid;
 
 export const apiGetters = {};
