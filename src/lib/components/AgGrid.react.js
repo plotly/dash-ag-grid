@@ -12,7 +12,7 @@ function getGrid(enable) {
 /**
  * Dash interface to AG Grid, a powerful tabular data component.
  */
-export default class DashAgGrid extends Component {
+class DashAgGrid extends Component {
     constructor(props) {
         super(props);
 
@@ -750,10 +750,18 @@ DashAgGrid.propTypes = {
      * Other ag-grid options
      */
     dashGridOptions: PropTypes.object,
+
+    /**
+    * dashRenderType to determine why grid is rendering
+    */
+    dashRenderType: PropTypes.string,
 };
 
 export const propTypes = DashAgGrid.propTypes;
 export const defaultProps = DashAgGrid.defaultProps;
+
+DashAgGrid.dashRenderType = true
+export default DashAgGrid;
 
 export const apiGetters = {};
 
