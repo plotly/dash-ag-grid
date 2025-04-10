@@ -42,7 +42,7 @@ jobs:
         run: |
           pushd npm-dist
           FILE=$(echo *.tgz)
-          npm publish "$FILE" --access public
+          npm publish "$FILE" --provenance --access public
           popd
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
