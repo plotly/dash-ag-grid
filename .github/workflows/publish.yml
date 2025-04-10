@@ -1,4 +1,4 @@
-name: Publish to PyPI
+name: Publish to PyPI & NPM
 
 on:
   release:
@@ -40,7 +40,10 @@ jobs:
           path: npm-dist/
       - name: Publish to npm
         run: |
-          npm publish npm-dist/*.tgz --access public
+          pushd npm-dist
+          FILE=$(echo *.tgz)
+          npm publish "$FILE" --provenance --access public
+          popd
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
