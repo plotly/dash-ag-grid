@@ -499,3 +499,7 @@ dagfuncs.TestEvent = (params, setEventData) => {
     console.log(params)
     setEventData('here I am')
 }
+
+dagfuncs.testToyota = (params) => {
+    return params.data.make == 'Toyota' ? {'color': 'blue'} : {}
+}
