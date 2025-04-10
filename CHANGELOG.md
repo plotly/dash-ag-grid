@@ -6,6 +6,12 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
+### Fixed
+- [#328](https://github.com/plotly/dash-ag-grid/pull/328) fixed issue where `getRowStyle` wast able to be passed as a complete function
+
+### Changed
+- [#328](https://github.com/plotly/dash-ag-grid/pull/328) bumping to v`32.3` for the grid
+
 ## [31.3.1] - 2025-03-17
 
 ### Fixed
