@@ -488,7 +488,8 @@ export default class DashAgGrid extends Component {
             if (target === 'getRowId') {
                 return this.convertFunction(value);
             }
-            if (target === 'getRowStyle') {
+            if (target === 'getRowStyle' &&
+                (has('styleConditions', value) || has('defaultStyle', value))) {
                 return this.handleDynamicStyle(value);
             }
             if (OBJ_OF_FUNCTIONS[target]) {
