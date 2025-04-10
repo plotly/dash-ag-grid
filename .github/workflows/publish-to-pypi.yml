@@ -40,8 +40,10 @@ jobs:
           path: npm-dist/
       - name: Publish to npm
         run: |
-          FILE=$(ls npm-dist/*.tgz)
+          pushd npm-dist
+          FILE=$(echo *.tgz)
           npm publish "$FILE" --access public
+          popd
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
