@@ -46,7 +46,7 @@ import MarkdownRenderer from '../renderers/markdownRenderer';
 import RowMenuRenderer from '../renderers/rowMenuRenderer';
 import {customFunctions} from '../renderers/customFunctions';
 
-import {AgGridReact} from 'ag-grid-react';
+import {AgGridReact, useGridFilter} from 'ag-grid-react';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -488,7 +488,10 @@ export default class DashAgGrid extends Component {
             if (target === 'getRowId') {
                 return this.convertFunction(value);
             }
-            if (target === 'getRowStyle') {
+            if (
+                target === 'getRowStyle' &&
+                (has('styleConditions', value) || has('defaultStyle', value))
+            ) {
                 return this.handleDynamicStyle(value);
             }
             if (OBJ_OF_FUNCTIONS[target]) {
@@ -604,7 +607,10 @@ export default class DashAgGrid extends Component {
             !equals(
                 {...omit(OMIT_PROP_RENDER, nextProps)},
                 {...omit(OMIT_PROP_RENDER, this.props)}
-            )
+            ) &&
+            (nextProps?.dashRenderType !== 'internal' ||
+                !equals(nextProps.rowData, this.props.rowData) ||
+                !equals(nextProps.selectedRows, this.props.selectedRows))
         ) {
             return true;
         }
@@ -617,14 +623,16 @@ export default class DashAgGrid extends Component {
             return true;
         }
         if (gridApi && !gridApi?.isDestroyed()) {
-            if (columnState) {
-                if (columnState !== this.props.columnState) {
-                    return true;
+            if (nextProps?.dashRenderType !== 'internal') {
+                if (columnState) {
+                    if (columnState !== this.props.columnState) {
+                        return true;
+                    }
                 }
-            }
-            if (filterModel) {
-                if (!equals(filterModel, gridApi.getFilterModel())) {
-                    return true;
+                if (filterModel) {
+                    if (!equals(filterModel, gridApi.getFilterModel())) {
+                        return true;
+                    }
                 }
             }
             if (selectedRows) {
@@ -1170,7 +1178,7 @@ export default class DashAgGrid extends Component {
                         cellRendererData: {
                             value,
                             colId: props.column.colId,
-                            rowIndex: props.rowIndex,
+                            rowIndex: props.node.sourceRowIndex,
                             rowId: props.node.id,
                             timestamp: Date.now(),
                         },
@@ -1494,3 +1502,6 @@ DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
 
 export const propTypes = DashAgGrid.propTypes;
 export const defaultProps = DashAgGrid.defaultProps;
+
+var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
+dagfuncs.useGridFilter = useGridFilter;

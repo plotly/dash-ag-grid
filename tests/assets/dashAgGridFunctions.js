@@ -184,29 +184,23 @@ const {useImperativeHandle, useState, useEffect, forwardRef} = React;
 dagfuncs.YearFilter = forwardRef((props, ref) => {
     const [year, setYear] = useState('All');
 
-    useImperativeHandle(ref, () => {
-        return {
-            doesFilterPass(params) {
-                return params.data.year >= 2010;
-            },
+    dash_ag_grid.useGridFilter({
+           doesFilterPass(params) {
+               return params.data.year >= 2010;
+           },
 
-            isFilterActive() {
-                return year === '2010'
-            },
+           // this example isn't using getModel() and setModel(),
+           // so safe to just leave these empty. don't do this in your code!!!
+           getModel() {
+           },
 
-            // this example isn't using getModel() and setModel(),
-            // so safe to just leave these empty. don't do this in your code!!!
-            getModel() {
-            },
+           setModel() {
+           }
+   });
 
-            setModel() {
-            }
-        }
-    });
-
-    useEffect(() => {
-        props.filterChangedCallback()
-    }, [year]);
+   useEffect(() => {
+       props.onModelChange(year === "All" ? null : year)
+   }, [year]);
 
     setProps = ({value}) => {
         if (value) {
@@ -504,4 +498,8 @@ dagfuncs.sortColumns = (a, b) => b.localeCompare(a)
 dagfuncs.TestEvent = (params, setEventData) => {
     console.log(params)
     setEventData('here I am')
+}
+
+dagfuncs.testToyota = (params) => {
+    return params.data.make == 'Toyota' ? {'color': 'blue'} : {}
 }
