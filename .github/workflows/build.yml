@@ -54,7 +54,7 @@ jobs:
           source test-dist/bin/activate
           WHL_FILE=$(ls dist/*.whl)
           uv pip install "${WHL_FILE}[dev]"
-          npm run test
+          pytest --headless
         shell: bash
       - name: Upload Python distributions
         uses: actions/upload-artifact@v4
