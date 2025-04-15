@@ -24,6 +24,8 @@ class DashAgGrid extends Component {
         this.buildArray = this.buildArray.bind(this);
     }
 
+    static dashRenderType = true;
+
     buildArray(arr1, arr2) {
         if (arr1) {
             if (!arr1.includes(arr2)) {
@@ -760,7 +762,6 @@ DashAgGrid.propTypes = {
 export const propTypes = DashAgGrid.propTypes;
 export const defaultProps = DashAgGrid.defaultProps;
 
-DashAgGrid.dashRenderType = true;
 export default DashAgGrid;
 
 export const apiGetters = {};
