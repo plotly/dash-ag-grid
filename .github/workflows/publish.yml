@@ -30,9 +30,7 @@ jobs:
           path: dist/
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
-      
+        
       - name: Download npm package
         uses: actions/download-artifact@v4
         with:
