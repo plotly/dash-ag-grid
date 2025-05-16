@@ -162,15 +162,15 @@ grid = dag.AgGrid(
 
 candlestick = dmc.Card(dcc.Graph(id="candlestick"), withBorder=True)
 pie = dmc.Card(dcc.Graph(id="asset-allocation"), withBorder=True)
-header = dmc.Title("My Portfolio", order=1, align="center", p="xl", color="blue")
+header = dmc.Title("My Portfolio", order=1, ta="center", p="xl", c="blue")
 
 app.layout = dmc.MantineProvider(
     theme={"colorScheme": "dark"},
-    withGlobalStyles=True,
+    withGlobalClasses=True,
     children=html.Div(
     [
         header,
-        dmc.Grid([dmc.Col(candlestick, span=6), dmc.Col(pie, span=6)]),
+        dmc.Grid([dmc.GridCol(candlestick, span=6), dmc.GridCol(pie, span=6)]),
         html.Div(grid),
     ], style={"padding":12}
     )
@@ -227,7 +227,7 @@ def update_portfolio_stats(_, data):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run(debug=False)
 
 
 """

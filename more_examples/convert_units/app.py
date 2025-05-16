@@ -1,11 +1,7 @@
 """
 This app is an example of a custom number filter
 https://www.ag-grid.com/react-data-grid/filter-number/#custom-number-support
-
 """
-
-
-
 
 import dash_ag_grid as dag
 from dash import Dash, html
@@ -49,4 +45,4 @@ app.layout = html.Div(
 )
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run(debug=True)
