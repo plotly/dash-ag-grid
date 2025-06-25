@@ -1,15 +1,13 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {LicenseManager} from 'ag-grid-enterprise';
 import DashAgGrid, {propTypes} from './AgGrid.react';
 
-export default class DashAgGridEnterprise extends Component {
-    render() {
-        const {licenseKey} = this.props;
-        if (licenseKey) {
-            LicenseManager.setLicenseKey(licenseKey);
-        }
-        return <DashAgGrid {...this.props} />;
+export default function DashAgGridEnterprise(props) {
+    const {licenseKey} = props;
+    if (licenseKey) {
+        LicenseManager.setLicenseKey(licenseKey);
     }
+    return <DashAgGrid {...props} />;
 }
 
 DashAgGridEnterprise.propTypes = propTypes;
