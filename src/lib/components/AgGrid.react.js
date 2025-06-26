@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
-import React, {Component, lazy, Suspense} from 'react';
-import {useState} from 'react';
-import {useCallback} from 'react';
-import {useEffect} from 'react';
+import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
