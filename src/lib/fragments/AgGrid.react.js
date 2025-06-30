@@ -268,6 +268,8 @@ export function DashAgGrid(props) {
     const newComponents = map(generateRenderer, customComponents);
 
     const [gridApi, setGridApi] = useState(null);
+    const [, forceRerender] = useState({});
+    const [openGroups, setOpenGroups] = useState({});
     const [state, setState] = useState({
         ...props.parentState,
         components: {
@@ -275,8 +277,6 @@ export function DashAgGrid(props) {
             markdown: generateRenderer(MarkdownRenderer),
             ...newComponents,
         },
-        rerender: 0,
-        openGroups: {},
         columnState_push: true,
     });
 
@@ -740,7 +740,6 @@ export function DashAgGrid(props) {
     const onRowDataUpdated = useCallback(() => {
         // Handles preserving existing selections when rowData is updated in a callback
         const {selectedRows, rowData, rowModelType, filterModel} = props;
-        const {openGroups} = state;
 
         if (gridApi && !gridApi?.isDestroyed()) {
             dataUpdates.current = true;
@@ -779,7 +778,7 @@ export function DashAgGrid(props) {
         props.rowModelType,
         props.filterModel,
         gridApi,
-        state.openGroups,
+        openGroups,
         dataUpdates.current,
         pauseSelections.current,
         setSelection,
@@ -788,12 +787,11 @@ export function DashAgGrid(props) {
     ]);
 
     const onRowGroupOpened = useCallback((e) => {
-        setState((prevState) => ({
-            ...prevState,
-            openGroups: e.expanded
-                ? assoc(e.node.key, 1, prevState.openGroups)
-                : omit([e.node.key], prevState.openGroups),
-        }));
+        setOpenGroups((prevOpenGroups) => 
+            e.expanded
+                ? assoc(e.node.key, 1, prevOpenGroups)
+                : omit([e.node.key], prevOpenGroups)
+        );
     }, []);
 
     const onSelectionChanged = useCallback(() => {
@@ -1375,9 +1373,9 @@ export function DashAgGrid(props) {
 
             // Hydrate virtualRowData
             onFilterChanged(true);
+            setOpenGroups(groups);
             setState((prev) => ({
                 ...prev,
-                openGroups: groups,
                 columnState_push: false,
             }));
             updateColumnState();
@@ -1585,10 +1583,7 @@ export function DashAgGrid(props) {
             const addGrid = (id) => {
                 const strId = stringifyId(id);
                 eventBus.on(props.id, strId, () => {
-                    setState((prevState) => ({
-                        ...prevState,
-                        rerender: prevState.rerender + 1,
-                    }));
+                    forceRerender({});
                 });
                 if (!agGridRefs[strId]) {
                     agGridRefs[strId] = {api: null};
