@@ -1,11 +1,4 @@
-import React, {
-    Component,
-    useCallback,
-    useRef,
-    useState,
-    useMemo,
-    useEffect,
-} from 'react';
+import React, {useCallback, useRef, useState, useMemo, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import * as evaluate from 'static-eval';
 import * as esprima from 'esprima';
@@ -130,7 +123,7 @@ function usePrevious(value) {
         setTimeout(() => {
             ref.current = value;
         }, 1);
-    });
+    }, [value]);
 
     return ref.current;
 }
@@ -145,7 +138,7 @@ export function DashAgGrid(props) {
                 props.setProps(propsToSet);
             }
         },
-        [props.setProps, active.current]
+        [props.setProps]
     );
 
     const setEventData = useCallback(
@@ -273,6 +266,8 @@ export function DashAgGrid(props) {
 
     const customComponents = window.dashAgGridComponentFunctions || {};
     const newComponents = map(generateRenderer, customComponents);
+
+    const [gridApi, setGridApi] = useState(null);
     const [state, setState] = useState({
         ...props.parentState,
         components: {
@@ -282,13 +277,11 @@ export function DashAgGrid(props) {
         },
         rerender: 0,
         openGroups: {},
-        gridApi: null,
         columnState_push: true,
     });
 
     const prevProps = usePrevious(props);
-    // const prevState = usePrevious(state);
-    const prevGridApi = usePrevious(state.gridApi);
+    const prevGridApi = usePrevious(gridApi);
 
     const convertedPropCache = useRef({});
 
@@ -302,7 +295,6 @@ export function DashAgGrid(props) {
     const pendingCellValueChanges = useRef(null);
 
     const onPaginationChanged = useCallback(() => {
-        const {gridApi} = state;
         if (gridApi && !gridApi?.isDestroyed()) {
             customSetProps({
                 paginationInfo: {
@@ -314,10 +306,10 @@ export function DashAgGrid(props) {
                 },
             });
         }
-    }, [state.gridApi, customSetProps]);
+    }, [gridApi, customSetProps]);
 
     const setSelection = useCallback(
-        (selection, gridApi = state.gridApi) => {
+        (selection) => {
             const {getRowId} = props;
             if (gridApi && selection && !gridApi?.isDestroyed()) {
                 pauseSelections.current = true;
@@ -365,13 +357,16 @@ export function DashAgGrid(props) {
                     }
                 }
                 gridApi.deselectAll();
-                gridApi.setNodesSelected({nodes: nodeData, newValue: true});
+                gridApi.setNodesSelected({
+                    nodes: nodeData,
+                    newValue: true,
+                });
                 setTimeout(() => {
                     pauseSelections.current = false;
                 }, 1);
             }
         },
-        [state.gridApi, props.getRowId, parseFunction]
+        [gridApi, props.getRowId, parseFunction]
     );
 
     const memoizeOne = useCallback(
@@ -679,7 +674,6 @@ export function DashAgGrid(props) {
 
     const virtualRowData = useCallback(() => {
         const {rowModelType} = props;
-        const {gridApi} = state;
         const virtualRowData = [];
         if (rowModelType === 'clientSide' && gridApi) {
             gridApi.forEachNodeAfterFilterAndSort((node) => {
@@ -689,29 +683,29 @@ export function DashAgGrid(props) {
             });
         }
         return virtualRowData;
-    }, [props.rowModelType, state.gridApi]);
+    }, [props.rowModelType, gridApi]);
 
     const onFilterChanged = useCallback(() => {
         const {rowModelType} = props;
-        if (!state.gridApi) {
+        if (!gridApi) {
             return;
         }
-        const filterModel = state.gridApi.getFilterModel();
+        const filterModel = gridApi.getFilterModel();
         const propsToSet = {filterModel};
         if (rowModelType === 'clientSide') {
             propsToSet.virtualRowData = virtualRowData();
         }
 
         customSetProps(propsToSet);
-    }, [props.rowModelType, state.gridApi, virtualRowData, customSetProps]);
+    }, [props.rowModelType, gridApi, virtualRowData, customSetProps]);
 
     const getRowData = useCallback(() => {
         const newRowData = [];
-        state.gridApi.forEachLeafNode((node) => {
+        gridApi.forEachLeafNode((node) => {
             newRowData.push(node.data);
         });
         return newRowData;
-    }, [state.gridApi]);
+    }, [gridApi]);
 
     const syncRowData = useCallback(() => {
         const {rowData} = props;
@@ -735,18 +729,18 @@ export function DashAgGrid(props) {
         if (rowModelType === 'clientSide') {
             propsToSet.virtualRowData = virtualRowData();
         }
-        if (!state.gridApi.isDestroyed()) {
+        if (!gridApi.isDestroyed()) {
             propsToSet.columnState = JSON.parse(
-                JSON.stringify(state.gridApi.getColumnState())
+                JSON.stringify(gridApi.getColumnState())
             );
         }
         customSetProps(propsToSet);
-    }, [props.rowModelType, virtualRowData, state, customSetProps]);
+    }, [props.rowModelType, virtualRowData, gridApi, customSetProps]);
 
     const onRowDataUpdated = useCallback(() => {
         // Handles preserving existing selections when rowData is updated in a callback
         const {selectedRows, rowData, rowModelType, filterModel} = props;
-        const {openGroups, gridApi} = state;
+        const {openGroups} = state;
 
         if (gridApi && !gridApi?.isDestroyed()) {
             dataUpdates.current = true;
@@ -784,7 +778,7 @@ export function DashAgGrid(props) {
         props.rowData,
         props.rowModelType,
         props.filterModel,
-        state.gridApi,
+        gridApi,
         state.openGroups,
         dataUpdates.current,
         pauseSelections.current,
@@ -805,7 +799,7 @@ export function DashAgGrid(props) {
     const onSelectionChanged = useCallback(() => {
         setTimeout(() => {
             if (!pauseSelections.current) {
-                const selectedRows = state.gridApi.getSelectedRows();
+                const selectedRows = gridApi.getSelectedRows();
                 if (!equals(selectedRows, props.selectedRows)) {
                     // Flag that the selection event was fired
                     selectionEventFired.current = true;
@@ -815,7 +809,7 @@ export function DashAgGrid(props) {
         }, 1);
     }, [
         pauseSelections.current,
-        state.gridApi,
+        gridApi,
         props.selectedRows,
         selectionEventFired.current,
         customSetProps,
@@ -843,18 +837,18 @@ export function DashAgGrid(props) {
     }, [getRowsParams.current, customSetProps]);
 
     const applyRowTransaction = useCallback(
-        (data, gridApi = state.gridApi) => {
+        (data, gridApiParam = gridApi) => {
             const {selectedRows} = props;
             if (data.async === false) {
-                gridApi.applyTransaction(data);
+                gridApiParam.applyTransaction(data);
                 if (selectedRows) {
                     setSelection(selectedRows);
                 }
             } else {
-                gridApi.applyTransactionAsync(data);
+                gridApiParam.applyTransactionAsync(data);
             }
         },
-        [state.gridApi, props.selectedRows, setSelection]
+        [gridApi, props.selectedRows, setSelection]
     );
 
     const onGridReady = useCallback(
@@ -877,17 +871,14 @@ export function DashAgGrid(props) {
                     });
                 });
             }
-            setState((prevState) => ({
-                ...prevState,
-                gridApi: params.api,
-            }));
+            setGridApi(params.api);
         },
         [
             props.rowModelType,
             props.eventListeners,
             getDatasource,
             parseFunctionEvent,
-            setState,
+            setGridApi,
         ]
     );
 
@@ -968,12 +959,12 @@ export function DashAgGrid(props) {
     ]);
 
     const updateColumnState = useCallback(() => {
-        if (!state.gridApi || !state.mounted) {
+        if (!gridApi) {
             return;
         }
-        if (!state.gridApi.isDestroyed()) {
+        if (!gridApi.isDestroyed()) {
             var columnState = JSON.parse(
-                JSON.stringify(state.gridApi.getColumnState())
+                JSON.stringify(gridApi.getColumnState())
             );
 
             customSetProps({
@@ -985,12 +976,11 @@ export function DashAgGrid(props) {
                 updateColumnState: false,
             });
         }
-    }, [state.gridApi, state.mounted, customSetProps]);
+    }, [gridApi, customSetProps]);
 
     const updateColumnWidths = useCallback(
         (setColumns = true) => {
             const {columnSize, columnSizeOptions} = props;
-            const {gridApi} = state;
             if (gridApi && !gridApi?.isDestroyed()) {
                 const {
                     keys,
@@ -1026,7 +1016,7 @@ export function DashAgGrid(props) {
         [
             props.columnSize,
             props.columnSizeOptions,
-            state.gridApi,
+            gridApi,
             customSetProps,
             updateColumnState,
         ]
@@ -1036,21 +1026,14 @@ export function DashAgGrid(props) {
         if (props.columnSize === 'responsiveSizeToFit') {
             updateColumnWidths();
         }
-        if (state.mounted) {
-            updateColumnState();
-        }
-    }, [
-        props.columnSize,
-        state.mounted,
-        updateColumnWidths,
-        updateColumnState,
-    ]);
+        updateColumnState();
+    }, [props.columnSize, updateColumnWidths, updateColumnState]);
 
     const onColumnResized = useCallback(() => {
-        if (state.mounted && props.columnSize !== 'responsiveSizeToFit') {
+        if (props.columnSize !== 'responsiveSizeToFit') {
             updateColumnState();
         }
-    }, [state.mounted, props.columnSize, updateColumnState]);
+    }, [props.columnSize, updateColumnState]);
 
     const onGridSizeChanged = useCallback(() => {
         if (props.columnSize === 'responsiveSizeToFit') {
@@ -1059,12 +1042,12 @@ export function DashAgGrid(props) {
     }, [props.columnSize, updateColumnWidths]);
 
     const setColumnState = useCallback(() => {
-        if (!state.gridApi || props.updateColumnState) {
+        if (!gridApi || props.updateColumnState) {
             return;
         }
 
         if (state.columnState_push) {
-            state.gridApi.applyColumnState({
+            gridApi.applyColumnState({
                 state: props.columnState,
                 applyOrder: true,
             });
@@ -1073,31 +1056,25 @@ export function DashAgGrid(props) {
                 columnState_push: false,
             }));
         }
-    }, [
-        state.gridApi,
-        props.updateColumnState,
-        state.columnState_push,
-        setState,
-    ]);
+    }, [gridApi, props.updateColumnState, state.columnState_push, setState]);
 
     const exportDataAsCsv = useCallback(
         (csvExportParams, reset = true) => {
-            if (!state.gridApi) {
+            if (!gridApi) {
                 return;
             }
-            state.gridApi.exportDataAsCsv(convertAllProps(csvExportParams));
+            gridApi.exportDataAsCsv(convertAllProps(csvExportParams));
             if (reset) {
                 customSetProps({
                     exportDataAsCsv: false,
                 });
             }
         },
-        [state.gridApi, convertAllProps, customSetProps]
+        [gridApi, convertAllProps, customSetProps]
     );
 
     const paginationGoTo = useCallback(
         (reset = true) => {
-            const {gridApi} = state;
             if (!gridApi) {
                 return;
             }
@@ -1123,12 +1100,11 @@ export function DashAgGrid(props) {
                 });
             }
         },
-        [state.gridApi, props.paginationGoTo, customSetProps]
+        [gridApi, props.paginationGoTo, customSetProps]
     );
 
     const scrollTo = useCallback(
         (reset = true) => {
-            const {gridApi} = state;
             const {scrollTo, getRowId} = props;
             if (!gridApi) {
                 return;
@@ -1172,15 +1148,15 @@ export function DashAgGrid(props) {
                 });
             }
         },
-        [state.gridApi, props.scrollTo, props.getRowId, customSetProps]
+        [gridApi, props.scrollTo, props.getRowId, customSetProps]
     );
 
     const resetColumnState = useCallback(
         (reset = true) => {
-            if (!state.gridApi) {
+            if (!gridApi) {
                 return;
             }
-            state.gridApi.resetColumnState();
+            gridApi.resetColumnState();
             if (reset) {
                 customSetProps({
                     resetColumnState: false,
@@ -1188,18 +1164,18 @@ export function DashAgGrid(props) {
                 updateColumnState();
             }
         },
-        [state.gridApi, customSetProps, updateColumnState]
+        [gridApi, customSetProps, updateColumnState]
     );
 
     const selectAll = useCallback(
         (opts, reset = true) => {
-            if (!state.gridApi) {
+            if (!gridApi) {
                 return;
             }
             if (opts?.filtered) {
-                state.gridApi.selectAllFiltered();
+                gridApi.selectAllFiltered();
             } else {
-                state.gridApi.selectAll();
+                gridApi.selectAll();
             }
             if (reset) {
                 customSetProps({
@@ -1207,31 +1183,31 @@ export function DashAgGrid(props) {
                 });
             }
         },
-        [state.gridApi, customSetProps]
+        [gridApi, customSetProps]
     );
 
     const deselectAll = useCallback(
         (reset = true) => {
-            if (!state.gridApi) {
+            if (!gridApi) {
                 return;
             }
-            state.gridApi.deselectAll();
+            gridApi.deselectAll();
             if (reset) {
                 customSetProps({
                     deselectAll: false,
                 });
             }
         },
-        [state.gridApi, customSetProps]
+        [gridApi, customSetProps]
     );
 
     const deleteSelectedRows = useCallback(
         (reset = true) => {
-            if (!state.gridApi) {
+            if (!gridApi) {
                 return;
             }
-            const sel = state.gridApi.getSelectedRows();
-            state.gridApi.applyTransaction({remove: sel});
+            const sel = gridApi.getSelectedRows();
+            gridApi.applyTransaction({remove: sel});
             if (reset) {
                 customSetProps({
                     deleteSelectedRows: false,
@@ -1239,7 +1215,7 @@ export function DashAgGrid(props) {
                 syncRowData();
             }
         },
-        [state.gridApi, customSetProps, syncRowData]
+        [gridApi, customSetProps, syncRowData]
     );
 
     const buildArray = useCallback((arr1, arr2) => {
@@ -1254,35 +1230,32 @@ export function DashAgGrid(props) {
 
     const rowTransaction = useCallback(
         (data) => {
-            const {rowTransaction, gridApi, mounted} = state;
-            if (mounted) {
-                if (gridApi && !gridApi?.isDestroyed()) {
-                    if (rowTransaction) {
-                        rowTransaction.forEach(applyRowTransaction);
-                        setState((prevState) => ({
-                            ...prevState,
-                            rowTransaction: null,
-                        }));
-                    }
-                    applyRowTransaction(data);
-                    customSetProps({
-                        rowTransaction: null,
-                    });
-                    syncRowData();
-                } else {
+            const {rowTransaction} = state;
+            if (gridApi && !gridApi?.isDestroyed()) {
+                if (rowTransaction) {
+                    rowTransaction.forEach(applyRowTransaction);
                     setState((prevState) => ({
                         ...prevState,
-                        rowTransaction: rowTransaction
-                            ? buildArray(rowTransaction, data)
-                            : [JSON.parse(JSON.stringify(data))],
+                        rowTransaction: null,
                     }));
                 }
+                applyRowTransaction(data);
+                customSetProps({
+                    rowTransaction: null,
+                });
+                syncRowData();
+            } else {
+                setState((prevState) => ({
+                    ...prevState,
+                    rowTransaction: rowTransaction
+                        ? buildArray(rowTransaction, data)
+                        : [JSON.parse(JSON.stringify(data))],
+                }));
             }
         },
         [
             state.rowTransaction,
-            state.gridApi,
-            state.mounted,
+            gridApi,
             applyRowTransaction,
             setState,
             customSetProps,
@@ -1308,11 +1281,7 @@ export function DashAgGrid(props) {
         }
 
         return () => {
-            setState((prevState) => ({
-                ...prevState,
-                mounted: false,
-                gridApi: null,
-            }));
+            setGridApi(null);
             active.current = false;
             if (props.id) {
                 delete agGridRefs[props.id];
@@ -1328,13 +1297,13 @@ export function DashAgGrid(props) {
 
     // 1. Handle gridApi changes and initialization
     useEffect(() => {
-        if (state.gridApi && state.gridApi !== prevGridApi) {
+        if (gridApi && gridApi !== prevGridApi) {
             const propsToSet = {};
             updateColumnWidths(false);
 
             // Track expanded groups
             const groups = {};
-            state.gridApi.forEachNode((node) => {
+            gridApi.forEachNode((node) => {
                 if (node.expanded) {
                     groups[node.key] = 1;
                 }
@@ -1343,7 +1312,7 @@ export function DashAgGrid(props) {
             // Handle row transactions
             if (state.rowTransaction) {
                 state.rowTransaction.map((data) =>
-                    applyRowTransaction(data, state.gridApi)
+                    applyRowTransaction(data, gridApi)
                 );
                 setState((prev) => ({...prev, rowTransaction: null}));
                 syncRowData();
@@ -1356,7 +1325,7 @@ export function DashAgGrid(props) {
 
             // Apply filter model
             if (!isEmpty(props.filterModel)) {
-                state.gridApi.setFilterModel(props.filterModel);
+                gridApi.setFilterModel(props.filterModel);
             }
 
             // Apply column state
@@ -1408,14 +1377,13 @@ export function DashAgGrid(props) {
             onFilterChanged(true);
             setState((prev) => ({
                 ...prev,
-                mounted: true,
                 openGroups: groups,
                 columnState_push: false,
             }));
             updateColumnState();
         }
     }, [
-        state.gridApi,
+        gridApi,
         updateColumnWidths,
         state.rowTransaction,
         applyRowTransaction,
@@ -1423,7 +1391,6 @@ export function DashAgGrid(props) {
         syncRowData,
         setSelection,
         props.selectedRows,
-        reference.current,
         onPaginationChanged,
         props.filterModel,
         props.columnState,
@@ -1451,7 +1418,7 @@ export function DashAgGrid(props) {
     // 2. Handle columnState push changes
     useEffect(() => {
         if (
-            state.gridApi &&
+            gridApi &&
             (!props.loading_state || prevProps?.loading_state?.is_loading)
         ) {
             if (
@@ -1464,7 +1431,7 @@ export function DashAgGrid(props) {
     }, [
         props.columnState,
         props.loading_state,
-        state.gridApi,
+        gridApi,
         state.columnState_push,
     ]);
 
@@ -1535,12 +1502,12 @@ export function DashAgGrid(props) {
 
     // 8. Handle prop changes when gridApi exists (but hasn't changed)
     useEffect(() => {
-        if (state.gridApi && state.gridApi === prevGridApi) {
+        if (gridApi && gridApi === prevGridApi) {
             if (
                 props.filterModel &&
-                state.gridApi.getFilterModel() !== props.filterModel
+                gridApi.getFilterModel() !== props.filterModel
             ) {
-                state.gridApi.setFilterModel(props.filterModel);
+                gridApi.setFilterModel(props.filterModel);
             }
 
             if (props.paginationGoTo || props.paginationGoTo === 0) {
@@ -1598,7 +1565,7 @@ export function DashAgGrid(props) {
         props.rowTransaction,
         props.updateColumnState,
         state.columnState_push,
-        state.gridApi,
+        gridApi,
     ]);
 
     // End of hooks
@@ -1687,1387 +1654,6 @@ export function DashAgGrid(props) {
     );
 }
 
-export class DashAgGridOld extends Component {
-    constructor(props) {
-        super(props);
-
-        this.onGridReady = this.onGridReady.bind(this);
-        this.onSelectionChanged = this.onSelectionChanged.bind(this);
-        this.onCellClicked = this.onCellClicked.bind(this);
-        this.onCellDoubleClicked = this.onCellDoubleClicked.bind(this);
-        this.onCellValueChanged = this.onCellValueChanged.bind(this);
-        this.afterCellValueChanged = this.afterCellValueChanged.bind(this);
-        this.onRowDataUpdated = this.onRowDataUpdated.bind(this);
-        this.onFilterChanged = this.onFilterChanged.bind(this);
-        this.onSortChanged = this.onSortChanged.bind(this);
-        this.onRowGroupOpened = this.onRowGroupOpened.bind(this);
-        this.onDisplayedColumnsChanged =
-            this.onDisplayedColumnsChanged.bind(this);
-        this.onColumnResized = this.onColumnResized.bind(this);
-        this.onGridSizeChanged = this.onGridSizeChanged.bind(this);
-        this.updateColumnWidths = this.updateColumnWidths.bind(this);
-        this.handleDynamicStyle = this.handleDynamicStyle.bind(this);
-        this.generateRenderer = this.generateRenderer.bind(this);
-        this.resetColumnState = this.resetColumnState.bind(this);
-        this.exportDataAsCsv = this.exportDataAsCsv.bind(this);
-        this.setSelection = this.setSelection.bind(this);
-        this.memoizeOne = this.memoizeOne.bind(this);
-        this.convertFunction = this.convertFunction.bind(this);
-        this.convertMaybeFunction = this.convertMaybeFunction.bind(this);
-        this.convertCol = this.convertCol.bind(this);
-        this.convertOne = this.convertOne.bind(this);
-        this.convertAllProps = this.convertAllProps.bind(this);
-        this.buildArray = this.buildArray.bind(this);
-        this.onAsyncTransactionsFlushed =
-            this.onAsyncTransactionsFlushed.bind(this);
-        this.onPaginationChanged = this.onPaginationChanged.bind(this);
-        this.scrollTo = this.scrollTo.bind(this);
-
-        // Additional Exposure
-        this.selectAll = this.selectAll.bind(this);
-        this.deselectAll = this.deselectAll.bind(this);
-        this.updateColumnState = this.updateColumnState.bind(this);
-        this.deleteSelectedRows = this.deleteSelectedRows.bind(this);
-        this.rowTransaction = this.rowTransaction.bind(this);
-        this.getRowData = this.getRowData.bind(this);
-        this.syncRowData = this.syncRowData.bind(this);
-        this.isDatasourceLoadedForInfiniteScrolling =
-            this.isDatasourceLoadedForInfiniteScrolling.bind(this);
-        this.getDatasource = this.getDatasource.bind(this);
-        this.applyRowTransaction = this.applyRowTransaction.bind(this);
-        this.parseFunction = this.parseFunction.bind(this);
-
-        const customComponents = window.dashAgGridComponentFunctions || {};
-        const newComponents = map(this.generateRenderer, customComponents);
-        this.active = true;
-        this.customSetProps = (propsToSet) => {
-            if (this.active) {
-                this.props.setProps(propsToSet);
-            }
-        };
-        this.setEventData = (data) => {
-            const timestamp = Date.now();
-            this.customSetProps({
-                eventData: {
-                    data,
-                    timestamp,
-                },
-            });
-        };
-
-        this.convertedPropCache = {};
-
-        this.state = {
-            ...this.props.parentState,
-            components: {
-                rowMenu: this.generateRenderer(RowMenuRenderer),
-                markdown: this.generateRenderer(MarkdownRenderer),
-                ...newComponents,
-            },
-            rerender: 0,
-            openGroups: {},
-            gridApi: null,
-            columnState_push: true,
-        };
-
-        this.selectionEventFired = false;
-        this.pauseSelections = false;
-        this.reference = React.createRef();
-        this.pendingChanges = null;
-        this.dataUpdates = false;
-    }
-
-    onPaginationChanged() {
-        const {gridApi} = this.state;
-        if (gridApi && !gridApi?.isDestroyed()) {
-            this.customSetProps({
-                paginationInfo: {
-                    isLastPageFound: gridApi.paginationIsLastPageFound(),
-                    pageSize: gridApi.paginationGetPageSize(),
-                    currentPage: gridApi.paginationGetCurrentPage(),
-                    totalPages: gridApi.paginationGetTotalPages(),
-                    rowCount: gridApi.paginationGetRowCount(),
-                },
-            });
-        }
-    }
-
-    setSelection(selection, gridApi = this.state?.gridApi) {
-        const {getRowId} = this.props;
-        if (gridApi && selection && !gridApi?.isDestroyed()) {
-            this.pauseSelections = true;
-            const nodeData = [];
-            if (has('function', selection)) {
-                const test = this.parseFunction(selection.function);
-
-                gridApi.forEachNode((node) => {
-                    if (test(node)) {
-                        nodeData.push(node);
-                    }
-                });
-            } else if (has('ids', selection)) {
-                const mapId = {};
-                selection.ids.forEach((id) => {
-                    mapId[id] = true;
-                });
-                gridApi.forEachNode((node) => {
-                    if (mapId[node.id]) {
-                        nodeData.push(node);
-                    }
-                });
-            } else {
-                if (selection.length) {
-                    if (getRowId) {
-                        const parsedCondition = esprima.parse(
-                            getRowId.replaceAll('params.data.', '')
-                        ).body[0].expression;
-                        const mapId = {};
-                        selection.forEach((params) => {
-                            mapId[evaluate(parsedCondition, params)] = true;
-                        });
-                        gridApi.forEachNode((node) => {
-                            if (mapId[node.id]) {
-                                nodeData.push(node);
-                            }
-                        });
-                    } else {
-                        gridApi.forEachNode((node) => {
-                            if (includes(node.data, selection)) {
-                                nodeData.push(node);
-                            }
-                        });
-                    }
-                }
-            }
-            gridApi.deselectAll();
-            gridApi.setNodesSelected({nodes: nodeData, newValue: true});
-            setTimeout(() => {
-                this.pauseSelections = false;
-            }, 1);
-        }
-    }
-
-    memoizeOne(converter, obj, target) {
-        const cache = this.convertedPropCache[target];
-        if (cache && obj === cache[0]) {
-            return cache[1];
-        }
-        const result = converter(obj, target);
-        this.convertedPropCache[target] = [obj, result];
-        return result;
-    }
-
-    convertFunction(func) {
-        // TODO: do we want this? ie allow the form `{function: <string>}` even when
-        // we're expecting just a string?
-        if (has('function', func)) {
-            return this.convertFunction(func.function);
-        }
-
-        try {
-            if (typeof func !== 'string') {
-                throw new Error('tried to parse non-string as function', func);
-            }
-            return this.parseFunction(func);
-        } catch (err) {
-            console.log(err);
-        }
-        return '';
-    }
-
-    convertFunctionNoParams(func) {
-        // TODO: do we want this? ie allow the form `{function: <string>}` even when
-        // we're expecting just a string?
-        if (has('function', func)) {
-            return this.convertFunctionNoParams(func.function);
-        }
-
-        try {
-            if (typeof func !== 'string') {
-                throw new Error('tried to parse non-string as function', func);
-            }
-            return this.parseFunctionNoParams(func);
-        } catch (err) {
-            console.log(err);
-        }
-        return '';
-    }
-
-    convertMaybeFunction(maybeFunc, stringsEvalContext) {
-        if (has('function', maybeFunc)) {
-            return this.convertFunction(maybeFunc.function);
-        }
-
-        if (
-            stringsEvalContext &&
-            typeof maybeFunc === 'string' &&
-            !this.props.dangerously_allow_code
-        ) {
-            xssMessage(stringsEvalContext);
-            return null;
-        }
-        return maybeFunc;
-    }
-
-    convertMaybeFunctionNoParams(maybeFunc, stringsEvalContext) {
-        if (has('function', maybeFunc)) {
-            return this.convertFunctionNoParams(maybeFunc.function);
-        }
-
-        if (
-            stringsEvalContext &&
-            typeof maybeFunc === 'string' &&
-            !this.props.dangerously_allow_code
-        ) {
-            xssMessage(stringsEvalContext);
-            return null;
-        }
-        return maybeFunc;
-    }
-
-    suppressGetDetail(colName) {
-        return (params) => {
-            params.successCallback(params.data[colName]);
-        };
-    }
-
-    callbackGetDetail = (params) => {
-        const {data} = params;
-        this.getDetailParams = params;
-        // Adding the current time in ms forces Dash to trigger a callback
-        // when the same row is closed and re-opened.
-        this.customSetProps({
-            getDetailRequest: {data: data, requestTime: Date.now()},
-        });
-    };
-
-    convertCol(columnDef) {
-        if (typeof columnDef === 'function') {
-            return columnDef;
-        }
-
-        return mapObjIndexed((value, target) => {
-            if (
-                target === 'cellStyle' &&
-                (has('styleConditions', value) || has('defaultStyle', value))
-            ) {
-                return this.handleDynamicStyle(value);
-            }
-            if (OBJ_OF_FUNCTIONS[target]) {
-                return map(this.convertFunction, value);
-            }
-            if (COLUMN_DANGEROUS_FUNCTIONS[target]) {
-                // the second argument tells convertMaybeFunction
-                // that a plain string is dangerous,
-                // and provides the context for error reporting
-                const field = columnDef.field || columnDef.headerName;
-                return this.convertMaybeFunction(value, {target, field});
-            }
-            if (COLUMN_MAYBE_FUNCTIONS[target]) {
-                return this.convertMaybeFunction(value);
-            }
-            if (COLUMN_MAYBE_FUNCTIONS_NO_PARAMS[target]) {
-                return this.convertMaybeFunctionNoParams(value);
-            }
-            if (COLUMN_ARRAY_NESTED_FUNCTIONS[target] && Array.isArray(value)) {
-                return value.map((c) => {
-                    if (typeof c === 'object') {
-                        return this.convertCol(c);
-                    }
-                    return c;
-                });
-            }
-            if (OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS[target]) {
-                if ('function' in value) {
-                    if (typeof value.function === 'string') {
-                        return this.convertMaybeFunctionNoParams(value);
-                    }
-                }
-                return map((v) => {
-                    if (typeof v === 'object') {
-                        if (typeof v.function === 'string') {
-                            return this.convertMaybeFunctionNoParams(v);
-                        }
-                        return this.convertCol(v);
-                    }
-                    return v;
-                }, value);
-            }
-            if (COLUMN_NESTED_FUNCTIONS[target] && typeof value === 'object') {
-                return this.convertCol(value);
-            }
-            if (COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS[target]) {
-                if (has('function', value)) {
-                    return this.convertMaybeFunction(value);
-                }
-                return this.convertCol(value);
-            }
-            // not one of those categories - pass it straight through
-            return value;
-        }, columnDef);
-    }
-
-    convertOne(value, target) {
-        if (value) {
-            if (target === 'columnDefs') {
-                return value.map(this.convertCol);
-            }
-            if (GRID_COLUMN_CONTAINERS[target]) {
-                return this.convertCol(value);
-            }
-            if (OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS[target]) {
-                if ('function' in value) {
-                    if (typeof value.function === 'string') {
-                        return this.convertMaybeFunctionNoParams(value);
-                    }
-                }
-                return mapObjIndexed((v) => {
-                    if (typeof v === 'object') {
-                        if ('function' in v) {
-                            if (typeof v.function === 'string') {
-                                return this.convertMaybeFunctionNoParams(v);
-                            }
-                        } else {
-                            return this.convertCol(v);
-                        }
-                    }
-                    return v;
-                }, value);
-            }
-            if (GRID_NESTED_FUNCTIONS[target]) {
-                let adjustedVal = value;
-                if ('suppressCallback' in value) {
-                    adjustedVal = {
-                        ...adjustedVal,
-                        getDetailRowData: value.suppressCallback
-                            ? this.suppressGetDetail(value.detailColName)
-                            : this.callbackGetDetail,
-                    };
-                }
-                if ('detailGridOptions' in value) {
-                    adjustedVal = assocPath(
-                        ['detailGridOptions', 'components'],
-                        this.state.components,
-                        adjustedVal
-                    );
-                }
-                return this.convertAllProps(adjustedVal);
-            }
-            if (GRID_DANGEROUS_FUNCTIONS[target]) {
-                return this.convertMaybeFunctionNoParams(value, {prop: target});
-            }
-            if (target === 'getRowId') {
-                return this.convertFunction(value);
-            }
-            if (
-                target === 'getRowStyle' &&
-                (has('styleConditions', value) || has('defaultStyle', value))
-            ) {
-                return this.handleDynamicStyle(value);
-            }
-            if (OBJ_OF_FUNCTIONS[target]) {
-                return map(this.convertFunction, value);
-            }
-            if (GRID_ONLY_FUNCTIONS[target]) {
-                return this.convertFunction(value);
-            }
-            if (GRID_MAYBE_FUNCTIONS[target]) {
-                return this.convertMaybeFunction(value);
-            }
-            if (GRID_MAYBE_FUNCTIONS_NO_PARAMS[target]) {
-                return this.convertMaybeFunctionNoParams(value);
-            }
-
-            return value;
-        }
-        return value;
-    }
-
-    convertAllProps(props) {
-        return mapObjIndexed(
-            (value, target) => this.memoizeOne(this.convertOne, value, target),
-            props
-        );
-    }
-
-    onFilterChanged() {
-        const {rowModelType} = this.props;
-        if (!this.state.gridApi) {
-            return;
-        }
-        const filterModel = this.state.gridApi.getFilterModel();
-        const propsToSet = {filterModel};
-        if (rowModelType === 'clientSide') {
-            propsToSet.virtualRowData = this.virtualRowData();
-        }
-
-        this.customSetProps(propsToSet);
-    }
-
-    getRowData() {
-        const newRowData = [];
-        this.state.gridApi.forEachLeafNode((node) => {
-            newRowData.push(node.data);
-        });
-        return newRowData;
-    }
-
-    virtualRowData() {
-        const {rowModelType} = this.props;
-        const {gridApi} = this.state;
-        const virtualRowData = [];
-        if (rowModelType === 'clientSide' && gridApi) {
-            gridApi.forEachNodeAfterFilterAndSort((node) => {
-                if (node.data) {
-                    virtualRowData.push(node.data);
-                }
-            });
-        }
-        return virtualRowData;
-    }
-
-    syncRowData() {
-        const {rowData} = this.props;
-        if (rowData) {
-            const virtualRowData = this.virtualRowData();
-            const newRowData = this.getRowData();
-            if (rowData !== newRowData) {
-                this.customSetProps({rowData: newRowData, virtualRowData});
-            } else {
-                this.customSetProps({virtualRowData});
-            }
-        }
-    }
-
-    onSortChanged() {
-        const {rowModelType} = this.props;
-        const propsToSet = {};
-        if (rowModelType === 'clientSide') {
-            propsToSet.virtualRowData = this.virtualRowData();
-        }
-        if (!this.state.gridApi.isDestroyed()) {
-            propsToSet.columnState = JSON.parse(
-                JSON.stringify(this.state.gridApi.getColumnState())
-            );
-        }
-        this.customSetProps(propsToSet);
-    }
-
-    componentDidMount() {
-        const {id} = this.props;
-        if (id) {
-            agGridRefs[id] = this.reference.current;
-            eventBus.dispatch(id);
-        }
-    }
-
-    componentWillUnmount() {
-        this.setState({mounted: false, gridApi: null});
-        this.active = false;
-        if (this.props.id) {
-            delete agGridRefs[this.props.id];
-            eventBus.remove(this.props.id);
-        }
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        const {gridApi} = this.state;
-        const {columnState, filterModel, selectedRows} = nextProps;
-
-        if (
-            !equals(
-                {...omit(OMIT_PROP_RENDER, nextProps)},
-                {...omit(OMIT_PROP_RENDER, this.props)}
-            ) &&
-            (nextProps?.dashRenderType !== 'internal' ||
-                !equals(nextProps.rowData, this.props.rowData) ||
-                !equals(nextProps.selectedRows, this.props.selectedRows))
-        ) {
-            return true;
-        }
-        if (
-            !equals(
-                {...omit(OMIT_STATE_RENDER, nextState)},
-                {...omit(OMIT_STATE_RENDER, this.state)}
-            )
-        ) {
-            return true;
-        }
-        if (gridApi && !gridApi?.isDestroyed()) {
-            if (nextProps?.dashRenderType !== 'internal') {
-                if (columnState) {
-                    if (columnState !== this.props.columnState) {
-                        return true;
-                    }
-                }
-                if (filterModel) {
-                    if (!equals(filterModel, gridApi.getFilterModel())) {
-                        return true;
-                    }
-                }
-            }
-            if (selectedRows) {
-                if (!equals(selectedRows, gridApi.getSelectedRows())) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return false;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        const {
-            selectedRows,
-            getDetailResponse,
-            detailCellRendererParams,
-            masterDetail,
-            id,
-            resetColumnState,
-            csvExportParams,
-            exportDataAsCsv,
-            selectAll,
-            deselectAll,
-            deleteSelectedRows,
-            filterModel,
-            columnState,
-            columnSize,
-            paginationGoTo,
-            scrollTo,
-            rowTransaction,
-            updateColumnState,
-            loading_state,
-        } = this.props;
-
-        if (
-            this.state.gridApi &&
-            (!loading_state || prevProps.loading_state?.is_loading)
-        ) {
-            if (
-                this.props.columnState !== prevProps.columnState &&
-                !this.state.columnState_push
-            ) {
-                this.setState({columnState_push: true});
-            }
-        }
-
-        if (id !== prevProps.id) {
-            if (id) {
-                agGridRefs[id] = this.reference.current;
-                eventBus.dispatch(id);
-            }
-            if (prevProps.id) {
-                delete agGridRefs[prevProps.id];
-                eventBus.remove(prevProps.id);
-            }
-        }
-
-        if (this.state.gridApi && this.state.gridApi !== prevState.gridApi) {
-            const propsToSet = {};
-            this.updateColumnWidths(false);
-
-            const groups = {};
-            this.state.gridApi.forEachNode((node) => {
-                if (node.expanded) {
-                    groups[node.key] = 1;
-                }
-            });
-
-            if (this.state.rowTransaction) {
-                this.state.rowTransaction.map((data) =>
-                    this.applyRowTransaction(data, this.state.gridApi)
-                );
-                this.setState({rowTransaction: null});
-                this.syncRowData();
-            }
-
-            // Handles applying selections when a selection was persisted by Dash
-            this.setSelection(selectedRows);
-
-            if (this.reference.current.props.pagination) {
-                this.onPaginationChanged();
-            }
-
-            if (!isEmpty(filterModel)) {
-                this.state.gridApi.setFilterModel(filterModel);
-            }
-
-            if (columnState) {
-                this.setColumnState();
-            }
-
-            if (paginationGoTo || paginationGoTo === 0) {
-                this.paginationGoTo(false);
-                propsToSet.paginationGoTo = null;
-            }
-
-            if (scrollTo) {
-                this.scrollTo(false);
-                propsToSet.scrollTo = null;
-            }
-
-            if (resetColumnState) {
-                this.resetColumnState(false);
-                propsToSet.resetColumnState = false;
-            }
-
-            if (exportDataAsCsv) {
-                this.exportDataAsCsv(csvExportParams, false);
-                propsToSet.exportDataAsCsv = false;
-            }
-
-            if (selectAll) {
-                this.selectAll(selectAll, false);
-                propsToSet.selectAll = false;
-            }
-
-            if (deselectAll) {
-                this.deselectAll(false);
-                propsToSet.deselectAll = false;
-            }
-
-            if (deleteSelectedRows) {
-                this.deleteSelectedRows(false);
-                propsToSet.deleteSelectedRows = false;
-            }
-
-            if (!isEmpty(propsToSet)) {
-                this.customSetProps(propsToSet);
-            }
-            // Hydrate virtualRowData
-            this.onFilterChanged(true);
-            this.setState({
-                mounted: true,
-                openGroups: groups,
-                columnState_push: false,
-            });
-            this.updateColumnState();
-        }
-
-        if (this.isDatasourceLoadedForInfiniteScrolling()) {
-            const {rowData, rowCount} = this.props.getRowsResponse;
-            this.getRowsParams.successCallback(rowData, rowCount);
-            this.customSetProps({getRowsResponse: null});
-        }
-
-        if (
-            masterDetail &&
-            !detailCellRendererParams.suppressCallback &&
-            getDetailResponse
-        ) {
-            this.getDetailParams.successCallback(getDetailResponse);
-            this.customSetProps({getDetailResponse: null});
-        }
-        // Call the API to select rows unless the update was triggered by a selection made in the UI
-        if (
-            !equals(selectedRows, prevProps.selectedRows) &&
-            // eslint-disable-next-line no-undefined
-            !(typeof loading_state !== 'undefined'
-                ? loading_state && this.selectionEventFired
-                : this.selectionEventFired)
-        ) {
-            if (!this.dataUpdates) {
-                setTimeout(() => {
-                    if (!this.dataUpdates) {
-                        this.setSelection(selectedRows);
-                    }
-                }, 10);
-            }
-        }
-
-        this.dataUpdates = false;
-
-        if (this.state.gridApi && this.state.gridApi === prevState.gridApi) {
-            if (filterModel) {
-                if (this.state.gridApi) {
-                    if (this.state.gridApi.getFilterModel() !== filterModel) {
-                        this.state.gridApi.setFilterModel(filterModel);
-                    }
-                }
-            }
-
-            if (paginationGoTo || paginationGoTo === 0) {
-                this.paginationGoTo();
-            }
-
-            if (scrollTo) {
-                this.scrollTo();
-            }
-
-            if (columnSize) {
-                this.updateColumnWidths();
-            }
-
-            if (resetColumnState) {
-                this.resetColumnState();
-            }
-
-            if (exportDataAsCsv) {
-                this.exportDataAsCsv(csvExportParams);
-            }
-
-            if (selectAll) {
-                this.selectAll(selectAll);
-            }
-
-            if (deselectAll) {
-                this.deselectAll();
-            }
-
-            if (deleteSelectedRows) {
-                this.deleteSelectedRows();
-            }
-
-            if (rowTransaction) {
-                this.rowTransaction(rowTransaction);
-            }
-            if (updateColumnState) {
-                this.updateColumnState();
-            } else if (this.state.columnState_push) {
-                this.setColumnState();
-            }
-        }
-
-        // Reset selection event flag
-        this.selectionEventFired = false;
-    }
-
-    onRowDataUpdated() {
-        // Handles preserving existing selections when rowData is updated in a callback
-        const {selectedRows, rowData, rowModelType, filterModel} = this.props;
-        const {openGroups, gridApi} = this.state;
-
-        if (gridApi && !gridApi?.isDestroyed()) {
-            this.dataUpdates = true;
-            this.pauseSelections = true;
-            this.setSelection(selectedRows);
-
-            if (rowData && rowModelType === 'clientSide') {
-                const virtualRowData = this.virtualRowData();
-
-                this.customSetProps({virtualRowData});
-            }
-
-            // When the rowData is updated, reopen any row groups if they previously existed in the table
-            // Iterate through all nodes in the grid. Unfortunately there's no way to iterate through only nodes representing groups
-            if (!isEmpty(openGroups)) {
-                gridApi.forEachNode((node) => {
-                    // Check if it's a group row based on whether it has the __hasChildren prop
-                    if (node.__hasChildren) {
-                        // If the key for the node (i.e. the group name) is the same as an
-                        if (openGroups[node.key]) {
-                            gridApi.setRowNodeExpanded(node, true);
-                        }
-                    }
-                });
-            }
-            if (!isEmpty(filterModel)) {
-                gridApi.setFilterModel(filterModel);
-            }
-            setTimeout(() => {
-                this.dataUpdates = false;
-            }, 1);
-        }
-    }
-
-    onRowGroupOpened(e) {
-        this.setState(({openGroups}) => ({
-            openGroups: e.expanded
-                ? assoc(e.node.key, 1, openGroups)
-                : omit([e.node.key], openGroups),
-        }));
-    }
-
-    onSelectionChanged() {
-        setTimeout(() => {
-            if (!this.pauseSelections) {
-                const selectedRows = this.state.gridApi.getSelectedRows();
-                if (!equals(selectedRows, this.props.selectedRows)) {
-                    // Flag that the selection event was fired
-                    this.selectionEventFired = true;
-                    this.customSetProps({selectedRows});
-                }
-            }
-        }, 1);
-    }
-
-    isDatasourceLoadedForInfiniteScrolling() {
-        return (
-            this.props.rowModelType === 'infinite' &&
-            this.getRowsParams &&
-            this.props.getRowsResponse
-        );
-    }
-
-    getDatasource() {
-        const self = this;
-
-        return {
-            getRows(params) {
-                self.getRowsParams = params;
-                self.customSetProps({getRowsRequest: params});
-            },
-
-            destroy() {
-                self.getRowsParams = null;
-            },
-        };
-    }
-
-    applyRowTransaction(data, gridApi = this.state.gridApi) {
-        const {selectedRows} = this.props;
-        if (data.async === false) {
-            gridApi.applyTransaction(data);
-            if (selectedRows) {
-                this.setSelection(selectedRows);
-            }
-        } else {
-            gridApi.applyTransactionAsync(data);
-        }
-    }
-
-    onGridReady(params) {
-        // Applying Infinite Row Model
-        // see: https://www.ag-grid.com/javascript-grid/infinite-scrolling/
-        const {rowModelType, eventListeners} = this.props;
-
-        if (rowModelType === 'infinite') {
-            params.api.setGridOption('datasource', this.getDatasource());
-        }
-
-        if (eventListeners) {
-            Object.entries(eventListeners).map(([key, v]) => {
-                v.map((func) => {
-                    params.api.addEventListener(
-                        key,
-                        this.parseFunctionEvent(func)
-                    );
-                });
-            });
-        }
-
-        this.setState({
-            gridApi: params.api,
-        });
-    }
-
-    onCellClicked({value, column: {colId}, rowIndex, node}) {
-        const timestamp = Date.now();
-        this.customSetProps({
-            cellClicked: {value, colId, rowIndex, rowId: node.id, timestamp},
-        });
-    }
-
-    onCellDoubleClicked({value, column: {colId}, rowIndex, node}) {
-        const timestamp = Date.now();
-        this.customSetProps({
-            cellDoubleClicked: {
-                value,
-                colId,
-                rowIndex,
-                rowId: node.id,
-                timestamp,
-            },
-        });
-    }
-
-    onCellValueChanged({
-        oldValue,
-        value,
-        column: {colId},
-        rowIndex,
-        data,
-        node,
-    }) {
-        const timestamp = Date.now();
-        // Collect new change.
-        const newChange = {
-            rowIndex,
-            rowId: node.id,
-            data,
-            oldValue,
-            value,
-            colId,
-            timestamp,
-        };
-        // Append it to current change session.
-        if (!this.pendingCellValueChanges) {
-            this.pendingCellValueChanges = [newChange];
-        } else {
-            this.pendingCellValueChanges.push(newChange);
-        }
-    }
-
-    afterCellValueChanged() {
-        // Guard against multiple invocations of the same change session.
-        if (!this.pendingCellValueChanges) {
-            return;
-        }
-        // Send update(s) for current change session to Dash.
-        const virtualRowData = this.virtualRowData();
-        this.customSetProps({
-            cellValueChanged: this.pendingCellValueChanges,
-            virtualRowData,
-        });
-        this.syncRowData();
-        // Mark current change session as ended.
-        this.pendingCellValueChanges = null;
-    }
-
-    onDisplayedColumnsChanged() {
-        if (this.props.columnSize === 'responsiveSizeToFit') {
-            this.updateColumnWidths();
-        }
-        if (this.state.mounted) {
-            this.updateColumnState();
-        }
-    }
-
-    onColumnResized() {
-        if (
-            this.state.mounted &&
-            this.props.columnSize !== 'responsiveSizeToFit'
-        ) {
-            this.updateColumnState();
-        }
-    }
-
-    onGridSizeChanged() {
-        if (this.props.columnSize === 'responsiveSizeToFit') {
-            this.updateColumnWidths();
-        }
-    }
-
-    updateColumnWidths(setColumns = true) {
-        const {columnSize, columnSizeOptions} = this.props;
-        const {gridApi} = this.state;
-        if (gridApi && !gridApi?.isDestroyed()) {
-            const {
-                keys,
-                skipHeader,
-                defaultMinWidth,
-                defaultMaxWidth,
-                columnLimits,
-            } = columnSizeOptions || {};
-            if (columnSize === 'autoSize') {
-                if (keys) {
-                    gridApi.autoSizeColumns(keys, skipHeader);
-                } else {
-                    gridApi.autoSizeAllColumns(skipHeader);
-                }
-            } else if (
-                columnSize === 'sizeToFit' ||
-                columnSize === 'responsiveSizeToFit'
-            ) {
-                gridApi.sizeColumnsToFit({
-                    defaultMinWidth,
-                    defaultMaxWidth,
-                    columnLimits,
-                });
-            }
-            if (columnSize !== 'responsiveSizeToFit') {
-                this.customSetProps({columnSize: null});
-            }
-            if (setColumns) {
-                this.updateColumnState();
-            }
-        }
-    }
-
-    parseFunction = memoizeWith(String, (funcString) => {
-        const parsedCondition = esprima.parse(funcString).body[0].expression;
-        const context = {
-            d3,
-            dash_clientside,
-            ...customFunctions,
-            ...window.dashAgGridFunctions,
-        };
-        return (params) => evaluate(parsedCondition, {params, ...context});
-    });
-
-    parseFunctionEvent = memoizeWith(String, (funcString) => {
-        const parsedCondition = esprima.parse(funcString).body[0].expression;
-        const context = {
-            d3,
-            dash_clientside,
-            ...customFunctions,
-            ...window.dashAgGridFunctions,
-            setGridProps: this.customSetProps,
-            setEventData: this.setEventData,
-        };
-        return (params) => evaluate(parsedCondition, {params, ...context});
-    });
-
-    parseFunctionNoParams = memoizeWith(String, (funcString) => {
-        const parsedCondition = esprima.parse(funcString).body[0].expression;
-        const context = {
-            d3,
-            ...customFunctions,
-            ...window.dashAgGridFunctions,
-        };
-        return evaluate(parsedCondition, context);
-    });
-
-    /**
-     * @params AG-Grid Styles rules attribute.
-     * Cells: https://www.ag-grid.com/react-grid/cell-styles/#cell-style-cell-class--cell-class-rules-params
-     * Rows: https://www.ag-grid.com/react-grid/row-styles/#row-style-row-class--row-class-rules-params
-     */
-    handleDynamicStyle(cellStyle) {
-        const {styleConditions, defaultStyle} = cellStyle;
-        const _defaultStyle = defaultStyle || null;
-
-        if (styleConditions && styleConditions.length) {
-            const tests = styleConditions.map(({condition, style}) => ({
-                test: this.parseFunction(condition),
-                style,
-            }));
-            return (params) => {
-                for (const {test, style} of tests) {
-                    if (params) {
-                        if (params.node.id && params.node.id !== null) {
-                            if (test(params)) {
-                                return style;
-                            }
-                        }
-                    }
-                }
-                return _defaultStyle;
-            };
-        }
-
-        return _defaultStyle;
-    }
-
-    generateRenderer(Renderer) {
-        const {dangerously_allow_code} = this.props;
-
-        return (props) => (
-            <Renderer
-                setData={(value) => {
-                    this.customSetProps({
-                        cellRendererData: {
-                            value,
-                            colId: props.column.colId,
-                            rowIndex: props.node.sourceRowIndex,
-                            rowId: props.node.id,
-                            timestamp: Date.now(),
-                        },
-                    });
-                }}
-                dangerously_allow_code={dangerously_allow_code}
-                {...props}
-            ></Renderer>
-        );
-    }
-
-    setColumnState() {
-        if (!this.state.gridApi || this.props.updateColumnState) {
-            return;
-        }
-
-        if (this.state.columnState_push) {
-            this.state.gridApi.applyColumnState({
-                state: this.props.columnState,
-                applyOrder: true,
-            });
-            this.setState({columnState_push: false});
-        }
-    }
-
-    // Event actions that reset
-    exportDataAsCsv(csvExportParams, reset = true) {
-        if (!this.state.gridApi) {
-            return;
-        }
-        this.state.gridApi.exportDataAsCsv(
-            this.convertAllProps(csvExportParams)
-        );
-        if (reset) {
-            this.customSetProps({
-                exportDataAsCsv: false,
-            });
-        }
-    }
-
-    paginationGoTo(reset = true) {
-        const {gridApi} = this.state;
-        if (!gridApi) {
-            return;
-        }
-        switch (this.props.paginationGoTo) {
-            case 'next':
-                gridApi.paginationGoToNextPage();
-                break;
-            case 'previous':
-                gridApi.paginationGoToPreviousPage();
-                break;
-            case 'last':
-                gridApi.paginationGoToLastPage();
-                break;
-            case 'first':
-                gridApi.paginationGoToFirstPage();
-                break;
-            default:
-                gridApi.paginationGoToPage(this.props.paginationGoTo);
-        }
-        if (reset) {
-            this.customSetProps({
-                paginationGoTo: null,
-            });
-        }
-    }
-
-    scrollTo(reset = true) {
-        const {gridApi} = this.state;
-        const {scrollTo, getRowId} = this.props;
-        if (!gridApi) {
-            return;
-        }
-        const rowPosition = scrollTo.rowPosition ? scrollTo.rowPosition : 'top';
-        if (scrollTo.rowIndex || scrollTo.rowIndex === 0) {
-            gridApi.ensureIndexVisible(scrollTo.rowIndex, rowPosition);
-        } else if (typeof scrollTo.rowId !== 'undefined') {
-            const node = gridApi.getRowNode(scrollTo.rowId);
-            gridApi.ensureNodeVisible(node, rowPosition);
-        } else if (scrollTo.data) {
-            if (getRowId) {
-                const parsedCondition = esprima.parse(
-                    getRowId.replaceAll('params.data.', '')
-                ).body[0].expression;
-                const node = gridApi.getRowNode(
-                    evaluate(parsedCondition, scrollTo.data)
-                );
-                gridApi.ensureNodeVisible(node, rowPosition);
-            } else {
-                let scrolled = false;
-                gridApi.forEachNodeAfterFilterAndSort((node) => {
-                    if (!scrolled && equals(node.data, scrollTo.data)) {
-                        gridApi.ensureNodeVisible(node, rowPosition);
-                        scrolled = true;
-                    }
-                });
-            }
-        }
-        if (scrollTo.column) {
-            const columnPosition = scrollTo.columnPosition
-                ? scrollTo.columnPosition
-                : 'auto';
-            gridApi.ensureColumnVisible(scrollTo.column, columnPosition);
-        }
-        if (reset) {
-            this.customSetProps({
-                scrollTo: null,
-            });
-        }
-    }
-
-    resetColumnState(reset = true) {
-        if (!this.state.gridApi) {
-            return;
-        }
-        this.state.gridApi.resetColumnState();
-        if (reset) {
-            this.customSetProps({
-                resetColumnState: false,
-            });
-            this.updateColumnState();
-        }
-    }
-
-    selectAll(opts, reset = true) {
-        if (!this.state.gridApi) {
-            return;
-        }
-        if (opts?.filtered) {
-            this.state.gridApi.selectAllFiltered();
-        } else {
-            this.state.gridApi.selectAll();
-        }
-        if (reset) {
-            this.customSetProps({
-                selectAll: false,
-            });
-        }
-    }
-
-    deselectAll(reset = true) {
-        if (!this.state.gridApi) {
-            return;
-        }
-        this.state.gridApi.deselectAll();
-        if (reset) {
-            this.customSetProps({
-                deselectAll: false,
-            });
-        }
-    }
-
-    deleteSelectedRows(reset = true) {
-        if (!this.state.gridApi) {
-            return;
-        }
-        const sel = this.state.gridApi.getSelectedRows();
-        this.state.gridApi.applyTransaction({remove: sel});
-        if (reset) {
-            this.customSetProps({
-                deleteSelectedRows: false,
-            });
-            this.syncRowData();
-        }
-    }
-
-    // end event actions
-
-    updateColumnState() {
-        if (!this.state.gridApi || !this.state.mounted) {
-            return;
-        }
-        if (!this.state.gridApi.isDestroyed()) {
-            var columnState = JSON.parse(
-                JSON.stringify(this.state.gridApi.getColumnState())
-            );
-
-            this.customSetProps({
-                columnState,
-                updateColumnState: false,
-            });
-        } else {
-            this.customSetProps({
-                updateColumnState: false,
-            });
-        }
-    }
-
-    buildArray(arr1, arr2) {
-        if (arr1) {
-            if (!arr1.includes(arr2)) {
-                return [...arr1, arr2];
-            }
-            return arr1;
-        }
-        return [JSON.parse(JSON.stringify(arr2))];
-    }
-
-    rowTransaction(data) {
-        const {rowTransaction, gridApi, mounted} = this.state;
-        if (mounted) {
-            if (gridApi && !gridApi?.isDestroyed()) {
-                if (rowTransaction) {
-                    rowTransaction.forEach(this.applyRowTransaction);
-                    this.setState({rowTransaction: null});
-                }
-                this.applyRowTransaction(data);
-                this.customSetProps({
-                    rowTransaction: null,
-                });
-                this.syncRowData();
-            } else {
-                this.setState({
-                    rowTransaction: rowTransaction
-                        ? this.buildArray(rowTransaction, data)
-                        : [JSON.parse(JSON.stringify(data))],
-                });
-            }
-        }
-    }
-
-    onAsyncTransactionsFlushed() {
-        const {selectedRows} = this.props;
-        if (selectedRows) {
-            this.setSelection(selectedRows);
-        }
-        this.syncRowData();
-    }
-
-    render() {
-        const {id, style, className, dashGridOptions, ...restProps} =
-            this.props;
-
-        const passingProps = pick(PASSTHRU_PROPS, restProps);
-
-        const convertedProps = this.convertAllProps(
-            omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
-        );
-
-        let alignedGrids;
-        if (dashGridOptions) {
-            if ('alignedGrids' in dashGridOptions) {
-                alignedGrids = [];
-                const addGrid = (id) => {
-                    const strId = stringifyId(id);
-                    eventBus.on(this.props.id, strId, () => {
-                        this.setState(({rerender}) => ({
-                            rerender: rerender + 1,
-                        }));
-                    });
-                    if (!agGridRefs[strId]) {
-                        agGridRefs[strId] = {api: null};
-                    }
-                    alignedGrids.push(agGridRefs[strId]);
-                };
-                eventBus.remove(this.props.id);
-                if (Array.isArray(dashGridOptions.alignedGrids)) {
-                    dashGridOptions.alignedGrids.map(addGrid);
-                } else {
-                    addGrid(dashGridOptions.alignedGrids);
-                }
-            }
-        }
-
-        return (
-            <div
-                id={id}
-                className={className}
-                style={{
-                    height:
-                        convertedProps.domLayout === 'autoHeight'
-                            ? null
-                            : '400px',
-                    width: '100%',
-                    ...style,
-                }}
-            >
-                <AgGridReact
-                    ref={this.reference}
-                    alignedGrids={alignedGrids}
-                    onGridReady={this.onGridReady}
-                    onSelectionChanged={this.onSelectionChanged}
-                    onCellClicked={this.onCellClicked}
-                    onCellDoubleClicked={this.onCellDoubleClicked}
-                    onCellValueChanged={debounce(
-                        this.afterCellValueChanged,
-                        CELL_VALUE_CHANGED_DEBOUNCE_MS,
-                        this.onCellValueChanged
-                    )}
-                    onFilterChanged={this.onFilterChanged}
-                    onSortChanged={this.onSortChanged}
-                    onRowDragEnd={this.onSortChanged}
-                    onRowDataUpdated={this.onRowDataUpdated}
-                    onRowGroupOpened={this.onRowGroupOpened}
-                    onDisplayedColumnsChanged={debounce(
-                        this.onDisplayedColumnsChanged,
-                        COL_RESIZE_DEBOUNCE_MS
-                    )}
-                    onColumnResized={debounce(
-                        this.onColumnResized,
-                        COL_RESIZE_DEBOUNCE_MS
-                    )}
-                    onAsyncTransactionsFlushed={this.onAsyncTransactionsFlushed}
-                    onPaginationChanged={this.onPaginationChanged}
-                    onGridSizeChanged={debounce(
-                        this.onGridSizeChanged,
-                        RESIZE_DEBOUNCE_MS
-                    )}
-                    components={this.state.components}
-                    {...passingProps}
-                    {...convertedProps}
-                ></AgGridReact>
-            </div>
-        );
-    }
-}
-
 DashAgGrid.defaultProps = _defaultProps;
 DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
 
@@ -3077,5 +1663,4 @@ export const defaultProps = DashAgGrid.defaultProps;
 var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
 dagfuncs.useGridFilter = useGridFilter;
 
-// export default DashAgGridOld;
 export default DashAgGrid;
