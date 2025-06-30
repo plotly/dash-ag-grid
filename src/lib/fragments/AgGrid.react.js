@@ -270,15 +270,18 @@ export function DashAgGrid(props) {
     const [gridApi, setGridApi] = useState(null);
     const [, forceRerender] = useState({});
     const [openGroups, setOpenGroups] = useState({});
-    const [state, setState] = useState({
-        ...props.parentState,
-        components: {
+    const [columnState_push, setColumnState_push] = useState(true);
+    const [rowTransactionState, setRowTransactionState] = useState(null);
+    const [parentState] = useState(props.parentState || {});
+
+    const components = useMemo(
+        () => ({
             rowMenu: generateRenderer(RowMenuRenderer),
             markdown: generateRenderer(MarkdownRenderer),
             ...newComponents,
-        },
-        columnState_push: true,
-    });
+        }),
+        [generateRenderer, newComponents]
+    );
 
     const prevProps = usePrevious(props);
     const prevGridApi = usePrevious(gridApi);
@@ -609,7 +612,7 @@ export function DashAgGrid(props) {
                     if ('detailGridOptions' in value) {
                         adjustedVal = assocPath(
                             ['detailGridOptions', 'components'],
-                            state.components,
+                            components,
                             adjustedVal
                         );
                     }
@@ -650,7 +653,7 @@ export function DashAgGrid(props) {
             convertMaybeFunctionNoParams,
             suppressGetDetail,
             callbackGetDetail,
-            state.components,
+            components,
             convertAllPropsRef.current,
             convertFunction,
             handleDynamicStyle,
@@ -787,7 +790,7 @@ export function DashAgGrid(props) {
     ]);
 
     const onRowGroupOpened = useCallback((e) => {
-        setOpenGroups((prevOpenGroups) => 
+        setOpenGroups((prevOpenGroups) =>
             e.expanded
                 ? assoc(e.node.key, 1, prevOpenGroups)
                 : omit([e.node.key], prevOpenGroups)
@@ -1044,17 +1047,14 @@ export function DashAgGrid(props) {
             return;
         }
 
-        if (state.columnState_push) {
+        if (columnState_push) {
             gridApi.applyColumnState({
                 state: props.columnState,
                 applyOrder: true,
             });
-            setState((prevState) => ({
-                ...prevState,
-                columnState_push: false,
-            }));
+            setColumnState_push(false);
         }
-    }, [gridApi, props.updateColumnState, state.columnState_push, setState]);
+    }, [gridApi, props.updateColumnState, columnState_push]);
 
     const exportDataAsCsv = useCallback(
         (csvExportParams, reset = true) => {
@@ -1228,14 +1228,11 @@ export function DashAgGrid(props) {
 
     const rowTransaction = useCallback(
         (data) => {
-            const {rowTransaction} = state;
+            const rowTransaction = rowTransactionState;
             if (gridApi && !gridApi?.isDestroyed()) {
                 if (rowTransaction) {
                     rowTransaction.forEach(applyRowTransaction);
-                    setState((prevState) => ({
-                        ...prevState,
-                        rowTransaction: null,
-                    }));
+                    setRowTransactionState(null);
                 }
                 applyRowTransaction(data);
                 customSetProps({
@@ -1243,19 +1240,18 @@ export function DashAgGrid(props) {
                 });
                 syncRowData();
             } else {
-                setState((prevState) => ({
-                    ...prevState,
-                    rowTransaction: rowTransaction
+                setRowTransactionState(
+                    rowTransaction
                         ? buildArray(rowTransaction, data)
-                        : [JSON.parse(JSON.stringify(data))],
-                }));
+                        : [JSON.parse(JSON.stringify(data))]
+                );
             }
         },
         [
-            state.rowTransaction,
+            rowTransactionState,
             gridApi,
             applyRowTransaction,
-            setState,
+            setRowTransactionState,
             customSetProps,
             syncRowData,
             buildArray,
@@ -1308,11 +1304,11 @@ export function DashAgGrid(props) {
             });
 
             // Handle row transactions
-            if (state.rowTransaction) {
-                state.rowTransaction.map((data) =>
+            if (rowTransactionState) {
+                rowTransactionState.map((data) =>
                     applyRowTransaction(data, gridApi)
                 );
-                setState((prev) => ({...prev, rowTransaction: null}));
+                setRowTransactionState(null);
                 syncRowData();
             }
 
@@ -1374,18 +1370,13 @@ export function DashAgGrid(props) {
             // Hydrate virtualRowData
             onFilterChanged(true);
             setOpenGroups(groups);
-            setState((prev) => ({
-                ...prev,
-                columnState_push: false,
-            }));
+            setColumnState_push(false);
             updateColumnState();
         }
     }, [
         gridApi,
         updateColumnWidths,
-        state.rowTransaction,
         applyRowTransaction,
-        setState,
         syncRowData,
         setSelection,
         props.selectedRows,
@@ -1421,17 +1412,12 @@ export function DashAgGrid(props) {
         ) {
             if (
                 props.columnState !== prevProps?.columnState &&
-                !state.columnState_push
+                !columnState_push
             ) {
-                setState((prev) => ({...prev, columnState_push: true}));
+                setColumnState_push(true);
             }
         }
-    }, [
-        props.columnState,
-        props.loading_state,
-        gridApi,
-        state.columnState_push,
-    ]);
+    }, [props.columnState, props.loading_state, gridApi, columnState_push]);
 
     // 3. Handle ID changes
     useEffect(() => {
@@ -1546,7 +1532,7 @@ export function DashAgGrid(props) {
 
             if (props.updateColumnState) {
                 updateColumnState();
-            } else if (state.columnState_push) {
+            } else if (columnState_push) {
                 setColumnState();
             }
         }
@@ -1562,7 +1548,7 @@ export function DashAgGrid(props) {
         props.deleteSelectedRows,
         props.rowTransaction,
         props.updateColumnState,
-        state.columnState_push,
+        columnState_push,
         gridApi,
     ]);
 
@@ -1641,7 +1627,7 @@ export function DashAgGrid(props) {
                     onGridSizeChanged,
                     RESIZE_DEBOUNCE_MS
                 )}
-                components={state.components}
+                components={components}
                 {...passingProps}
                 {...convertedProps}
             ></AgGridReact>
