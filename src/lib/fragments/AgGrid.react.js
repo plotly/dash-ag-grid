@@ -1289,45 +1289,68 @@ export function DashAgGrid(props) {
         setSelection(props.selectedRows);
     }, [props.selectedRows]);
 
-    // 1. Handle gridApi changes and initialization
+    // 1. Handle gridApi initialization - basic setup
     useEffect(() => {
         if (gridApi && gridApi !== prevGridApi) {
-            const propsToSet = {};
             updateColumnWidths(false);
 
-            // Track expanded groups
+            // Handle pagination initialization
+            if (reference.current.props.pagination) {
+                onPaginationChanged();
+            }
+        }
+    }, [gridApi, prevGridApi, updateColumnWidths, onPaginationChanged]);
+
+    // 1a. Handle gridApi initialization - expanded groups tracking
+    useEffect(() => {
+        if (gridApi && gridApi !== prevGridApi) {
             const groups = {};
             gridApi.forEachNode((node) => {
                 if (node.expanded) {
                     groups[node.key] = 1;
                 }
             });
+            setOpenGroups(groups);
+        }
+    }, [gridApi, prevGridApi, setOpenGroups]);
 
-            // Handle row transactions
-            if (rowTransactionState) {
-                rowTransactionState.map((data) =>
-                    applyRowTransaction(data, gridApi)
-                );
-                setRowTransactionState(null);
-                syncRowData();
-            }
+    // 1b. Handle gridApi initialization - row transactions
+    useEffect(() => {
+        if (gridApi && gridApi !== prevGridApi && rowTransactionState) {
+            rowTransactionState.map((data) =>
+                applyRowTransaction(data, gridApi)
+            );
+            setRowTransactionState(null);
+            syncRowData();
+        }
+    }, [
+        gridApi,
+        prevGridApi,
+        rowTransactionState,
+        applyRowTransaction,
+        setRowTransactionState,
+        syncRowData,
+    ]);
 
-            // Handle pagination
-            if (reference.current.props.pagination) {
-                onPaginationChanged();
-            }
+    // 1c. Handle gridApi initialization - filter model application
+    useEffect(() => {
+        if (gridApi && gridApi !== prevGridApi && !isEmpty(props.filterModel)) {
+            gridApi.setFilterModel(props.filterModel);
+        }
+    }, [gridApi, prevGridApi, props.filterModel]);
 
-            // Apply filter model
-            if (!isEmpty(props.filterModel)) {
-                gridApi.setFilterModel(props.filterModel);
-            }
+    // 1d. Handle gridApi initialization - column state application
+    useEffect(() => {
+        if (gridApi && gridApi !== prevGridApi && props.columnState) {
+            setColumnState();
+        }
+    }, [gridApi, prevGridApi, props.columnState, setColumnState]);
 
-            // Apply column state
-            if (props.columnState) {
-                setColumnState();
-            }
+    // 1e. Handle gridApi initialization - action props with cleanup
+    useEffect(() => {
+        if (gridApi && gridApi !== prevGridApi) {
+            const propsToSet = {};
 
-            // Handle various action props
             if (props.paginationGoTo || props.paginationGoTo === 0) {
                 paginationGoTo(false);
                 propsToSet.paginationGoTo = null;
@@ -1366,41 +1389,41 @@ export function DashAgGrid(props) {
             if (!isEmpty(propsToSet)) {
                 customSetProps(propsToSet);
             }
+        }
+    }, [
+        gridApi,
+        prevGridApi,
+        props.paginationGoTo,
+        props.scrollTo,
+        props.resetColumnState,
+        props.exportDataAsCsv,
+        props.csvExportParams,
+        props.selectAll,
+        props.deselectAll,
+        props.deleteSelectedRows,
+        paginationGoTo,
+        scrollTo,
+        resetColumnState,
+        exportDataAsCsv,
+        selectAll,
+        deselectAll,
+        deleteSelectedRows,
+        customSetProps,
+    ]);
 
-            // Hydrate virtualRowData
+    // 1f. Handle gridApi initialization - finalization
+    useEffect(() => {
+        if (gridApi && gridApi !== prevGridApi) {
+            // Hydrate virtualRowData and finalize setup
             onFilterChanged(true);
-            setOpenGroups(groups);
             setColumnState_push(false);
             updateColumnState();
         }
     }, [
         gridApi,
-        updateColumnWidths,
-        applyRowTransaction,
-        syncRowData,
-        setSelection,
-        props.selectedRows,
-        onPaginationChanged,
-        props.filterModel,
-        props.columnState,
-        setColumnState,
-        props.paginationGoTo,
-        paginationGoTo,
-        props.scrollTo,
-        scrollTo,
-        props.resetColumnState,
-        resetColumnState,
-        props.exportDataAsCsv,
-        exportDataAsCsv,
-        props.csvExportParams,
-        props.selectAll,
-        selectAll,
-        props.deselectAll,
-        deselectAll,
-        props.deleteSelectedRows,
-        deleteSelectedRows,
-        customSetProps,
+        prevGridApi,
         onFilterChanged,
+        setColumnState_push,
         updateColumnState,
     ]);
 
@@ -1484,72 +1507,112 @@ export function DashAgGrid(props) {
         dataUpdates.current = false;
     });
 
-    // 8. Handle prop changes when gridApi exists (but hasn't changed)
+    // 8. Handle filter model updates
+    useEffect(() => {
+        if (
+            gridApi &&
+            gridApi === prevGridApi &&
+            props.filterModel &&
+            gridApi.getFilterModel() !== props.filterModel
+        ) {
+            gridApi.setFilterModel(props.filterModel);
+        }
+    }, [props.filterModel, gridApi, prevGridApi]);
+
+    // 9. Handle pagination actions
+    useEffect(() => {
+        if (
+            gridApi &&
+            gridApi === prevGridApi &&
+            (props.paginationGoTo || props.paginationGoTo === 0)
+        ) {
+            paginationGoTo();
+        }
+    }, [props.paginationGoTo, gridApi, prevGridApi, paginationGoTo]);
+
+    // 10. Handle scroll actions
+    useEffect(() => {
+        if (gridApi && gridApi === prevGridApi && props.scrollTo) {
+            scrollTo();
+        }
+    }, [props.scrollTo, gridApi, prevGridApi, scrollTo]);
+
+    // 11. Handle column size updates
+    useEffect(() => {
+        if (gridApi && gridApi === prevGridApi && props.columnSize) {
+            updateColumnWidths();
+        }
+    }, [props.columnSize, gridApi, prevGridApi, updateColumnWidths]);
+
+    // 12. Handle column state reset
+    useEffect(() => {
+        if (gridApi && gridApi === prevGridApi && props.resetColumnState) {
+            resetColumnState();
+        }
+    }, [props.resetColumnState, gridApi, prevGridApi, resetColumnState]);
+
+    // 13. Handle CSV export
+    useEffect(() => {
+        if (gridApi && gridApi === prevGridApi && props.exportDataAsCsv) {
+            exportDataAsCsv(props.csvExportParams);
+        }
+    }, [
+        props.exportDataAsCsv,
+        props.csvExportParams,
+        gridApi,
+        prevGridApi,
+        exportDataAsCsv,
+    ]);
+
+    // 14. Handle row selection actions
     useEffect(() => {
         if (gridApi && gridApi === prevGridApi) {
-            if (
-                props.filterModel &&
-                gridApi.getFilterModel() !== props.filterModel
-            ) {
-                gridApi.setFilterModel(props.filterModel);
-            }
-
-            if (props.paginationGoTo || props.paginationGoTo === 0) {
-                paginationGoTo();
-            }
-
-            if (props.scrollTo) {
-                scrollTo();
-            }
-
-            if (props.columnSize) {
-                updateColumnWidths();
-            }
-
-            if (props.resetColumnState) {
-                resetColumnState();
-            }
-
-            if (props.exportDataAsCsv) {
-                exportDataAsCsv(props.csvExportParams);
-            }
-
             if (props.selectAll) {
                 selectAll(props.selectAll);
             }
-
             if (props.deselectAll) {
                 deselectAll();
             }
-
             if (props.deleteSelectedRows) {
                 deleteSelectedRows();
             }
-
-            if (props.rowTransaction) {
-                rowTransaction(props.rowTransaction);
-            }
-
-            if (props.updateColumnState) {
-                updateColumnState();
-            } else if (columnState_push) {
-                setColumnState();
-            }
         }
     }, [
-        props.filterModel,
-        props.paginationGoTo,
-        props.scrollTo,
-        props.columnSize,
-        props.resetColumnState,
-        props.exportDataAsCsv,
         props.selectAll,
         props.deselectAll,
         props.deleteSelectedRows,
-        props.rowTransaction,
+        gridApi,
+        prevGridApi,
+        selectAll,
+        deselectAll,
+        deleteSelectedRows,
+    ]);
+
+    // 15. Handle row transactions
+    useEffect(() => {
+        if (gridApi && gridApi === prevGridApi && props.rowTransaction) {
+            rowTransaction(props.rowTransaction);
+        }
+    }, [props.rowTransaction, gridApi, prevGridApi, rowTransaction]);
+
+    // 16. Handle column state updates
+    useEffect(() => {
+        if (gridApi && gridApi === prevGridApi) {
+            if (props.updateColumnState) {
+                updateColumnState();
+            } else if (columnState_push) {
+                setTimeout(() => {
+                    setColumnState();
+                }, 1);
+            }
+        }
+    }, [
         props.updateColumnState,
         columnState_push,
         gridApi,
+        prevGridApi,
+        updateColumnState,
+        setColumnState,
     ]);
 
     // End of hooks
