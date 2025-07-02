@@ -1416,7 +1416,6 @@ export function DashAgGrid(props) {
         if (gridApi && gridApi !== prevGridApi) {
             // Hydrate virtualRowData and finalize setup
             onFilterChanged(true);
-            setColumnState_push(false);
             updateColumnState();
         }
     }, [
