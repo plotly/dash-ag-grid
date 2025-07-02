@@ -1,6 +1,10 @@
 import React from 'react';
-import {LicenseManager} from 'ag-grid-enterprise';
+import {ModuleRegistry} from 'ag-grid-community';
+import {AllEnterpriseModule, LicenseManager} from 'ag-grid-enterprise';
 import DashAgGrid, {propTypes} from './AgGrid.react';
+
+// Register all enterprise features
+ModuleRegistry.registerModules([AllEnterpriseModule]);
 
 export default function DashAgGridEnterprise(props) {
     const {licenseKey} = props;
