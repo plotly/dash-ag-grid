@@ -335,6 +335,7 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'alignedGrids',
     'resetColumnState',
     'exportDataAsCsv',
+    'selectedRows',
     'selectAll',
     'deselectAll',
     'deleteSelectedRows',
