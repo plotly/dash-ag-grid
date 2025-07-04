@@ -272,7 +272,6 @@ export function DashAgGrid(props) {
     const [openGroups, setOpenGroups] = useState({});
     const [columnState_push, setColumnState_push] = useState(true);
     const [rowTransactionState, setRowTransactionState] = useState(null);
-    const [parentState] = useState(props.parentState || {});
 
     const components = useMemo(
         () => ({
@@ -1706,4 +1705,22 @@ export const defaultProps = DashAgGrid.defaultProps;
 var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
 dagfuncs.useGridFilter = useGridFilter;
 
-export default DashAgGrid;
+const MemoizedAgGrid = React.memo(DashAgGrid, (prevProps, nextProps) => {
+  // Check if props are equal (excluding render-specific props)
+  const relevantNextProps = { ...omit(OMIT_PROP_RENDER, nextProps) };
+  const relevantPrevProps = { ...omit(OMIT_PROP_RENDER, prevProps) };
+
+  const isInternalChange = nextProps?.dashRenderType === 'internal';
+  const propsHaveChanged = !equals(relevantNextProps, relevantPrevProps);
+  const rowDataChanged = !equals(nextProps.rowData, prevProps.rowData);
+  const selectedRowsChanged = !equals(nextProps.selectedRows, prevProps.selectedRows);
+
+  if (propsHaveChanged && (!isInternalChange || rowDataChanged || selectedRowsChanged)) {
+    return false; // Props changed, re-render
+  }
+
+  return true;
+
+});
+
+export default MemoizedAgGrid;

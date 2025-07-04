@@ -317,10 +317,12 @@ export const PASSTHRU_PROPS = ['rowData'];
  * in the render() method, so they don't need to be listed here
  */
 export const PROPS_NOT_FOR_AG_GRID = [
+    'children',
     'setProps',
     'loading_state',
     'enableEnterpriseModules',
     'parentState',
+    'persistence',
     'persisted_props',
     'persistence_type',
     'virtualRowData',
@@ -335,6 +337,7 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'alignedGrids',
     'resetColumnState',
     'exportDataAsCsv',
+    'selectedRows',
     'selectAll',
     'deselectAll',
     'deleteSelectedRows',
@@ -357,7 +360,6 @@ export const OMIT_PROP_RENDER = [
     'virtualRowData',
     'columnState',
     'filterModel',
-    'selectedRows',
     'getRowRequest',
     'getDetailRequest',
     'cellValueChanged',
