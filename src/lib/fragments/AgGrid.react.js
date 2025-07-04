@@ -1706,4 +1706,22 @@ export const defaultProps = DashAgGrid.defaultProps;
 var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
 dagfuncs.useGridFilter = useGridFilter;
 
-export default DashAgGrid;
+const MemoizedAgGrid = React.memo(DashAgGrid, (prevProps, nextProps) => {
+  // Check if props are equal (excluding render-specific props)
+  if (
+    !equals(
+      {...omit(OMIT_PROP_RENDER, nextProps)},
+      {...omit(OMIT_PROP_RENDER, prevProps)}
+    ) &&
+    (nextProps?.dashRenderType !== 'internal' ||
+      !equals(nextProps.rowData, prevProps.rowData) ||
+      !equals(nextProps.selectedRows, prevProps.selectedRows))
+  ) {
+    return false; // Props changed, re-render
+  }
+
+  return true;
+
+});
+
+export default MemoizedAgGrid;
