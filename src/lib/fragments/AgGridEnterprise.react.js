@@ -2,7 +2,7 @@ import React from 'react';
 import {ModuleRegistry} from 'ag-grid-community';
 import {AllEnterpriseModule, LicenseManager, SparklinesModule} from 'ag-grid-enterprise';
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
-import DashAgGrid, {propTypes} from './AgGrid.react';
+import MemoizedAgGrid, {propTypes} from './AgGrid.react';
 
 // Register all enterprise features
 ModuleRegistry.registerModules([AllEnterpriseModule, SparklinesModule.with(AgChartsEnterpriseModule)]);
@@ -13,7 +13,7 @@ export default function DashAgGridEnterprise(props) {
     if (licenseKey) {
         LicenseManager.setLicenseKey(licenseKey);
     }
-    return <DashAgGrid {...props} />;
+    return <MemoizedAgGrid {...props} />;
 }
 
 DashAgGridEnterprise.propTypes = propTypes;

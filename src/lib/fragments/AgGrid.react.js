@@ -37,7 +37,6 @@ import {
     PROPS_NOT_FOR_AG_GRID,
     GRID_DANGEROUS_FUNCTIONS,
     OMIT_PROP_RENDER,
-    OMIT_STATE_RENDER,
     OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS,
 } from '../utils/propCategories';
 import debounce from '../utils/debounce';
@@ -243,21 +242,21 @@ export function DashAgGrid(props) {
         (Renderer) => {
             const {dangerously_allow_code} = props;
 
-            return (props) => (
+            return (cellProps) => (
                 <Renderer
                     setData={(value) => {
                         customSetProps({
                             cellRendererData: {
                                 value,
-                                colId: props.column.colId,
-                                rowIndex: props.node.sourceRowIndex,
-                                rowId: props.node.id,
+                                colId: cellProps.column.colId,
+                                rowIndex: cellProps.node.sourceRowIndex,
+                                rowId: cellProps.node.id,
                                 timestamp: Date.now(),
                             },
                         });
                     }}
                     dangerously_allow_code={dangerously_allow_code}
-                    {...props}
+                    {...cellProps}
                 ></Renderer>
             );
         },
@@ -1285,7 +1284,7 @@ export function DashAgGrid(props) {
     useEffect(() => {
         // Apply selections
         if (gridApi) {
-          setSelection(props.selectedRows);
+            setSelection(props.selectedRows);
         }
     }, [props.selectedRows, gridApi]);
 
@@ -1682,21 +1681,26 @@ var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
 dagfuncs.useGridFilter = useGridFilter;
 
 const MemoizedAgGrid = React.memo(DashAgGrid, (prevProps, nextProps) => {
-  // Check if props are equal (excluding render-specific props)
-  const relevantNextProps = { ...omit(OMIT_PROP_RENDER, nextProps) };
-  const relevantPrevProps = { ...omit(OMIT_PROP_RENDER, prevProps) };
+    // Check if props are equal (excluding render-specific props)
+    const relevantNextProps = {...omit(OMIT_PROP_RENDER, nextProps)};
+    const relevantPrevProps = {...omit(OMIT_PROP_RENDER, prevProps)};
 
-  const isInternalChange = nextProps?.dashRenderType === 'internal';
-  const propsHaveChanged = !equals(relevantNextProps, relevantPrevProps);
-  const rowDataChanged = !equals(nextProps.rowData, prevProps.rowData);
-  const selectedRowsChanged = !equals(nextProps.selectedRows, prevProps.selectedRows);
+    const isInternalChange = nextProps?.dashRenderType === 'internal';
+    const propsHaveChanged = !equals(relevantNextProps, relevantPrevProps);
+    const rowDataChanged = !equals(nextProps.rowData, prevProps.rowData);
+    const selectedRowsChanged = !equals(
+        nextProps.selectedRows,
+        prevProps.selectedRows
+    );
 
-  if (propsHaveChanged && (!isInternalChange || rowDataChanged || selectedRowsChanged)) {
-    return false; // Props changed, re-render
-  }
+    if (
+        propsHaveChanged &&
+        (!isInternalChange || rowDataChanged || selectedRowsChanged)
+    ) {
+        return false; // Props changed, re-render
+    }
 
-  return true;
-
+    return true;
 });
 
 export default MemoizedAgGrid;
