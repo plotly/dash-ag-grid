@@ -37,7 +37,6 @@ import {
     PROPS_NOT_FOR_AG_GRID,
     GRID_DANGEROUS_FUNCTIONS,
     OMIT_PROP_RENDER,
-    OMIT_STATE_RENDER,
     OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS,
 } from '../utils/propCategories';
 import debounce from '../utils/debounce';
@@ -243,21 +242,21 @@ export function DashAgGrid(props) {
         (Renderer) => {
             const {dangerously_allow_code} = props;
 
-            return (props) => (
+            return (cellProps) => (
                 <Renderer
                     setData={(value) => {
                         customSetProps({
                             cellRendererData: {
                                 value,
-                                colId: props.column.colId,
-                                rowIndex: props.node.sourceRowIndex,
-                                rowId: props.node.id,
+                                colId: cellProps.column.colId,
+                                rowIndex: cellProps.node.sourceRowIndex,
+                                rowId: cellProps.node.id,
                                 timestamp: Date.now(),
                             },
                         });
                     }}
                     dangerously_allow_code={dangerously_allow_code}
-                    {...props}
+                    {...cellProps}
                 ></Renderer>
             );
         },
@@ -290,7 +289,6 @@ export function DashAgGrid(props) {
     const selectionEventFired = useRef(false);
     const pauseSelections = useRef(false);
     const reference = useRef();
-    // const pendingChanges = useRef(null);
     const dataUpdates = useRef(false);
     const getDetailParams = useRef();
     const getRowsParams = useRef(null);
@@ -1286,11 +1284,11 @@ export function DashAgGrid(props) {
     useEffect(() => {
         // Apply selections
         if (gridApi) {
-          setSelection(props.selectedRows);
+            setSelection(props.selectedRows);
         }
     }, [props.selectedRows, gridApi]);
 
-    // 1. Handle gridApi initialization - basic setup
+    // Handle gridApi initialization - basic setup
     useEffect(() => {
         if (gridApi && gridApi !== prevGridApi) {
             updateColumnWidths(false);
@@ -1302,7 +1300,7 @@ export function DashAgGrid(props) {
         }
     }, [gridApi, prevGridApi, updateColumnWidths, onPaginationChanged]);
 
-    // 1a. Handle gridApi initialization - expanded groups tracking
+    // Handle gridApi initialization - expanded groups tracking
     useEffect(() => {
         if (gridApi && gridApi !== prevGridApi) {
             const groups = {};
@@ -1315,7 +1313,7 @@ export function DashAgGrid(props) {
         }
     }, [gridApi, prevGridApi, setOpenGroups]);
 
-    // 1b. Handle gridApi initialization - row transactions
+    // Handle gridApi initialization - row transactions
     useEffect(() => {
         if (gridApi && gridApi !== prevGridApi && rowTransactionState) {
             rowTransactionState.map((data) =>
@@ -1333,21 +1331,21 @@ export function DashAgGrid(props) {
         syncRowData,
     ]);
 
-    // 1c. Handle gridApi initialization - filter model application
+    // Handle gridApi initialization - filter model application
     useEffect(() => {
         if (gridApi && gridApi !== prevGridApi && !isEmpty(props.filterModel)) {
             gridApi.setFilterModel(props.filterModel);
         }
     }, [gridApi, prevGridApi, props.filterModel]);
 
-    // 1d. Handle gridApi initialization - column state application
+    // Handle gridApi initialization - column state application
     useEffect(() => {
         if (gridApi && gridApi !== prevGridApi && props.columnState) {
             setColumnState();
         }
     }, [gridApi, prevGridApi, props.columnState, setColumnState]);
 
-    // 1e. Handle gridApi initialization - action props with cleanup
+    // Handle gridApi initialization - action props with cleanup
     useEffect(() => {
         if (gridApi && gridApi !== prevGridApi) {
             const propsToSet = {};
@@ -1412,7 +1410,7 @@ export function DashAgGrid(props) {
         customSetProps,
     ]);
 
-    // 1f. Handle gridApi initialization - finalization
+    // Handle gridApi initialization - finalization
     useEffect(() => {
         if (gridApi && gridApi !== prevGridApi) {
             // Hydrate virtualRowData and finalize setup
@@ -1427,7 +1425,7 @@ export function DashAgGrid(props) {
         updateColumnState,
     ]);
 
-    // 2. Handle columnState push changes
+    // Handle columnState push changes
     useEffect(() => {
         if (
             gridApi &&
@@ -1442,7 +1440,7 @@ export function DashAgGrid(props) {
         }
     }, [props.columnState, props.loading_state, gridApi, columnState_push]);
 
-    // 3. Handle ID changes
+    // Handle ID changes
     useEffect(() => {
         if (props.id !== prevProps?.id) {
             if (props.id) {
@@ -1456,7 +1454,7 @@ export function DashAgGrid(props) {
         }
     }, [props.id]);
 
-    // 4. Handle infinite scrolling datasource
+    // Handle infinite scrolling datasource
     useEffect(() => {
         if (isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = props.getRowsResponse;
@@ -1465,7 +1463,7 @@ export function DashAgGrid(props) {
         }
     }, [props.getRowsResponse]);
 
-    // 5. Handle master detail response
+    // Handle master detail response
     useEffect(() => {
         if (
             props.masterDetail &&
@@ -1481,12 +1479,12 @@ export function DashAgGrid(props) {
         props.detailCellRendererParams,
     ]);
 
-    // 7. Handle dataUpdates reset
+    // Handle dataUpdates reset
     useEffect(() => {
         dataUpdates.current = false;
     });
 
-    // 8. Handle filter model updates
+    // Handle filter model updates
     useEffect(() => {
         if (
             gridApi &&
@@ -1498,7 +1496,7 @@ export function DashAgGrid(props) {
         }
     }, [props.filterModel, gridApi, prevGridApi]);
 
-    // 9. Handle pagination actions
+    // Handle pagination actions
     useEffect(() => {
         if (
             gridApi &&
@@ -1509,28 +1507,28 @@ export function DashAgGrid(props) {
         }
     }, [props.paginationGoTo, gridApi, prevGridApi, paginationGoTo]);
 
-    // 10. Handle scroll actions
+    // Handle scroll actions
     useEffect(() => {
         if (gridApi && gridApi === prevGridApi && props.scrollTo) {
             scrollTo();
         }
     }, [props.scrollTo, gridApi, prevGridApi, scrollTo]);
 
-    // 11. Handle column size updates
+    // Handle column size updates
     useEffect(() => {
         if (gridApi && gridApi === prevGridApi && props.columnSize) {
             updateColumnWidths();
         }
     }, [props.columnSize, gridApi, prevGridApi, updateColumnWidths]);
 
-    // 12. Handle column state reset
+    // Handle column state reset
     useEffect(() => {
         if (gridApi && gridApi === prevGridApi && props.resetColumnState) {
             resetColumnState();
         }
     }, [props.resetColumnState, gridApi, prevGridApi, resetColumnState]);
 
-    // 13. Handle CSV export
+    // Handle CSV export
     useEffect(() => {
         if (gridApi && gridApi === prevGridApi && props.exportDataAsCsv) {
             exportDataAsCsv(props.csvExportParams);
@@ -1543,7 +1541,7 @@ export function DashAgGrid(props) {
         exportDataAsCsv,
     ]);
 
-    // 14. Handle row selection actions
+    // Handle row selection actions
     useEffect(() => {
         if (gridApi && gridApi === prevGridApi) {
             if (props.selectAll) {
@@ -1567,14 +1565,14 @@ export function DashAgGrid(props) {
         deleteSelectedRows,
     ]);
 
-    // 15. Handle row transactions
+    // Handle row transactions
     useEffect(() => {
         if (gridApi && gridApi === prevGridApi && props.rowTransaction) {
             rowTransaction(props.rowTransaction);
         }
     }, [props.rowTransaction, gridApi, prevGridApi, rowTransaction]);
 
-    // 16. Handle column state updates
+    // Handle column state updates
     useEffect(() => {
         if (gridApi && gridApi === prevGridApi) {
             if (props.updateColumnState) {
@@ -1594,12 +1592,8 @@ export function DashAgGrid(props) {
         setColumnState,
     ]);
 
-    // End of hooks
-
     const {id, style, className, dashGridOptions, ...restProps} = props;
-
     const passingProps = pick(PASSTHRU_PROPS, restProps);
-
     const convertedProps = convertAllProps(
         omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
     );
@@ -1687,21 +1681,26 @@ var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
 dagfuncs.useGridFilter = useGridFilter;
 
 const MemoizedAgGrid = React.memo(DashAgGrid, (prevProps, nextProps) => {
-  // Check if props are equal (excluding render-specific props)
-  const relevantNextProps = { ...omit(OMIT_PROP_RENDER, nextProps) };
-  const relevantPrevProps = { ...omit(OMIT_PROP_RENDER, prevProps) };
+    // Check if props are equal (excluding render-specific props)
+    const relevantNextProps = {...omit(OMIT_PROP_RENDER, nextProps)};
+    const relevantPrevProps = {...omit(OMIT_PROP_RENDER, prevProps)};
 
-  const isInternalChange = nextProps?.dashRenderType === 'internal';
-  const propsHaveChanged = !equals(relevantNextProps, relevantPrevProps);
-  const rowDataChanged = !equals(nextProps.rowData, prevProps.rowData);
-  const selectedRowsChanged = !equals(nextProps.selectedRows, prevProps.selectedRows);
+    const isInternalChange = nextProps?.dashRenderType === 'internal';
+    const propsHaveChanged = !equals(relevantNextProps, relevantPrevProps);
+    const rowDataChanged = !equals(nextProps.rowData, prevProps.rowData);
+    const selectedRowsChanged = !equals(
+        nextProps.selectedRows,
+        prevProps.selectedRows
+    );
 
-  if (propsHaveChanged && (!isInternalChange || rowDataChanged || selectedRowsChanged)) {
-    return false; // Props changed, re-render
-  }
+    if (
+        propsHaveChanged &&
+        (!isInternalChange || rowDataChanged || selectedRowsChanged)
+    ) {
+        return false; // Props changed, re-render
+    }
 
-  return true;
-
+    return true;
 });
 
 export default MemoizedAgGrid;
