@@ -1285,8 +1285,10 @@ export function DashAgGrid(props) {
 
     useEffect(() => {
         // Apply selections
-        setSelection(props.selectedRows);
-    }, [props.selectedRows]);
+        if (gridApi) {
+          setSelection(props.selectedRows);
+        }
+    }, [props.selectedRows, gridApi]);
 
     // 1. Handle gridApi initialization - basic setup
     useEffect(() => {
@@ -1478,27 +1480,6 @@ export function DashAgGrid(props) {
         props.masterDetail,
         props.detailCellRendererParams,
     ]);
-
-    // 6. Handle selectedRows changes
-    useEffect(() => {
-        if (
-            !equals(props.selectedRows, prevProps?.selectedRows) &&
-            !(typeof props.loading_state !== 'undefined'
-                ? props.loading_state && selectionEventFired.current
-                : selectionEventFired.current)
-        ) {
-            if (!dataUpdates.current) {
-                setTimeout(() => {
-                    if (!dataUpdates.current) {
-                        setSelection(props.selectedRows);
-                    }
-                }, 10);
-            }
-        }
-
-        // Reset selection event flag
-        selectionEventFired.current = false;
-    }, [props.selectedRows, props.loading_state]);
 
     // 7. Handle dataUpdates reset
     useEffect(() => {
