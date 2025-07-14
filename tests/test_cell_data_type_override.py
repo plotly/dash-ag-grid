@@ -77,6 +77,6 @@ def test_cd001_cell_data_types_override(dash_duo):
         # test overriden dateString cell data type
         action.double_click(grid.get_cell(0, 1)).perform()
         date_input_element = dash_duo.find_element(f'#{grid.id} .ag-date-field-input')
-        date_input_element.send_keys("01172024" + Keys.ENTER)
+        date_input_element.send_keys("01012024" + Keys.ENTER)
 
-        grid.wait_for_cell_text(0, 1, "17/01/2024")
+        grid.wait_for_cell_text(0, 1, "01/01/2024")

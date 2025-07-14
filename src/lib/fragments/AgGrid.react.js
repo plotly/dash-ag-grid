@@ -1416,6 +1416,7 @@ export function DashAgGrid(props) {
             // Hydrate virtualRowData and finalize setup
             onFilterChanged(true);
             updateColumnState();
+            setColumnState_push(false);
         }
     }, [
         gridApi,
@@ -1431,14 +1432,16 @@ export function DashAgGrid(props) {
             gridApi &&
             (!props.loading_state || prevProps?.loading_state?.is_loading)
         ) {
-            if (
-                props.columnState !== prevProps?.columnState &&
-                !columnState_push
-            ) {
+            const existingColumnState = gridApi.getColumnState();
+            const realStateChange =
+                props.columnState &&
+                !equals(props.columnState, existingColumnState);
+
+            if (realStateChange && !columnState_push) {
                 setColumnState_push(true);
             }
         }
-    }, [props.columnState, props.loading_state, gridApi, columnState_push]);
+    }, [props.columnState, props.loading_state, columnState_push]);
 
     // Handle ID changes
     useEffect(() => {
@@ -1578,9 +1581,7 @@ export function DashAgGrid(props) {
             if (props.updateColumnState) {
                 updateColumnState();
             } else if (columnState_push) {
-                setTimeout(() => {
-                    setColumnState();
-                }, 1);
+                setColumnState();
             }
         }
     }, [
