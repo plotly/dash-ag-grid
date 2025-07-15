@@ -803,11 +803,7 @@ export function DashAgGrid(props) {
                 }
             }
         }, 1);
-    }, [
-        gridApi,
-        props.selectedRows,
-        customSetProps,
-    ]);
+    }, [gridApi, props.selectedRows, customSetProps]);
 
     const isDatasourceLoadedForInfiniteScrolling = useCallback(() => {
         return (
@@ -1504,14 +1500,14 @@ export function DashAgGrid(props) {
 
     // Handle row transactions
     useEffect(() => {
-        if (gridApi  && props.rowTransaction) {
+        if (gridApi && props.rowTransaction) {
             rowTransaction(props.rowTransaction);
         }
     }, [props.rowTransaction, gridApi, prevGridApi, rowTransaction]);
 
     // Handle column state updates
     useEffect(() => {
-        if (gridApi ) {
+        if (gridApi) {
             if (props.updateColumnState) {
                 updateColumnState();
             } else if (columnState_push) {
