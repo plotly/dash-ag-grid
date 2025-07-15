@@ -448,6 +448,7 @@ def test_sb004_sizing_buttons(dash_duo):
             assert oldValue == dash_duo.find_element("#columnState").get_attribute(
                 "innerText"
             )
+            time.sleep(.2) # allow window size to change
             dash_duo.find_element(f"#{x}").click()
             until(
                 lambda: oldValue
@@ -457,4 +458,4 @@ def test_sb004_sizing_buttons(dash_duo):
 
         oldValue = dash_duo.find_element("#columnState").text
         dash_duo.driver.set_window_size(1000, 1000)
-        time.sleep(.2)
+        time.sleep(.2) # allow oldValue to change to the bigger size
