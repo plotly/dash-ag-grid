@@ -16,7 +16,8 @@ from dash.testing.wait import until
 def test_cd001_cell_data_types_override(dash_duo):
     os.environ['LANGUAGE'] = 'en-US'
     chrome_options = Options()
-    driver = webdriver.Chrome(options=chrome_options) # run this test with a Chrome driver to control the locale
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(options=chrome_options) # run this test with a Chrome driver to control the locale via the environment variable set above
 
     app = Dash(__name__)
 
