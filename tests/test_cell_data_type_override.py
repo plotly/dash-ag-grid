@@ -1,10 +1,23 @@
 from selenium.webdriver import Keys
+from selenium import webdriver
+import os
 
 import dash_ag_grid as dag
 from dash import Dash, html
 from . import utils
 
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+from dash.testing.wait import until
+
 def test_cd001_cell_data_types_override(dash_duo):
+    os.environ['LANGUAGE'] = 'en-US'
+    chrome_options = Options()
+    driver = webdriver.Chrome(options=chrome_options) # run this test with a Chrome driver to control the locale
+
     app = Dash(__name__)
 
     rowData = [
@@ -60,23 +73,33 @@ def test_cd001_cell_data_types_override(dash_duo):
     )
 
     dash_duo.start_server(app)
+    try:
+        driver.get(dash_duo.server_url)
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "grid-cell-data-types-override-full-JS"))
+        )
 
-    action = utils.ActionChains(dash_duo.driver)
+        action = utils.ActionChains(driver)
 
-    # same tests for both grids
-    for id in ["grid-cell-data-types-override-full-JS", "grid-cell-data-types-override"]:
-        grid = utils.Grid(dash_duo, id)
+        get_driver_cell = lambda id, row, col: driver.find_element(By.CSS_SELECTOR, f'#{id} .ag-center-cols-container .ag-row:nth-child({row + 1}) .ag-cell:nth-child({col + 1})')
 
-        # test overriden number cell data type
-        action.double_click(grid.get_cell(0, 0)).perform()
-        date_input_element = dash_duo.find_element(f'#{grid.id} .ag-number-field-input')
-        date_input_element.send_keys("0.1" + Keys.ENTER)
+        # same tests for both grids
+        for id in ["grid-cell-data-types-override-full-JS", "grid-cell-data-types-override"]:
 
-        grid.wait_for_cell_text(0, 0, "10.0%")
+            until(lambda: get_driver_cell(id, 0, 0).text == "7.5%", timeout=3)
 
-        # test overriden dateString cell data type
-        action.double_click(grid.get_cell(0, 1)).perform()
-        date_input_element = dash_duo.find_element(f'#{grid.id} .ag-date-field-input')
-        date_input_element.send_keys("01172024" + Keys.ENTER)
+            # test overriden number cell data type
+            action.double_click(get_driver_cell(id,0, 0)).perform()
+            date_input_element = driver.find_element(By.CSS_SELECTOR,f'#{id} .ag-number-field-input')
+            date_input_element.send_keys("0.1" + Keys.ENTER)
 
-        grid.wait_for_cell_text(0, 1, "17/01/2024")
+            until(lambda: get_driver_cell(id,0, 0).text == "10.0%", timeout=3)
+
+            # test overriden dateString cell data type
+            action.double_click(get_driver_cell(id,0, 1)).perform()
+            date_input_element = driver.find_element(By.CSS_SELECTOR, f'#{id} .ag-date-field-input')
+            date_input_element.send_keys("01172024" + Keys.ENTER)
+
+            until(lambda: get_driver_cell(id,0, 1).text == "17/01/2024", timeout=3)
+    finally:
+        driver.quit()
