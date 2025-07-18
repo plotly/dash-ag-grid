@@ -47,12 +47,6 @@ import {customFunctions} from '../renderers/customFunctions';
 
 import {AgGridReact, useGridFilter} from 'ag-grid-react';
 
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import 'ag-grid-community/styles/ag-theme-balham.css';
-import 'ag-grid-community/styles/ag-theme-material.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
-
 // d3 imports
 import * as d3Format from 'd3-format';
 import * as d3Time from 'd3-time';

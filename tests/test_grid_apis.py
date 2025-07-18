@@ -100,7 +100,7 @@ def test_ga001_grid_apis(dash_duo):
     app.clientside_callback(
         """function (n) {
             if (n) {
-                dash_ag_grid.getApi('grid').setColumnVisible("price", false)
+                dash_ag_grid.getApi('grid').setColumnsVisible(["price"], false)
             }
             return dash_clientside.no_update
         }""",

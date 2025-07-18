@@ -31,6 +31,11 @@ def test_cv001_cell_value_changed(dash_duo):
                 columnDefs=[{"field": "Key", "checkboxSelection": True}]
                            + [{"field": i} for i in ["Column", "OldValue", "NewValue"]],
                 rowData=[],
+                dashGridOptions={
+                    "rowSelection": {
+                        "mode": 'singleRow'
+                    },
+                }
             ),
         ],
         style={"margin": 20},
@@ -50,7 +55,7 @@ def test_cv001_cell_value_changed(dash_duo):
                     data = changes[i];
                     reloadData = {...data.data};
                     reloadData[data.colId] = data.oldValue;
-                    newData.push({Key: data.rowId, Column: data.colId, OldValue: data.oldValue, 
+                    newData.push({Key: data.rowId, Column: data.colId, OldValue: data.oldValue,
                     NewValue: data.value, reloadData});
                 }
                 return {'add': newData}
