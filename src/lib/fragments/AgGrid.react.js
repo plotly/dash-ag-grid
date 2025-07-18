@@ -779,8 +779,6 @@ export function DashAgGrid(props) {
         props.filterModel,
         gridApi,
         openGroups,
-        dataUpdates.current,
-        pauseSelections.current,
         setSelection,
         virtualRowData,
         customSetProps,
@@ -805,13 +803,7 @@ export function DashAgGrid(props) {
                 }
             }
         }, 1);
-    }, [
-        pauseSelections.current,
-        gridApi,
-        props.selectedRows,
-        selectionEventFired.current,
-        customSetProps,
-    ]);
+    }, [gridApi, props.selectedRows, customSetProps]);
 
     const isDatasourceLoadedForInfiniteScrolling = useCallback(() => {
         return (
@@ -1284,7 +1276,10 @@ export function DashAgGrid(props) {
     useEffect(() => {
         // Apply selections
         if (gridApi) {
-            setSelection(props.selectedRows);
+            const selectedRows = gridApi.getSelectedRows();
+            if (!equals(selectedRows, props.selectedRows)) {
+                setSelection(props.selectedRows);
+            }
         }
     }, [props.selectedRows, gridApi]);
 
@@ -1344,71 +1339,6 @@ export function DashAgGrid(props) {
             setColumnState();
         }
     }, [gridApi, prevGridApi, props.columnState, setColumnState]);
-
-    // Handle gridApi initialization - action props with cleanup
-    useEffect(() => {
-        if (gridApi && gridApi !== prevGridApi) {
-            const propsToSet = {};
-
-            if (props.paginationGoTo || props.paginationGoTo === 0) {
-                paginationGoTo(false);
-                propsToSet.paginationGoTo = null;
-            }
-
-            if (props.scrollTo) {
-                scrollTo(false);
-                propsToSet.scrollTo = null;
-            }
-
-            if (props.resetColumnState) {
-                resetColumnState(false);
-                propsToSet.resetColumnState = false;
-            }
-
-            if (props.exportDataAsCsv) {
-                exportDataAsCsv(props.csvExportParams, false);
-                propsToSet.exportDataAsCsv = false;
-            }
-
-            if (props.selectAll) {
-                selectAll(props.selectAll, false);
-                propsToSet.selectAll = false;
-            }
-
-            if (props.deselectAll) {
-                deselectAll(false);
-                propsToSet.deselectAll = false;
-            }
-
-            if (props.deleteSelectedRows) {
-                deleteSelectedRows(false);
-                propsToSet.deleteSelectedRows = false;
-            }
-
-            if (!isEmpty(propsToSet)) {
-                customSetProps(propsToSet);
-            }
-        }
-    }, [
-        gridApi,
-        prevGridApi,
-        props.paginationGoTo,
-        props.scrollTo,
-        props.resetColumnState,
-        props.exportDataAsCsv,
-        props.csvExportParams,
-        props.selectAll,
-        props.deselectAll,
-        props.deleteSelectedRows,
-        paginationGoTo,
-        scrollTo,
-        resetColumnState,
-        exportDataAsCsv,
-        selectAll,
-        deselectAll,
-        deleteSelectedRows,
-        customSetProps,
-    ]);
 
     // Handle gridApi initialization - finalization
     useEffect(() => {
@@ -1512,28 +1442,28 @@ export function DashAgGrid(props) {
 
     // Handle scroll actions
     useEffect(() => {
-        if (gridApi && gridApi === prevGridApi && props.scrollTo) {
+        if (gridApi && props.scrollTo) {
             scrollTo();
         }
     }, [props.scrollTo, gridApi, prevGridApi, scrollTo]);
 
     // Handle column size updates
     useEffect(() => {
-        if (gridApi && gridApi === prevGridApi && props.columnSize) {
+        if (gridApi && props.columnSize) {
             updateColumnWidths();
         }
     }, [props.columnSize, gridApi, prevGridApi, updateColumnWidths]);
 
     // Handle column state reset
     useEffect(() => {
-        if (gridApi && gridApi === prevGridApi && props.resetColumnState) {
+        if (gridApi && props.resetColumnState) {
             resetColumnState();
         }
     }, [props.resetColumnState, gridApi, prevGridApi, resetColumnState]);
 
     // Handle CSV export
     useEffect(() => {
-        if (gridApi && gridApi === prevGridApi && props.exportDataAsCsv) {
+        if (gridApi && props.exportDataAsCsv) {
             exportDataAsCsv(props.csvExportParams);
         }
     }, [
@@ -1546,7 +1476,7 @@ export function DashAgGrid(props) {
 
     // Handle row selection actions
     useEffect(() => {
-        if (gridApi && gridApi === prevGridApi) {
+        if (gridApi) {
             if (props.selectAll) {
                 selectAll(props.selectAll);
             }
@@ -1570,14 +1500,14 @@ export function DashAgGrid(props) {
 
     // Handle row transactions
     useEffect(() => {
-        if (gridApi && gridApi === prevGridApi && props.rowTransaction) {
+        if (gridApi && props.rowTransaction) {
             rowTransaction(props.rowTransaction);
         }
     }, [props.rowTransaction, gridApi, prevGridApi, rowTransaction]);
 
     // Handle column state updates
     useEffect(() => {
-        if (gridApi && gridApi === prevGridApi) {
+        if (gridApi) {
             if (props.updateColumnState) {
                 updateColumnState();
             } else if (columnState_push) {
