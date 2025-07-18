@@ -1,17 +1,10 @@
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
 import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
-import {
-    AllCommunityModule,
-    ModuleRegistry,
-    provideGlobalGridOptions,
-} from 'ag-grid-community';
+import {AllCommunityModule, ModuleRegistry} from 'ag-grid-community';
 
 // Register all community features
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-// Mark all grids as using legacy themes
-provideGlobalGridOptions({theme: 'legacy'});
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
