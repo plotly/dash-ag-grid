@@ -5,6 +5,7 @@ from . import utils
 import json
 from selenium.webdriver.common.by import By
 from dash.testing.wait import until
+import time
 
 
 df = px.data.medals_wide()
@@ -52,7 +53,7 @@ def test_el001_event_listener(dash_duo):
 
     # Test left click.
     grid.get_cell(1, 2).click()
-    until(lambda: json.loads(dash_duo.find_element('#log').text).get('value') == 15, timeout=3)
+    until(lambda: json.loads(dash_duo.find_element('#log').text or "{}").get('value') == 15, timeout=3)
 
     # Test right click
     action = utils.ActionChains(dash_duo.driver)

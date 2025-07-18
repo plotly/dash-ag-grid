@@ -247,6 +247,9 @@ def test_cs001_column_state(dash_duo):
     )
 
     dash_duo.find_element("#load-column-defs").click()
+
+    time.sleep(0.5)  # pausing to emulate separation because user inputs
+
     until(
         lambda: json.dumps(alt_colState)
         in dash_duo.find_element("#reset-column-state-grid-pre").text,
