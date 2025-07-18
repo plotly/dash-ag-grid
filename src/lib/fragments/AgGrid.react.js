@@ -1433,7 +1433,6 @@ export function DashAgGrid(props) {
     useEffect(() => {
         if (
             gridApi &&
-            gridApi === prevGridApi &&
             (props.paginationGoTo || props.paginationGoTo === 0)
         ) {
             paginationGoTo();
