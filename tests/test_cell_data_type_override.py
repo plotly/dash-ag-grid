@@ -4,7 +4,7 @@ import dash_ag_grid as dag
 from dash import Dash, html
 from . import utils
 
-def test_cd001_cell_data_types_override(dash_duo):
+def test_cd001_cell_data_types_override(enforced_locale, dash_duo):
     app = Dash(__name__)
 
     rowData = [
