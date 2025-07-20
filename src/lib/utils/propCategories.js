@@ -118,6 +118,7 @@ export const GRID_MAYBE_FUNCTIONS = {
     // Selection
     isRowSelectable: 1,
     fillOperation: 1,
+    checkboxes: 1,
 
     // Sorting
     postSortRows: 1,
@@ -170,6 +171,7 @@ export const GRID_NESTED_FUNCTIONS = {
     detailGridOptions: 1,
     csvExportParams: 1,
     defaultCsvExportParams: 1,
+    rowSelection: 1,
 };
 
 /**
@@ -200,7 +202,6 @@ export const COLUMN_MAYBE_FUNCTIONS = {
     // Columns
     keyCreator: 1,
     equals: 1,
-    checkboxSelection: 1,
     icons: 1,
     suppressNavigable: 1,
     suppressKeyboardEvent: 1,
@@ -222,7 +223,6 @@ export const COLUMN_MAYBE_FUNCTIONS = {
 
     // Columns: Headers
     suppressHeaderKeyboardEvent: 1,
-    headerCheckboxSelection: 1,
 
     // Columns: Rendering and Styling
     cellStyle: 1,
