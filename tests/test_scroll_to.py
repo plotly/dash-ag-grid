@@ -122,6 +122,7 @@ def test_st001_scroll_to(dash_duo, df, scroll_to_inputs):
     def update_scrollTo(n_clicks):
         return scroll_to_inputs[n_clicks - 1]
 
+    dash_duo.driver.set_window_size(800, 600)  # Make window small enough to scroll things
     dash_duo.start_server(app)
     grid = utils.Grid(dash_duo, "grid")
 
@@ -230,6 +231,7 @@ def test_st002_initial_scroll_to(dash_duo, df):
         state[0]['width'] = s[0]['width'] - n + 1
         return state
 
+    dash_duo.driver.set_window_size(800, 600)  # Make window small enough to scroll things
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
