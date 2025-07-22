@@ -103,11 +103,11 @@ function DashAgGrid(props) {
 
     const shouldLoadLegacyCSS = useMemo(() => {
         // Only load legacy CSS if theme is 'legacy' or unset
+        const dashGridOptions = props.dashGridOptions || {};
         return (
-            !('theme' in props.dashGridOptions) ||
-            props.dashGridOptions.theme === 'legacy'
+            !('theme' in dashGridOptions) || dashGridOptions.theme === 'legacy'
         );
-    }, [props.dashGridOptions.theme]);
+    }, [props.dashGridOptions]);
 
     const LegacyThemeLoader = useMemo(() => {
         if (
