@@ -57,7 +57,7 @@ function DashAgGrid(props) {
 DashAgGrid.dashRenderType = true;
 
 DashAgGrid.defaultProps = {
-    className: 'ag-theme-alpine',
+    className: '',
     resetColumnState: false,
     exportDataAsCsv: false,
     selectAll: false,
