@@ -465,6 +465,10 @@ export default class DashAgGrid extends Component {
             }
             if (GRID_NESTED_FUNCTIONS[target]) {
                 let adjustedVal = value;
+                if (target === 'rowSelection' && typeof value === 'string') {
+                // to still support rowSelection='single' | 'multiple' deprecated in v32.3.4
+                    return value
+                }
                 if ('suppressCallback' in value) {
                     adjustedVal = {
                         ...adjustedVal,
@@ -1001,13 +1005,13 @@ export default class DashAgGrid extends Component {
     }
 
     onCellValueChanged({
-        oldValue,
-        value,
-        column: {colId},
-        rowIndex,
-        data,
-        node,
-    }) {
+                           oldValue,
+                           value,
+                           column: {colId},
+                           rowIndex,
+                           data,
+                           node,
+                       }) {
         const timestamp = Date.now();
         // Collect new change.
         const newChange = {

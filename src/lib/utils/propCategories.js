@@ -202,6 +202,7 @@ export const COLUMN_MAYBE_FUNCTIONS = {
     // Columns
     keyCreator: 1,
     equals: 1,
+    checkboxSelection: 1,
     icons: 1,
     suppressNavigable: 1,
     suppressKeyboardEvent: 1,
@@ -223,6 +224,7 @@ export const COLUMN_MAYBE_FUNCTIONS = {
 
     // Columns: Headers
     suppressHeaderKeyboardEvent: 1,
+    headerCheckboxSelection: 1,
 
     // Columns: Rendering and Styling
     cellStyle: 1,
