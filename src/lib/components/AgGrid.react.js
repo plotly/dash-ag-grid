@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
-import React, {Component, lazy, Suspense} from 'react';
+import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
@@ -12,21 +12,13 @@ function getGrid(enable) {
 /**
  * Dash interface to AG Grid, a powerful tabular data component.
  */
-class DashAgGrid extends Component {
-    constructor(props) {
-        super(props);
+function DashAgGrid(props) {
+    const [state, setState] = useState({
+        mounted: false,
+        rowTransaction: null,
+    });
 
-        this.state = {
-            mounted: false,
-            rowTransaction: null,
-        };
-
-        this.buildArray = this.buildArray.bind(this);
-    }
-
-    static dashRenderType = true;
-
-    buildArray(arr1, arr2) {
+    const buildArray = useCallback((arr1, arr2) => {
         if (arr1) {
             if (!arr1.includes(arr2)) {
                 return [...arr1, arr2];
@@ -34,32 +26,31 @@ class DashAgGrid extends Component {
             return arr1;
         }
         return [JSON.parse(JSON.stringify(arr2))];
-    }
+    }, []);
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (this.props.rowTransaction && !this.state.mounted) {
-            if (nextProps.rowTransaction !== this.props.rowTransaction) {
-                this.setState({
-                    rowTransaction: this.buildArray(
-                        this.state.rowTransaction,
-                        this.props.rowTransaction
-                    ),
-                });
-            }
+    useEffect(() => {
+        if (props.rowTransaction && !state.mounted) {
+            setState((prevState) => ({
+                ...prevState,
+                rowTransaction: buildArray(
+                    prevState.rowTransaction,
+                    props.rowTransaction
+                ),
+            }));
         }
-    }
+    }, [props.rowTransaction, state.mounted, buildArray]);
 
-    render() {
-        const {enableEnterpriseModules} = this.props;
+    const {enableEnterpriseModules} = props;
+    const RealComponent = getGrid(enableEnterpriseModules);
 
-        const RealComponent = getGrid(enableEnterpriseModules);
-        return (
-            <Suspense fallback={null}>
-                <RealComponent parentState={this.state} {...this.props} />
-            </Suspense>
-        );
-    }
+    return (
+        <Suspense fallback={null}>
+            <RealComponent parentState={state} {...props} />
+        </Suspense>
+    );
 }
+
+DashAgGrid.dashRenderType = true;
 
 DashAgGrid.defaultProps = {
     className: 'ag-theme-alpine',

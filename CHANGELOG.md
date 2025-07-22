@@ -4,6 +4,11 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
+## UNRELEASED
+
+### Changed
+- Component is refactored to be a function component rather than a class
+
 ## [32.3.0rc0] - 2025-04-15
 
 ### Fixed

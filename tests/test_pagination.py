@@ -4,6 +4,7 @@ import plotly.express as px
 import pandas as pd
 import json
 from dash.testing.wait import until
+import time
 
 from . import utils
 
@@ -74,6 +75,7 @@ def test_pa001_pagination(dash_duo):
 
     grid = utils.Grid(dash_duo, "grid")
 
+    time.sleep(1)  # wait for the grid to load
     until(lambda: "Australia" == grid.get_cell(500, 0).text, timeout=3)
     oldValue = '{"isLastPageFound": true, "pageSize": 100, "currentPage": 5, "totalPages": 87, "rowCount": 8618}'
     until(lambda: oldValue == dash_duo.find_element("#grid-info").text, timeout=3)
