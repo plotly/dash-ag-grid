@@ -41,7 +41,6 @@ def test_us001_user_style(dash_duo):
                 defaultColDef=defaultColDef,
                 rowData=rowData,
                 style={"height": "500px", "width": "500px"},
-                className="ag-theme-alpine",
             ),
         ]
     )

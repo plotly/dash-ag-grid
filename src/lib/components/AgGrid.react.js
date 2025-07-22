@@ -1,13 +1,6 @@
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
-import React, {
-    lazy,
-    Suspense,
-    useState,
-    useCallback,
-    useEffect,
-    useMemo,
-} from 'react';
+import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
 import {AllCommunityModule, ModuleRegistry} from 'ag-grid-community';
 
 // Register all community features
@@ -19,46 +12,6 @@ const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
 function getGrid(enable) {
     return enable ? RealAgGridEnterprise : RealAgGrid;
 }
-
-// Base CSS loader - loads ag-grid.css
-const LegacyThemeBaseCSS = lazy(() =>
-    import(
-        /* webpackChunkName: "ag-grid-css" */ 'ag-grid-community/styles/ag-grid.css'
-    ).then(() => ({default: () => null}))
-);
-
-// Theme-specific CSS loaders
-const LegacyThemeAlpineCSS = lazy(() =>
-    import(
-        /* webpackChunkName: "ag-theme-alpine-css" */ 'ag-grid-community/styles/ag-theme-alpine.css'
-    ).then(() => ({default: () => null}))
-);
-
-const LegacyThemeBalhamCSS = lazy(() =>
-    import(
-        /* webpackChunkName: "ag-theme-balham-css" */ 'ag-grid-community/styles/ag-theme-balham.css'
-    ).then(() => ({default: () => null}))
-);
-
-const LegacyThemeMaterialCSS = lazy(() =>
-    import(
-        /* webpackChunkName: "ag-theme-material-css" */ 'ag-grid-community/styles/ag-theme-material.css'
-    ).then(() => ({default: () => null}))
-);
-
-const LegacyThemeQuartzCSS = lazy(() =>
-    import(
-        /* webpackChunkName: "ag-theme-quartz-css" */ 'ag-grid-community/styles/ag-theme-quartz.css'
-    ).then(() => ({default: () => null}))
-);
-
-// Map themes to their CSS loaders
-const legacyThemeLoaderMap = {
-    alpine: LegacyThemeAlpineCSS,
-    balham: LegacyThemeBalhamCSS,
-    material: LegacyThemeMaterialCSS,
-    quartz: LegacyThemeQuartzCSS,
-};
 
 /**
  * Dash interface to AG Grid, a powerful tabular data component.
@@ -94,52 +47,6 @@ function DashAgGrid(props) {
     const {enableEnterpriseModules} = props;
     const RealComponent = getGrid(enableEnterpriseModules);
 
-    const themeName = useMemo(() => {
-        const themeMatch = props.className.match(
-            /\bag-theme-([a-zA-Z0-9-]+)\b/
-        );
-        return themeMatch ? themeMatch[1] : null;
-    }, [props.className]);
-
-    const shouldLoadLegacyCSS = useMemo(() => {
-        // Only load legacy CSS if theme is 'legacy' or unset
-        return (
-            !('theme' in props.dashGridOptions) ||
-            props.dashGridOptions.theme === 'legacy'
-        );
-    }, [props.dashGridOptions.theme]);
-
-    const LegacyThemeLoader = useMemo(() => {
-        if (
-            themeName &&
-            shouldLoadLegacyCSS &&
-            legacyThemeLoaderMap[themeName]
-        ) {
-            return legacyThemeLoaderMap[themeName];
-        }
-        return null;
-    }, [themeName, shouldLoadLegacyCSS]);
-
-    if (themeName && shouldLoadLegacyCSS && LegacyThemeLoader) {
-        const dashGridOptions = {
-            ...props.dashGridOptions,
-            theme: 'legacy',
-        };
-        return (
-            <Suspense fallback={null}>
-                <LegacyThemeBaseCSS />
-                <LegacyThemeLoader />
-                <Suspense fallback={null}>
-                    <RealComponent
-                        parentState={state}
-                        {...props}
-                        dashGridOptions={dashGridOptions}
-                    />
-                </Suspense>
-            </Suspense>
-        );
-    }
-
     return (
         <Suspense fallback={null}>
             <RealComponent parentState={state} {...props} />
@@ -150,7 +57,7 @@ function DashAgGrid(props) {
 DashAgGrid.dashRenderType = true;
 
 DashAgGrid.defaultProps = {
-    className: '',
+    className: 'ag-theme-alpine',
     resetColumnState: false,
     exportDataAsCsv: false,
     selectAll: false,

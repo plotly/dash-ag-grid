@@ -7,7 +7,7 @@ Change the `className` theme to one of the options in that folder to see the
 legacy theme in action.
 """
 
-app = Dash(__name__,)
+app = Dash(__name__, assets_folder="assets_legacy_themes/")
 
 rowData = [
     {"weight": 0.074657, "date": "01/01/2024"},
@@ -17,8 +17,8 @@ rowData = [
 ]
 
 columnDefs = [
-    {"field": "weight"},
-    {"field": "date"},
+    {"field": "weight", "cellDataType": "percentage"},
+    {"field": "date", "cellDataType": "dateString"},
 ]
 
 app.layout = html.Div(
@@ -28,7 +28,8 @@ app.layout = html.Div(
             columnDefs=columnDefs,
             rowData=rowData,
             defaultColDef={"filter": True, "editable": True},
-            className="ag-theme-balham",
+            dashGridOptions={"theme": "legacy"},
+            className="ag-theme-material",
         ),
     ],
 )
