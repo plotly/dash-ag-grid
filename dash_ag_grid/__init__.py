@@ -67,6 +67,66 @@ _js_dist = [
         'external_url': f'{_unpkg}async-enterprise.js.map',
         'dynamic': True
     },
+    {
+        'relative_package_path': 'async-ag-grid-css.js',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-grid-css.js',
+        'async': True
+    },
+    {
+        'relative_package_path': 'async-ag-grid-css.js.map',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-grid-css.js.map',
+        'dynamic': True
+    },
+    {
+        'relative_package_path': 'async-ag-theme-alpine-css.js',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-theme-alpine-css.js',
+        'async': True
+    },
+    {
+        'relative_package_path': 'async-ag-theme-alpine-css.js.map',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-theme-alpine-css.js.map',
+        'dynamic': True
+    },
+    {
+        'relative_package_path': 'async-ag-theme-balham-css.js',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-theme-balham-css.js',
+        'async': True
+    },
+    {
+        'relative_package_path': 'async-ag-theme-balham-css.js.map',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-theme-balham-css.js.map',
+        'dynamic': True
+    },
+    {
+        'relative_package_path': 'async-ag-theme-material-css.js',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-theme-material-css.js',
+        'async': True
+    },
+    {
+        'relative_package_path': 'async-ag-theme-material-css.js.map',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-theme-material-css.js.map',
+        'dynamic': True
+    },
+    {
+        'relative_package_path': 'async-ag-theme-quartz-css.js',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-theme-quartz-css.js',
+        'async': True
+    },
+    {
+        'relative_package_path': 'async-ag-theme-quartz-css.js.map',
+        'namespace': package_name,
+        'external_url': f'{_unpkg}async-ag-theme-quartz-css.js.map',
+        'dynamic': True
+    },
 ]
 
 _css_dist = []

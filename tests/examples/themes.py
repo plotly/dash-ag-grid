@@ -46,7 +46,7 @@ app.layout = html.Div(
             {"label": "Alpine", "value": "themeAlpine"},
             {"label": "Custom Balham with red accent", "value": '{ "function": "themeBalham.withParams({ accentColor: \'red\' })"}'},
             {"label": "Invalid theme name", "value": "invalidTheme"},
-        ], value="themeQuartz", id="themeSelector"),
+        ], value="", id="themeSelector"),
         dag.AgGrid(
             id="grid",
             columnDefs=columnDefs,
@@ -61,6 +61,7 @@ app.layout = html.Div(
     Output("grid", "dashGridOptions"),
     Input("themeSelector", "value"),
     State("grid", "dashGridOptions"),
+    prevent_initial_call=True,
 )
 def addGrid(selected_theme, dash_grid_options):
     try:
