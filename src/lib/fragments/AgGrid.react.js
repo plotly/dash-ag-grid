@@ -598,9 +598,12 @@ export function DashAgGrid(props) {
                 }
                 if (GRID_NESTED_FUNCTIONS[target]) {
                     let adjustedVal = value;
-                    if (target === 'rowSelection' && typeof value === 'string') {
+                    if (
+                        target === 'rowSelection' &&
+                        typeof value === 'string'
+                    ) {
                         // to still support rowSelection='single' | 'multiple' deprecated in v32.3.4
-                        return value
+                        return value;
                     }
                     if ('suppressCallback' in value) {
                         adjustedVal = {
