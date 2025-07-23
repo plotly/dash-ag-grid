@@ -118,6 +118,7 @@ export const GRID_MAYBE_FUNCTIONS = {
     // Selection
     isRowSelectable: 1,
     fillOperation: 1,
+    checkboxes: 1,
 
     // Sorting
     postSortRows: 1,
@@ -170,6 +171,7 @@ export const GRID_NESTED_FUNCTIONS = {
     detailGridOptions: 1,
     csvExportParams: 1,
     defaultCsvExportParams: 1,
+    rowSelection: 1,
 };
 
 /**
