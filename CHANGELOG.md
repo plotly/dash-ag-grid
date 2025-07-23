@@ -4,10 +4,13 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
-## UNRELEASED
+## [32.3.0] - 2025-07-23
 
 ### Changed
 - Component is refactored to be a function component rather than a class
+
+### Fixed
+- [#387](https://github.com/plotly/dash-ag-grid/pull/387) fixed `isRowSelectable` prop ([issue #379](https://github.com/plotly/dash-ag-grid/issues/379))
 
 ## [32.3.0rc0] - 2025-04-15
 
