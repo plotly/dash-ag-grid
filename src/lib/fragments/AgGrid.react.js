@@ -46,12 +46,13 @@ import RowMenuRenderer from '../renderers/rowMenuRenderer';
 import {customFunctions} from '../renderers/customFunctions';
 
 import {AgGridReact, useGridFilter} from 'ag-grid-react';
-
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import 'ag-grid-community/styles/ag-theme-balham.css';
-import 'ag-grid-community/styles/ag-theme-material.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import {
+    themeAlpine,
+    themeBalham,
+    themeMaterial,
+    themeQuartz,
+} from 'ag-grid-community';
+const themes = {themeAlpine, themeBalham, themeMaterial, themeQuartz};
 
 // d3 imports
 import * as d3Format from 'd3-format';
@@ -159,6 +160,7 @@ export function DashAgGrid(props) {
                 const parsedCondition =
                     esprima.parse(funcString).body[0].expression;
                 const context = {
+                    ...themes,
                     d3,
                     dash_clientside,
                     ...customFunctions,
@@ -176,6 +178,7 @@ export function DashAgGrid(props) {
                 const parsedCondition =
                     esprima.parse(funcString).body[0].expression;
                 const context = {
+                    ...themes,
                     d3,
                     dash_clientside,
                     ...customFunctions,
@@ -195,6 +198,7 @@ export function DashAgGrid(props) {
                 const parsedCondition =
                     esprima.parse(funcString).body[0].expression;
                 const context = {
+                    ...themes,
                     d3,
                     ...customFunctions,
                     ...window.dashAgGridFunctions,
@@ -1531,6 +1535,14 @@ export function DashAgGrid(props) {
     const convertedProps = convertAllProps(
         omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
     );
+
+    if ('theme' in convertedProps) {
+        if (typeof convertedProps.theme === 'function') {
+            convertedProps.theme = convertedProps.theme();
+        } else if (convertedProps.theme in themes) {
+            convertedProps.theme = themes[convertedProps.theme];
+        }
+    }
 
     let alignedGrids;
     if (dashGridOptions) {

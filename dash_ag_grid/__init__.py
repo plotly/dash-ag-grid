@@ -9,6 +9,7 @@ import dash as _dash
 # noinspection PyUnresolvedReferences
 from ._imports_ import *
 from ._imports_ import __all__
+from dash_ag_grid import themes
 
 if not hasattr(_dash, '__plotly_dash') and not hasattr(_dash, 'development'):
     print('Dash was not successfully imported. '
@@ -16,14 +17,10 @@ if not hasattr(_dash, '__plotly_dash') and not hasattr(_dash, 'development'):
           'named \n"dash.py" in your current directory.', file=_sys.stderr)
     _sys.exit(1)
 
-_basepath = _os.path.dirname(__file__)
-_filepath = _os.path.abspath(_os.path.join(_basepath, 'package-info.json'))
-with open(_filepath) as f:
-    package = json.load(f)
+from ._version import __version__, grid_version, get_package_info
 
+package = get_package_info()
 package_name = package['name'].replace(' ', '_').replace('-', '_')
-__version__ = package['version']
-grid_version = package['dependencies']['ag-grid-community']
 
 _current_path = _os.path.dirname(_os.path.abspath(__file__))
 

@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
 import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
+import {AllCommunityModule, ModuleRegistry} from 'ag-grid-community';
+
+// Register all community features
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
@@ -53,7 +57,7 @@ function DashAgGrid(props) {
 DashAgGrid.dashRenderType = true;
 
 DashAgGrid.defaultProps = {
-    className: 'ag-theme-alpine',
+    className: '',
     resetColumnState: false,
     exportDataAsCsv: false,
     selectAll: false,

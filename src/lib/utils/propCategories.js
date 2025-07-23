@@ -142,6 +142,9 @@ export const GRID_MAYBE_FUNCTIONS_NO_PARAMS = {
     setPopupParent: 1,
     popupParent: 1,
     quickFilterMatcher: 1,
+
+    // Themeing
+    theme: 1,
 };
 
 /**
