@@ -52,24 +52,11 @@ function DashAgGrid(props) {
 
 DashAgGrid.dashRenderType = true;
 
-DashAgGrid.defaultProps = {
-    className: 'ag-theme-alpine',
-    resetColumnState: false,
-    exportDataAsCsv: false,
-    selectAll: false,
-    deselectAll: false,
-    enableEnterpriseModules: false,
-    updateColumnState: false,
+DashAgGrid.dashPersistence = {
     persisted_props: ['selectedRows'],
     persistence_type: 'local',
-    suppressDragLeaveHidesColumns: true,
-    dangerously_allow_code: false,
-    rowModelType: 'clientSide',
-    dashGridOptions: {},
-    filterModel: {},
-    paginationGoTo: null,
-    selectedRows: [],
 };
+
 DashAgGrid.propTypes = {
     /********************************
      * DASH PROPS
@@ -751,7 +738,7 @@ DashAgGrid.propTypes = {
 };
 
 export const propTypes = DashAgGrid.propTypes;
-export const defaultProps = DashAgGrid.defaultProps;
+// export const defaultProps = DashAgGrid.defaultProps;
 
 export default DashAgGrid;
 

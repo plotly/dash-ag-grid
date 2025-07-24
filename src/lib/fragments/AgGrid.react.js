@@ -15,11 +15,7 @@ import {
     assoc,
     assocPath,
 } from 'ramda';
-import {
-    propTypes as _propTypes,
-    defaultProps as _defaultProps,
-    apiGetters,
-} from '../components/AgGrid.react';
+import {propTypes as _propTypes, apiGetters} from '../components/AgGrid.react';
 import {
     COLUMN_DANGEROUS_FUNCTIONS,
     COLUMN_MAYBE_FUNCTIONS,
@@ -127,7 +123,11 @@ function usePrevious(value) {
     return ref.current;
 }
 
-export function DashAgGrid(props) {
+export function DashAgGrid({
+    className = 'ag-theme-alpine',
+    suppressDragLeaveHidesColumns = true,
+    ...props
+}) {
     const active = useRef(true);
 
     // const customSetProps = props.setProps;
@@ -680,7 +680,7 @@ export function DashAgGrid(props) {
     convertAllPropsRef.current = convertAllProps;
 
     const virtualRowData = useCallback(() => {
-        const {rowModelType} = props;
+        const {rowModelType = 'clientSide'} = props;
         const virtualRowData = [];
         if (rowModelType === 'clientSide' && gridApi) {
             gridApi.forEachNodeAfterFilterAndSort((node) => {
@@ -693,7 +693,7 @@ export function DashAgGrid(props) {
     }, [props.rowModelType, gridApi]);
 
     const onFilterChanged = useCallback(() => {
-        const {rowModelType} = props;
+        const {rowModelType = 'clientSide'} = props;
         if (!gridApi) {
             return;
         }
@@ -731,7 +731,7 @@ export function DashAgGrid(props) {
     }, [props.rowData, virtualRowData, getRowData, customSetProps]);
 
     const onSortChanged = useCallback(() => {
-        const {rowModelType} = props;
+        const {rowModelType = 'clientSide'} = props;
         const propsToSet = {};
         if (rowModelType === 'clientSide') {
             propsToSet.virtualRowData = virtualRowData();
@@ -746,12 +746,17 @@ export function DashAgGrid(props) {
 
     const onRowDataUpdated = useCallback(() => {
         // Handles preserving existing selections when rowData is updated in a callback
-        const {selectedRows, rowData, rowModelType, filterModel} = props;
+        const {
+            selectedRows = [],
+            rowData,
+            rowModelType = 'clientSide',
+            filterModel = {},
+        } = props;
 
         if (gridApi && !gridApi?.isDestroyed()) {
             dataUpdates.current = true;
             pauseSelections.current = true;
-            setSelection(selectedRows);
+            setSelection(selectedRows ?? []);
 
             if (rowData && rowModelType === 'clientSide') {
                 const virtualRowDataResult = virtualRowData();
@@ -803,7 +808,7 @@ export function DashAgGrid(props) {
         setTimeout(() => {
             if (!pauseSelections.current) {
                 const selectedRows = gridApi.getSelectedRows();
-                if (!equals(selectedRows, props.selectedRows)) {
+                if (!equals(selectedRows, props.selectedRows ?? [])) {
                     // Flag that the selection event was fired
                     selectionEventFired.current = true;
                     customSetProps({selectedRows});
@@ -839,7 +844,7 @@ export function DashAgGrid(props) {
             if (data.async === false) {
                 gridApiParam.applyTransaction(data);
                 if (selectedRows) {
-                    setSelection(selectedRows);
+                    setSelection(selectedRows ?? []);
                 }
             } else {
                 gridApiParam.applyTransactionAsync(data);
@@ -852,7 +857,7 @@ export function DashAgGrid(props) {
         (params) => {
             // Applying Infinite Row Model
             // see: https://www.ag-grid.com/javascript-grid/infinite-scrolling/
-            const {rowModelType, eventListeners} = props;
+            const {rowModelType = 'clientSide', eventListeners} = props;
 
             if (rowModelType === 'infinite') {
                 params.api.setGridOption('datasource', getDatasource());
@@ -1255,7 +1260,7 @@ export function DashAgGrid(props) {
     );
 
     const onAsyncTransactionsFlushed = useCallback(() => {
-        const {selectedRows} = props;
+        const {selectedRows = []} = props;
         if (selectedRows) {
             setSelection(selectedRows);
         }
@@ -1284,8 +1289,8 @@ export function DashAgGrid(props) {
         // Apply selections
         if (gridApi) {
             const selectedRows = gridApi.getSelectedRows();
-            if (!equals(selectedRows, props.selectedRows)) {
-                setSelection(props.selectedRows);
+            if (!equals(selectedRows, props.selectedRows ?? [])) {
+                setSelection(props.selectedRows ?? []);
             }
         }
     }, [props.selectedRows, gridApi]);
@@ -1335,8 +1340,12 @@ export function DashAgGrid(props) {
 
     // Handle gridApi initialization - filter model application
     useEffect(() => {
-        if (gridApi && gridApi !== prevGridApi && !isEmpty(props.filterModel)) {
-            gridApi.setFilterModel(props.filterModel);
+        if (
+            gridApi &&
+            gridApi !== prevGridApi &&
+            !isEmpty(props.filterModel ?? {})
+        ) {
+            gridApi.setFilterModel(props.filterModel ?? {});
         }
     }, [gridApi, prevGridApi, props.filterModel]);
 
@@ -1429,10 +1438,10 @@ export function DashAgGrid(props) {
         if (
             gridApi &&
             gridApi === prevGridApi &&
-            props.filterModel &&
-            gridApi.getFilterModel() !== props.filterModel
+            (props.filterModel ?? {}) &&
+            gridApi.getFilterModel() !== (props.filterModel ?? {})
         ) {
-            gridApi.setFilterModel(props.filterModel);
+            gridApi.setFilterModel(props.filterModel ?? {});
         }
     }, [props.filterModel, gridApi, prevGridApi]);
 
@@ -1526,7 +1535,7 @@ export function DashAgGrid(props) {
         setColumnState,
     ]);
 
-    const {id, style, className, dashGridOptions, ...restProps} = props;
+    const {id, style, dashGridOptions = {}, ...restProps} = props;
     const passingProps = pick(PASSTHRU_PROPS, restProps);
     const convertedProps = convertAllProps(
         omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
@@ -1600,16 +1609,17 @@ export function DashAgGrid(props) {
                 components={components}
                 {...passingProps}
                 {...convertedProps}
+                suppressDragLeaveHidesColumns={suppressDragLeaveHidesColumns}
             ></AgGridReact>
         </div>
     );
 }
 
-DashAgGrid.defaultProps = _defaultProps;
+// DashAgGrid.defaultProps = _defaultProps;
 DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
 
 export const propTypes = DashAgGrid.propTypes;
-export const defaultProps = DashAgGrid.defaultProps;
+// export const defaultProps = DashAgGrid.defaultProps;
 
 var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
 dagfuncs.useGridFilter = useGridFilter;
