@@ -56,24 +56,21 @@ function DashAgGrid(props) {
 
 DashAgGrid.dashRenderType = true;
 
-DashAgGrid.defaultProps = {
-    className: '',
-    resetColumnState: false,
-    exportDataAsCsv: false,
-    selectAll: false,
-    deselectAll: false,
-    enableEnterpriseModules: false,
-    updateColumnState: false,
+/** Apply persistence settings based on React version for dash 2 compatibility */
+const REACT_VERSION_DASH2_COMPAT = 18.3;
+const persistence = {
     persisted_props: ['selectedRows'],
     persistence_type: 'local',
-    suppressDragLeaveHidesColumns: true,
-    dangerously_allow_code: false,
-    rowModelType: 'clientSide',
-    dashGridOptions: {},
-    filterModel: {},
-    paginationGoTo: null,
-    selectedRows: [],
 };
+if (
+    parseFloat(React.version.substring(0, React.version.lastIndexOf('.'))) <
+    REACT_VERSION_DASH2_COMPAT
+) {
+    DashAgGrid.defaultProps = persistence;
+} else {
+    DashAgGrid.dashPersistence = persistence;
+}
+
 DashAgGrid.propTypes = {
     /********************************
      * DASH PROPS
@@ -755,7 +752,7 @@ DashAgGrid.propTypes = {
 };
 
 export const propTypes = DashAgGrid.propTypes;
-export const defaultProps = DashAgGrid.defaultProps;
+// export const defaultProps = DashAgGrid.defaultProps;
 
 export default DashAgGrid;
 
