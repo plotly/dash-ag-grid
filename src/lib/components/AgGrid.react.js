@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
 import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
+import {AllCommunityModule, ModuleRegistry} from 'ag-grid-community';
+
+// Register all community features
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
@@ -51,6 +55,7 @@ function DashAgGrid(props) {
 }
 
 DashAgGrid.dashRenderType = true;
+
 
 /** Apply persistence settings based on React version for dash 2 compatibility */
 const REACT_VERSION_DASH2_COMPAT = 18.3;

@@ -4,6 +4,8 @@
 # Build artifacts
 dash_ag_grid/*
 !dash_ag_grid/__init__.py
+!dash_ag_grid/_version.py
+!dash_ag_grid/themes.py
 R/
 deps/
 man/
