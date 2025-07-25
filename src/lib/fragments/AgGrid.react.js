@@ -125,7 +125,6 @@ function usePrevious(value) {
 }
 
 export function DashAgGrid({
-    className = 'ag-theme-alpine',
     suppressDragLeaveHidesColumns = true,
     ...props
 }) {
