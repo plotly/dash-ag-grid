@@ -56,7 +56,6 @@ function DashAgGrid(props) {
 
 DashAgGrid.dashRenderType = true;
 
-
 /** Apply persistence settings based on React version for dash 2 compatibility */
 const REACT_VERSION_DASH2_COMPAT = 18.3;
 const persistence = {
