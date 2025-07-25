@@ -52,10 +52,20 @@ function DashAgGrid(props) {
 
 DashAgGrid.dashRenderType = true;
 
-DashAgGrid.dashPersistence = {
+/** Apply persistence settings based on React version for dash 2 compatibility */
+const REACT_VERSION_DASH2_COMPAT = 18.3;
+const persistence = {
     persisted_props: ['selectedRows'],
     persistence_type: 'local',
 };
+if (
+    parseFloat(React.version.substring(0, React.version.lastIndexOf('.'))) <
+    REACT_VERSION_DASH2_COMPAT
+) {
+    DashAgGrid.defaultProps = persistence;
+} else {
+    DashAgGrid.dashPersistence = persistence;
+}
 
 DashAgGrid.propTypes = {
     /********************************
