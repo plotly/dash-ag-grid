@@ -17,7 +17,6 @@ import {
 } from 'ramda';
 import {
     propTypes as _propTypes,
-    defaultProps as _defaultProps,
     apiGetters,
 } from '../components/AgGrid.react';
 import {
