@@ -15,10 +15,7 @@ import {
     assoc,
     assocPath,
 } from 'ramda';
-import {
-    propTypes as _propTypes,
-    apiGetters,
-} from '../components/AgGrid.react';
+import {propTypes as _propTypes, apiGetters} from '../components/AgGrid.react';
 import {
     COLUMN_DANGEROUS_FUNCTIONS,
     COLUMN_MAYBE_FUNCTIONS,
