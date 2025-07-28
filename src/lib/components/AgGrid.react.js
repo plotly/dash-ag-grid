@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
 import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
 import {AllCommunityModule, ModuleRegistry} from 'ag-grid-community';
-import { pick } from 'ramda';
+import {pick} from 'ramda';
 
 // Register all community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -76,12 +76,15 @@ function DashAgGrid(props) {
 
 const REACT_VERSION_DASH2_COMPAT = 18.3;
 if (
- parseFloat(React.version.substring(0, React.version.lastIndexOf('.'))) <
+    parseFloat(React.version.substring(0, React.version.lastIndexOf('.'))) <
     REACT_VERSION_DASH2_COMPAT
 ) {
     DashAgGrid.defaultProps = defaultProps;
 } else {
-    DashAgGrid.dashPersistence = pick(['persisted_props', 'persistence_type'],defaultProps);
+    DashAgGrid.dashPersistence = pick(
+        ['persisted_props', 'persistence_type'],
+        defaultProps
+    );
 }
 
 DashAgGrid.dashRenderType = true;
