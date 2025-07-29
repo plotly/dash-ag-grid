@@ -323,6 +323,8 @@ export const PASSTHRU_PROPS = ['rowData'];
  */
 export const PROPS_NOT_FOR_AG_GRID = [
     'children',
+    'dashRenderType',
+    'licenseKey',
     'setProps',
     'loading_state',
     'enableEnterpriseModules',
@@ -356,6 +358,7 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'scrollTo',
     'eventListeners',
     'eventData',
+    'paginationInfo',
 ];
 
 /**
