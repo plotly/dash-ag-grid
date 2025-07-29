@@ -4,6 +4,14 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
+## [33.3.2rc0] - 2025-07-29
+
+### Changed
+- bump to v`33.3.2` for the grid
+- legacy (CSS-only) themes now require stylesheets to be loaded externally (for example, via the `external_stylesheets` kwarg to the Dash constructor). See `tests/examples/themes_legacy.py` for an example.
+- dashGridOptions now accepts a `theme` string or function as per AG Grid's latest theming system. See `tests/examples/themes.py` for examples.
+- defaultProps no longer used in modern React versions
+
 ## [32.3.0] - 2025-07-23
 
 ### Changed
