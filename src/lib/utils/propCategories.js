@@ -230,6 +230,7 @@ export const COLUMN_MAYBE_FUNCTIONS = {
     cellStyle: 1,
     cellClass: 1,
     tooltipComponent: 1,
+    cellRenderer: 1,
     cellRendererSelector: 1,
 
     // Columns: Row Dragging
