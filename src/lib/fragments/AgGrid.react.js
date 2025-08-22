@@ -1342,10 +1342,10 @@ export function DashAgGrid(props) {
 
     // Handle gridApi initialization - column state application
     useEffect(() => {
-        if (gridApi && gridApi !== prevGridApi && props.columnState) {
+        if (gridApi && gridApi !== prevGridApi && columnState_push) {
             setColumnState();
         }
-    }, [gridApi, prevGridApi, props.columnState, setColumnState]);
+    }, [gridApi, prevGridApi, columnState_push]);
 
     // Handle gridApi initialization - finalization
     useEffect(() => {
@@ -1378,7 +1378,7 @@ export function DashAgGrid(props) {
                 setColumnState_push(true);
             }
         }
-    }, [props.columnState, props.loading_state, columnState_push]);
+    }, [props.columnState, props.loading_state]);
 
     // Handle ID changes
     useEffect(() => {
