@@ -475,28 +475,26 @@ def test_cs003_column_state(dash_duo):
         [
             html.Div(
                 [
-                    html.Button(
-                        "Remove Column", id="remove-column", n_clicks=0
-                    ),
+                    html.Button("Remove Column", id="remove-column", n_clicks=0),
                     html.Div(
-                        id='grid-holder',
+                        id="grid-holder",
                         children=[
                             dag.AgGrid(
                                 id=f"grid",
                                 columnDefs=columnDefs,
                                 rowData=data,
-                                columnSize='autoSize'
+                                columnSize="autoSize",
                             )
-                        ]
-                    )
+                        ],
+                    ),
                 ],
             ),
         ]
     )
 
     @app.callback(
-        Output('grid', 'columnDefs'),
-        Input('remove-column', 'n_clicks'),
+        Output("grid", "columnDefs"),
+        Input("remove-column", "n_clicks"),
     )
     def remove_column(n):
         if n:
@@ -506,13 +504,15 @@ def test_cs003_column_state(dash_duo):
                 return cols
         return no_update
 
-    dash_duo.start_server(app,
-                          debug=True, 
-                          use_reloader=False,
+    dash_duo.start_server(
+        app,
+        debug=True,
+        use_reloader=False,
         use_debugger=True,
         dev_tools_hot_reload=False,
         dev_tools_props_check=True,
-        dev_tools_disable_version_check=True,)
+        dev_tools_disable_version_check=True,
+    )
 
     for x in range(3):
         dash_duo.find_element("#remove-column").click()
