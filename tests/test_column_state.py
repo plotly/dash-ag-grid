@@ -1,4 +1,4 @@
-from dash import Dash, html, Output, Input, no_update, State, ctx
+from dash import Dash, html, Output, Input, no_update, State, ctx, Patch
 import dash_ag_grid as dag
 import plotly.express as px
 import json
@@ -316,3 +316,205 @@ def test_cs002_column_state(dash_duo):
         dash_duo.find_element("#add-grid").click()
         time.sleep(2)  # pausing to emulate separation because user inputs
     assert list(filter(lambda i: i.get("level") != "WARNING", dash_duo.get_logs())) == []
+
+def test_cs003_column_state(dash_duo):
+    data = [
+        {
+            "localTime": "5:00am",
+            "a": 0.231,
+            "b": 0.523,
+            "c": 0.423,
+            "d": 0.527,
+        },
+        {
+            "localTime": "5:15am",
+            "a": 0.423,
+            "b": 0.452,
+            "c": 0.523,
+            "d": 0.543,
+        },
+        {
+            "localTime": "5:30am",
+            "a": 0.537,
+            "b": 0.246,
+            "c": 0.426,
+            "d": 0.421,
+        },
+        {
+            "localTime": "5:45am",
+            "a": 0.893,
+            "b": 0.083,
+            "c": 0.532,
+            "d": 0.983,
+        },
+        {
+            "localTime": "6:00am",
+            "a": 0.231,
+            "b": 0.523,
+            "c": 0.423,
+            "d": 0.527,
+        },
+        {
+            "localTime": "6:15am",
+            "a": 0.423,
+            "b": 0.452,
+            "c": 0.523,
+            "d": 0.543,
+        },
+        {
+            "localTime": "6:30am",
+            "a": 0.537,
+            "b": 0.246,
+            "c": 0.426,
+            "d": 0.421,
+        },
+        {
+            "localTime": "6:45am",
+            "a": 0.893,
+            "b": 0.083,
+            "c": 0.532,
+            "d": 0.983,
+        },
+        {
+            "localTime": "7:00am",
+            "a": 0.231,
+            "b": 0.523,
+            "c": 0.423,
+            "d": 0.527,
+        },
+        {
+            "localTime": "7:15am",
+            "a": 0.423,
+            "b": 0.452,
+            "c": 0.523,
+            "d": 0.543,
+        },
+        {
+            "localTime": "7:30am",
+            "a": 0.537,
+            "b": 0.246,
+            "c": 0.426,
+            "d": 0.421,
+        },
+        {
+            "localTime": "7:45am",
+            "a": 0.893,
+            "b": 0.083,
+            "c": 0.532,
+            "d": 0.983,
+        },
+        {
+            "localTime": "8:00am",
+            "a": 0.231,
+            "b": 0.523,
+            "c": 0.423,
+            "d": 0.527,
+        },
+        {
+            "localTime": "8:15am",
+            "a": 0.423,
+            "b": 0.452,
+            "c": 0.523,
+            "d": 0.543,
+        },
+        {
+            "localTime": "8:30am",
+            "a": 0.537,
+            "b": 0.246,
+            "c": 0.426,
+            "d": 0.421,
+        },
+        {
+            "localTime": "8:45am",
+            "a": 0.893,
+            "b": 0.083,
+            "c": 0.532,
+            "d": 0.983,
+        },
+        {
+            "localTime": "8:00am",
+            "a": 0.231,
+            "b": 0.523,
+            "c": 0.423,
+            "d": 0.527,
+        },
+        {
+            "localTime": "8:15am",
+            "a": 0.423,
+            "b": 0.452,
+            "c": 0.523,
+            "d": 0.543,
+        },
+        {
+            "localTime": "8:30am",
+            "a": 0.537,
+            "b": 0.246,
+            "c": 0.426,
+            "d": 0.421,
+        },
+        {
+            "localTime": "8:45am",
+            "a": 0.893,
+            "b": 0.083,
+            "c": 0.532,
+            "d": 0.983,
+        },
+    ]
+
+    columnDefs = [
+        {"field": "localTime"},
+        {"field": "a"},
+        {"field": "b"},
+        {"field": "c"},
+        {"field": "d"},
+    ]
+
+    app = Dash(__name__)
+
+    app.layout = html.Div(
+        [
+            html.Div(
+                [
+                    html.Button("Remove Column", id="remove-column", n_clicks=0),
+                    html.Div(
+                        id="grid-holder",
+                        children=[
+                            dag.AgGrid(
+                                id=f"grid",
+                                columnDefs=columnDefs,
+                                rowData=data,
+                                columnSize="autoSize",
+                            )
+                        ],
+                    ),
+                ],
+            ),
+        ]
+    )
+
+    @app.callback(
+        Output("grid", "columnDefs"),
+        Input("remove-column", "n_clicks"),
+    )
+    def remove_column(n):
+        if n:
+            cols = Patch()
+            if n < 3:
+                del cols[0]
+                return cols
+        return no_update
+
+    dash_duo.start_server(
+        app,
+        debug=True,
+        use_reloader=False,
+        use_debugger=True,
+        dev_tools_hot_reload=False,
+        dev_tools_props_check=True,
+        dev_tools_disable_version_check=True,
+    )
+
+    for x in range(3):
+        dash_duo.find_element("#remove-column").click()
+        time.sleep(2)  # pausing to emulate separation because user inputs
+    assert list(filter(lambda i: i.get("level") != "ERROR", dash_duo.get_logs())) == []
