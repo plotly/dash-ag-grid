@@ -4,6 +4,11 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
+## [32.3.2] - 2025-09-17
+
+### Fixed
+- [#403](https://github.com/plotly/dash-ag-grid/issues/403) fix "Maximum update depth exceeded" error
+
 ## [32.3.1] - 2025-08-05
 
 ### Fixed
