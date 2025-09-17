@@ -15,11 +15,7 @@ import {
     assoc,
     assocPath,
 } from 'ramda';
-import {
-    propTypes as _propTypes,
-    defaultProps as _defaultProps,
-    apiGetters,
-} from '../components/AgGrid.react';
+import {propTypes as _propTypes, apiGetters} from '../components/AgGrid.react';
 import {
     COLUMN_DANGEROUS_FUNCTIONS,
     COLUMN_MAYBE_FUNCTIONS,
@@ -1342,10 +1338,10 @@ export function DashAgGrid(props) {
 
     // Handle gridApi initialization - column state application
     useEffect(() => {
-        if (gridApi && gridApi !== prevGridApi && props.columnState) {
+        if (gridApi && gridApi !== prevGridApi && columnState_push) {
             setColumnState();
         }
-    }, [gridApi, prevGridApi, props.columnState, setColumnState]);
+    }, [gridApi, prevGridApi, columnState_push]);
 
     // Handle gridApi initialization - finalization
     useEffect(() => {
@@ -1378,7 +1374,7 @@ export function DashAgGrid(props) {
                 setColumnState_push(true);
             }
         }
-    }, [props.columnState, props.loading_state, columnState_push]);
+    }, [props.columnState, props.loading_state]);
 
     // Handle ID changes
     useEffect(() => {
@@ -1605,11 +1601,9 @@ export function DashAgGrid(props) {
     );
 }
 
-DashAgGrid.defaultProps = _defaultProps;
 DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
 
 export const propTypes = DashAgGrid.propTypes;
-export const defaultProps = DashAgGrid.defaultProps;
 
 var dagfuncs = (window.dash_ag_grid = window.dash_ag_grid || {});
 dagfuncs.useGridFilter = useGridFilter;

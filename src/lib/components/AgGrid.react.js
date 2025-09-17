@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
 import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
+import {pick} from 'ramda';
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
@@ -8,6 +9,25 @@ const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
 function getGrid(enable) {
     return enable ? RealAgGridEnterprise : RealAgGrid;
 }
+
+export const defaultProps = {
+    className: 'ag-theme-alpine',
+    resetColumnState: false,
+    exportDataAsCsv: false,
+    selectAll: false,
+    deselectAll: false,
+    enableEnterpriseModules: false,
+    updateColumnState: false,
+    persisted_props: ['selectedRows'],
+    persistence_type: 'local',
+    suppressDragLeaveHidesColumns: true,
+    dangerously_allow_code: false,
+    rowModelType: 'clientSide',
+    dashGridOptions: {},
+    filterModel: {},
+    paginationGoTo: null,
+    selectedRows: [],
+};
 
 /**
  * Dash interface to AG Grid, a powerful tabular data component.
@@ -45,31 +65,26 @@ function DashAgGrid(props) {
 
     return (
         <Suspense fallback={null}>
-            <RealComponent parentState={state} {...props} />
+            <RealComponent parentState={state} {...defaultProps} {...props} />
         </Suspense>
+    );
+}
+
+const REACT_VERSION_DASH2_COMPAT = 18.3;
+if (
+    parseFloat(React.version.substring(0, React.version.lastIndexOf('.'))) <
+    REACT_VERSION_DASH2_COMPAT
+) {
+    DashAgGrid.defaultProps = defaultProps;
+} else {
+    DashAgGrid.dashPersistence = pick(
+        ['persisted_props', 'persistence_type'],
+        defaultProps
     );
 }
 
 DashAgGrid.dashRenderType = true;
 
-DashAgGrid.defaultProps = {
-    className: 'ag-theme-alpine',
-    resetColumnState: false,
-    exportDataAsCsv: false,
-    selectAll: false,
-    deselectAll: false,
-    enableEnterpriseModules: false,
-    updateColumnState: false,
-    persisted_props: ['selectedRows'],
-    persistence_type: 'local',
-    suppressDragLeaveHidesColumns: true,
-    dangerously_allow_code: false,
-    rowModelType: 'clientSide',
-    dashGridOptions: {},
-    filterModel: {},
-    paginationGoTo: null,
-    selectedRows: [],
-};
 DashAgGrid.propTypes = {
     /********************************
      * DASH PROPS
@@ -751,7 +766,6 @@ DashAgGrid.propTypes = {
 };
 
 export const propTypes = DashAgGrid.propTypes;
-export const defaultProps = DashAgGrid.defaultProps;
 
 export default DashAgGrid;
 
