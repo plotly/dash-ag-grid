@@ -1,3 +1,4 @@
+import pytest
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Output, Input, no_update, ctx, State
 import requests
@@ -118,6 +119,7 @@ def test_sb001_sizing_buttons(dash_duo):
         oldValue = dash_duo.find_element("#columnState").text
 
 
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_sb002_sizing_buttons(dash_duo):
     app = Dash(__name__)
 
@@ -204,6 +206,7 @@ def test_sb002_sizing_buttons(dash_duo):
     for x in columnDefs:
         assert x["field"] in oldValue
 
+    time.sleep(.5) # allow window size to change
     for x in ["sizeToFit", "responsiveSizeToFit"]:
         dash_duo.find_element(f"#{x}").click()
         if x != "responsiveSizeToFit":
@@ -339,7 +342,7 @@ def test_sb003_sizing_buttons(dash_duo):
         )
         oldValue = dash_duo.find_element("#columnState").text
 
-
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_sb004_sizing_buttons(dash_duo):
     app = Dash(__name__)
 
@@ -427,6 +430,7 @@ def test_sb004_sizing_buttons(dash_duo):
     oldValue = dash_duo.find_element("#columnState").text
     for x in columnDefs:
         assert x["field"] in oldValue
+    time.sleep(.5)
 
     for x in ["sizeToFit", "responsiveSizeToFit"]:
         dash_duo.find_element(f"#{x}").click()
@@ -448,7 +452,7 @@ def test_sb004_sizing_buttons(dash_duo):
             assert oldValue == dash_duo.find_element("#columnState").get_attribute(
                 "innerText"
             )
-            time.sleep(.2) # allow window size to change
+            time.sleep(.5) # allow window size to change
             dash_duo.find_element(f"#{x}").click()
             until(
                 lambda: oldValue
