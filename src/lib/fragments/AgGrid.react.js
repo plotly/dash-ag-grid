@@ -1365,10 +1365,7 @@ export function DashAgGrid(props) {
 
     // Handle columnState push changes
     useEffect(() => {
-        if (
-            gridApi &&
-            !(props.dashRenderType === 'internal')
-        ) {
+        if (gridApi && !(props.dashRenderType === 'internal')) {
             const existingColumnState = gridApi.getColumnState();
             const realStateChange =
                 props.columnState &&
@@ -1639,7 +1636,10 @@ const MemoizedAgGrid = React.memo(DashAgGrid, (prevProps, nextProps) => {
 
     if (
         propsHaveChanged &&
-        (!isInternalChange || rowDataChanged || selectedRowsChanged || columnStateChanged)
+        (!isInternalChange ||
+            rowDataChanged ||
+            selectedRowsChanged ||
+            columnStateChanged)
     ) {
         return false; // Props changed, re-render
     }
