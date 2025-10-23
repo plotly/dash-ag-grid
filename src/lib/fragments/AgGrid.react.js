@@ -820,11 +820,32 @@ export function DashAgGrid(props) {
         );
     }, [props.rowModelType, getRowsParams.current, props.getRowsResponse]);
 
+    const isDatasourceLoadedForServerSide = useCallback(() => {
+        return (
+            props.rowModelType === 'serverSide' &&
+            getRowsParams.current &&
+            props.getRowsResponse
+        );
+    }, [props.rowModelType, getRowsParams.current, props.getRowsResponse]);
+
     const getDatasource = useCallback(() => {
         return {
             getRows(params) {
                 getRowsParams.current = params;
                 customSetProps({getRowsRequest: params});
+            },
+
+            destroy() {
+                getRowsParams.current = null;
+            },
+        };
+    }, [getRowsParams.current, customSetProps]);
+
+    const getServerSideDatasource = useCallback(() => {
+        return {
+            getRows(params) {
+                getRowsParams.current = params;
+                customSetProps({getRowsRequest: params.request});
             },
 
             destroy() {
@@ -852,10 +873,14 @@ export function DashAgGrid(props) {
         (params) => {
             // Applying Infinite Row Model
             // see: https://www.ag-grid.com/javascript-grid/infinite-scrolling/
+            // Applying Server-Side Row Model
+            // see: https://www.ag-grid.com/javascript-grid/server-side-model/
             const {rowModelType, eventListeners} = props;
 
             if (rowModelType === 'infinite') {
                 params.api.setGridOption('datasource', getDatasource());
+            } else if (rowModelType === 'serverSide') {
+                params.api.setGridOption('serverSideDatasource', getServerSideDatasource());
             }
 
             if (eventListeners) {
@@ -874,6 +899,7 @@ export function DashAgGrid(props) {
             props.rowModelType,
             props.eventListeners,
             getDatasource,
+            getServerSideDatasource,
             parseFunctionEvent,
             setGridApi,
         ]
@@ -1399,6 +1425,15 @@ export function DashAgGrid(props) {
         if (isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = props.getRowsResponse;
             getRowsParams.current.successCallback(rowData, rowCount);
+            customSetProps({getRowsResponse: null});
+        }
+    }, [props.getRowsResponse]);
+
+    // Handle server-side datasource
+    useEffect(() => {
+        if (isDatasourceLoadedForServerSide()) {
+            const {rowData, rowCount} = props.getRowsResponse;
+            getRowsParams.current.success({rowData, rowCount});
             customSetProps({getRowsResponse: null});
         }
     }, [props.getRowsResponse]);
