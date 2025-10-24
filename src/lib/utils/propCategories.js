@@ -301,6 +301,7 @@ export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS = {
 export const COLUMN_ARRAY_NESTED_FUNCTIONS = {
     children: 1,
     filterOptions: 1,
+    filters: 1
 };
 
 /**
