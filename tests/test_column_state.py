@@ -1,8 +1,9 @@
-from dash import Dash, html, Output, Input, no_update, State, ctx, Patch
+from dash import Dash, html, Output, Input, no_update, State, ctx, Patch, dcc
 import dash_ag_grid as dag
 import plotly.express as px
 import json
 import time
+import pandas as pd
 
 from . import utils
 from dash.testing.wait import until
@@ -518,3 +519,70 @@ def test_cs003_column_state(dash_duo):
         dash_duo.find_element("#remove-column").click()
         time.sleep(2)  # pausing to emulate separation because user inputs
     assert list(filter(lambda i: i.get("level") != "ERROR", dash_duo.get_logs())) == []
+
+def test_toggle_column_visibility(dash_duo):
+    data = pd.DataFrame([
+        {"a": 1, "b": 2},
+        {"a": 3, "b": 4},
+    ])
+
+    app = Dash(__name__)
+
+    app.layout = html.Div([
+        dcc.Dropdown(
+            id="select-columns",
+            value=list(data.columns),
+            options=[{"label": col, "value": col} for col in data.columns],
+            multi=True,
+        ),
+        dag.AgGrid(
+            id="ag-grid",
+            style={"height": "75vh", "width": "100%"},
+            rowData=data.to_dict(orient="records"),
+        ),
+    ])
+
+    @app.callback(
+        Output("ag-grid", "columnDefs"),
+        Input("select-columns", "value"),
+    )
+    def toggle_column_visibility(selected_columns):
+        if not selected_columns:
+            return no_update
+        return [
+            {
+                "headerName": col_name,
+                "field": col_name,
+                "hide": col_name not in selected_columns,
+            }
+            for col_name in data.columns
+        ]
+
+    dash_duo.start_server(app)
+
+    # Wait for grid to render
+    grid = utils.Grid(dash_duo, "ag-grid")
+
+    grid.wait_for_cell_text(0, 0, "1")
+
+    # Hide column 'b'
+    dropdown = dash_duo.find_element("#select-columns")
+    option_b = dash_duo.find_element('span.Select-value-icon:nth-child(1)')
+    option_b.click()
+    time.sleep(1)
+
+    # Only column 'a' should be visible
+    grid_headers = dash_duo.find_elements("div.ag-header-cell-label")
+    header_texts = [h.text for h in grid_headers]
+    assert "a" not in header_texts
+    assert "b" in header_texts
+
+    # Show both columns again
+    dropdown.click()
+    option_b = dash_duo.find_element('.Select-menu')
+    option_b.click()
+    time.sleep(1)
+    grid_headers = dash_duo.find_elements("div.ag-header-cell-label")
+    header_texts = [h.text for h in grid_headers]
+    assert "a" in header_texts
+    assert "b" in header_texts
