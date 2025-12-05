@@ -4,6 +4,13 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
+## [unreleased]
+### Fixed
+- [#408](https://github.com/plotly/dash-ag-grid/pull/408) fixed issue where the `columnState` would conflict with `columnDefs` updates
+    - fixes [#416] (https://github.com/plotly/dash-ag-grid/issues/416)
+    - fixes [#407](https://github.com/plotly/dash-ag-grid/issues/407)
+- [#412](https://github.com/plotly/dash-ag-grid/issues/412) fix "Multi-Column Filter not properly recognized in filterParams"
+
 ## [33.3.2rc2] - 2025-09-17
 
 ### Fixed
