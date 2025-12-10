@@ -114,7 +114,7 @@ def test_fi003_custom_filter(dash_duo):
 
     grid.wait_for_cell_text(0, 0, "23")
 
-    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
+    dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
 
     dash_duo.find_element('.ag-filter label:nth-child(2)').click()
 
@@ -299,7 +299,7 @@ def test_fi006_custom_filter(dash_duo):
     grid.wait_for_cell_text(0, 0, "Michael Phelps")
 
     # Test Set Filter - click filter button on date column
-    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
+    dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
 
     # Uncheck "Select All"
     dash_duo.find_element('.ag-set-filter-list .ag-set-filter-item .ag-checkbox-input').click()
@@ -316,11 +316,11 @@ def test_fi006_custom_filter(dash_duo):
     grid.wait_for_cell_text(0, 2, "24/08/2008")
 
     # Reset
-    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
+    dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
     dash_duo.find_element('button[ref="resetFilterButton"]').click()
 
     # Test Date Filter - click filter button again
-    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
+    dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
 
     # Switch to Date Filter tab (second tab)
     dash_duo.find_elements('.ag-tabs-header .ag-tab')[1].click()
