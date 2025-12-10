@@ -300,10 +300,13 @@ def test_fi006_custom_filter(dash_duo):
     grid.wait_for_cell_text(0, 0, "Michael Phelps")
 
     # Test Set Filter - select a date from the checkbox list
-    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
+    filter_button = dash_duo.wait_for_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]')
+    filter_button.click()
 
-    # Uncheck "Select All"
-    dash_duo.find_element('.ag-set-filter-list .ag-set-filter-item .ag-checkbox-input').click()
+    # Wait for filter menu to open and uncheck "Select All"
+    dash_duo.wait_for_element('.ag-set-filter-list')
+    select_all = dash_duo.wait_for_element('.ag-set-filter-list .ag-set-filter-item .ag-checkbox-input')
+    select_all.click()
 
     # Select "24/08/2008"
     set_filter_items = dash_duo.find_elements('.ag-set-filter-list .ag-virtual-list-item')
@@ -313,22 +316,30 @@ def test_fi006_custom_filter(dash_duo):
             break
 
     # Apply and verify
-    dash_duo.find_element('button[ref="applyFilterButton"]').click()
+    apply_button = dash_duo.wait_for_element('button[ref="applyFilterButton"]')
+    apply_button.click()
     grid.wait_for_cell_text(0, 2, "24/08/2008")
 
     # Reset
-    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
-    dash_duo.find_element('button[ref="resetFilterButton"]').click()
+    filter_button = dash_duo.wait_for_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]')
+    filter_button.click()
+    reset_button = dash_duo.wait_for_element('button[ref="resetFilterButton"]')
+    reset_button.click()
 
     # Test Date Filter - type a date in the input field
-    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
+    filter_button = dash_duo.wait_for_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]')
+    filter_button.click()
 
-    # Switch to Date Filter tab
-    dash_duo.find_elements('.ag-tabs-header .ag-tab')[1].click()
+    # Wait for tabs and switch to Date Filter tab
+    dash_duo.wait_for_element('.ag-tabs-header')
+    date_tab = dash_duo.find_elements('.ag-tabs-header .ag-tab')[1]
+    date_tab.click()
 
-    # Type date and apply
-    dash_duo.find_element('.ag-date-filter input[class*="ag-input-field-input"]').send_keys("24/08/2008")
-    dash_duo.find_element('button[ref="applyFilterButton"]').click()
+    # Wait for date input and type date
+    date_input = dash_duo.wait_for_element('.ag-date-filter input[class*="ag-input-field-input"]')
+    date_input.send_keys("24/08/2008")
 
-    # Verify
+    # Apply and verify
+    apply_button = dash_duo.wait_for_element('button[ref="applyFilterButton"]')
+    apply_button.click()
     grid.wait_for_cell_text(0, 2, "24/08/2008")
