@@ -911,6 +911,21 @@ export function DashAgGrid(props) {
         [customSetProps]
     );
 
+    const onRowDoubleClicked = useCallback(
+        ({data, rowIndex, node}) => {
+            const timestamp = Date.now();
+            customSetProps({
+                rowDoubleClicked: {
+                    data,
+                    rowIndex,
+                    rowId: node.id,
+                    timestamp,
+                },
+            });
+        },
+        [customSetProps]
+    );
+
     const onCellValueChanged = useCallback(
         ({oldValue, value, column: {colId}, rowIndex, data, node}) => {
             const timestamp = Date.now();
@@ -1578,6 +1593,7 @@ export function DashAgGrid(props) {
                 onSelectionChanged={onSelectionChanged}
                 onCellClicked={onCellClicked}
                 onCellDoubleClicked={onCellDoubleClicked}
+                onRowDoubleClicked={onRowDoubleClicked}
                 onCellValueChanged={debounce(
                     afterCellValueChanged,
                     CELL_VALUE_CHANGED_DEBOUNCE_MS,

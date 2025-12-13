@@ -703,6 +703,31 @@ DashAgGrid.propTypes = {
     }),
 
     /**
+     * Row is double clicked.
+     */
+    rowDoubleClicked: PropTypes.shape({
+        /**
+         * data object from the double-clicked row
+         */
+        data: PropTypes.any,
+
+        /**
+         * rowIndex, typically a row number
+         */
+        rowIndex: PropTypes.number,
+
+        /**
+         * Row Id from the grid, this could be a number automatically, or set via getRowId
+         */
+        rowId: PropTypes.any,
+
+        /**
+         * timestamp of last action
+         */
+        timestamp: PropTypes.any,
+    }),
+
+    /**
      * The actively selected rows from the grid (may include filtered rows)
      * Can take one of three forms:
      * (1) an array of row objects - if you have defined `getRowId`, you only need the fields it uses.
