@@ -238,11 +238,14 @@ def test_fi005_custom_filter(dash_duo):
     grid.wait_for_cell_text(0, 0, "$200,00")
 
 def test_fi006_custom_filter(dash_duo):
+    print("\n=== Starting test_fi006_custom_filter ===")
     app = Dash(__name__)
 
+    print("Loading CSV data...")
     df = pd.read_csv(
         "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
     )
+    print(f"Loaded {len(df)} rows")
 
     columnDefs = [
         {"field": "athlete",
@@ -261,13 +264,13 @@ def test_fi006_custom_filter(dash_duo):
                 "filters": [
                     {
                         "filter": "agSetColumnFilter",
-                        'filterParams': {'excelMode': 'windows', 'buttons': ['apply', 'reset'], 
+                        'filterParams': {'excelMode': 'windows', 'buttons': ['apply', 'reset'],
                         }
                     },
                     {
                         "filter": "agDateColumnFilter",
                         'filterParams': {
-                            'excelMode': 'windows', 
+                            'excelMode': 'windows',
                             'buttons': ['apply', 'reset'],
                             'comparator': {'function': 'dateFilterComparator'},
                         }
@@ -292,42 +295,73 @@ def test_fi006_custom_filter(dash_duo):
         ],
     )
 
+    print("Starting Dash server...")
     dash_duo.start_server(app)
+    print(f"Server started at: {dash_duo.server_url}")
 
     grid = utils.Grid(dash_duo, "date-filter-example")
 
+    print("Waiting for grid to load...")
     grid.wait_for_cell_text(0, 0, "Michael Phelps")
+    print("Grid loaded successfully!")
 
     # Test Set Filter - click filter button on date column
+    print("\n--- Testing Set Filter ---")
+    print("Clicking filter button on date column (aria-colindex=3)...")
     dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
+    print("Filter button clicked successfully!")
 
     # Uncheck "Select All"
+    print("Unchecking 'Select All'...")
     dash_duo.find_element('.ag-set-filter-list .ag-set-filter-item .ag-checkbox-input').click()
 
     # Select "24/08/2008"
+    print("Selecting date '24/08/2008'...")
+    dash_duo.wait_for_element('.ag-set-filter-list .ag-virtual-list-item', timeout=10)
     set_filter_items = dash_duo.find_elements('.ag-set-filter-list .ag-virtual-list-item')
-    for item in set_filter_items:
+    checkboxes = dash_duo.find_elements('.ag-set-filter-list .ag-virtual-list-item .ag-checkbox-input')
+
+    print(f"Found {len(set_filter_items)} filter items")
+    for i, item in enumerate(set_filter_items):
         if "24/08/2008" in item.text:
-            item.find_element_by_css_selector('.ag-checkbox-input').click()
+            print(f"Found matching item: {item.text}")
+            checkboxes[i].click()
             break
 
     # Apply
-    dash_duo.find_element('button[ref="applyFilterButton"]').click()
+    print("Applying set filter...")
+    dash_duo.find_element('button[data-ref="applyFilterButton"]').click()
     grid.wait_for_cell_text(0, 2, "24/08/2008")
+    print("Set filter applied successfully!")
 
     # Reset
+    print("\n--- Resetting Filter ---")
+    print("Clicking filter button to reset...")
     dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
-    dash_duo.find_element('button[ref="resetFilterButton"]').click()
+    dash_duo.find_element('button[data-ref="resetFilterButton"]').click()
+    print("Filter reset!")
 
     # Test Date Filter - click filter button again
+    print("\n--- Testing Date Filter ---")
+    print("Opening filter menu again...")
     dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
 
-    # Switch to Date Filter tab (second tab)
-    dash_duo.find_elements('.ag-tabs-header .ag-tab')[1].click()
+    # # Switch to Date Filter tab (second tab)
+    # print("Switching to Date Filter tab...")
+    # dash_duo.find_elements('.ag-tabs-header .ag-tab')[1].click()
 
     # Type date
-    dash_duo.find_element('.ag-date-filter input[class*="ag-input-field-input"]').send_keys("24/08/2008")
+    print("Entering date '24/08/2008'...")
+    date_input = dash_duo.find_element('.ag-filter-wrapper .ag-date-filter input[class="ag-input-field-input ag-text-field-input"]')
+    date_input.click()
+    date_input.send_keys("24-08-2008")
 
     # Apply
-    dash_duo.find_element('button[ref="applyFilterButton"]').click()
+    print("Applying date filter...")
+    apply_buttons = dash_duo.find_elements('button[data-ref="applyFilterButton"]')
+    print(f"Found {len(apply_buttons)} apply buttons")
+    apply_buttons[1].click()
     grid.wait_for_cell_text(0, 2, "24/08/2008")
+    print("Date filter applied successfully!")
+
+    print("\n=== test_fi006_custom_filter PASSED ===\n")
