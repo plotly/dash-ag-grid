@@ -6,6 +6,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
+## [32.3.4] - 2025-12-19
+- re-release of 32.3.3 to fix publishing issue
+
 ## [32.3.3] - 2025-12-19
 ### Fixed
 - [#408](https://github.com/plotly/dash-ag-grid/pull/408) fixed issue where the `columnState` would conflict with `columnDefs` updates
