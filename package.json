@@ -1,6 +1,6 @@
 {
     "name": "dash-ag-grid",
-    "version": "33.3.2rc2",
+    "version": "32.3.3rc0",
     "description": "Dash wrapper around AG Grid, the best interactive data grid for the web.",
     "repository": {
         "type": "git",
