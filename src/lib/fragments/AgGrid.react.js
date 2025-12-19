@@ -532,8 +532,12 @@ export function DashAgGrid(props) {
                             return convertMaybeFunctionNoParams(value);
                         }
                     }
-                    return map((v, t) => {
-                        if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
+                    return map((v) => {
+                        if (
+                            typeof v === 'object' &&
+                            v !== null &&
+                            !Array.isArray(v)
+                        ) {
                             if (typeof v.function === 'string') {
                                 return convertMaybeFunctionNoParams(v);
                             }
