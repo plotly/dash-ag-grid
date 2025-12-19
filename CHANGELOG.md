@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## [unreleased]
+
+## [32.3.3] - 2025-12-19
 ### Fixed
 - [#408](https://github.com/plotly/dash-ag-grid/pull/408) fixed issue where the `columnState` would conflict with `columnDefs` updates
     - fixes [#416] (https://github.com/plotly/dash-ag-grid/issues/416)
