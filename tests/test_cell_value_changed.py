@@ -144,6 +144,7 @@ def test_cv001_cell_value_changed_multi(dash_duo):
     grid.wait_for_cell_text(0, 0, "South Korea")
 
     # Test single event.
+    grid.get_cell(0, 1).click()
     grid.get_cell(0, 1).send_keys("50")
     grid.get_cell(1, 2).click()
     dash_duo.wait_for_text_to_equal('#log', "1")
