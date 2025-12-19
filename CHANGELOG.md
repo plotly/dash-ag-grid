@@ -4,15 +4,34 @@ All notable changes to `dash-ag-grid` will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
+## [unreleased]
+### Fixed
+- [#408](https://github.com/plotly/dash-ag-grid/pull/408) fixed issue where the `columnState` would conflict with `columnDefs` updates
+    - fixes [#416] (https://github.com/plotly/dash-ag-grid/issues/416)
+    - fixes [#407](https://github.com/plotly/dash-ag-grid/issues/407)
+
 ## [32.3.2] - 2025-09-17
 
 ### Fixed
 - [#403](https://github.com/plotly/dash-ag-grid/issues/403) fix "Maximum update depth exceeded" error
 
+## [32.3.2rc1] - 2025-08-05
+
+### Fixed
+- [#394](https://github.com/plotly/dash-ag-grid/issues/394) allow `cellRenderer` column def to be a function
+
 ## [32.3.1] - 2025-08-05
 
 ### Fixed
 - [#394](https://github.com/plotly/dash-ag-grid/issues/394) allow `cellRenderer` column def to be a function
+
+## [33.3.2rc0] - 2025-07-29
+
+### Changed
+- bump to v`33.3.2` for the grid
+- legacy (CSS-only) themes now require stylesheets to be loaded externally (for example, via the `external_stylesheets` kwarg to the Dash constructor). See `tests/examples/themes_legacy.py` for an example.
+- dashGridOptions now accepts a `theme` string or function as per AG Grid's latest theming system. See `tests/examples/themes.py` for examples.
+- defaultProps no longer used in modern React versions
 
 ## [32.3.0] - 2025-07-23
 
