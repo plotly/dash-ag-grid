@@ -328,7 +328,7 @@ def test_fi006_custom_filter(dash_duo):
     # Type date
     date_input = dash_duo.find_element('.ag-filter-wrapper .ag-date-filter input[class="ag-input-field-input ag-text-field-input"]')
     date_input.click()
-    date_input.send_keys("24-08-2008")
+    date_input.send_keys("08/24/2008")
 
     # Apply
     apply_buttons = dash_duo.find_elements('button[data-ref="applyFilterButton"]')
