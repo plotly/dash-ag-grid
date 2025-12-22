@@ -236,3 +236,101 @@ def test_fi005_custom_filter(dash_duo):
     # Test numberParser and numberFormatter
     grid.set_filter(0, "$100,5")
     grid.wait_for_cell_text(0, 0, "$200,00")
+
+def test_fi006_custom_filter(dash_duo):
+    app = Dash(__name__)
+
+    df = pd.read_csv(
+        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+    )
+
+    columnDefs = [
+        {"field": "athlete",
+        "filter": "agMultiColumnFilter",
+                "filterParams": {
+                    "filters": [
+                        {"filter": "agTextColumnFilter"},
+                        {"filter": "agSetColumnFilter"} # Example with Set Filter
+                    ]
+                }},
+        {"field": "country"},
+        {
+            "field": "date",
+            "filter": "agMultiColumnFilter",
+            "filterParams": {
+                "filters": [
+                    {
+                        "filter": "agSetColumnFilter",
+                        'filterParams': {'excelMode': 'windows', 'buttons': ['apply', 'reset'],
+                        }
+                    },
+                    {
+                        "filter": "agDateColumnFilter",
+                        'filterParams': {
+                            'excelMode': 'windows',
+                            'buttons': ['apply', 'reset'],
+                            'comparator': {'function': 'dateFilterComparator'},
+                        }
+                    },
+                ],
+
+            },
+        },
+    ]
+
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="date-filter-example",
+                enableEnterpriseModules=True,
+                columnDefs=columnDefs,
+                rowData=df.to_dict("records"),
+                defaultColDef={"flex": 1, "minWidth": 150, "floatingFilter": True},
+                dashGridOptions={"animateRows": False}
+            ),
+        ],
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "date-filter-example")
+
+    grid.wait_for_cell_text(0, 0, "Michael Phelps")
+
+    # Test Set Filter - click filter button on date column
+    dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
+
+    # Uncheck "Select All"
+    dash_duo.find_element('.ag-set-filter-list .ag-set-filter-item .ag-checkbox-input').click()
+
+    # Select "24/08/2008"
+    dash_duo.wait_for_element('.ag-set-filter-list .ag-virtual-list-item', timeout=10)
+    set_filter_items = dash_duo.find_elements('.ag-set-filter-list .ag-virtual-list-item')
+    checkboxes = dash_duo.find_elements('.ag-set-filter-list .ag-virtual-list-item .ag-checkbox-input')
+
+    for i, item in enumerate(set_filter_items):
+        if "24/08/2008" in item.text:
+            checkboxes[i].click()
+            break
+
+    # Apply
+    dash_duo.find_element('button[data-ref="applyFilterButton"]').click()
+    grid.wait_for_cell_text(0, 2, "24/08/2008")
+
+    # Reset
+    dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
+    dash_duo.find_element('button[data-ref="resetFilterButton"]').click()
+
+    # Test Date Filter - click filter button again
+    dash_duo.find_element('.ag-floating-filter[aria-colindex="3"] button').click()
+
+    # Type date
+    date_input = dash_duo.find_element('.ag-filter-wrapper .ag-date-filter input[class="ag-input-field-input ag-text-field-input"]')
+    date_input.click()
+    date_input.send_keys("24-08-2008")
+
+    # Apply
+    apply_buttons = dash_duo.find_elements('button[data-ref="applyFilterButton"]')
+    apply_buttons[1].click()
+    grid.wait_for_cell_text(0, 2, "24/08/2008")

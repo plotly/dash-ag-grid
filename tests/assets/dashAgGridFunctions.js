@@ -396,6 +396,41 @@ dagfuncs.startWith = ([filterValues], cellValue) => {
     const name = cellValue ? cellValue.split(" ")[1] : ""
     return name && name.toLowerCase().indexOf(filterValues.toLowerCase()) === 0
 }
+
+dagfuncs.dateFilterComparator = (filterLocalDateAtMidnight, cellValue) => {
+    const dateAsString = cellValue;
+
+    if (dateAsString == null) {
+        // Return -1 to show nulls "before" any date
+        return -1;
+    }
+
+    // The data from this CSV is in dd/mm/yyyy format
+    const dateParts = dateAsString.split("/");
+    if (dateParts.length !== 3) {
+        // Handle invalid format
+        return 0;
+    }
+
+    const day = Number(dateParts[0]);
+    const month = Number(dateParts[1]) - 1; // JS months are 0-indexed
+    const year = Number(dateParts[2]);
+    const cellDate = new Date(year, month, day);
+
+    // Check for invalid date (e.g., from "NaN")
+    if (isNaN(cellDate.getTime())) {
+        return 0;
+    }
+
+    // Now that both parameters are Date objects, we can compare
+    if (cellDate < filterLocalDateAtMidnight) {
+        return -1;
+    } else if (cellDate > filterLocalDateAtMidnight) {
+        return 1;
+    }
+    return 0;
+};
+
 // END test_custom_filter.py
 
 // FOR test_quick_filter.py
@@ -503,3 +538,4 @@ dagfuncs.TestEvent = (params, setEventData) => {
 dagfuncs.testToyota = (params) => {
     return params.data.make == 'Toyota' ? {'color': 'blue'} : {}
 }
+
