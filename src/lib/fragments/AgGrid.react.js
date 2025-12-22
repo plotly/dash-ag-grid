@@ -29,6 +29,7 @@ import {
     GRID_NESTED_FUNCTIONS,
     OBJ_OF_FUNCTIONS,
     COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS,
+    COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS_NO_PARAMS,
     PASSTHRU_PROPS,
     PROPS_NOT_FOR_AG_GRID,
     GRID_DANGEROUS_FUNCTIONS,
@@ -532,7 +533,11 @@ export function DashAgGrid(props) {
                         }
                     }
                     return map((v) => {
-                        if (typeof v === 'object') {
+                        if (
+                            typeof v === 'object' &&
+                            v !== null &&
+                            !Array.isArray(v)
+                        ) {
                             if (typeof v.function === 'string') {
                                 return convertMaybeFunctionNoParams(v);
                             }
@@ -550,6 +555,12 @@ export function DashAgGrid(props) {
                 if (COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS[target]) {
                     if (has('function', value)) {
                         return convertMaybeFunction(value);
+                    }
+                    return convertCol(value);
+                }
+                if (COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS_NO_PARAMS[target]) {
+                    if (has('function', value)) {
+                        return convertMaybeFunctionNoParams(value);
                     }
                     return convertCol(value);
                 }
