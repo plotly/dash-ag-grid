@@ -47,6 +47,7 @@ import {
     themeBalham,
     themeMaterial,
     themeQuartz,
+    createPart,
 } from 'ag-grid-community';
 const themes = {themeAlpine, themeBalham, themeMaterial, themeQuartz};
 
@@ -157,6 +158,7 @@ export function DashAgGrid(props) {
                     esprima.parse(funcString).body[0].expression;
                 const context = {
                     ...themes,
+                    createPart,
                     d3,
                     dash_clientside,
                     ...customFunctions,
@@ -175,6 +177,7 @@ export function DashAgGrid(props) {
                     esprima.parse(funcString).body[0].expression;
                 const context = {
                     ...themes,
+                    createPart,
                     d3,
                     dash_clientside,
                     ...customFunctions,
@@ -195,6 +198,7 @@ export function DashAgGrid(props) {
                     esprima.parse(funcString).body[0].expression;
                 const context = {
                     ...themes,
+                    createPart,
                     d3,
                     ...customFunctions,
                     ...window.dashAgGridFunctions,
