@@ -43,7 +43,11 @@ import {customFunctions} from '../renderers/customFunctions';
 
 import {AgGridReact, useGridFilter} from 'ag-grid-react';
 import * as agGrid from 'ag-grid-community';
-const themes = {themeAlpine, themeBalham, themeMaterial, themeQuartz} = agGrid;
+let themes = {};
+if (agGrid && typeof agGrid === 'object' && !Array.isArray(agGrid)) {
+    const {themeAlpine, themeBalham, themeMaterial, themeQuartz} = agGrid;
+    themes = {themeAlpine, themeBalham, themeMaterial, themeQuartz};
+}
 
 // d3 imports
 import * as d3Format from 'd3-format';
