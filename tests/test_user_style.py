@@ -109,10 +109,11 @@ def test_us002_legacy_themes(dash_duo, theme):
 
     # Base styles: assert that the grid height is <= 400px because an unstyled
     # grid is very "tall"
-    root_wrapper = dash_duo.find_element(".ag-root-wrapper")
-    wrapper_height = root_wrapper.size["height"]
-    assert wrapper_height <= 400, f"Grid appears to be unstyled: height is too tall ({wrapper_height}px)"
-
+    until(
+        lambda: dash_duo.find_element(".ag-root-wrapper").size["height"] <= 400,
+        timeout=3,
+        msg=f"Grid appears to be unstyled: height is too tall ({dash_duo.find_element('.ag-root-wrapper').size['height']}px)"
+    )
     # Specific themes: Assert that cell headers are bold
     header_cell_text = dash_duo.find_element(".ag-header-cell-text")
     font_weight = header_cell_text.value_of_css_property("font-weight")
@@ -155,9 +156,11 @@ def test_us003_part_themes(dash_duo, theme):
 
     # Base styles: assert that the grid height is <= 400px because an unstyled
     # grid is very "tall"
-    root_wrapper = dash_duo.find_element(".ag-root-wrapper")
-    wrapper_height = root_wrapper.size["height"]
-    assert wrapper_height <= 400, f"Grid appears to be unstyled: height is too tall ({wrapper_height}px)"
+    until(
+        lambda: dash_duo.find_element(".ag-root-wrapper").size["height"] <= 400,
+        timeout=3,
+        msg=f"Grid appears to be unstyled: height is too tall ({dash_duo.find_element('.ag-root-wrapper').size['height']}px)"
+    )
 
     # Specific themes: Assert that cell headers are bold
     header_cell_text = dash_duo.find_element(".ag-header-cell-text")
