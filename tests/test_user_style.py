@@ -121,10 +121,7 @@ def test_us002_legacy_themes(dash_duo, theme):
 @pytest.mark.parametrize("theme", ["themeAlpine", "themeBalham", "themeMaterial", "themeQuartz"])
 def test_us003_part_themes(dash_duo, theme):
     app = Dash(
-        __name__,
-        external_scripts=[
-            f'https://cdn.jsdelivr.net/npm/ag-grid-community@{dag.grid_version}/dist/ag-grid-community.min.js'
-        ],
+        __name__
     )
 
     columnDefs = [
@@ -143,7 +140,7 @@ def test_us003_part_themes(dash_duo, theme):
                 id="grid",
                 columnDefs=columnDefs,
                 rowData=rowData,
-                dashGridOptions={'theme': {'function': f'customTheme({theme}, createPart)'}},
+                dashGridOptions={'theme': {'function': f'customTheme({theme}, agGrid)'}},
             ),
         ]
     )

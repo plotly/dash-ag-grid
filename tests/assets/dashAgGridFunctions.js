@@ -539,6 +539,6 @@ dagfuncs.testToyota = (params) => {
     return params.data.make == 'Toyota' ? {'color': 'blue'} : {}
 }
 
-dagfuncs.customTheme = (theme, createPart) => {
-    return theme.withPart(createPart(agGrid.colorSchemeDark))
+dagfuncs.customTheme = (theme, agGrid) => {
+    return theme.withPart(agGrid.createPart(agGrid.colorSchemeDark)).withPart(agGrid.createPart(agGrid.iconSetAlpine));
 }
