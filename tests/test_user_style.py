@@ -109,9 +109,58 @@ def test_us002_legacy_themes(dash_duo, theme):
 
     # Base styles: assert that the grid height is <= 400px because an unstyled
     # grid is very "tall"
-    root_wrapper = dash_duo.find_element(".ag-root-wrapper")
-    wrapper_height = root_wrapper.size["height"]
-    assert wrapper_height <= 400, f"Grid appears to be unstyled: height is too tall ({wrapper_height}px)"
+    until(
+        lambda: dash_duo.find_element(".ag-root-wrapper").size["height"] <= 400,
+        timeout=3,
+        msg=f"Grid appears to be unstyled: height is too tall ({dash_duo.find_element('.ag-root-wrapper').size['height']}px)"
+    )
+    # Specific themes: Assert that cell headers are bold
+    header_cell_text = dash_duo.find_element(".ag-header-cell-text")
+    font_weight = header_cell_text.value_of_css_property("font-weight")
+    assert font_weight in ["bold", "700", "600", "500",], "Grid appears to be unstyled: cell headers are not bold"
+
+@pytest.mark.parametrize("theme", ["themeAlpine", "themeBalham", "themeMaterial", "themeQuartz"])
+def test_us003_part_themes(dash_duo, theme):
+    app = Dash(
+        __name__
+    )
+
+    columnDefs = [
+        {"field": "name", "width": "500"},
+    ]
+
+    rowData = [
+        {"name": "a"},
+        {"name": "b"},
+        {"name": "c"},
+    ]
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid",
+                columnDefs=columnDefs,
+                rowData=rowData,
+                dashGridOptions={'theme': {'function': f'customTheme({theme}, agGrid)'}},
+            ),
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+
+    grid.wait_for_cell_text(0, 0, "a")
+
+    # Test that the CSS files are actually loaded and applied
+
+    # Base styles: assert that the grid height is <= 400px because an unstyled
+    # grid is very "tall"
+    until(
+        lambda: dash_duo.find_element(".ag-root-wrapper").size["height"] <= 400,
+        timeout=3,
+        msg=f"Grid appears to be unstyled: height is too tall ({dash_duo.find_element('.ag-root-wrapper').size['height']}px)"
+    )
 
     # Specific themes: Assert that cell headers are bold
     header_cell_text = dash_duo.find_element(".ag-header-cell-text")

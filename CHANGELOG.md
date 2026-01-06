@@ -12,6 +12,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
     - fixes [#416] (https://github.com/plotly/dash-ag-grid/issues/416)
     - fixes [#407](https://github.com/plotly/dash-ag-grid/issues/407)
 - [#412](https://github.com/plotly/dash-ag-grid/issues/412) fix "Multi-Column Filter not properly recognized in filterParams"
+- [#427](https://github.com/plotly/dash-ag-grid/issues/427) exposes `agGrid` from the community package for use in custom themes and functions
 
 ## [33.3.2rc2] - 2025-09-17
 
