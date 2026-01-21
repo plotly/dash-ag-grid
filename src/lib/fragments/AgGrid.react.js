@@ -43,13 +43,12 @@ import RowMenuRenderer from '../renderers/rowMenuRenderer';
 import {customFunctions} from '../renderers/customFunctions';
 
 import {AgGridReact, useGridFilter} from 'ag-grid-react';
-import {
-    themeAlpine,
-    themeBalham,
-    themeMaterial,
-    themeQuartz,
-} from 'ag-grid-community';
-const themes = {themeAlpine, themeBalham, themeMaterial, themeQuartz};
+import * as agGrid from 'ag-grid-community';
+let themes = {};
+if (agGrid && typeof agGrid === 'object' && !Array.isArray(agGrid)) {
+    const {themeAlpine, themeBalham, themeMaterial, themeQuartz} = agGrid;
+    themes = {themeAlpine, themeBalham, themeMaterial, themeQuartz};
+}
 
 // d3 imports
 import * as d3Format from 'd3-format';
@@ -158,6 +157,7 @@ export function DashAgGrid(props) {
                     esprima.parse(funcString).body[0].expression;
                 const context = {
                     ...themes,
+                    agGrid,
                     d3,
                     dash_clientside,
                     ...customFunctions,
@@ -176,6 +176,7 @@ export function DashAgGrid(props) {
                     esprima.parse(funcString).body[0].expression;
                 const context = {
                     ...themes,
+                    agGrid,
                     d3,
                     dash_clientside,
                     ...customFunctions,
@@ -196,6 +197,7 @@ export function DashAgGrid(props) {
                     esprima.parse(funcString).body[0].expression;
                 const context = {
                     ...themes,
+                    agGrid,
                     d3,
                     ...customFunctions,
                     ...window.dashAgGridFunctions,
