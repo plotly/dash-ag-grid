@@ -152,5 +152,6 @@ def test_cv001_cell_value_changed_multi(dash_duo):
     # Test multi event.
     grid.get_cell(0, 1).send_keys("20")
     grid.get_cell_editing_input(0, 2).send_keys("20")
+    grid.get_cell(0, 2).click()
     grid.get_cell(1, 2).click()
     dash_duo.wait_for_text_to_equal('#log', "2")

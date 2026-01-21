@@ -149,10 +149,13 @@ def test_is001_infinite_scroll(dash_duo):
     ## testing sorting with responses
     grid.get_header_cell(0).click()
     grid.wait_for_cell_text(0, 0, "0")
+    time.sleep(.2)
     grid.get_header_cell(0).click()
     grid.wait_for_cell_text(0, 0, "9999")
+    time.sleep(.2)
     grid.get_header_cell(1).click()
     grid.wait_for_cell_text(1, 0, "3600")
+    time.sleep(.2)
     grid.get_header_cell(1).click()
     grid.wait_for_cell_text(0, 0, "7263")
 
