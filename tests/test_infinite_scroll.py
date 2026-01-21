@@ -152,9 +152,9 @@ def test_is001_infinite_scroll(dash_duo):
     grid.get_header_cell(0).click()
     grid.wait_for_cell_text(0, 0, "9999")
     grid.get_header_cell(1).click()
-    grid.wait_for_cell_text(1, 0, "3600")
+    grid.wait_for_cell_text(0, 1, "0-0-0")
     grid.get_header_cell(1).click()
-    grid.wait_for_cell_text(0, 0, "7263")
+    grid.wait_for_cell_text(0, 1, "4-6-7")
 
 
 def test_is002_infinite_scroll_styling(dash_duo):

@@ -288,10 +288,17 @@ export const COLUMN_NESTED_FUNCTIONS = {
  * or may be functions themselves
  **/
 export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS = {
-    filterParams: 1,
     cellRendererParams: 1,
     cellEditorParams: 1,
     tooltipComponentParams: 1,
+};
+
+/**
+ * Container objects inside columnDefs that may have other functions
+ * or may be functions themselves no params passed
+ **/
+export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS_NO_PARAMS = {
+    filterParams: 1,
 };
 
 /**
