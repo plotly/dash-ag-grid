@@ -6,12 +6,12 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
+### Added 
+- [#436](https://github.com/plotly/dash-ag-grid/pull/436) Enabled Filter Handlers to simplify custom filter components by splitting the filter logic out from the UI component.
+
 ## [35.0.0rc0] - 2026-01-21
 ### Changed
 - bumping to v`35.0.0` for the grid
-
-### Added 
-- [#436](https://github.com/plotly/dash-ag-grid/pull/436) Enabled Filter Handlers to simplify custom filter components by splitting the filter logic out from the UI component.
 
 ## [33.3.3] - 2025-12-19
 ### Fixed
