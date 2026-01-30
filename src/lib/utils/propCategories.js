@@ -185,7 +185,6 @@ export const GRID_NESTED_FUNCTIONS = {
  **/
 export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
     cellEditor: 1,
-    //    filter: 1,
 
     // Columns: Sort
     comparator: 1,
@@ -272,7 +271,6 @@ export const COLUMN_MAYBE_FUNCTIONS = {
 
     // in filter
     doesFilterPass: 1,
-    handler: 1,
 
     // In dataTypeDefinitions
     dataTypeMatcher: 1,
