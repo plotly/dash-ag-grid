@@ -221,6 +221,12 @@ dagfuncs.YearFilter = forwardRef((props, ref) => {
     )
 });
 
+
+// for v34 filter logic seperate from component
+dagfuncs.doesFilterPass = (params) => {
+   return params.data.year >= 2010;
+}
+
 dagfuncs.setBody = () => {
     return document.querySelector('body')
 }
