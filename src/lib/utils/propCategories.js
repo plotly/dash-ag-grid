@@ -192,6 +192,10 @@ export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
 
     // filter params custom option
     predicate: 1,
+
+    // filter
+    doesFilterPass: 1,
+    handler: 1,
 };
 
 /**
@@ -268,9 +272,6 @@ export const COLUMN_MAYBE_FUNCTIONS = {
 
     // In filterParams
     filterPlaceholder: 1,
-
-    // in filter
-    doesFilterPass: 1,
 
     // In dataTypeDefinitions
     dataTypeMatcher: 1,
