@@ -564,7 +564,9 @@ export function DashAgGrid(props) {
                     if (has('function', value)) {
                         return convertMaybeFunctionNoParams(value);
                     }
-                    return convertCol(value);
+                    if (typeof value === 'object') {
+                        return convertCol(value);
+                    }
                 }
                 // not one of those categories - pass it straight through
                 return value;
