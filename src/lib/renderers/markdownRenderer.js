@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import rehypeExternalLinks from 'rehype-external-links';
 
 import ReactMarkdown from 'react-markdown';
 
 export default function MarkdownRenderer(props) {
-    const {colDef, target, value, dangerously_allow_code} = props;
+    const {colDef, value, dangerously_allow_code} = props;
     // Markdown renderer with HTML rendering enabled.
     // rehypeRaw allows HTML rendering.
     // Convert <p> tags to simple <divs> using the components prop.
@@ -18,24 +19,28 @@ export default function MarkdownRenderer(props) {
         linkTarget = colDef.linkTarget || '_self';
     }
 
+    rehypePlugins.push([rehypeExternalLinks, {target: linkTarget}]);
+
     return (
-        <ReactMarkdown
-            linkTarget={linkTarget}
-            remarkPlugins={[[remarkGfm, {singleTilde: false}]]}
-            components={{
-                p: 'div',
-                a: ({node: _, children, ...props}) => {
-                    const linkProps = props;
-                    if (target === '_blank') {
-                        linkProps.rel = 'noopener noreferrer';
-                    }
-                    return <a {...linkProps}>{children}</a>;
-                },
-            }}
-            className="agGrid-Markdown"
-            rehypePlugins={rehypePlugins}
-            children={value ? String(value) : null}
-        />
+        <div className="agGrid-Markdown">
+            <ReactMarkdown
+                remarkPlugins={[[remarkGfm, {singleTilde: false}]]}
+                components={{
+                    p: 'div',
+                    a: ({node: _, children, ...props}) => {
+                        const linkProps = props;
+                        // Use the correct target for links
+                        linkProps.target = linkTarget;
+                        if (linkProps.target === '_blank') {
+                            linkProps.rel = 'noopener noreferrer';
+                        }
+                        return <a {...linkProps}>{children}</a>;
+                    },
+                }}
+                rehypePlugins={rehypePlugins}
+                children={value ? String(value) : null}
+            />
+        </div>
     );
 }
 

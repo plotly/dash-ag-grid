@@ -45,6 +45,7 @@
         "npm-check-updates": "^19.6.3",
         "ramda": "^0.32.0",
         "react-markdown": "^10.1.0",
+        "rehype-external-links": "^3.0.0",
         "rehype-raw": "^7.0.0",
         "remark-gfm": "^4.0.1",
         "static-eval": "^2.1.1"
