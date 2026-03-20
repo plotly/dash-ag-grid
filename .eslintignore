@@ -1,2 +1,3 @@
 *.css
 registerServiceWorker.js
+node_modules/
