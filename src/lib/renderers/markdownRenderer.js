@@ -30,16 +30,18 @@ export default function MarkdownRenderer(props) {
                 remarkPlugins={[[remarkGfm, {singleTilde: false}]]}
                 components={{
                     p: 'div',
-                    a({node: _, children, ...props}) {
+                    a({node: _, children, target, ...props}) {
                         const linkProps = props;
+                        const subLinkTarget = linkTarget || target;
                         // Use the correct target for links
-                        if (!linkProps.target) {
-                            linkProps.target = linkTarget;
-                        }
-                        if (linkProps.target === '_blank') {
+                        if (subLinkTarget === '_blank') {
                             linkProps.rel = 'noopener noreferrer nofollow';
                         }
-                        return <a {...linkProps}>{children}</a>;
+                        return (
+                            <a {...{target: subLinkTarget, ...linkProps}}>
+                                {children}
+                            </a>
+                        );
                     },
                 }}
                 rehypePlugins={rehypePlugins}

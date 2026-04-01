@@ -150,7 +150,7 @@ def test_mc001_markdown_components(dash_duo):
 
     assert (
         safe_grid.get_cell(2, 2).get_attribute("innerHTML")
-        == '<div class="agGrid-Markdown"><div><a href="#" target="_blank" rel="noopener noreferrer nofollow">Example</a></div></div>'
+        == '<div class="agGrid-Markdown"><div><a target="_blank" href="#" rel="noopener noreferrer nofollow">Example</a></div></div>'
     )
     safe_grid.wait_for_cell_text(
         1, 2, '<a href="#" target="_blank">Link to new tab</a>'
@@ -163,7 +163,7 @@ def test_mc001_markdown_components(dash_duo):
     dangerous_grid.wait_for_cell_text(1, 2, "Link to new tab")
     assert (
         dangerous_grid.get_cell(1, 2).get_attribute("innerHTML")
-        == '<div class="agGrid-Markdown"><div><a href="#" target="_blank" rel="noopener noreferrer nofollow">Link to new tab</a></div></div>'
+        == '<div class="agGrid-Markdown"><div><a target="_blank" href="#" rel="noopener noreferrer nofollow">Link to new tab</a></div></div>'
     )
 
     assert safe2_grid.get_cell(0, 2).text == ""
