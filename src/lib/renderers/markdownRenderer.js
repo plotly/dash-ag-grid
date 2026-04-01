@@ -19,7 +19,10 @@ export default function MarkdownRenderer(props) {
         linkTarget = colDef.linkTarget || '_self';
     }
 
-    rehypePlugins.push([rehypeExternalLinks, {target: linkTarget, rel: ['noopener', 'noreferrer', 'nofollow']}]);
+    rehypePlugins.push([
+        rehypeExternalLinks,
+        {target: linkTarget, rel: ['noopener', 'noreferrer', 'nofollow']},
+    ]);
 
     return (
         <div className="agGrid-Markdown">
