@@ -14,14 +14,14 @@ export default function MarkdownRenderer(props) {
     // Convert <p> tags to simple <divs> using the components prop.
     const rehypePlugins = dangerously_allow_code ? [rehypeRaw] : [];
 
-    let linkTarget;
-    if (!dangerously_allow_code) {
-        linkTarget = colDef.linkTarget || '_self';
-    }
+    const linkTarget = colDef.linkTarget || '_self';
 
     rehypePlugins.push([
         rehypeExternalLinks,
-        {target: linkTarget, rel: ['noopener', 'noreferrer', 'nofollow']},
+        {
+            target: dangerously_allow_code ? linkTarget : null,
+            rel: ['noopener', 'noreferrer', 'nofollow'],
+        },
     ]);
 
     return (
@@ -32,7 +32,9 @@ export default function MarkdownRenderer(props) {
                     p: 'div',
                     a({node: _, children, target, ...props}) {
                         const linkProps = props;
-                        const subLinkTarget = linkTarget || target;
+                        const subLinkTarget = dangerously_allow_code
+                            ? target || linkTarget
+                            : linkTarget;
                         // Use the correct target for links
                         if (subLinkTarget === '_blank') {
                             linkProps.rel = 'noopener noreferrer nofollow';

@@ -158,7 +158,7 @@ def test_mc001_markdown_components(dash_duo):
 
     assert (
         dangerous_grid.get_cell(2, 2).get_attribute("innerHTML")
-        == '<div class="agGrid-Markdown"><div><a href="#">Example</a></div></div>'
+        == '<div class="agGrid-Markdown"><div><a target="_self" href="#">Example</a></div></div>'
     )
     dangerous_grid.wait_for_cell_text(1, 2, "Link to new tab")
     assert (
