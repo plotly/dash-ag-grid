@@ -19,7 +19,7 @@ export default function MarkdownRenderer(props) {
         linkTarget = colDef.linkTarget || '_self';
     }
 
-    rehypePlugins.push([rehypeExternalLinks, {target: linkTarget}]);
+    rehypePlugins.push([rehypeExternalLinks, {target: linkTarget, rel: ['noopener', 'noreferrer', 'nofollow']}]);
 
     return (
         <div className="agGrid-Markdown">
@@ -27,12 +27,14 @@ export default function MarkdownRenderer(props) {
                 remarkPlugins={[[remarkGfm, {singleTilde: false}]]}
                 components={{
                     p: 'div',
-                    a: ({node: _, children, ...props}) => {
+                    a({node: _, children, ...props}) {
                         const linkProps = props;
                         // Use the correct target for links
-                        linkProps.target = linkTarget;
+                        if (!linkProps.target) {
+                            linkProps.target = linkTarget;
+                        }
                         if (linkProps.target === '_blank') {
-                            linkProps.rel = 'noopener noreferrer';
+                            linkProps.rel = 'noopener noreferrer nofollow';
                         }
                         return <a {...linkProps}>{children}</a>;
                     },
