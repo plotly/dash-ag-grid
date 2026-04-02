@@ -1,6 +1,6 @@
 {
     "name": "dash-ag-grid",
-    "version": "35.1.0",
+    "version": "35.2.0",
     "description": "Dash wrapper around AG Grid, the best interactive data grid for the web.",
     "repository": {
         "type": "git",
@@ -35,9 +35,9 @@
         "@emotion/styled": "^11.14.1",
         "@mui/icons-material": "^7.3.9",
         "@mui/material": "^7.3.9",
-        "ag-grid-community": "35.1.0",
-        "ag-grid-enterprise": "35.1.0",
-        "ag-grid-react": "35.1.0",
+        "ag-grid-community": "35.2.0",
+        "ag-grid-enterprise": "35.2.0",
+        "ag-grid-react": "35.2.0",
         "d3-format": "^3.1.2",
         "d3-time": "^3.1.0",
         "d3-time-format": "^4.1.0",
