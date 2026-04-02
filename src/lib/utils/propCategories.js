@@ -322,6 +322,7 @@ export const COLUMN_ARRAY_NESTED_FUNCTIONS = {
 export const OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS = {
     dataTypeDefinitions: 1,
     aggFuncs: 1,
+    columnTypes: 1,
 };
 
 /**
