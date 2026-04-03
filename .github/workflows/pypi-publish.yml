@@ -1,4 +1,4 @@
-name: Publish to PyPI & NPM
+name: Publish to PyPI
 
 on:
   release:
@@ -30,22 +30,3 @@ jobs:
           path: dist/
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        
-      - name: Download npm package
-        uses: actions/download-artifact@v4
-        with:
-          name: npm-package
-          path: npm-dist/
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
-      - name: Publish to npm
-        run: |
-          pushd npm-dist
-          FILE=$(echo *.tgz)
-          npm publish "$FILE" --provenance --access public
-          popd
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        shell: bash
