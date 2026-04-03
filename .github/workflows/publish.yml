@@ -33,6 +33,21 @@ jobs:
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
       
+  npm-publish:
+    name: Upload release to NPM
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+    permissions:
+      id-token: write
+      contents: read
+    needs: build
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'v18.16.0'
+          registry-url: 'https://registry.npmjs.org'
       - name: Download npm package
         uses: actions/download-artifact@v4
         with:
