@@ -5,13 +5,23 @@ import {AgChartsCommunityModule} from 'ag-charts-community';
 import {AgChartsEnterpriseModule} from 'ag-charts-enterprise';
 import MemoizedAgGrid, {propTypes} from './AgGrid.react';
 
-const registeredChartModules = new Set();
 const chartsModules = {
     community: AgChartsCommunityModule,
     enterprise: AgChartsEnterpriseModule,
 };
 
+function getRegisteredChartModules() {
+    if (typeof window === 'undefined') {
+        return new Set();
+    }
+    if (!window.dashAgGridRegisteredChartModules) {
+        window.dashAgGridRegisteredChartModules = new Set();
+    }
+    return window.dashAgGridRegisteredChartModules;
+}
+
 function registerChartsModule(mode) {
+    const registeredChartModules = getRegisteredChartModules();
     if (!registeredChartModules.has(mode)) {
         ModuleRegistry.registerModules([
             IntegratedChartsModule.with(chartsModules[mode]),

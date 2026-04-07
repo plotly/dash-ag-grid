@@ -84,12 +84,13 @@ function DashAgGrid(props) {
         typeof dashEnableCharts === 'undefined' || dashEnableCharts === null
             ? false
             : dashEnableCharts;
-    const hasEnableCharts = props.enableCharts || dashGridOptions.enableCharts;
-    const validDashEnableCharts =
-        normalizedDashEnableCharts === false ||
-        normalizedDashEnableCharts === true ||
-        normalizedDashEnableCharts === 'community' ||
-        normalizedDashEnableCharts === 'enterprise';
+    const hasEnableCharts = dashGridOptions.enableCharts;
+    const validDashEnableCharts = [
+        false,
+        true,
+        'community',
+        'enterprise',
+    ].includes(normalizedDashEnableCharts);
 
     if (!validDashEnableCharts) {
         throw new Error(
@@ -99,7 +100,7 @@ function DashAgGrid(props) {
 
     if (hasEnableCharts && !normalizedDashEnableCharts) {
         throw new Error(
-            "enableCharts is set, but chart modules are not loaded. Set dashEnableCharts to true, 'community', or 'enterprise'."
+            "enableCharts is set, but chart modules are not loaded. Set dashEnableCharts to true (same as 'community'), 'community', or 'enterprise'."
         );
     }
 

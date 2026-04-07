@@ -15,18 +15,26 @@ ModuleRegistry.registerModules([
     SparklinesModule.with(AgChartsEnterpriseModule),
 ]);
 
-let chartsModuleRegistered = false;
+function shouldRegisterChartsModule() {
+    if (typeof window === 'undefined') {
+        return true;
+    }
+    if (window.dashAgGridEnterpriseChartsRegistered) {
+        return false;
+    }
+    window.dashAgGridEnterpriseChartsRegistered = true;
+    return true;
+}
 
 export default function DashAgGridEnterprise(props) {
     const {licenseKey, dashEnableCharts} = props;
     if (licenseKey) {
         LicenseManager.setLicenseKey(licenseKey);
     }
-    if (dashEnableCharts && !chartsModuleRegistered) {
+    if (dashEnableCharts && shouldRegisterChartsModule()) {
         ModuleRegistry.registerModules([
             IntegratedChartsModule.with(AgChartsEnterpriseModule),
         ]);
-        chartsModuleRegistered = true;
     }
     return <MemoizedAgGrid {...props} />;
 }
