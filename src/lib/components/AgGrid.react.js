@@ -77,6 +77,8 @@ function DashAgGrid(props) {
     const validDashEnableCharts = [false, true, 'enterprise'].includes(
         normalizedDashEnableCharts
     );
+    const hasConflictingEnableChartsSetting =
+        normalizedDashEnableCharts && dashGridOptions.enableCharts === false;
     const gridDashOptions = normalizedDashEnableCharts
         ? {...dashGridOptions, enableCharts: true}
         : dashGridOptions;
@@ -91,6 +93,12 @@ function DashAgGrid(props) {
     if (normalizedDashEnableCharts && !enableEnterpriseModules) {
         throw new Error(
             'dashEnableCharts is only supported when enableEnterpriseModules is true.'
+        );
+    }
+
+    if (hasConflictingEnableChartsSetting) {
+        throw new Error(
+            'dashEnableCharts cannot be combined with dashGridOptions.enableCharts=false.'
         );
     }
 
@@ -541,7 +549,7 @@ DashAgGrid.propTypes = {
 
     /**
      * Load enterprise AG Charts modules for integrated charts.
-     * Setting this to true or "enterprise" also sets dashGridOptions.enableCharts=true.
+     * true and "enterprise" are equivalent and set dashGridOptions.enableCharts=true.
      */
     dashEnableCharts: PropTypes.oneOfType([
         PropTypes.bool,

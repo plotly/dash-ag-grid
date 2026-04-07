@@ -104,3 +104,24 @@ def test_charts005_rejects_enablecharts_without_dashenablecharts(dash_duo):
         in entry.get("message", "")
         for entry in dash_duo.get_logs()
     )
+
+
+def test_charts006_rejects_conflicting_enablecharts_false(dash_duo):
+    app = Dash(__name__)
+    app.layout = html.Div(
+        [
+            _make_chart_grid(
+                enableEnterpriseModules=True,
+                dashEnableCharts=True,
+                dashGridOptions={"enableCharts": False},
+            )
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    assert any(
+        "dashEnableCharts cannot be combined with dashGridOptions.enableCharts=false."
+        in entry.get("message", "")
+        for entry in dash_duo.get_logs()
+    )
