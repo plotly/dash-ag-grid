@@ -30,9 +30,11 @@ def _make_basic_grid(**extra_props):
     )
 
 
-def test_charts001_enables_community_charts_modules(dash_duo):
+def test_charts001_enables_enterprise_charts_modules_with_true(dash_duo):
     app = Dash(__name__)
-    app.layout = html.Div([_make_chart_grid(dashEnableCharts=True)])
+    app.layout = html.Div(
+        [_make_chart_grid(enableEnterpriseModules=True, dashEnableCharts=True)]
+    )
 
     dash_duo.start_server(app)
 
@@ -75,3 +77,16 @@ def test_charts003_keeps_enterprise_grid_without_charts(dash_duo):
 
     grid = utils.Grid(dash_duo, "grid")
     grid.wait_for_cell_text(0, 0, "Toyota")
+
+
+def test_charts004_rejects_charts_on_community_grid(dash_duo):
+    app = Dash(__name__)
+    app.layout = html.Div([_make_chart_grid(dashEnableCharts="community")])
+
+    dash_duo.start_server(app)
+
+    assert any(
+        "dashEnableCharts is only supported when enableEnterpriseModules is true."
+        in entry.get("message", "")
+        for entry in dash_duo.get_logs()
+    )

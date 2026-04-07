@@ -8,20 +8,10 @@ import {pick} from 'ramda';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
-const RealAgGridCharts = lazy(LazyLoader.agGridCharts);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
 
-function getGrid(enableEnterpriseModules, dashEnableCharts) {
-    const chartsEnabled =
-        dashEnableCharts === true ||
-        dashEnableCharts === 'community' ||
-        dashEnableCharts === 'enterprise';
-
-    if (enableEnterpriseModules) {
-        return RealAgGridEnterprise;
-    }
-
-    return chartsEnabled ? RealAgGridCharts : RealAgGrid;
+function getGrid(enableEnterpriseModules) {
+    return enableEnterpriseModules ? RealAgGridEnterprise : RealAgGrid;
 }
 
 export const defaultProps = {
@@ -98,16 +88,19 @@ function DashAgGrid(props) {
         );
     }
 
-    if (hasEnableCharts && !normalizedDashEnableCharts) {
+    if (normalizedDashEnableCharts && !enableEnterpriseModules) {
         throw new Error(
-            "enableCharts is set, but chart modules are not loaded. Set dashEnableCharts to true (same as 'community'), 'community', or 'enterprise'."
+            'dashEnableCharts is only supported when enableEnterpriseModules is true.'
         );
     }
 
-    const RealComponent = getGrid(
-        enableEnterpriseModules,
-        normalizedDashEnableCharts
-    );
+    if (hasEnableCharts && !normalizedDashEnableCharts) {
+        throw new Error(
+            "enableCharts is set, but chart modules are not loaded. Set enableEnterpriseModules=true and dashEnableCharts=true or 'enterprise'."
+        );
+    }
+
+    const RealComponent = getGrid(enableEnterpriseModules);
 
     return (
         <Suspense fallback={null}>

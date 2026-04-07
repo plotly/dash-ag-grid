@@ -53,18 +53,6 @@ _js_dist = [
         'dynamic': True
     },
     {
-        'relative_package_path': 'async-community-charts.js',
-        'namespace': package_name,
-        'external_url': f'{_unpkg}async-community-charts.js',
-        'async': True
-    },
-    {
-        'relative_package_path': 'async-community-charts.js.map',
-        'namespace': package_name,
-        'external_url': f'{_unpkg}async-community-charts.js.map',
-        'dynamic': True
-    },
-    {
         'relative_package_path': 'async-enterprise.js',
         'namespace': package_name,
         'external_url': f'{_unpkg}async-enterprise.js',
