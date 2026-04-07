@@ -74,9 +74,12 @@ function DashAgGrid(props) {
         typeof dashEnableCharts === 'undefined' || dashEnableCharts === null
             ? false
             : dashEnableCharts;
-    const validDashEnableCharts = [false, true, 'enterprise', 'community'].includes(
-        normalizedDashEnableCharts
-    );
+    const validDashEnableCharts = [
+        false,
+        true,
+        'enterprise',
+        'community',
+    ].includes(normalizedDashEnableCharts);
     const hasConflictingEnableChartsSetting =
         normalizedDashEnableCharts && dashGridOptions.enableCharts === false;
     const gridDashOptions = normalizedDashEnableCharts
