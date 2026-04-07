@@ -74,17 +74,17 @@ function DashAgGrid(props) {
         typeof dashEnableCharts === 'undefined' || dashEnableCharts === null
             ? false
             : dashEnableCharts;
-    const hasEnableCharts = dashGridOptions.enableCharts;
-    const validDashEnableCharts = [
-        false,
-        true,
-        'community',
-        'enterprise',
-    ].includes(normalizedDashEnableCharts);
+    const validDashEnableCharts = [false, true, 'enterprise'].includes(
+        normalizedDashEnableCharts
+    );
+    const gridDashOptions = normalizedDashEnableCharts
+        ? {...dashGridOptions, enableCharts: true}
+        : dashGridOptions;
+    const hasEnableCharts = gridDashOptions.enableCharts;
 
     if (!validDashEnableCharts) {
         throw new Error(
-            "dashEnableCharts must be one of: false, true, 'community', 'enterprise'."
+            "dashEnableCharts must be one of: false, true, 'enterprise'."
         );
     }
 
@@ -104,7 +104,12 @@ function DashAgGrid(props) {
 
     return (
         <Suspense fallback={null}>
-            <RealComponent parentState={state} {...defaultProps} {...props} />
+            <RealComponent
+                parentState={state}
+                {...defaultProps}
+                {...props}
+                dashGridOptions={gridDashOptions}
+            />
         </Suspense>
     );
 }
@@ -535,12 +540,12 @@ DashAgGrid.propTypes = {
     enableEnterpriseModules: PropTypes.bool,
 
     /**
-     * Load AG Charts modules for integrated charts when using `enableCharts`.
-     * Set to true (community charts), "community", or "enterprise".
+     * Load enterprise AG Charts modules for integrated charts.
+     * Setting this to true or "enterprise" also sets dashGridOptions.enableCharts=true.
      */
     dashEnableCharts: PropTypes.oneOfType([
         PropTypes.bool,
-        PropTypes.oneOf(['community', 'enterprise']),
+        PropTypes.oneOf(['enterprise']),
     ]),
 
     /**

@@ -12,7 +12,6 @@ def _make_chart_grid(**extra_props):
             {"make": "Ford", "model": "Mondeo", "price": 32000},
             {"make": "Porsche", "model": "Boxster", "price": 72000},
         ],
-        dashGridOptions={"enableCharts": True},
         **extra_props,
     )
 
@@ -81,12 +80,27 @@ def test_charts003_keeps_enterprise_grid_without_charts(dash_duo):
 
 def test_charts004_rejects_charts_on_community_grid(dash_duo):
     app = Dash(__name__)
-    app.layout = html.Div([_make_chart_grid(dashEnableCharts="community")])
+    app.layout = html.Div([_make_chart_grid(dashEnableCharts=True)])
 
     dash_duo.start_server(app)
 
     assert any(
         "dashEnableCharts is only supported when enableEnterpriseModules is true."
+        in entry.get("message", "")
+        for entry in dash_duo.get_logs()
+    )
+
+
+def test_charts005_rejects_enablecharts_without_dashenablecharts(dash_duo):
+    app = Dash(__name__)
+    app.layout = html.Div(
+        [_make_chart_grid(dashGridOptions={"enableCharts": True})]
+    )
+
+    dash_duo.start_server(app)
+
+    assert any(
+        "enableCharts is set, but chart modules are not loaded."
         in entry.get("message", "")
         for entry in dash_duo.get_logs()
     )
