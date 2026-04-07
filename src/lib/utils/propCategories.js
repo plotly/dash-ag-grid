@@ -342,6 +342,7 @@ export const PROPS_NOT_FOR_AG_GRID = [
     'setProps',
     'loading_state',
     'enableEnterpriseModules',
+    'dashEnableCharts',
     'parentState',
     'persistence',
     'persisted_props',

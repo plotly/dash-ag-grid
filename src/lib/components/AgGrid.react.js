@@ -8,10 +8,20 @@ import {pick} from 'ramda';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const RealAgGrid = lazy(LazyLoader.agGrid);
+const RealAgGridCharts = lazy(LazyLoader.agGridCharts);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
 
-function getGrid(enable) {
-    return enable ? RealAgGridEnterprise : RealAgGrid;
+function getGrid(enableEnterpriseModules, dashEnableCharts) {
+    const chartsEnabled =
+        dashEnableCharts === true ||
+        dashEnableCharts === 'community' ||
+        dashEnableCharts === 'enterprise';
+
+    if (enableEnterpriseModules) {
+        return RealAgGridEnterprise;
+    }
+
+    return chartsEnabled ? RealAgGridCharts : RealAgGrid;
 }
 
 export const defaultProps = {
@@ -21,6 +31,7 @@ export const defaultProps = {
     selectAll: false,
     deselectAll: false,
     enableEnterpriseModules: false,
+    dashEnableCharts: false,
     updateColumnState: false,
     persisted_props: ['selectedRows'],
     persistence_type: 'local',
@@ -64,8 +75,38 @@ function DashAgGrid(props) {
         }
     }, [props.rowTransaction, state.mounted, buildArray]);
 
-    const {enableEnterpriseModules} = props;
-    const RealComponent = getGrid(enableEnterpriseModules);
+    const {
+        enableEnterpriseModules,
+        dashEnableCharts,
+        dashGridOptions = {},
+    } = props;
+    const normalizedDashEnableCharts =
+        typeof dashEnableCharts === 'undefined' || dashEnableCharts === null
+            ? false
+            : dashEnableCharts;
+    const hasEnableCharts = props.enableCharts || dashGridOptions.enableCharts;
+    const validDashEnableCharts =
+        normalizedDashEnableCharts === false ||
+        normalizedDashEnableCharts === true ||
+        normalizedDashEnableCharts === 'community' ||
+        normalizedDashEnableCharts === 'enterprise';
+
+    if (!validDashEnableCharts) {
+        throw new Error(
+            "dashEnableCharts must be one of: false, true, 'community', 'enterprise'."
+        );
+    }
+
+    if (hasEnableCharts && !normalizedDashEnableCharts) {
+        throw new Error(
+            "enableCharts is set, but chart modules are not loaded. Set dashEnableCharts to true, 'community', or 'enterprise'."
+        );
+    }
+
+    const RealComponent = getGrid(
+        enableEnterpriseModules,
+        normalizedDashEnableCharts
+    );
 
     return (
         <Suspense fallback={null}>
@@ -498,6 +539,15 @@ DashAgGrid.propTypes = {
      * If True, enable ag-grid Enterprise modules. Recommended to use with licenseKey.
      */
     enableEnterpriseModules: PropTypes.bool,
+
+    /**
+     * Load AG Charts modules for integrated charts when using `enableCharts`.
+     * Set to true (community charts), "community", or "enterprise".
+     */
+    dashEnableCharts: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.oneOf(['community', 'enterprise']),
+    ]),
 
     /**
      * The rowData in the grid after inline filters are applied.
