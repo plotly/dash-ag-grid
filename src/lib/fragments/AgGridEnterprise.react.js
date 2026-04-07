@@ -6,6 +6,7 @@ import {
     LicenseManager,
     SparklinesModule,
 } from 'ag-grid-enterprise';
+import {AgChartsCommunityModule} from 'ag-charts-community';
 import {AgChartsEnterpriseModule} from 'ag-charts-enterprise';
 import MemoizedAgGrid, {propTypes} from './AgGrid.react';
 
@@ -15,26 +16,21 @@ ModuleRegistry.registerModules([
     SparklinesModule.with(AgChartsEnterpriseModule),
 ]);
 
-function shouldRegisterChartsModule() {
-    if (typeof window === 'undefined') {
-        return true;
-    }
-    if (window.dashAgGridEnterpriseChartsRegistered) {
-        return false;
-    }
-    window.dashAgGridEnterpriseChartsRegistered = true;
-    return true;
-}
-
 export default function DashAgGridEnterprise(props) {
     const {licenseKey, dashEnableCharts} = props;
     if (licenseKey) {
         LicenseManager.setLicenseKey(licenseKey);
     }
-    if (dashEnableCharts && shouldRegisterChartsModule()) {
-        ModuleRegistry.registerModules([
-            IntegratedChartsModule.with(AgChartsEnterpriseModule),
-        ]);
+    if (dashEnableCharts) {
+        if (dashEnableCharts === 'enterprise') {
+            ModuleRegistry.registerModules([
+                IntegratedChartsModule.with(AgChartsEnterpriseModule),
+            ]);
+        } else {
+            ModuleRegistry.registerModules([
+                IntegratedChartsModule.with(AgChartsCommunityModule),
+            ]);
+        }
     }
     return <MemoizedAgGrid {...props} />;
 }
