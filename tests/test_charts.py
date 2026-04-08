@@ -125,3 +125,22 @@ def test_charts006_rejects_conflicting_enablecharts_false(dash_duo):
         in entry.get("message", "")
         for entry in dash_duo.get_logs()
     )
+
+
+def test_charts007_accepts_charts_license_key_prop(dash_duo):
+    app = Dash(__name__)
+    app.layout = html.Div(
+        [
+            _make_chart_grid(
+                enableEnterpriseModules=True,
+                dashEnableCharts="enterprise",
+                licenseKey="grid-key",
+                chartsLicenseKey="charts-key",
+            )
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(0, 0, "Toyota")

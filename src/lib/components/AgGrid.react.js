@@ -546,6 +546,12 @@ DashAgGrid.propTypes = {
     licenseKey: PropTypes.string,
 
     /**
+     * License key for AG Charts Enterprise when dashEnableCharts is "enterprise".
+     * If not provided, licenseKey is used.
+     */
+    chartsLicenseKey: PropTypes.string,
+
+    /**
      * If True, enable ag-grid Enterprise modules. Recommended to use with licenseKey.
      */
     enableEnterpriseModules: PropTypes.bool,

@@ -7,7 +7,10 @@ import {
     SparklinesModule,
 } from 'ag-grid-enterprise';
 import {AgChartsCommunityModule} from 'ag-charts-community';
-import {AgChartsEnterpriseModule} from 'ag-charts-enterprise';
+import {
+    AgChartsEnterpriseModule,
+    LicenseManager as AgChartsLicenseManager,
+} from 'ag-charts-enterprise';
 import MemoizedAgGrid, {propTypes} from './AgGrid.react';
 
 // Register all enterprise features
@@ -17,12 +20,16 @@ ModuleRegistry.registerModules([
 ]);
 
 export default function DashAgGridEnterprise(props) {
-    const {licenseKey, dashEnableCharts} = props;
+    const {licenseKey, chartsLicenseKey, dashEnableCharts} = props;
     if (licenseKey) {
         LicenseManager.setLicenseKey(licenseKey);
     }
     if (dashEnableCharts) {
         if (dashEnableCharts === 'enterprise') {
+            const effectiveChartsLicenseKey = chartsLicenseKey || licenseKey;
+            if (effectiveChartsLicenseKey) {
+                AgChartsLicenseManager.setLicenseKey(effectiveChartsLicenseKey);
+            }
             ModuleRegistry.registerModules([
                 IntegratedChartsModule.with(AgChartsEnterpriseModule),
             ]);
