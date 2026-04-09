@@ -21,7 +21,6 @@ export const defaultProps = {
     selectAll: false,
     deselectAll: false,
     enableEnterpriseModules: false,
-    dashEnableCharts: false,
     updateColumnState: false,
     persisted_props: ['selectedRows'],
     persistence_type: 'local',
@@ -74,24 +73,12 @@ function DashAgGrid(props) {
         typeof dashEnableCharts === 'undefined' || dashEnableCharts === null
             ? false
             : dashEnableCharts;
-    const validDashEnableCharts = [
-        false,
-        true,
-        'enterprise',
-        'community',
-    ].includes(normalizedDashEnableCharts);
     const hasConflictingEnableChartsSetting =
         normalizedDashEnableCharts && dashGridOptions.enableCharts === false;
     const gridDashOptions = normalizedDashEnableCharts
         ? {...dashGridOptions, enableCharts: true}
         : dashGridOptions;
     const hasEnableCharts = gridDashOptions.enableCharts;
-
-    if (!validDashEnableCharts) {
-        throw new Error(
-            "dashEnableCharts must be one of: false, true, 'enterprise', 'community'."
-        );
-    }
 
     if (normalizedDashEnableCharts && !enableEnterpriseModules) {
         throw new Error(
@@ -107,7 +94,7 @@ function DashAgGrid(props) {
 
     if (hasEnableCharts && !normalizedDashEnableCharts) {
         throw new Error(
-            "enableCharts is set, but chart modules are not loaded. Set enableEnterpriseModules=true and dashEnableCharts=true, 'community', or 'enterprise'."
+            "enableCharts is set, but chart modules are not loaded. Set enableEnterpriseModules=true and dashEnableCharts='community' or 'enterprise'."
         );
     }
 
@@ -560,10 +547,7 @@ DashAgGrid.propTypes = {
      * Load enterprise AG Charts modules for integrated charts.
      * true and "community" are equivalent and set dashGridOptions.enableCharts=true.
      */
-    dashEnableCharts: PropTypes.oneOfType([
-        PropTypes.bool,
-        PropTypes.oneOf(['community', 'enterprise']),
-    ]),
+    dashEnableCharts: PropTypes.oneOf(['community', 'enterprise']),
 
     /**
      * The rowData in the grid after inline filters are applied.
