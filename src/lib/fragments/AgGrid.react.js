@@ -529,7 +529,7 @@ export function DashAgGrid(props) {
                     });
                 }
                 if (OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS[target]) {
-                    if (typeof value === 'object' ) {
+                    if (typeof value === 'object') {
                         if ('function' in value) {
                             if (typeof value.function === 'string') {
                                 return convertMaybeFunctionNoParams(value);
