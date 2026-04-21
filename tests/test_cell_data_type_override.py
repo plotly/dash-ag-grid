@@ -2,6 +2,7 @@ from selenium.webdriver import Keys
 
 import dash_ag_grid as dag
 from dash import Dash, html
+import plotly.express as px
 from . import utils
 
 def test_cd001_cell_data_types_override(enforced_locale, dash_duo):
@@ -147,3 +148,28 @@ def test_cd002_column_types_formatting(dash_duo):
     input_el.send_keys("0.2" + Keys.ENTER)
 
     grid.wait_for_cell_text(0, 1, "0.200")
+
+def test_cd003_column_types_overriding(dash_duo):
+    df = px.data.iris()
+
+    app = Dash(__name__)
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                rowData=df.to_dict("records"),
+                columnDefs=[{"field": c} for c in df.columns],
+                dashGridOptions={
+                    "dataTypeDefinitions": {
+                        "number": {
+                            "columnTypes": "rightAligned",
+                        }
+                    }
+                },
+                id='grid'
+            )
+        ]
+    )
+
+    dash_duo.start_server(app)
+    grid = utils.Grid(dash_duo, "grid")
