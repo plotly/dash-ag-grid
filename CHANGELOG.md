@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## [unreleased]
+### Added
+- [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 
 
 ## [35.2.0] - 2026-04-03

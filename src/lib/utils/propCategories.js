@@ -258,6 +258,7 @@ export const COLUMN_MAYBE_FUNCTIONS = {
 
     // Groups
     toolPanelClass: 1,
+    totalValueGetter: 1,
 
     // Groups: Header
     headerClass: 1,
