@@ -5,6 +5,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
 jobs:
   check-changelog:
     runs-on: ubuntu-latest
