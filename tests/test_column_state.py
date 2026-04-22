@@ -567,19 +567,18 @@ def test_toggle_column_visibility(dash_duo):
 
     # Hide column 'b'
     dropdown = dash_duo.find_element("#select-columns")
-    option_b = dash_duo.find_element('span.Select-value-icon:nth-child(1)')
+    dropdown.click()
+    option_b = dash_duo.find_element('label:nth-child(2) > span.dash-options-list-option-wrapper > input')
     option_b.click()
     time.sleep(1)
 
     # Only column 'a' should be visible
     grid_headers = dash_duo.find_elements("div.ag-header-cell-label")
     header_texts = [h.text for h in grid_headers]
-    assert "a" not in header_texts
-    assert "b" in header_texts
+    assert "a" in header_texts
+    assert "b" not in header_texts
 
     # Show both columns again
-    dropdown.click()
-    option_b = dash_duo.find_element('.Select-menu')
     option_b.click()
     time.sleep(1)
     grid_headers = dash_duo.find_elements("div.ag-header-cell-label")

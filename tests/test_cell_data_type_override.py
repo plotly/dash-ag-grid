@@ -80,3 +80,70 @@ def test_cd001_cell_data_types_override(enforced_locale, dash_duo):
         date_input_element.send_keys("01172024" + Keys.ENTER)
 
         grid.wait_for_cell_text(0, 1, "17/01/2024")
+
+
+def test_cd002_column_types_formatting(dash_duo):
+    app = Dash(__name__)
+
+    rowData = [
+        {"col1": 0.12345, "col2": 0.98765},
+        {"col1": 0.5, "col2": 0.25},
+    ]
+
+    columnDefs = [
+        {
+            "field": "col1",
+            "type": "rightAligned",
+            "valueFormatter": {"function": "d3.format('.3f')(params.value)"},
+        },
+        {
+            "field": "col2",
+            "type": "float",
+        },
+    ]
+
+    dashGridOptions = {
+        "columnTypes": {
+            "float": {
+                "cellClass": "ag-right-aligned-cell",
+                "headerClass": "ag-right-aligned-header",
+                "valueFormatter": {
+                    "function": "d3.format('.3f')(params.value)"
+                },
+            }
+        }
+    }
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid-column-types",
+                columnDefs=columnDefs,
+                rowData=rowData,
+                defaultColDef={"editable": True},
+                dashGridOptions=dashGridOptions,
+            )
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid-column-types")
+
+    action = utils.ActionChains(dash_duo.driver)
+
+    # ---- Test col1 formatter ----
+    # edit valye
+    action.double_click(grid.get_cell(0, 0)).perform()
+    input_el = dash_duo.find_element("#grid-column-types .ag-input-field-input")
+    input_el.send_keys("0.1" + Keys.ENTER)
+
+    # expect formatted to 3 decimals
+    grid.wait_for_cell_text(0, 0, "0.100")
+
+    # ---- Test col2 formatter via column type ----
+    action.double_click(grid.get_cell(0, 1)).perform()
+    input_el = dash_duo.find_element("#grid-column-types .ag-input-field-input")
+    input_el.send_keys("0.2" + Keys.ENTER)
+
+    grid.wait_for_cell_text(0, 1, "0.200")
