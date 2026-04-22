@@ -1415,10 +1415,7 @@ export function DashAgGrid(props) {
 
     // handle getRowsResponse
     useEffect(() => {
-        if (
-            isDatasourceLoadedForInfiniteScrolling() &&
-            !getRowsParams.current
-        ) {
+        if (isDatasourceLoadedForInfiniteScrolling() && getRowsParams.current) {
             const params = getRowsParams.current;
 
             const {rowData, rowCount} = props.getRowsResponse;
