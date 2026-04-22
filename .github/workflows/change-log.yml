@@ -4,9 +4,6 @@ name: Check changelog entry
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  push:
-    branches:
-      - '**'
 
 jobs:
   check-changelog:
