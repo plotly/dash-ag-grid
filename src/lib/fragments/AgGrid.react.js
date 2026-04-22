@@ -585,6 +585,33 @@ export function DashAgGrid(props) {
     const convertOneRef = useRef();
     const convertAllPropsRef = useRef();
 
+    const normalizeDetailCellRendererParams = useCallback(
+        (value) => {
+            if (!value || typeof value !== 'object') {
+                return value;
+            }
+
+            let adjustedVal = value;
+            if ('suppressCallback' in value) {
+                adjustedVal = {
+                    ...adjustedVal,
+                    getDetailRowData: value.suppressCallback
+                        ? suppressGetDetail(value.detailColName)
+                        : callbackGetDetail,
+                };
+            }
+            if ('detailGridOptions' in value) {
+                adjustedVal = assocPath(
+                    ['detailGridOptions', 'components'],
+                    components,
+                    adjustedVal
+                );
+            }
+            return convertAllPropsRef.current(adjustedVal);
+        },
+        [suppressGetDetail, callbackGetDetail, components]
+    );
+
     const convertOne = useCallback(
         (value, target) => {
             if (value) {
@@ -614,6 +641,21 @@ export function DashAgGrid(props) {
                     }, value);
                 }
                 if (GRID_NESTED_FUNCTIONS[target]) {
+                    if (target === 'detailCellRendererParams') {
+                        if (has('function', value)) {
+                            const dynamicDetailParams =
+                                convertMaybeFunction(value);
+                            if (typeof dynamicDetailParams === 'function') {
+                                return (params) =>
+                                    normalizeDetailCellRendererParams(
+                                        dynamicDetailParams(params)
+                                    );
+                            }
+                            return dynamicDetailParams;
+                        }
+                        return normalizeDetailCellRendererParams(value);
+                    }
+
                     let adjustedVal = value;
                     if (
                         target === 'rowSelection' &&
@@ -672,6 +714,8 @@ export function DashAgGrid(props) {
         [
             convertCol,
             convertMaybeFunctionNoParams,
+            convertMaybeFunction,
+            normalizeDetailCellRendererParams,
             suppressGetDetail,
             callbackGetDetail,
             components,

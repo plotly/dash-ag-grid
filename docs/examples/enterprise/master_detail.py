@@ -26,6 +26,11 @@ detailColumnDefs = [
     {"headerName": "Pop. (Metro area)", "field": "population_metro"},
 ]
 
+detailColumnDefsSimple = [
+    {"headerName": "City", "field": "city"},
+    {"headerName": "Pop. (City proper)", "field": "population_city"},
+]
+
 rowData = [
     {
         "country": "China",
@@ -161,6 +166,31 @@ To use Master/Detail view:
                     "suppressCallback": False,
                 },
                 dashGridOptions={"detailRowAutoHeight": True}
+            ),
+            body=True,
+        ),
+        html.Hr(),
+        dbc.Card(
+            dcc.Markdown(
+                "Use a JavaScript function in `detailCellRendererParams` to dynamically define detail columns per expanded row."
+            ),
+            body=True,
+        ),
+        dbc.Card(
+            dag.AgGrid(
+                id="master-detail-table-dynamic-columns",
+                columnDefs=masterColumnDefs,
+                rowData=rowData,
+                columnSize="sizeToFit",
+                enableEnterpriseModules=True,
+                masterDetail=True,
+                detailCellRendererParams={
+                    "function": """params.data.region === "Asia"
+                        ? {detailGridOptions: {columnDefs: %s}, detailColName: "cities", suppressCallback: true}
+                        : {detailGridOptions: {columnDefs: %s}, detailColName: "cities", suppressCallback: true}"""
+                    % (detailColumnDefsSimple, detailColumnDefs)
+                },
+                dashGridOptions={"detailRowAutoHeight": True},
             ),
             body=True,
         ),
