@@ -529,24 +529,26 @@ export function DashAgGrid(props) {
                     });
                 }
                 if (OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS[target]) {
-                    if ('function' in value) {
-                        if (typeof value.function === 'string') {
-                            return convertMaybeFunctionNoParams(value);
-                        }
-                    }
-                    return map((v) => {
-                        if (
-                            typeof v === 'object' &&
-                            v !== null &&
-                            !Array.isArray(v)
-                        ) {
-                            if (typeof v.function === 'string') {
-                                return convertMaybeFunctionNoParams(v);
+                    if (typeof value === 'object') {
+                        if ('function' in value) {
+                            if (typeof value.function === 'string') {
+                                return convertMaybeFunctionNoParams(value);
                             }
-                            return convertCol(v);
                         }
-                        return v;
-                    }, value);
+                        return map((v) => {
+                            if (
+                                typeof v === 'object' &&
+                                v !== null &&
+                                !Array.isArray(v)
+                            ) {
+                                if (typeof v.function === 'string') {
+                                    return convertMaybeFunctionNoParams(v);
+                                }
+                                return convertCol(v);
+                            }
+                            return v;
+                        }, value);
+                    }
                 }
                 if (
                     COLUMN_NESTED_FUNCTIONS[target] &&
