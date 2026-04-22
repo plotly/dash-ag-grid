@@ -275,6 +275,7 @@ export function DashAgGrid(props) {
     const [columnState_push, setColumnState_push] = useState(true);
     const [rowTransactionState, setRowTransactionState] = useState(null);
     const resettingCount = useRef(false);
+    const prevRowCountRef = useRef(null);
 
     const components = useMemo(
         () => ({
@@ -841,10 +842,10 @@ export function DashAgGrid(props) {
     const getDatasource = useCallback(() => {
         return {
             getRows(params) {
+                getRowsParams.current = params;
                 if (resettingCount.current) {
                     return;
                 }
-                getRowsParams.current = params;
                 customSetProps({getRowsRequest: params});
             },
             destroy() {
@@ -1416,26 +1417,20 @@ export function DashAgGrid(props) {
         if (isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = props.getRowsResponse;
             if (
-                getRowsParams.current &&
-                'oldRowCount' in getRowsParams.current
+                prevRowCountRef.current !== null &&
+                prevRowCountRef.current === 0
             ) {
-                if (getRowsParams.current.oldRowCount === 0) {
-                    resettingCount.current = true;
-                    getRowsParams.current.api.setRowCount(rowCount, false);
-                    setTimeout(() => {
-                        resettingCount.current = false;
-                        getRowsParams.current.successCallback(
-                            rowData,
-                            rowCount
-                        );
-                    }, 0);
-                } else {
+                resettingCount.current = true;
+                getRowsParams.current.api.setRowCount(rowCount, false);
+                setTimeout(() => {
+                    resettingCount.current = false;
                     getRowsParams.current.successCallback(rowData, rowCount);
-                }
+                }, 0);
             } else {
                 getRowsParams.current.successCallback(rowData, rowCount);
             }
-            getRowsParams.current.oldRowCount = rowCount;
+
+            prevRowCountRef.current = rowCount;
 
             customSetProps({getRowsResponse: null});
         }
