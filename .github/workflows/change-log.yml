@@ -33,7 +33,10 @@ jobs:
               exit 1
             fi
             echo "Fetching base ref origin/$PR_BASE_REF"
-            git fetch origin "$PR_BASE_REF":refs/remotes/origin/"$PR_BASE_REF" || true
+            if ! git fetch origin "$PR_BASE_REF":refs/remotes/origin/"$PR_BASE_REF"; then
+              echo "::error::Failed to fetch pull request base ref origin/$PR_BASE_REF."
+              exit 1
+            fi
             changed=$(git diff --name-only "origin/$PR_BASE_REF...HEAD")
           else
             if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
