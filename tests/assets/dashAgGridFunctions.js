@@ -548,3 +548,14 @@ dagfuncs.testToyota = (params) => {
 dagfuncs.customTheme = (theme, agGrid) => {
     return theme.withPart(agGrid.createPart(agGrid.colorSchemeDark)).withPart(agGrid.createPart(agGrid.iconSetAlpine));
 }
+
+
+dagfuncs.myTotalValueGetter = function (params) {
+    const isRootLevel = params.node.level === -1;
+
+        if (isRootLevel) {
+          return 'Grand Total';
+        }
+
+        return `Sub Total (${params.value})`;
+    }

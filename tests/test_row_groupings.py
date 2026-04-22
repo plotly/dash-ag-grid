@@ -182,3 +182,66 @@ def test_rg002_row_groupings(dash_duo):
     until(lambda: dash_duo.find_element('#grid-virtualRowData-info').text
                   == "{'country': 'Ireland', 'type': 'Non Fiction', 'city': 'texas'}",
           timeout=3)
+
+
+def test_rg003_total_value_getter(dash_duo):
+    import dash
+    from dash import html
+    import dash_ag_grid as dag
+
+    from dash.testing.wait import until
+    from . import utils
+
+    app = dash.Dash(__name__)
+
+    row_data = [
+        {"country": "USA", "year": 2020, "gold": 1, "silver": 0, "bronze": 1},
+        {"country": "USA", "year": 2020, "gold": 2, "silver": 1, "bronze": 0},
+        {"country": "USA", "year": 2024, "gold": 1, "silver": 1, "bronze": 1},
+        {"country": "Canada", "year": 2020, "gold": 0, "silver": 1, "bronze": 1},
+        {"country": "Canada", "year": 2024, "gold": 2, "silver": 0, "bronze": 0},
+    ]
+
+    column_defs = [
+        {"field": "country", "rowGroup": True, "hide": True},
+        {"field": "year", "rowGroup": True, "hide": True},
+        {"field": "gold", "aggFunc": "sum"},
+        {"field": "silver", "aggFunc": "sum"},
+        {"field": "bronze", "aggFunc": "sum"},
+    ]
+
+    auto_group_column_def = {
+        "minWidth": 300,
+        "cellRendererParams": {
+            "totalValueGetter": {"function": "myTotalValueGetter(params)"},
+        },
+    }
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid",
+                rowData=row_data,
+                columnDefs=column_defs,
+                defaultColDef={"flex": 1, "minWidth": 150},
+                enableEnterpriseModules=True,
+                dashGridOptions={
+                    "autoGroupColumnDef": auto_group_column_def,
+                    "groupTotalRow": "bottom",
+                    "grandTotalRow": "bottom",
+                    "groupDefaultExpanded": 1,
+                },
+
+            )
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+
+    until(lambda: "USA" in grid.get_cell(0, 0).text, timeout=3)
+    all_text = [el.text for el in dash_duo.find_elements(".ag-cell")]
+
+    assert any("Sub Total (" in t for t in all_text)
+    assert "Grand Total" in all_text
