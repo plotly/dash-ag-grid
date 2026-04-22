@@ -651,7 +651,9 @@ export function DashAgGrid(props) {
                                         dynamicDetailParams(params)
                                     );
                             }
-                            return dynamicDetailParams;
+                            return normalizeDetailCellRendererParams(
+                                dynamicDetailParams
+                            );
                         }
                         return normalizeDetailCellRendererParams(value);
                     }

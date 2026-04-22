@@ -69,7 +69,7 @@ def test_rf001_recursive_functions(dash_duo):
                 {
                     "city": "Shanghai",
                     "population_city": 24870895,
-                    "population_metro": "NA",
+                    "population_metro": 0,
                 },
                 {
                     "city": "Beijing",
@@ -295,7 +295,7 @@ def test_rf003_master_detail_dynamic_columns(dash_duo):
                 {
                     "city": "Shanghai",
                     "population_city": 24870895,
-                    "population_metro": "NA",
+                    "population_metro": 0,
                 },
             ],
         },
