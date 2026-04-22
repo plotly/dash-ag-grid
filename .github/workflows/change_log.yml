@@ -1,0 +1,58 @@
+# yaml
+name: Check changelog entry
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - '**'
+
+jobs:
+  check-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine changed files and require changelog update
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref || '' }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          echo "Event: $EVENT_NAME"
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            if [ -z "$PR_BASE_REF" ]; then
+              echo "Pull request base ref not provided."
+              exit 1
+            fi
+            echo "Fetching base ref origin/$PR_BASE_REF"
+            git fetch origin "$PR_BASE_REF":refs/remotes/origin/"$PR_BASE_REF" || true
+            changed=$(git diff --name-only "origin/$PR_BASE_REF...HEAD" || true)
+          else
+            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              # new branch or forced push: list files in the commit
+              changed=$(git show --name-only --pretty="" "$SHA" || true)
+            else
+              changed=$(git diff --name-only "$BEFORE...$SHA" || true)
+            fi
+          fi
+
+          echo "Changed files:"
+          echo "$changed" | sed 's/^/ - /'
+
+          # match: CHANGELOG.md, NEWS.md, any file under changelog(s)/ or docs/changelog/
+          echo "$changed" | grep -E '(^CHANGELOG\.md$|^NEWS\.md$|(^|/)changelog(/|$)|(^|/)changelogs(/|$)|(^|/)docs/changelog(/|$))' >/dev/null 2>&1 || {
+            echo "::error::No changelog changes detected."
+            echo "Please add or update a changelog entry (e.g. update `CHANGELOG.md` or add a file under `changelog/`)."
+            exit 1
+          }
+
+          echo "Changelog change detected. OK."
