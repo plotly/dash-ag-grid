@@ -8,6 +8,11 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 ### Added
 - [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 
+### Changed
+- [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
+  - Added test for `OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS` to test that the value is an object before parsing, 
+  - this allows for reused keys to not comply with being an object
+
 
 ## [35.2.0] - 2026-04-03
 ### Added 
