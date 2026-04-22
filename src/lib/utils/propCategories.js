@@ -185,7 +185,6 @@ export const GRID_NESTED_FUNCTIONS = {
  **/
 export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
     cellEditor: 1,
-    filter: 1,
 
     // Columns: Sort
     comparator: 1,
@@ -193,6 +192,10 @@ export const COLUMN_MAYBE_FUNCTIONS_NO_PARAMS = {
 
     // filter params custom option
     predicate: 1,
+
+    // filter
+    doesFilterPass: 1,
+    handler: 1,
 };
 
 /**
@@ -289,10 +292,18 @@ export const COLUMN_NESTED_FUNCTIONS = {
  * or may be functions themselves
  **/
 export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS = {
-    filterParams: 1,
     cellRendererParams: 1,
     cellEditorParams: 1,
     tooltipComponentParams: 1,
+};
+
+/**
+ * Container objects inside columnDefs that may have other functions
+ * or may be functions themselves no params passed
+ **/
+export const COLUMN_NESTED_OR_OBJ_OF_FUNCTIONS_NO_PARAMS = {
+    filterParams: 1,
+    filter: 1,
 };
 
 /**
@@ -312,6 +323,7 @@ export const COLUMN_ARRAY_NESTED_FUNCTIONS = {
 export const OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS = {
     dataTypeDefinitions: 1,
     aggFuncs: 1,
+    columnTypes: 1,
 };
 
 /**

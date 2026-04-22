@@ -6,6 +6,25 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
+
+## [35.2.0] - 2026-04-03
+### Added 
+- [#436](https://github.com/plotly/dash-ag-grid/pull/436) Enabled Filter Handlers to simplify custom filter components by splitting the filter logic out from the UI component.
+- [#440](https://github.com/plotly/dash-ag-grid/pull/440)
+  - added `columnTypes` to prop categories for parsing functions
+
+### Changed
+- [#440](https://github.com/plotly/dash-ag-grid/pull/440) 
+  - Markdown update for npm
+    - `linkTarget` now works even if `dangerously_allow_code` is `true` and no `target` is passed in the link. 
+    - `_self` will auto apply as a `linkTarget`.
+    - `_blank` will auto apply `rel='noreferrer noopener 'nofollow'` for security reasons, but will open in a new tab.
+  - version bump to v`35.2.0` for the grid
+
+## [35.0.0rc0] - 2026-01-21
+### Changed
+- bumping to v`35.0.0` for the grid
+
 ## [33.3.3] - 2025-12-19
 ### Fixed
 - [#408](https://github.com/plotly/dash-ag-grid/pull/408) fixed issue where the `columnState` would conflict with `columnDefs` updates
