@@ -274,6 +274,22 @@ export function DashAgGrid(props) {
     const [openGroups, setOpenGroups] = useState({});
     const [columnState_push, setColumnState_push] = useState(true);
     const [rowTransactionState, setRowTransactionState] = useState(null);
+    const evaluateGetRowId = useMemo(() => {
+        const {getRowId} = props;
+        if (typeof getRowId !== 'string') {
+            return null;
+        }
+        try {
+            const parsedCondition = esprima.parse(getRowId).body[0].expression;
+            return (data) => evaluate(parsedCondition, {params: {data}});
+        } catch (err) {
+            console.error(
+                'Failed to parse getRowId expression. Expected formats like params.data.field or params.data["field"]:',
+                err
+            );
+        }
+        return null;
+    }, [props.getRowId]);
 
     const components = useMemo(
         () => ({
@@ -313,7 +329,6 @@ export function DashAgGrid(props) {
 
     const setSelection = useCallback(
         (selection) => {
-            const {getRowId} = props;
             if (gridApi && selection && !gridApi?.isDestroyed()) {
                 pauseSelections.current = true;
                 const nodeData = [];
@@ -337,13 +352,13 @@ export function DashAgGrid(props) {
                     });
                 } else {
                     if (selection.length) {
-                        if (getRowId) {
-                            const parsedCondition = esprima.parse(
-                                getRowId.replaceAll('params.data.', '')
-                            ).body[0].expression;
+                        if (evaluateGetRowId) {
                             const mapId = {};
-                            selection.forEach((params) => {
-                                mapId[evaluate(parsedCondition, params)] = true;
+                            selection.forEach((data) => {
+                                const rowId = evaluateGetRowId(data);
+                                if (typeof rowId !== 'undefined') {
+                                    mapId[rowId] = true;
+                                }
                             });
                             gridApi.forEachNode((node) => {
                                 if (mapId[node.id]) {
@@ -369,7 +384,7 @@ export function DashAgGrid(props) {
                 }, 1);
             }
         },
-        [gridApi, props.getRowId, parseFunction]
+        [gridApi, parseFunction, evaluateGetRowId]
     );
 
     const memoizeOne = useCallback(
@@ -1116,7 +1131,7 @@ export function DashAgGrid(props) {
 
     const scrollTo = useCallback(
         (reset = true) => {
-            const {scrollTo, getRowId} = props;
+            const {scrollTo} = props;
             if (!gridApi) {
                 return;
             }
@@ -1129,12 +1144,9 @@ export function DashAgGrid(props) {
                 const node = gridApi.getRowNode(scrollTo.rowId);
                 gridApi.ensureNodeVisible(node, rowPosition);
             } else if (scrollTo.data) {
-                if (getRowId) {
-                    const parsedCondition = esprima.parse(
-                        getRowId.replaceAll('params.data.', '')
-                    ).body[0].expression;
+                if (evaluateGetRowId) {
                     const node = gridApi.getRowNode(
-                        evaluate(parsedCondition, scrollTo.data)
+                        evaluateGetRowId(scrollTo.data)
                     );
                     gridApi.ensureNodeVisible(node, rowPosition);
                 } else {
@@ -1159,7 +1171,7 @@ export function DashAgGrid(props) {
                 });
             }
         },
-        [gridApi, props.scrollTo, props.getRowId, customSetProps]
+        [gridApi, props.scrollTo, customSetProps, evaluateGetRowId]
     );
 
     const resetColumnState = useCallback(
