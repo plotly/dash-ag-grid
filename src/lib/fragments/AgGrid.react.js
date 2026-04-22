@@ -1429,8 +1429,9 @@ export function DashAgGrid(props) {
                             rowCount
                         );
                     }, 0);
+                } else {
+                    getRowsParams.current.successCallback(rowData, rowCount);
                 }
-                getRowsParams.current.successCallback(rowData, rowCount);
             } else {
                 getRowsParams.current.successCallback(rowData, rowCount);
             }
