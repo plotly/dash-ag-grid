@@ -32,13 +32,13 @@ jobs:
             fi
             echo "Fetching base ref origin/$PR_BASE_REF"
             git fetch origin "$PR_BASE_REF":refs/remotes/origin/"$PR_BASE_REF" || true
-            changed=$(git diff --name-only "origin/$PR_BASE_REF...HEAD" || true)
+            changed=$(git diff --name-only "origin/$PR_BASE_REF...HEAD")
           else
             if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
               # new branch or forced push: list files in the commit
-              changed=$(git show --name-only --pretty="" "$SHA" || true)
+              changed=$(git show --name-only --pretty="" "$SHA")
             else
-              changed=$(git diff --name-only "$BEFORE...$SHA" || true)
+              changed=$(git diff --name-only "$BEFORE...$SHA")
             fi
           fi
 
