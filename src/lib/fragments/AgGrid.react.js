@@ -1459,18 +1459,6 @@ export function DashAgGrid(props) {
         };
     }, [props.getRowsResponse]);
 
-    // ensure any stray timeout cleared on unmount (defensive)
-    useEffect(
-        () => () => {
-            if (resetTimeoutRef.current) {
-                clearTimeout(resetTimeoutRef.current);
-                resetTimeoutRef.current = null;
-            }
-            resettingCount.current = false;
-        },
-        []
-    );
-
     // Handle master detail response
     useEffect(() => {
         if (
