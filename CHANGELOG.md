@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## [unreleased]
+### Added
+- [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 
 ### Added 
 - [#436](https://github.com/plotly/dash-ag-grid/pull/436) Enabled Filter Handlers to simplify custom filter components by splitting the filter logic out from the UI component.
