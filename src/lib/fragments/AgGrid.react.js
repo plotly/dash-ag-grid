@@ -841,10 +841,10 @@ export function DashAgGrid(props) {
     const getDatasource = useCallback(() => {
         return {
             getRows(params) {
-                getRowsParams.current = params;
                 if (resettingCount.current) {
                     return;
                 }
+                getRowsParams.current = params;
                 customSetProps({getRowsRequest: params});
             },
             destroy() {
