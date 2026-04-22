@@ -3,12 +3,12 @@ Nested tables.
 """
 
 import dash_ag_grid as dag
-import dash
-from dash import Input, Output, html, dcc, Dash, no_update
-from . import utils
-import pandas as pd
+from dash import Input, Output, html, dcc, Dash, no_update, ctx
 from dash.testing.wait import until
+from . import utils
 import time
+import numpy as np
+import pandas as pd
 
 
 def test_is001_infinite_scroll(dash_duo):
@@ -248,3 +248,86 @@ def test_is002_infinite_scroll_styling(dash_duo):
         dash_duo.find_element("#scroll").click()
         time.sleep(3)  # pausing to emulate separation because user inputs
     assert list(filter(lambda i: i.get("level") != "WARNING", dash_duo.get_logs())) == []
+
+def test_is003_infinite_scroll_clear(dash_duo):
+    app = Dash(__name__)
+    data = pd.DataFrame(
+        {
+            "id": [str(x) for x in range(1000)],
+            "value": np.random.rand(1000),
+        }
+    )
+
+    clear_button = html.Button("Clear", id="clear")
+    reset_button = html.Button("Reset", id='reset')
+
+    grid = dag.AgGrid(
+        columnDefs=[
+            {"field": "id"},
+            {"field": "value"},
+        ],
+        getRowId="params.data.id",
+        rowModelType="infinite",
+        id="grid"
+    )
+
+    test_data = []
+
+
+    @app.callback(
+        Output(grid, "getRowsResponse"),
+        Input(grid, "getRowsRequest"),
+        Input(clear_button, "n_clicks"),
+        Input(reset_button, "n_clicks"),
+        prevent_initial_call=True,
+    )
+    def update_rfq_grid_rows(
+        request,
+        n_clicks_clear,
+        n_clicks_reset,
+    ):
+        if ctx.triggered_id == "clear":
+            response = {
+                "rowData": [], "rowCount": 0,
+            }
+            return response
+
+        if request is None:
+            partial_df = data.head(100)
+        else:
+            partial_df = data.iloc[request["startRow"] : request["endRow"]]
+
+        response = {
+            "rowData": partial_df.to_dict("records"),
+            "rowCount": len(data.index),
+        }
+        test_data.append('response')
+        return response
+
+    app.layout = html.Div(
+        children=[
+            clear_button,
+            reset_button,
+            grid,
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid_dom = utils.Grid(dash_duo, 'grid')
+    grid_dom.wait_for_cell_text(0, 0, "0")
+
+    for x in range(2, 5):
+        dash_duo.find_element("#clear").click()
+        until(
+            lambda: len(
+                dash_duo.find_elements(
+                    "#grid .ag-center-cols-container > *"
+                )
+            )
+                    == 0,
+            timeout=3,
+        )
+        dash_duo.find_element("#reset").click()
+        grid_dom.wait_for_cell_text(0, 0, "0")
+        assert x == len(test_data)  # make sure the callback was called the expected number of times

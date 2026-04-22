@@ -274,6 +274,7 @@ export function DashAgGrid(props) {
     const [openGroups, setOpenGroups] = useState({});
     const [columnState_push, setColumnState_push] = useState(true);
     const [rowTransactionState, setRowTransactionState] = useState(null);
+    const resettingCount = useRef(false);
 
     const components = useMemo(
         () => ({
@@ -839,11 +840,12 @@ export function DashAgGrid(props) {
 
     const getDatasource = useCallback(() => {
         return {
+            rowCount: undefined,
             getRows(params) {
                 getRowsParams.current = params;
+                if (resettingCount.current) return;
                 customSetProps({getRowsRequest: params});
             },
-
             destroy() {
                 getRowsParams.current = null;
             },
@@ -1412,7 +1414,21 @@ export function DashAgGrid(props) {
     useEffect(() => {
         if (isDatasourceLoadedForInfiniteScrolling()) {
             const {rowData, rowCount} = props.getRowsResponse;
-            getRowsParams.current.successCallback(rowData, rowCount);
+            if (getRowsParams.current && 'oldRowCount' in getRowsParams.current) {
+                if (getRowsParams.current['oldRowCount'] == 0) {
+                    resettingCount.current = true;
+                    getRowsParams.current.api.setRowCount(rowCount, false);
+                    setTimeout(() => {
+                        resettingCount.current = false
+                        getRowsParams.current.successCallback(rowData, rowCount);
+                    }, 0);
+                }
+                getRowsParams.current.successCallback(rowData, rowCount);
+            } else {
+                getRowsParams.current.successCallback(rowData, rowCount);
+            }
+            getRowsParams.current['oldRowCount'] = rowCount;
+
             customSetProps({getRowsResponse: null});
         }
     }, [props.getRowsResponse]);
