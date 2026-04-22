@@ -8,6 +8,13 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 ### Added
 - [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 
+### Changed
+- [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
+  - Added test for `OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS` to test that the value is an object before parsing, 
+  - this allows for reused keys to not comply with being an object
+
+
+## [35.2.0] - 2026-04-03
 ### Added 
 - [#436](https://github.com/plotly/dash-ag-grid/pull/436) Enabled Filter Handlers to simplify custom filter components by splitting the filter logic out from the UI component.
 - [#440](https://github.com/plotly/dash-ag-grid/pull/440)
@@ -24,6 +31,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
   - Added test for `OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS` to test that the value is an object before parsing, 
   - this allows for reused keys to not comply with being an object
+
+### Fixed
+- [#454](https://github.com/plotly/dash-ag-grid/pull/454) fixes issue where a rowCount of 0 would cause the grid not to display new data
 
 ## [34.0.0rc0] - 2026-01-21
 ### Changed
