@@ -74,6 +74,7 @@ const xssMessage = (context) => {
 };
 
 const NO_CONVERT_PROPS = [...PASSTHRU_PROPS, ...PROPS_NOT_FOR_AG_GRID];
+const OMIT_GRID_INTERNAL_PROPS = ['parentState', 'onJsGridMounted'];
 
 const dash_clientside = window.dash_clientside || {};
 
@@ -298,10 +299,12 @@ export function DashAgGrid(props) {
     const getDetailParams = useRef();
     const getRowsParams = useRef(null);
     const pendingCellValueChanges = useRef(null);
+    const onJsGridMountedRef = useRef(props.onJsGridMounted);
+    onJsGridMountedRef.current = props.onJsGridMounted;
 
     useEffect(() => {
-        props.onJsGridMounted?.();
-    }, [props.onJsGridMounted]);
+        onJsGridMountedRef.current?.();
+    }, []);
 
     useEffect(() => {
         if (
@@ -1561,7 +1564,7 @@ export function DashAgGrid(props) {
     const {id, style, className, dashGridOptions, ...restProps} = props;
     const passingProps = pick(PASSTHRU_PROPS, restProps);
     const convertedProps = convertAllProps(
-        omit([...NO_CONVERT_PROPS, 'parentState', 'onJsGridMounted'], {
+        omit([...NO_CONVERT_PROPS, ...OMIT_GRID_INTERNAL_PROPS], {
             ...dashGridOptions,
             ...restProps,
         })

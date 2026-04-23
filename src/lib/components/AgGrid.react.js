@@ -44,12 +44,9 @@ function DashAgGrid(props) {
 
     const buildArray = useCallback((arr1, arr2) => {
         if (arr1) {
-            if (!arr1.includes(arr2)) {
-                return [...arr1, arr2];
-            }
-            return arr1;
+            return [...arr1, arr2];
         }
-        return [JSON.parse(JSON.stringify(arr2))];
+        return [arr2];
     }, []);
 
     useEffect(() => {
