@@ -273,7 +273,9 @@ export function DashAgGrid(props) {
     const [, forceRerender] = useState({});
     const [openGroups, setOpenGroups] = useState({});
     const [columnState_push, setColumnState_push] = useState(true);
-    const [rowTransactionState, setRowTransactionState] = useState(null);
+    const [rowTransactionState, setRowTransactionState] = useState(
+        props.parentState?.rowTransaction || null
+    );
 
     const components = useMemo(
         () => ({
@@ -296,6 +298,20 @@ export function DashAgGrid(props) {
     const getDetailParams = useRef();
     const getRowsParams = useRef(null);
     const pendingCellValueChanges = useRef(null);
+
+    useEffect(() => {
+        props.onJsGridMounted?.();
+    }, [props.onJsGridMounted]);
+
+    useEffect(() => {
+        if (
+            !gridApi &&
+            props.parentState?.rowTransaction &&
+            props.parentState.rowTransaction !== rowTransactionState
+        ) {
+            setRowTransactionState(props.parentState.rowTransaction);
+        }
+    }, [props.parentState, rowTransactionState, gridApi]);
 
     const onPaginationChanged = useCallback(() => {
         if (gridApi && !gridApi?.isDestroyed()) {
@@ -1244,7 +1260,9 @@ export function DashAgGrid(props) {
             const rowTransaction = rowTransactionState;
             if (gridApi && !gridApi?.isDestroyed()) {
                 if (rowTransaction) {
-                    rowTransaction.forEach(applyRowTransaction);
+                    rowTransaction.forEach((transaction) =>
+                        applyRowTransaction(transaction)
+                    );
                     setRowTransactionState(null);
                 }
                 applyRowTransaction(data);
@@ -1543,7 +1561,10 @@ export function DashAgGrid(props) {
     const {id, style, className, dashGridOptions, ...restProps} = props;
     const passingProps = pick(PASSTHRU_PROPS, restProps);
     const convertedProps = convertAllProps(
-        omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
+        omit([...NO_CONVERT_PROPS, 'parentState', 'onJsGridMounted'], {
+            ...dashGridOptions,
+            ...restProps,
+        })
     );
 
     if ('theme' in convertedProps) {
@@ -1627,7 +1648,11 @@ export function DashAgGrid(props) {
     );
 }
 
-DashAgGrid.propTypes = {parentState: PropTypes.any, ..._propTypes};
+DashAgGrid.propTypes = {
+    parentState: PropTypes.any,
+    onJsGridMounted: PropTypes.func,
+    ..._propTypes,
+};
 
 export const propTypes = DashAgGrid.propTypes;
 

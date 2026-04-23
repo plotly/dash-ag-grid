@@ -139,3 +139,52 @@ def test_sp001_selection_persistence(dash_duo):
     dash_duo.wait_for_text_to_equal(
         "#selectedRows", '[{"make": "Ford", "model": "Mondeo", "price": 32000}]'
     )
+
+
+def test_sp002_row_transaction_before_grid_ready(dash_duo):
+    app = Dash(__name__)
+
+    rowData = [
+        {"id": "Toyota_0", "make": "Toyota", "model": "Celica", "price": 35000},
+        {"id": "Ford_0", "make": "Ford", "model": "Mondeo", "price": 32000},
+        {"id": "Porsche_0", "make": "Porsche", "model": "Boxster", "price": 72000},
+    ]
+
+    app.layout = html.Div(
+        [
+            dcc.Interval(id="tick", interval=1, n_intervals=0, max_intervals=1),
+            dag.AgGrid(
+                id="grid",
+                rowData=rowData,
+                columnDefs=[
+                    {"field": "id"},
+                    {"field": "make"},
+                    {"field": "model"},
+                    {"field": "price"},
+                ],
+                defaultColDef={"flex": 1},
+                getRowId="params.data.id",
+            ),
+        ]
+    )
+
+    @app.callback(Output("grid", "rowTransaction"), Input("tick", "n_intervals"))
+    def apply_transaction(n):
+        if not n:
+            return dash.no_update
+        return {
+            "add": [
+                {
+                    "id": "Queued_1",
+                    "make": "Queued",
+                    "model": "Queued",
+                    "price": 1,
+                }
+            ]
+        }
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(0, 0, "Toyota_0")
+    grid.wait_for_cell_text(3, 0, "Queued_1")

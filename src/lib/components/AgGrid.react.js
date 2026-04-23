@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import LazyLoader from '../LazyLoader';
-import React, {lazy, Suspense} from 'react';
+import React, {lazy, Suspense, useState, useCallback, useEffect} from 'react';
 import {AllCommunityModule, ModuleRegistry} from 'ag-grid-community';
 import {pick} from 'ramda';
 
@@ -37,12 +37,52 @@ export const defaultProps = {
  * Dash interface to AG Grid, a powerful tabular data component.
  */
 function DashAgGrid(props) {
+    const [state, setState] = useState({
+        mounted: false,
+        rowTransaction: null,
+    });
+
+    const buildArray = useCallback((arr1, arr2) => {
+        if (arr1) {
+            if (!arr1.includes(arr2)) {
+                return [...arr1, arr2];
+            }
+            return arr1;
+        }
+        return [JSON.parse(JSON.stringify(arr2))];
+    }, []);
+
+    useEffect(() => {
+        if (props.rowTransaction && !state.mounted) {
+            setState((prevState) => ({
+                ...prevState,
+                rowTransaction: buildArray(
+                    prevState.rowTransaction,
+                    props.rowTransaction
+                ),
+            }));
+        }
+    }, [props.rowTransaction, state.mounted, buildArray]);
+
+    const onJsGridMounted = useCallback(() => {
+        setState((prevState) => ({
+            ...prevState,
+            mounted: true,
+            rowTransaction: null,
+        }));
+    }, []);
+
     const {enableEnterpriseModules} = props;
     const RealComponent = getGrid(enableEnterpriseModules);
 
     return (
         <Suspense fallback={null}>
-            <RealComponent {...defaultProps} {...props} />
+            <RealComponent
+                parentState={state}
+                onJsGridMounted={onJsGridMounted}
+                {...defaultProps}
+                {...props}
+            />
         </Suspense>
     );
 }
