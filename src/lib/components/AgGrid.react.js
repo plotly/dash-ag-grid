@@ -43,10 +43,16 @@ function DashAgGrid(props) {
     });
 
     const buildArray = useCallback((arr1, arr2) => {
-        if (arr1) {
-            return [...arr1, arr2];
+        if (!arr1) {
+            return [arr2];
         }
-        return [arr2];
+        const nextSerialized = JSON.stringify(arr2);
+        if (
+            arr1.some((transaction) => JSON.stringify(transaction) === nextSerialized)
+        ) {
+            return arr1;
+        }
+        return [...arr1, arr2];
     }, []);
 
     useEffect(() => {
