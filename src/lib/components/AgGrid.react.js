@@ -67,8 +67,9 @@ function DashAgGrid(props) {
     const {
         enableEnterpriseModules,
         dashEnableCharts,
-        dashGridOptions = {},
+        dashGridOptions: rawDashGridOptions,
     } = props;
+    const dashGridOptions = rawDashGridOptions ?? {};
     const normalizedDashEnableCharts =
         typeof dashEnableCharts === 'undefined' || dashEnableCharts === null
             ? false
