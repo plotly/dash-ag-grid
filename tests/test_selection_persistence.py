@@ -199,3 +199,54 @@ def test_sp002_row_transaction_before_grid_ready(dash_duo):
     grid.wait_for_cell_text(3, 0, "Queued_1")
     grid.wait_for_rendered_rows(4)
     dash_duo.wait_for_text_to_equal("#rowTransaction-state", "null")
+
+
+def test_sp003_duplicate_row_transaction_before_grid_ready(dash_duo):
+    app = Dash(__name__)
+
+    rowData = [
+        {"id": "Toyota_0", "make": "Toyota", "model": "Celica", "price": 35000},
+        {"id": "Ford_0", "make": "Ford", "model": "Mondeo", "price": 32000},
+        {"id": "Porsche_0", "make": "Porsche", "model": "Boxster", "price": 72000},
+    ]
+
+    app.layout = html.Div(
+        [
+            dcc.Interval(id="tick", interval=1, n_intervals=0, max_intervals=2),
+            dag.AgGrid(
+                id="grid",
+                rowData=rowData,
+                columnDefs=[
+                    {"field": "id"},
+                    {"field": "make"},
+                    {"field": "model"},
+                    {"field": "price"},
+                ],
+                defaultColDef={"flex": 1},
+            ),
+        ]
+    )
+
+    @app.callback(Output("grid", "rowTransaction"), Input("tick", "n_intervals"))
+    def apply_duplicate_transaction(n):
+        if not n:
+            return dash.no_update
+        return {
+            "add": [
+                {
+                    "id": "Queued_1",
+                    "make": "Queued",
+                    "model": "Queued",
+                    "price": 1,
+                }
+            ]
+        }
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(0, 0, "Toyota_0")
+    grid.wait_for_cell_text(1, 0, "Ford_0")
+    grid.wait_for_cell_text(2, 0, "Porsche_0")
+    grid.wait_for_cell_text(3, 0, "Queued_1")
+    grid.wait_for_rendered_rows(4)
