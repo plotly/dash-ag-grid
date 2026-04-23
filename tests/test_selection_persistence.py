@@ -187,7 +187,7 @@ def test_sp002_row_transaction_before_grid_ready(dash_duo):
     @app.callback(
         Output("rowTransaction-state", "children"), Input("grid", "rowTransaction")
     )
-    def log_row_transaction(value):
+    def expose_row_transaction_state(value):
         return json.dumps(value)
 
     dash_duo.start_server(app)
