@@ -197,4 +197,5 @@ def test_sp002_row_transaction_before_grid_ready(dash_duo):
     grid.wait_for_cell_text(1, 0, "Ford_0")
     grid.wait_for_cell_text(2, 0, "Porsche_0")
     grid.wait_for_cell_text(3, 0, "Queued_1")
+    grid.wait_for_rendered_rows(4)
     dash_duo.wait_for_text_to_equal("#rowTransaction-state", "null")

@@ -1271,13 +1271,14 @@ export function DashAgGrid(props) {
         (data) => {
             const rowTransaction = rowTransactionState;
             if (gridApi && !gridApi?.isDestroyed()) {
-                if (rowTransaction) {
-                    rowTransaction.forEach((transaction) =>
-                        applyRowTransaction(transaction)
+                const isAlreadyQueued =
+                    rowTransaction &&
+                    rowTransaction.some((transaction) =>
+                        equals(transaction, data)
                     );
-                    setRowTransactionState(null);
+                if (!isAlreadyQueued) {
+                    applyRowTransaction(data);
                 }
-                applyRowTransaction(data);
                 customSetProps({
                     rowTransaction: null,
                 });
