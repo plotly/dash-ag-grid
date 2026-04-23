@@ -727,7 +727,6 @@ export function DashAgGrid(props) {
             convertAllPropsRef.current,
             convertFunction,
             handleDynamicStyle,
-            convertMaybeFunction,
         ]
     );
 
