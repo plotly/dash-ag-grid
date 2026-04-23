@@ -1259,7 +1259,9 @@ export function DashAgGrid(props) {
         }
         const nextSerialized = JSON.stringify(arr2);
         if (
-            arr1.some((transaction) => JSON.stringify(transaction) === nextSerialized)
+            arr1.some(
+                (transaction) => JSON.stringify(transaction) === nextSerialized
+            )
         ) {
             return arr1;
         }
@@ -1283,9 +1285,7 @@ export function DashAgGrid(props) {
                 syncRowData();
             } else {
                 setRowTransactionState(
-                    rowTransaction
-                        ? buildArray(rowTransaction, data)
-                        : [data]
+                    rowTransaction ? buildArray(rowTransaction, data) : [data]
                 );
             }
         },

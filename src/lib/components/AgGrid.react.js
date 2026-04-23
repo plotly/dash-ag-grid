@@ -48,7 +48,9 @@ function DashAgGrid(props) {
         }
         const nextSerialized = JSON.stringify(arr2);
         if (
-            arr1.some((transaction) => JSON.stringify(transaction) === nextSerialized)
+            arr1.some(
+                (transaction) => JSON.stringify(transaction) === nextSerialized
+            )
         ) {
             return arr1;
         }
