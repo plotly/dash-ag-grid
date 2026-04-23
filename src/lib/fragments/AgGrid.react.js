@@ -644,6 +644,13 @@ export function DashAgGrid(props) {
                     }, value);
                 }
                 if (GRID_NESTED_FUNCTIONS[target]) {
+                    if (
+                        target === 'rowSelection' &&
+                        typeof value === 'string'
+                    ) {
+                        // to still support rowSelection='single' | 'multiple' deprecated in v32.3.4
+                        return value;
+                    }
                     if (target === 'detailCellRendererParams') {
                         if (has('function', value)) {
                             const dynamicDetailParams =
@@ -658,32 +665,11 @@ export function DashAgGrid(props) {
                                 dynamicDetailParams
                             );
                         }
-                        return normalizeDetailCellRendererParams(value);
                     }
-
-                    let adjustedVal = value;
-                    if (
-                        target === 'rowSelection' &&
-                        typeof value === 'string'
-                    ) {
-                        // to still support rowSelection='single' | 'multiple' deprecated in v32.3.4
-                        return value;
-                    }
-                    if ('suppressCallback' in value) {
-                        adjustedVal = {
-                            ...adjustedVal,
-                            getDetailRowData: value.suppressCallback
-                                ? suppressGetDetail(value.detailColName)
-                                : callbackGetDetail,
-                        };
-                    }
-                    if ('detailGridOptions' in value) {
-                        adjustedVal = assocPath(
-                            ['detailGridOptions', 'components'],
-                            components,
-                            adjustedVal
-                        );
-                    }
+                    const adjustedVal =
+                        target === 'detailCellRendererParams'
+                            ? normalizeDetailCellRendererParams(value)
+                            : value;
                     return convertAllPropsRef.current(adjustedVal);
                 }
                 if (GRID_DANGEROUS_FUNCTIONS[target]) {
