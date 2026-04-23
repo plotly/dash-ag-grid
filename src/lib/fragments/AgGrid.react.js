@@ -1258,11 +1258,10 @@ export function DashAgGrid(props) {
             return [arr2];
         }
         const nextSerialized = JSON.stringify(arr2);
-        if (
-            arr1.some(
-                (transaction) => JSON.stringify(transaction) === nextSerialized
-            )
-        ) {
+        const serializedTransactions = new Set(
+            arr1.map((transaction) => JSON.stringify(transaction))
+        );
+        if (serializedTransactions.has(nextSerialized)) {
             return arr1;
         }
         return [...arr1, arr2];
