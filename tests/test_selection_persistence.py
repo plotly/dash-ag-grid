@@ -153,6 +153,7 @@ def test_sp002_row_transaction_before_grid_ready(dash_duo):
     app.layout = html.Div(
         [
             dcc.Interval(id="tick", interval=1, n_intervals=0, max_intervals=1),
+            html.Div(id="rowTransaction-state"),
             dag.AgGrid(
                 id="grid",
                 rowData=rowData,
@@ -183,6 +184,12 @@ def test_sp002_row_transaction_before_grid_ready(dash_duo):
             ]
         }
 
+    @app.callback(
+        Output("rowTransaction-state", "children"), Input("grid", "rowTransaction")
+    )
+    def log_row_transaction(value):
+        return json.dumps(value)
+
     dash_duo.start_server(app)
 
     grid = utils.Grid(dash_duo, "grid")
@@ -190,3 +197,4 @@ def test_sp002_row_transaction_before_grid_ready(dash_duo):
     grid.wait_for_cell_text(1, 0, "Ford_0")
     grid.wait_for_cell_text(2, 0, "Porsche_0")
     grid.wait_for_cell_text(3, 0, "Queued_1")
+    dash_duo.wait_for_text_to_equal("#rowTransaction-state", "null")
