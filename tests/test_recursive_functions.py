@@ -338,12 +338,32 @@ def test_rf003_master_detail_dynamic_columns(dash_duo):
     grid.wait_for_cell_text(0, 0, "China")
 
     grid.get_cell_expandable(0, 0).click()
+    until(
+        lambda: [
+            e.text
+            for e in dash_duo.find_elements(
+                '#grid .ag-details-grid [aria-rowindex="1"] .ag-header-cell-text'
+            )
+        ]
+        == ["City", "Pop. (City proper)"],
+        timeout=3,
+    )
     dash_duo.wait_for_text_to_equal(
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="2"]', "24870895"
     )
 
     grid.get_cell_expandable(0, 0).click()
     grid.get_cell_expandable(1, 0).click()
+    until(
+        lambda: [
+            e.text
+            for e in dash_duo.find_elements(
+                '#grid .ag-details-grid [aria-rowindex="1"] .ag-header-cell-text'
+            )
+        ]
+        == ["City", "Pop. (City proper)", "Pop. (Metro area)"],
+        timeout=3,
+    )
     dash_duo.wait_for_text_to_equal(
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="3"]', "19303808"
     )
