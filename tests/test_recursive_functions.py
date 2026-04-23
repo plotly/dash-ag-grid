@@ -352,7 +352,11 @@ def test_rf003_master_detail_dynamic_columns(dash_duo):
         '#grid .ag-details-grid [row-index="0"] [aria-colindex="2"]', "24870895"
     )
 
-    grid.get_cell_expandable(0, 0).click()
+    grid.get_cell_collapsable(0, 0).click()
+    until(
+        lambda: len(dash_duo.find_elements("#grid .ag-details-grid")) == 0,
+        timeout=3,
+    )
     grid.get_cell_expandable(1, 0).click()
     until(
         lambda: [
