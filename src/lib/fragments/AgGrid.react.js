@@ -1587,6 +1587,9 @@ export function DashAgGrid(props) {
     const convertedProps = convertAllProps(
         omit(NO_CONVERT_PROPS, {...dashGridOptions, ...restProps})
     );
+    if (convertedProps.getRowId === null) {
+        delete convertedProps.getRowId;
+    }
 
     if ('theme' in convertedProps) {
         if (typeof convertedProps.theme === 'function') {
