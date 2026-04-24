@@ -3,7 +3,7 @@ from dash import Dash
 from . import utils
 
 
-def test_gri001_get_row_id_none_renders(dash_duo):
+def test_get_row_id_none_renders(dash_duo):
     app = Dash(__name__)
     app.layout = [
         dag.AgGrid(
