@@ -600,22 +600,30 @@ DashAgGrid.propTypes = {
      * Specifies the params to be used by the default detail Cell Renderer. See Detail
      * Grids.
      */
-    detailCellRendererParams: PropTypes.shape({
-        /**
-         * Grid options for detail grid in master-detail view.
-         */
-        detailGridOptions: PropTypes.any,
+    detailCellRendererParams: PropTypes.oneOfType([
+        PropTypes.shape({
+            /**
+             * Grid options for detail grid in master-detail view.
+             */
+            detailGridOptions: PropTypes.any,
 
-        /**
-         * Column name where detail grid data is located in main dataset, for master-detail view.
-         */
-        detailColName: PropTypes.string,
+            /**
+             * Column name where detail grid data is located in main dataset, for master-detail view.
+             */
+            detailColName: PropTypes.string,
 
-        /**
-         * Default: true. If true, suppresses the Dash callback in favor of using the data embedded in rowData at the given detailColName.
-         */
-        suppressCallback: PropTypes.bool,
-    }),
+            /**
+             * Default: true. If true, suppresses the Dash callback in favor of using the data embedded in rowData at the given detailColName.
+             */
+            suppressCallback: PropTypes.bool,
+        }),
+        PropTypes.shape({
+            /**
+             * JavaScript function that receives detail row params and returns detailCellRendererParams.
+             */
+            function: PropTypes.string,
+        }),
+    ]),
 
     /**
      * The style to give a particular row. See Row Style.

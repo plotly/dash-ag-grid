@@ -69,7 +69,7 @@ def test_rf001_recursive_functions(dash_duo):
                 {
                     "city": "Shanghai",
                     "population_city": 24870895,
-                    "population_metro": "NA",
+                    "population_metro": 0,
                 },
                 {
                     "city": "Beijing",
@@ -266,6 +266,111 @@ def test_rf001_recursive_functions(dash_duo):
     assert "color: orange" in dash_duo.find_element(
         '#grid .ag-details-grid .ag-details-grid [row-index="0"] [aria-colindex="5"]'
     ).get_attribute("style")
+
+
+def test_rf003_master_detail_dynamic_columns(dash_duo):
+    app = Dash(__name__)
+    masterColumnDefs = [
+        {
+            "headerName": "Country",
+            "field": "country",
+            "cellRenderer": "agGroupCellRenderer",
+        },
+        {"headerName": "Region", "field": "region"},
+    ]
+
+    detailColumnDefsSimple = [
+        {"headerName": "City", "field": "city"},
+        {"headerName": "Pop. (City proper)", "field": "population_city"},
+    ]
+    detailColumnDefs = detailColumnDefsSimple + [
+        {"headerName": "Pop. (Metro area)", "field": "population_metro"},
+    ]
+
+    rowData = [
+        {
+            "country": "China",
+            "region": "Asia",
+            "cities": [
+                {
+                    "city": "Shanghai",
+                    "population_city": 24870895,
+                    "population_metro": 0,
+                },
+            ],
+        },
+        {
+            "country": "United States",
+            "region": "Americas",
+            "cities": [
+                {
+                    "city": "New York",
+                    "population_city": 8398748,
+                    "population_metro": 19303808,
+                },
+            ],
+        },
+    ]
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid",
+                columnDefs=masterColumnDefs,
+                rowData=rowData,
+                columnSize="sizeToFit",
+                enableEnterpriseModules=True,
+                masterDetail=True,
+                detailCellRendererParams={
+                    "function": """params.data.region === "Asia"
+                        ? {detailGridOptions: {columnDefs: %s}, detailColName: "cities", suppressCallback: true}
+                        : {detailGridOptions: {columnDefs: %s}, detailColName: "cities", suppressCallback: true}"""
+                    % (detailColumnDefsSimple, detailColumnDefs)
+                },
+                dashGridOptions={"detailRowAutoHeight": True},
+            )
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(0, 0, "China")
+
+    grid.get_cell_expandable(0, 0).click()
+    until(
+        lambda: [
+            e.text
+            for e in dash_duo.find_elements(
+                '#grid .ag-details-grid [aria-rowindex="1"] .ag-header-cell-text'
+            )
+        ]
+        == ["City", "Pop. (City proper)"],
+        timeout=3,
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="2"]', "24870895"
+    )
+
+    grid.get_cell_collapsable(0, 0).click()
+    until(
+        lambda: len(dash_duo.find_elements("#grid .ag-details-grid")) == 0,
+        timeout=3,
+    )
+    grid.get_cell_expandable(1, 0).click()
+    until(
+        lambda: [
+            e.text
+            for e in dash_duo.find_elements(
+                '#grid .ag-details-grid [aria-rowindex="1"] .ag-header-cell-text'
+            )
+        ]
+        == ["City", "Pop. (City proper)", "Pop. (Metro area)"],
+        timeout=3,
+    )
+    dash_duo.wait_for_text_to_equal(
+        '#grid .ag-details-grid [row-index="0"] [aria-colindex="3"]', "19303808"
+    )
 
 
 def test_rf002_recursive_functions_server(dash_duo):
