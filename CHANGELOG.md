@@ -15,6 +15,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ### Fixed
 - [#454](https://github.com/plotly/dash-ag-grid/pull/454) fixes issue where a rowCount of 0 would cause the grid not to display new data
+- Fixed `getRowsRequest` / `getRowsResponse` warnings by excluding these Dash callback props from AG Grid options.
 
 ## [35.2.0] - 2026-04-03
 ### Added 
