@@ -247,7 +247,13 @@ def test_is002_infinite_scroll_styling(dash_duo):
     for x in range(8):
         dash_duo.find_element("#scroll").click()
         time.sleep(3)  # pausing to emulate separation because user inputs
-    assert list(filter(lambda i: i.get("level") != "WARNING", dash_duo.get_logs())) == []
+    logs = dash_duo.get_logs()
+    assert list(filter(lambda i: i.get("level") != "WARNING", logs)) == []
+    assert not any(
+        "invalid gridOptions property 'getRowsRequest'" in log.get("message", "")
+        or "invalid gridOptions property 'getRowsResponse'" in log.get("message", "")
+        for log in logs
+    )
 
 def test_is003_infinite_scroll_clear(dash_duo):
     app = Dash(__name__)
