@@ -14,7 +14,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
   - this allows for reused keys to not comply with being an object
 - [#462](https://github.com/plotly/dash-ag-grid/pull/462)
   - Updated workflow test targets to Python 3.10, Python 3.14, and React 19.
-  - Added `requires-dev.txt` installation to workflow dependency setup so test libraries (e.g., `numpy`, `pandas`) are available in CI.
+  - Updated dev requirements to `dash[dev,testing]` and added explicit `numpy`/`pandas` dependencies for test/runtime imports in Python CI.
 
 ### Fixed
 - [#454](https://github.com/plotly/dash-ag-grid/pull/454) fixes issue where a rowCount of 0 would cause the grid not to display new data
