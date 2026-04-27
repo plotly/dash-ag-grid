@@ -78,7 +78,7 @@ function DashAgGrid(props) {
     const gridDashOptions = normalizedDashEnableCharts
         ? {...dashGridOptions, enableCharts: true}
         : dashGridOptions;
-    const hasEnableCharts = gridDashOptions.enableCharts;
+    const hasEnableCharts = gridDashOptions?.enableCharts;
 
     if (normalizedDashEnableCharts && !enableEnterpriseModules) {
         throw new Error(
