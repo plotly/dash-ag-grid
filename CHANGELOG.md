@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## [unreleased]
+### Fixed
+- [#466](https://github.com/plotly/dash-ag-grid/issues/466) guard against a null `gridApi` in `onSortChanged`, which threw an uncaught `TypeError` when a grid initialized with a sort applied via `initialState.sort.sortModel`
 
 ## [33.3.3] - 2025-12-19
 ### Fixed
