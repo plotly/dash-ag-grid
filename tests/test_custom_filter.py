@@ -125,6 +125,67 @@ def test_fi003_custom_filter(dash_duo):
     grid.wait_for_cell_text(0, 0, "23")
 
 
+def test_fi003_custom_filter_v34(dash_duo):
+    app = Dash(__name__)
+
+    df = pd.read_json('https://www.ag-grid.com/example-assets/olympic-winners.json', convert_dates=False)
+
+    rowData = df.to_dict('records')
+
+    columnDefs = [
+        {'field': 'age', 'filter': 'agNumberColumnFilter'},
+        {'field': 'country', 'minWidth': 150},
+        {'field': 'year', 'filter': {'component': 'YearFilter34', 'doesFilterPass': {'function': 'doesFilterPass'}}},
+        {
+            'field': 'date',
+            'minWidth': 130,
+            'filter': 'agDateColumnFilter',
+        },
+        {'field': 'sport'},
+        {'field': 'gold', 'filter': 'agNumberColumnFilter'},
+        {'field': 'silver', 'filter': 'agNumberColumnFilter'},
+        {'field': 'bronze', 'filter': 'agNumberColumnFilter'},
+        {'field': 'total', 'filter': 'agNumberColumnFilter'},
+    ]
+
+    defaultColDef = {
+        'editable': True,
+        'sortable': True,
+        'flex': 1,
+        'minWidth': 100,
+        'filter': True,
+        'resizable': True,
+    }
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid",
+                columnDefs=columnDefs,
+                rowData=rowData,
+                defaultColDef=defaultColDef,
+                dashGridOptions={"enableFilterHandlers": True}
+            ),
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+
+    grid.wait_for_cell_text(0, 0, "23")
+
+    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
+
+    dash_duo.find_element('.ag-filter label:nth-child(2)').click()
+
+    grid.wait_for_cell_text(0, 0, "27")
+
+    dash_duo.find_element('.ag-filter label:nth-child(1)').click()
+
+    grid.wait_for_cell_text(0, 0, "23")
+
+
 # test filterParams.textFormatter, filterParams.textMatcher and filterParams.filterOptions.predicate functions
 def test_fi004_custom_filter(dash_duo):
     app = Dash(__name__)
