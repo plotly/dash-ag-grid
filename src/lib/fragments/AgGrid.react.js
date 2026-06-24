@@ -756,7 +756,7 @@ export function DashAgGrid(props) {
         if (rowModelType === 'clientSide') {
             propsToSet.virtualRowData = virtualRowData();
         }
-        if (!gridApi.isDestroyed()) {
+        if (gridApi && !gridApi?.isDestroyed()) {
             propsToSet.columnState = JSON.parse(
                 JSON.stringify(gridApi.getColumnState())
             );
