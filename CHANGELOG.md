@@ -5,6 +5,36 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## [unreleased]
+### Added
+- [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
+
+### Changed
+- [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
+  - Added test for `OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS` to test that the value is an object before parsing, 
+  - this allows for reused keys to not comply with being an object
+
+### Fixed
+- [#454](https://github.com/plotly/dash-ag-grid/pull/454) fixes issue where a rowCount of 0 would cause the grid not to display new data
+- [#459](https://github.com/plotly/dash-ag-grid/pull/459) removes `getRowsRequest` / `getRowsResponse` warnings by excluding these Dash callback props from AG Grid options.
+- [#460](https://github.com/plotly/dash-ag-grid/pull/460) fix grid rendering when `getRowId` is explicitly set to `None`
+
+## [35.2.0] - 2026-04-03
+### Added 
+- [#436](https://github.com/plotly/dash-ag-grid/pull/436) Enabled Filter Handlers to simplify custom filter components by splitting the filter logic out from the UI component.
+- [#440](https://github.com/plotly/dash-ag-grid/pull/440)
+  - added `columnTypes` to prop categories for parsing functions
+
+### Changed
+- [#440](https://github.com/plotly/dash-ag-grid/pull/440) 
+  - Markdown update for npm
+    - `linkTarget` now works even if `dangerously_allow_code` is `true` and no `target` is passed in the link. 
+    - `_self` will auto apply as a `linkTarget`.
+    - `_blank` will auto apply `rel='noreferrer noopener 'nofollow'` for security reasons, but will open in a new tab.
+  - version bump to v`35.2.0` for the grid
+
+## [35.0.0rc0] - 2026-01-21
+### Changed
+- bumping to v`35.0.0` for the grid
 
 ## [33.3.3] - 2025-12-19
 ### Fixed

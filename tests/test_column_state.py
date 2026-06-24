@@ -89,6 +89,7 @@ alt_colState = [
         "hide": False,
         "pinned": None,
         "sort": "asc",
+        "sortType": "default",
         "sortIndex": None,
         "aggFunc": None,
         "rowGroup": False,

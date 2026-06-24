@@ -138,3 +138,30 @@ dagcomponentfuncs.myCustomButton2 = function (props) {
 
     }, 'test cellRendererData'))
 }
+
+
+dagcomponentfuncs.YearFilter34 = (props) => {
+    const [year, setYear] = useState('All');
+
+   useEffect(() => {
+       props.onModelChange(year === "All" ? null : year)
+   }, [year]);
+
+    setProps = ({value}) => {
+        if (value) {
+            setYear(value)
+        }
+    }
+
+    return React.createElement(
+        window.dash_core_components.RadioItems,
+        {
+            options: [
+                {'label': 'All', 'value': 'All'},
+                {'label': 'Since 2010', 'value': '2010'},
+            ],
+            value: year,
+            setProps
+        }
+    )
+};
