@@ -68,7 +68,9 @@ def test_fi002_custom_filter(dash_duo):
 def test_fi003_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    df = pd.read_json('https://www.ag-grid.com/example-assets/olympic-winners.json', convert_dates=False)
+    df = pd.read_csv(
+        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+    )
 
     rowData = df.to_dict('records')
 
@@ -129,7 +131,9 @@ def test_fi003_custom_filter(dash_duo):
 def test_fi004_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    df = pd.read_json('https://www.ag-grid.com/example-assets/olympic-winners.json', convert_dates=False)
+    df = pd.read_csv(
+        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+    )
 
     columnDefs = [
         {
