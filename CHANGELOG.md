@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## [unreleased]
+
 ### Added
 - [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 
@@ -53,6 +54,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#454](https://github.com/plotly/dash-ag-grid/pull/454) fixes issue where a rowCount of 0 would cause the grid not to display new data
 - [#459](https://github.com/plotly/dash-ag-grid/pull/459) removes `getRowsRequest` / `getRowsResponse` warnings by excluding these Dash callback props from AG Grid options.
 - [#460](https://github.com/plotly/dash-ag-grid/pull/460) fix grid rendering when `getRowId` is explicitly set to `None`
+- [#466](https://github.com/plotly/dash-ag-grid/issues/466) guard against a null `gridApi` in `onSortChanged`, which threw an uncaught `TypeError` when a grid initialized with a sort applied via `initialState.sort.sortModel`
 
 ## [34.0.0rc0] - 2026-01-21
 ### Changed
