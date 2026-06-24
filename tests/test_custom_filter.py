@@ -5,15 +5,19 @@ import pandas as pd
 
 from . import utils
 
-df = px.data.election()
-default_display_cols = ["district_id"]
-other_cols = ["district", "winner"]
-
-df = pd.concat([df, pd.DataFrame({"district": ["test"]})])
-
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
+rowData = df.to_dict('records')
 
 def test_fi002_custom_filter(dash_duo):
     app = Dash(__name__)
+
+    df = px.data.election()
+    default_display_cols = ["district_id"]
+    other_cols = ["district", "winner"]
+
+    df = pd.concat([df, pd.DataFrame({"district": ["test"]})])
 
     app.layout = html.Div(
         [
@@ -67,12 +71,6 @@ def test_fi002_custom_filter(dash_duo):
 
 def test_fi003_custom_filter(dash_duo):
     app = Dash(__name__)
-
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
-    )
-
-    rowData = df.to_dict('records')
 
     columnDefs = [
         {'field': 'age', 'filter': 'agNumberColumnFilter'},
@@ -129,10 +127,6 @@ def test_fi003_custom_filter(dash_duo):
 
 def test_fi003_custom_filter_v34(dash_duo):
     app = Dash(__name__)
-
-    df = pd.read_json('https://www.ag-grid.com/example-assets/olympic-winners.json', convert_dates=False)
-
-    rowData = df.to_dict('records')
 
     columnDefs = [
         {'field': 'age', 'filter': 'agNumberColumnFilter'},
@@ -192,9 +186,6 @@ def test_fi003_custom_filter_v34(dash_duo):
 def test_fi004_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
-    )
 
     columnDefs = [
         {
@@ -224,7 +215,7 @@ def test_fi004_custom_filter(dash_duo):
         [
             dag.AgGrid(
                 id="grid",
-                rowData=df.to_dict("records"),
+                rowData=rowData,
                 columnDefs=columnDefs,
                 columnSize="sizeToFit",
                 defaultColDef={"filter": True, "floatingFilter": True}
@@ -305,9 +296,6 @@ def test_fi005_custom_filter(dash_duo):
 def test_fi006_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
-    )
 
     columnDefs = [
         {"field": "athlete",
@@ -350,7 +338,7 @@ def test_fi006_custom_filter(dash_duo):
                 id="date-filter-example",
                 enableEnterpriseModules=True,
                 columnDefs=columnDefs,
-                rowData=df.to_dict("records"),
+                rowData=rowData,
                 defaultColDef={"flex": 1, "minWidth": 150, "floatingFilter": True},
                 dashGridOptions={"animateRows": False}
             ),
