@@ -547,14 +547,9 @@ def test_toggle_column_visibility(dash_duo):
         Input("select-columns", "n_clicks"),
     )
     def toggle_column_visibility(n):
-        if n % 2 == 0:
-            return [
-                {"headerName": "a", "field": "a", "hide": False},
-                {"headerName": "b", "field": "b", "hide": True}
-            ]
-        return [
+       return [
             {"headerName": "a", "field": "a", "hide": False},
-            {"headerName": "b", "field": "b", "hide": False},
+            {"headerName": "b", "field": "b", "hide": n % 2 == 0},
         ]
 
     dash_duo.start_server(app)
