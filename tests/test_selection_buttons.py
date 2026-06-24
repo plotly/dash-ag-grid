@@ -1,15 +1,17 @@
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Output, Input, no_update, ctx
-import requests
 from . import utils
+import pandas as pd
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
+data=df.to_dict("records")
+
 
 
 def test_sb001_selection_buttons(dash_duo):
     app = Dash(__name__)
-
-    data = requests.get(
-        r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-    ).json()
 
     columnDefs = [
         {"field": "athlete"},
