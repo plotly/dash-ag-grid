@@ -1,19 +1,21 @@
 import pytest
 import dash_ag_grid as dag
 from dash import Dash, html, dcc, Output, Input, no_update, ctx, State
-import requests
 from . import utils
 import json
 from dash.testing.wait import until
 import time
+import pandas as pd
 
+
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+).head(100)
+data=df.to_dict("records")
 
 def test_sb001_sizing_buttons(dash_duo):
     app = Dash(__name__)
-
-    data = requests.get(
-        r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-    ).json()
 
     columnDefs = [
         {"field": "athlete"},
@@ -34,7 +36,7 @@ def test_sb001_sizing_buttons(dash_duo):
             dag.AgGrid(
                 id="grid",
                 columnDefs=columnDefs,
-                rowData=data[:100],
+                rowData=data,
                 columnSize="sizeToFit",
                 defaultColDef={
                     "resizable": True,
@@ -123,10 +125,6 @@ def test_sb001_sizing_buttons(dash_duo):
 def test_sb002_sizing_buttons(dash_duo):
     app = Dash(__name__)
 
-    data = requests.get(
-        r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-    ).json()
-
     columnDefs = [
         {"field": "athlete"},
         {"field": "age"},
@@ -146,7 +144,7 @@ def test_sb002_sizing_buttons(dash_duo):
             dag.AgGrid(
                 id="grid",
                 columnDefs=columnDefs,
-                rowData=data[:100],
+                rowData=data,
                 columnSize="autoSize",
                 defaultColDef={
                     "resizable": True,
@@ -235,10 +233,6 @@ def test_sb002_sizing_buttons(dash_duo):
 def test_sb003_sizing_buttons(dash_duo):
     app = Dash(__name__)
 
-    data = requests.get(
-        r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-    ).json()
-
     columnDefs = [
         {"field": "athlete"},
         {"field": "age"},
@@ -258,7 +252,7 @@ def test_sb003_sizing_buttons(dash_duo):
             dag.AgGrid(
                 id="grid",
                 columnDefs=columnDefs,
-                rowData=data[:100],
+                rowData=data,
                 columnSize="sizeToFit",
                 defaultColDef={
                     "resizable": True,
@@ -346,10 +340,6 @@ def test_sb003_sizing_buttons(dash_duo):
 def test_sb004_sizing_buttons(dash_duo):
     app = Dash(__name__)
 
-    data = requests.get(
-        r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-    ).json()
-
     columnDefs = [
         {"field": "athlete"},
         {"field": "age"},
@@ -369,7 +359,7 @@ def test_sb004_sizing_buttons(dash_duo):
             dag.AgGrid(
                 id="grid",
                 columnDefs=columnDefs,
-                rowData=data[:100],
+                rowData=data,
                 columnSize="autoSize",
                 defaultColDef={
                     "resizable": True,
