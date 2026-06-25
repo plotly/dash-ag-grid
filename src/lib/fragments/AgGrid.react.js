@@ -588,6 +588,33 @@ export function DashAgGrid(props) {
     const convertOneRef = useRef();
     const convertAllPropsRef = useRef();
 
+    const normalizeDetailCellRendererParams = useCallback(
+        (value) => {
+            if (!value || typeof value !== 'object') {
+                return value;
+            }
+
+            let adjustedVal = value;
+            if ('suppressCallback' in value) {
+                adjustedVal = {
+                    ...adjustedVal,
+                    getDetailRowData: value.suppressCallback
+                        ? suppressGetDetail(value.detailColName)
+                        : callbackGetDetail,
+                };
+            }
+            if ('detailGridOptions' in value) {
+                adjustedVal = assocPath(
+                    ['detailGridOptions', 'components'],
+                    components,
+                    adjustedVal
+                );
+            }
+            return convertAllPropsRef.current(adjustedVal);
+        },
+        [suppressGetDetail, callbackGetDetail, components]
+    );
+
     const convertOne = useCallback(
         (value, target) => {
             if (value) {
@@ -617,7 +644,6 @@ export function DashAgGrid(props) {
                     }, value);
                 }
                 if (GRID_NESTED_FUNCTIONS[target]) {
-                    let adjustedVal = value;
                     if (
                         target === 'rowSelection' &&
                         typeof value === 'string'
@@ -625,21 +651,25 @@ export function DashAgGrid(props) {
                         // to still support rowSelection='single' | 'multiple' deprecated in v32.3.4
                         return value;
                     }
-                    if ('suppressCallback' in value) {
-                        adjustedVal = {
-                            ...adjustedVal,
-                            getDetailRowData: value.suppressCallback
-                                ? suppressGetDetail(value.detailColName)
-                                : callbackGetDetail,
-                        };
+                    if (target === 'detailCellRendererParams') {
+                        if (has('function', value)) {
+                            const dynamicDetailParams =
+                                convertMaybeFunction(value);
+                            if (typeof dynamicDetailParams === 'function') {
+                                return (params) =>
+                                    normalizeDetailCellRendererParams(
+                                        dynamicDetailParams(params)
+                                    );
+                            }
+                            return normalizeDetailCellRendererParams(
+                                dynamicDetailParams
+                            );
+                        }
                     }
-                    if ('detailGridOptions' in value) {
-                        adjustedVal = assocPath(
-                            ['detailGridOptions', 'components'],
-                            components,
-                            adjustedVal
-                        );
-                    }
+                    const adjustedVal =
+                        target === 'detailCellRendererParams'
+                            ? normalizeDetailCellRendererParams(value)
+                            : value;
                     return convertAllPropsRef.current(adjustedVal);
                 }
                 if (GRID_DANGEROUS_FUNCTIONS[target]) {
@@ -675,13 +705,14 @@ export function DashAgGrid(props) {
         [
             convertCol,
             convertMaybeFunctionNoParams,
+            convertMaybeFunction,
+            normalizeDetailCellRendererParams,
             suppressGetDetail,
             callbackGetDetail,
             components,
             convertAllPropsRef.current,
             convertFunction,
             handleDynamicStyle,
-            convertMaybeFunction,
         ]
     );
 
