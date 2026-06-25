@@ -6,7 +6,6 @@ import {
     LicenseManager,
     SparklinesModule,
 } from 'ag-grid-enterprise';
-import {AgChartsCommunityModule} from 'ag-charts-community';
 import {
     AgChartsEnterpriseModule,
     LicenseManager as AgChartsLicenseManager,
@@ -25,19 +24,13 @@ export default function DashAgGridEnterprise(props) {
         LicenseManager.setLicenseKey(licenseKey);
     }
     if (dashEnableCharts) {
-        if (dashEnableCharts === 'enterprise') {
-            const effectiveChartsLicenseKey = chartsLicenseKey || licenseKey;
-            if (effectiveChartsLicenseKey) {
-                AgChartsLicenseManager.setLicenseKey(effectiveChartsLicenseKey);
-            }
-            ModuleRegistry.registerModules([
-                IntegratedChartsModule.with(AgChartsEnterpriseModule),
-            ]);
-        } else {
-            ModuleRegistry.registerModules([
-                IntegratedChartsModule.with(AgChartsCommunityModule),
-            ]);
+        const effectiveChartsLicenseKey = chartsLicenseKey || licenseKey;
+        if (effectiveChartsLicenseKey) {
+            AgChartsLicenseManager.setLicenseKey(effectiveChartsLicenseKey);
         }
+        ModuleRegistry.registerModules([
+            IntegratedChartsModule.with(AgChartsEnterpriseModule),
+        ]);
     }
     return <MemoizedAgGrid {...props} />;
 }

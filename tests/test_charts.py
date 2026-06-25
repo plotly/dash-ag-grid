@@ -39,7 +39,7 @@ def _make_basic_grid(**extra_props):
 def test_charts001_enables_enterprise_charts_modules_with_true(dash_duo):
     app = Dash(__name__)
     app.layout = html.Div(
-        _make_chart_grid(enableEnterpriseModules=True, dashEnableCharts='community')
+        _make_chart_grid(enableEnterpriseModules=True, dashEnableCharts="enterprise")
     )
 
     dash_duo.start_server(app)
@@ -85,7 +85,7 @@ def test_charts003_keeps_enterprise_grid_without_charts(dash_duo):
 
 def test_charts004_rejects_charts_on_community_grid(dash_duo):
     app = Dash(__name__)
-    app.layout = html.Div(_make_chart_grid(dashEnableCharts='community'))
+    app.layout = html.Div(_make_chart_grid(dashEnableCharts="enterprise"))
 
     dash_duo.start_server(app)
     until(lambda: dash_duo.find_element('#loaded').text == 'true', 10)
@@ -118,7 +118,7 @@ def test_charts006_rejects_conflicting_enablecharts_false(dash_duo):
     app.layout = html.Div(
         _make_chart_grid(
             enableEnterpriseModules=True,
-            dashEnableCharts='community',
+            dashEnableCharts="enterprise",
             dashGridOptions={"enableCharts": False},
         )
     )

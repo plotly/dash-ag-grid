@@ -86,6 +86,13 @@ function DashAgGrid(props) {
         );
     }
 
+    if (
+        normalizedDashEnableCharts &&
+        normalizedDashEnableCharts !== 'enterprise'
+    ) {
+        throw new Error("dashEnableCharts must be set to 'enterprise'.");
+    }
+
     if (hasConflictingEnableChartsSetting) {
         throw new Error(
             'dashEnableCharts cannot be combined with dashGridOptions.enableCharts=false.'
@@ -94,7 +101,7 @@ function DashAgGrid(props) {
 
     if (hasEnableCharts && !normalizedDashEnableCharts) {
         throw new Error(
-            "enableCharts is set, but chart modules are not loaded. Set enableEnterpriseModules=true and dashEnableCharts='community' or 'enterprise'."
+            "enableCharts is set, but chart modules are not loaded. Set enableEnterpriseModules=true and dashEnableCharts='enterprise'."
         );
     }
 
@@ -545,9 +552,9 @@ DashAgGrid.propTypes = {
 
     /**
      * Load enterprise AG Charts modules for integrated charts.
-     * true and "community" are equivalent and set dashGridOptions.enableCharts=true.
+     * Set to "enterprise" to load enterprise chart modules and set dashGridOptions.enableCharts=true.
      */
-    dashEnableCharts: PropTypes.oneOf(['community', 'enterprise']),
+    dashEnableCharts: PropTypes.oneOf(['enterprise']),
 
     /**
      * The rowData in the grid after inline filters are applied.
