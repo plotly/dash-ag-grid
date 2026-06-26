@@ -107,7 +107,7 @@ def test_charts005_rejects_enablecharts_without_dashenablecharts(dash_duo):
     until(lambda: dash_duo.find_element('#loaded').text == 'true', 10)
 
     assert any(
-        "enableCharts is set, but chart modules are not loaded."
+        "enableCharts=true requires enableEnterpriseModules=true and dashChartMode='community' or 'enterprise'."
         in entry.get("message", "")
         for entry in dash_duo.get_logs()
     )

@@ -94,7 +94,7 @@ function DashAgGrid(props) {
 
     if (hasEnableCharts && !normalizedDashChartMode) {
         throw new Error(
-            "enableCharts is set, but chart modules are not loaded. Set enableEnterpriseModules=true and dashChartMode='community' or 'enterprise'."
+            "enableCharts=true requires enableEnterpriseModules=true and dashChartMode='community' or 'enterprise'."
         );
     }
 
