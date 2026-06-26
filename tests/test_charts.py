@@ -39,7 +39,7 @@ def _make_basic_grid(**extra_props):
 def test_charts001_enables_enterprise_charts_modules_with_true(dash_duo):
     app = Dash(__name__)
     app.layout = html.Div(
-        _make_chart_grid(enableEnterpriseModules=True, dashEnableCharts="enterprise")
+        _make_chart_grid(enableEnterpriseModules=True, dashChartMode="enterprise")
     )
 
     dash_duo.start_server(app)
@@ -58,7 +58,7 @@ def test_charts002_enables_enterprise_charts_modules(dash_duo):
     app.layout = html.Div(
         _make_chart_grid(
             enableEnterpriseModules=True,
-            dashEnableCharts="enterprise",
+            dashChartMode="enterprise",
         )
     )
 
@@ -85,13 +85,13 @@ def test_charts003_keeps_enterprise_grid_without_charts(dash_duo):
 
 def test_charts004_rejects_charts_on_community_grid(dash_duo):
     app = Dash(__name__)
-    app.layout = html.Div(_make_chart_grid(dashEnableCharts="enterprise"))
+    app.layout = html.Div(_make_chart_grid(dashChartMode="enterprise"))
 
     dash_duo.start_server(app)
     until(lambda: dash_duo.find_element('#loaded').text == 'true', 10)
 
     assert any(
-        "dashEnableCharts is only supported when enableEnterpriseModules is true."
+        "dashChartMode is only supported when enableEnterpriseModules is true."
         in entry.get("message", "")
         for entry in dash_duo.get_logs()
     )
@@ -118,7 +118,7 @@ def test_charts006_rejects_conflicting_enablecharts_false(dash_duo):
     app.layout = html.Div(
         _make_chart_grid(
             enableEnterpriseModules=True,
-            dashEnableCharts="enterprise",
+            dashChartMode="enterprise",
             dashGridOptions={"enableCharts": False},
         )
     )
@@ -127,7 +127,7 @@ def test_charts006_rejects_conflicting_enablecharts_false(dash_duo):
     until(lambda: dash_duo.find_element('#loaded').text == 'true', 10)
 
     assert any(
-        "dashEnableCharts cannot be combined with dashGridOptions.enableCharts=false."
+        "dashChartMode cannot be combined with dashGridOptions.enableCharts=false."
         in entry.get("message", "")
         for entry in dash_duo.get_logs()
     )
@@ -138,7 +138,7 @@ def test_charts007_accepts_charts_license_key_prop(dash_duo):
     app.layout = html.Div(
         _make_chart_grid(
             enableEnterpriseModules=True,
-            dashEnableCharts="enterprise",
+            dashChartMode="enterprise",
             licenseKey="grid-key",
             chartsLicenseKey="charts-key",
         )

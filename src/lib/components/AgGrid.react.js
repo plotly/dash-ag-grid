@@ -66,42 +66,35 @@ function DashAgGrid(props) {
 
     const {
         enableEnterpriseModules,
-        dashEnableCharts,
+        dashChartMode,
         dashGridOptions = {},
     } = props;
-    const normalizedDashEnableCharts =
-        typeof dashEnableCharts === 'undefined' || dashEnableCharts === null
+    const normalizedDashChartMode =
+        typeof dashChartMode === 'undefined' || dashChartMode === null
             ? false
-            : dashEnableCharts;
+            : dashChartMode;
     const hasConflictingEnableChartsSetting =
-        normalizedDashEnableCharts && dashGridOptions.enableCharts === false;
-    const gridDashOptions = normalizedDashEnableCharts
+        normalizedDashChartMode && dashGridOptions.enableCharts === false;
+    const gridDashOptions = normalizedDashChartMode
         ? {...dashGridOptions, enableCharts: true}
         : dashGridOptions;
     const hasEnableCharts = gridDashOptions?.enableCharts;
 
-    if (normalizedDashEnableCharts && !enableEnterpriseModules) {
+    if (normalizedDashChartMode && !enableEnterpriseModules) {
         throw new Error(
-            'dashEnableCharts is only supported when enableEnterpriseModules is true.'
+            'dashChartMode is only supported when enableEnterpriseModules is true.'
         );
-    }
-
-    if (
-        normalizedDashEnableCharts &&
-        normalizedDashEnableCharts !== 'enterprise'
-    ) {
-        throw new Error("dashEnableCharts must be set to 'enterprise'.");
     }
 
     if (hasConflictingEnableChartsSetting) {
         throw new Error(
-            'dashEnableCharts cannot be combined with dashGridOptions.enableCharts=false.'
+            'dashChartMode cannot be combined with dashGridOptions.enableCharts=false.'
         );
     }
 
-    if (hasEnableCharts && !normalizedDashEnableCharts) {
+    if (hasEnableCharts && !normalizedDashChartMode) {
         throw new Error(
-            "enableCharts is set, but chart modules are not loaded. Set enableEnterpriseModules=true and dashEnableCharts='enterprise'."
+            "enableCharts is set, but chart modules are not loaded. Set enableEnterpriseModules=true and dashChartMode='community' or 'enterprise'."
         );
     }
 
@@ -540,7 +533,7 @@ DashAgGrid.propTypes = {
     licenseKey: PropTypes.string,
 
     /**
-     * License key for AG Charts Enterprise when dashEnableCharts is "enterprise".
+     * License key for AG Charts Enterprise when dashChartMode is "enterprise".
      * If not provided, licenseKey is used.
      */
     chartsLicenseKey: PropTypes.string,
@@ -552,9 +545,9 @@ DashAgGrid.propTypes = {
 
     /**
      * Load enterprise AG Charts modules for integrated charts.
-     * Set to "enterprise" to load enterprise chart modules and set dashGridOptions.enableCharts=true.
+     * Set to "enterprise" to load enterprise chart modules or use "community" for community chart modules and set dashGridOptions.enableCharts=true.
      */
-    dashEnableCharts: PropTypes.oneOf(['enterprise']),
+    dashChartMode: PropTypes.oneOf(['enterprise', 'community']),
 
     /**
      * The rowData in the grid after inline filters are applied.
