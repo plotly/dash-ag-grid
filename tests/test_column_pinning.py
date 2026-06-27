@@ -9,17 +9,17 @@ def test_cd001_process_unpinned_columns(dash_duo):
     
     column_count = 10
     row_count = 10
-    rowData = [
+    row_data = [
         {f"COL_{col_idx}": uuid.uuid4().hex for col_idx in range(column_count)} for _ in range(row_count)
     ]
 
     app = Dash(__name__)
-    columnDefs = [
+    column_defs = [
         {
             "field": col,
             "pinned": "left"
         }
-        for col in rowData[0].keys()
+        for col in row_data[0].keys()
     ]
 
     app.layout = html.Div(
@@ -29,8 +29,8 @@ def test_cd001_process_unpinned_columns(dash_duo):
                 " that the right most columns are unpinned when the available viewport space is exceeded."
             ),
             dag.AgGrid(
-                columnDefs=columnDefs,
-                rowData=rowData,
+                columnDefs=column_defs,
+                rowData=row_data,
                 id="grid",
                 dashGridOptions={
                     "processUnpinnedColumns": {"function": "unpinAllButFirstColumn(params)"},
