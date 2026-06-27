@@ -1,3 +1,5 @@
+from typing import Literal
+
 from selenium.webdriver.common.action_chains import ActionChains
 
 from dash.testing.wait import until
@@ -44,11 +46,40 @@ class Grid:
             raise ValueError(f"found {len(els)} {description}, expected {expected}")
 
     def wait_for_pinned_cols(self, expected):
-        # TODO: is there a pinned right?
+        self.wait_for_pinned_column_count(expected, pin_state="left")
+
+    def _header_class_for_pin_state(self, pin_state: Literal["left", "right", "scrolling"]):
+        """Return the appropriate header class for the given pin state."""
+        if pin_state == "scrolling":
+            return "ag-header-viewport"
+        elif pin_state == "left":
+            return "ag-pinned-left-header"
+        elif pin_state == "right":
+            return "ag-pinned-right-header"
+        else:
+            raise ValueError(f"Invalid pin_state: {pin_state}")
+    
+    def wait_for_pinned_column_count(self, expected_count, pin_state: Literal["left", "right", "scrolling"]):
+        """Wait for the number of columns in the specified pin state to match the expected count."""
+        header_class = self._header_class_for_pin_state(pin_state)
         self._wait_for_count(
-            f'#{self.id} .ag-pinned-left-header [aria-rowindex="1"] .ag-header-cell',
-            expected,
-            "pinned_cols",
+            f'#{self.id} .{header_class} [aria-rowindex="1"] .ag-header-cell',
+            expected_count,
+            f"pinned_cols '{pin_state}'",
+        )
+
+    def wait_for_pinned_column(
+        self,
+        col_id: str,
+        pin_state: Literal["left", "right", "scrolling"],
+    ) -> None:
+        """Wait for a column to be in the specified pin state."""
+        header_class = self._header_class_for_pin_state(pin_state)
+
+        self._wait_for_count(
+            f'#{self.id} .{header_class} [aria-rowindex="1"] .ag-header-cell[col-id="{col_id}"]',
+            1,
+            f"column '{col_id}' pinned '{pin_state}'",
         )
 
     def wait_for_viewport_cols(self, expected):

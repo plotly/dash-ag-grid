@@ -433,6 +433,16 @@ dagfuncs.dateFilterComparator = (filterLocalDateAtMidnight, cellValue) => {
 
 // END test_custom_filter.py
 
+// FOR test_column_pinning.py
+dagfuncs.unpinAllButFirstColumn = (params) => {
+    const {columns, viewportWidth, api, context} = params;
+    // columns contains the columns AgGrid would like to unpin, but we can override that by returning
+    // a different set of columns.  In this case, we will unpin all columns except the first column
+    allButFirstColumn = api.getColumns().filter((col, index) => index > 0 && col.isPinned());
+    return allButFirstColumn;
+}
+// END test_column_pinning.py
+
 // FOR test_quick_filter.py
 dagfuncs.quickFilterMatcher = (quickFilterParts, rowQuickFilterAggregateText) => {
     return quickFilterParts.every(part => rowQuickFilterAggregateText.match(part));
