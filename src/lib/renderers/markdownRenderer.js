@@ -3,39 +3,53 @@ import PropTypes from 'prop-types';
 
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import rehypeExternalLinks from 'rehype-external-links';
 
 import ReactMarkdown from 'react-markdown';
 
 export default function MarkdownRenderer(props) {
-    const {colDef, target, value, dangerously_allow_code} = props;
+    const {colDef, value, dangerously_allow_code} = props;
     // Markdown renderer with HTML rendering enabled.
     // rehypeRaw allows HTML rendering.
     // Convert <p> tags to simple <divs> using the components prop.
     const rehypePlugins = dangerously_allow_code ? [rehypeRaw] : [];
 
-    let linkTarget;
-    if (!dangerously_allow_code) {
-        linkTarget = colDef.linkTarget || '_self';
-    }
+    const linkTarget = colDef.linkTarget || '_self';
+
+    rehypePlugins.push([
+        rehypeExternalLinks,
+        {
+            target: dangerously_allow_code ? linkTarget : null,
+            rel: ['noopener', 'noreferrer', 'nofollow'],
+        },
+    ]);
 
     return (
-        <ReactMarkdown
-            linkTarget={linkTarget}
-            remarkPlugins={[[remarkGfm, {singleTilde: false}]]}
-            components={{
-                p: 'div',
-                a: ({node: _, children, ...props}) => {
-                    const linkProps = props;
-                    if (target === '_blank') {
-                        linkProps.rel = 'noopener noreferrer';
-                    }
-                    return <a {...linkProps}>{children}</a>;
-                },
-            }}
-            className="agGrid-Markdown"
-            rehypePlugins={rehypePlugins}
-            children={value ? String(value) : null}
-        />
+        <div className="agGrid-Markdown">
+            <ReactMarkdown
+                remarkPlugins={[[remarkGfm, {singleTilde: false}]]}
+                components={{
+                    p: 'div',
+                    a({node: _, children, target, ...props}) {
+                        const linkProps = props;
+                        const subLinkTarget = dangerously_allow_code
+                            ? target || linkTarget
+                            : linkTarget;
+                        // Use the correct target for links
+                        if (subLinkTarget === '_blank') {
+                            linkProps.rel = 'noopener noreferrer nofollow';
+                        }
+                        return (
+                            <a {...{target: subLinkTarget, ...linkProps}}>
+                                {children}
+                            </a>
+                        );
+                    },
+                }}
+                rehypePlugins={rehypePlugins}
+                children={value ? String(value) : null}
+            />
+        </div>
     );
 }
 

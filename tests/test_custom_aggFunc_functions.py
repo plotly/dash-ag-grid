@@ -6,16 +6,15 @@ import dash_ag_grid as dag
 import dash
 from dash import html, dcc
 from . import utils
-from dash.testing.wait import until
-import requests
+import pandas as pd
 
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
+data=df.to_dict("records")
 
 def test_ca001_custom_aggFunc_functions(dash_duo):
     app = dash.Dash(__name__)
-
-    data = requests.get(
-        r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-    ).json()
 
     columnDefs = [
         # Row group by country and by year is enabled.
@@ -85,10 +84,6 @@ def test_ca001_custom_aggFunc_functions(dash_duo):
 
 def test_ca002_custom_aggFunc_functions(dash_duo):
     app = dash.Dash(__name__)
-
-    data = requests.get(
-        r"https://www.ag-grid.com/example-assets/olympic-winners.json"
-    ).json()
 
     columnDefs = [
         # Row group by country and by year is enabled.
