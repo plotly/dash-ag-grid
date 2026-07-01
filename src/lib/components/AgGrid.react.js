@@ -10,8 +10,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 const RealAgGrid = lazy(LazyLoader.agGrid);
 const RealAgGridEnterprise = lazy(LazyLoader.agGridEnterprise);
 
-function getGrid(enable) {
-    return enable ? RealAgGridEnterprise : RealAgGrid;
+function getGrid(enableEnterpriseModules) {
+    return enableEnterpriseModules ? RealAgGridEnterprise : RealAgGrid;
 }
 
 export const defaultProps = {
@@ -64,12 +64,50 @@ function DashAgGrid(props) {
         }
     }, [props.rowTransaction, state.mounted, buildArray]);
 
-    const {enableEnterpriseModules} = props;
+    const {
+        enableEnterpriseModules,
+        dashChartMode,
+        dashGridOptions = {},
+    } = props;
+    const normalizedDashChartMode =
+        typeof dashChartMode === 'undefined' || dashChartMode === null
+            ? false
+            : dashChartMode;
+    const hasConflictingEnableChartsSetting =
+        normalizedDashChartMode && dashGridOptions.enableCharts === false;
+    const gridDashOptions = normalizedDashChartMode
+        ? {...dashGridOptions, enableCharts: true}
+        : dashGridOptions;
+    const hasEnableCharts = gridDashOptions?.enableCharts;
+
+    if (normalizedDashChartMode && !enableEnterpriseModules) {
+        throw new Error(
+            'dashChartMode is only supported when enableEnterpriseModules is true.'
+        );
+    }
+
+    if (hasConflictingEnableChartsSetting) {
+        throw new Error(
+            'dashChartMode cannot be combined with dashGridOptions.enableCharts=false.'
+        );
+    }
+
+    if (hasEnableCharts && !normalizedDashChartMode) {
+        throw new Error(
+            "enableCharts=true requires enableEnterpriseModules=true and dashChartMode='community' or 'enterprise'."
+        );
+    }
+
     const RealComponent = getGrid(enableEnterpriseModules);
 
     return (
         <Suspense fallback={null}>
-            <RealComponent parentState={state} {...defaultProps} {...props} />
+            <RealComponent
+                parentState={state}
+                {...defaultProps}
+                {...props}
+                dashGridOptions={gridDashOptions}
+            />
         </Suspense>
     );
 }
@@ -495,9 +533,21 @@ DashAgGrid.propTypes = {
     licenseKey: PropTypes.string,
 
     /**
+     * License key for AG Charts Enterprise when dashChartMode is "enterprise".
+     * If not provided, licenseKey is used.
+     */
+    chartsLicenseKey: PropTypes.string,
+
+    /**
      * If True, enable ag-grid Enterprise modules. Recommended to use with licenseKey.
      */
     enableEnterpriseModules: PropTypes.bool,
+
+    /**
+     * Load enterprise AG Charts modules for integrated charts.
+     * Set to "enterprise" to load enterprise chart modules or use "community" for community chart modules and set dashGridOptions.enableCharts=true.
+     */
+    dashChartMode: PropTypes.oneOf(['enterprise', 'community']),
 
     /**
      * The rowData in the grid after inline filters are applied.
