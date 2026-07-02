@@ -59,7 +59,7 @@ class Grid:
         else:
             raise ValueError(f"Invalid pin_state: {pin_state}")
     
-    def wait_for_pinned_column_count(self, expected_count, pin_state: Literal["left", "right", "scrolling"]):
+    def wait_for_pinned_column_count(self, expected_count, pin_state: Literal["left", "right", "scrolling"] = "left"):
         """Wait for the number of columns in the specified pin state to match the expected count."""
         header_class = self._header_class_for_pin_state(pin_state)
         self._wait_for_count(
@@ -71,7 +71,7 @@ class Grid:
     def wait_for_pinned_column(
         self,
         col_id: str,
-        pin_state: Literal["left", "right", "scrolling"],
+        pin_state: Literal["left", "right", "scrolling"] = "left",
     ) -> None:
         """Wait for a column to be in the specified pin state."""
         header_class = self._header_class_for_pin_state(pin_state)
