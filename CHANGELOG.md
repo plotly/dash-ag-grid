@@ -9,6 +9,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 ### Added
 - [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 - [#455](https://github.com/plotly/dash-ag-grid/pull/455) Added support for dynamic `detailCellRendererParams` in Master/Detail, including dynamic detail-grid column definitions.
+- [#468](https://github.com/plotly/dash-ag-grid/issues/468) Support passing a function to the grid option `processUnpinnedColumns`.
 
 ### Changed
 - [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
