@@ -58,6 +58,9 @@ export const GRID_MAYBE_FUNCTIONS = {
     sendToClipboard: 1,
     processDataFromClipboard: 1,
 
+    // Columns
+    processUnpinnedColumns: 1,
+
     // Exporting
     getCustomContentBelowRow: 1,
     shouldRowBeSkipped: 1,
