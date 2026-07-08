@@ -733,6 +733,9 @@ export function DashAgGrid(props) {
     }, [props.rowData, virtualRowData, getRowData, customSetProps]);
 
     const onSortChanged = useCallback(() => {
+        if (!gridApi) {
+            return;
+        }
         const {rowModelType} = props;
         const propsToSet = {};
         if (rowModelType === 'clientSide') {

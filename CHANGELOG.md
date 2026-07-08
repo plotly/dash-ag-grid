@@ -6,6 +6,9 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
+### Fixed
+- [#466](https://github.com/plotly/dash-ag-grid/issues/466) fix uncaught TypeError in `onSortChanged` when the grid initializes with a sort in `initialState`
+
 ## [33.3.3] - 2025-12-19
 ### Fixed
 - [#408](https://github.com/plotly/dash-ag-grid/pull/408) fixed issue where the `columnState` would conflict with `columnDefs` updates
