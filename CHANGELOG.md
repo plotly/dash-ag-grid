@@ -6,6 +6,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
+## [35.3.0] - 2026-07-13
 ### Added
 - [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 - [#448](https://github.com/plotly/dash-ag-grid/pull/448) Added support for AG-Charts (split out in v33 of AG Grid).  Integrated Charts require enableEnterpriseModules=True, dashChartMode="community" or "enterprise", and dashGridOptions={"enableCharts": True}.
