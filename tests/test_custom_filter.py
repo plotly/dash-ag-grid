@@ -387,3 +387,48 @@ def test_fi006_custom_filter(dash_duo):
     apply_buttons = dash_duo.find_elements('button[data-ref="applyFilterButton"]')
     apply_buttons[1].click()
     grid.wait_for_cell_text(0, 2, "24/08/2008")
+    
+    
+def test_fi007_custom_filter(dash_duo):
+
+    app = Dash(__name__)
+    
+    column_defs = [
+        {"field": "country", "rowGroup": True, "hide": True},
+        {"field": "year"},
+        {"field": "total", "aggFunc": "sum", "filter": "agNumberColumnFilter"},
+    ]
+    
+    default_col_def = {
+        "flex": 1,
+        "floatingFilter": True,
+    }
+    
+    auto_group_column_def = {
+        "field": "athlete",
+    }
+    
+    app.layout = html.Div(
+        children=[
+            dag.AgGrid(
+                id="grid",
+                rowData=df.to_dict("records"),
+                columnDefs=column_defs,
+                defaultColDef=default_col_def,
+                dashGridOptions={
+                    "groupAggFiltering": {"function": "!!params.node.group"},
+                    "groupDefaultExpanded": -1,
+                    "autoGroupColumnDef": auto_group_column_def,
+                },
+                enableEnterpriseModules=True,
+            )
+        ],
+    )
+    
+    dash_duo.start_server(app)
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(1, 0, "Michael Phelps")
+
+    grid.set_filter(3, 8)
+    grid.wait_for_cell_text(0, 3, "8")
+    

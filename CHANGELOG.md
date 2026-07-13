@@ -11,6 +11,7 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#448](https://github.com/plotly/dash-ag-grid/pull/448) Added support for AG-Charts (split out in v33 of AG Grid).  Integrated Charts require enableEnterpriseModules=True, dashChartMode="community" or "enterprise", and dashGridOptions={"enableCharts": True}.
 - [#455](https://github.com/plotly/dash-ag-grid/pull/455) Added support for dynamic `detailCellRendererParams` in Master/Detail, including dynamic detail-grid column definitions.
 - [#468](https://github.com/plotly/dash-ag-grid/issues/468) Support passing a function to the grid option `processUnpinnedColumns`.
+- [#472](https://github.com/plotly/dash-ag-grid/pull/472) Added support for callback function for the groupAggFiltering options
 
 ### Changed
 - [#452](https://github.com/plotly/dash-ag-grid/pull/452) 

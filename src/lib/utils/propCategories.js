@@ -73,6 +73,7 @@ export const GRID_MAYBE_FUNCTIONS = {
     isExternalFilterPresent: 1,
     doesExternalFilterPass: 1,
     quickFilterParser: 1,
+    groupAggFiltering: 1,
 
     // Integrated Charts
     getChartToolbarItems: 1,
