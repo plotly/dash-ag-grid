@@ -8,10 +8,14 @@ on:
     branches: [main]
     tags:
       - v*
+    paths:
+      - src/**
   pull_request:
     branches:
       - main
       - v*
+    paths:
+      - src/**
 
 jobs:
   test:
