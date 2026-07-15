@@ -5,15 +5,19 @@ import pandas as pd
 
 from . import utils
 
-df = px.data.election()
-default_display_cols = ["district_id"]
-other_cols = ["district", "winner"]
-
-df = pd.concat([df, pd.DataFrame({"district": ["test"]})])
-
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
+)
+rowData = df.to_dict('records')
 
 def test_fi002_custom_filter(dash_duo):
     app = Dash(__name__)
+
+    df = px.data.election()
+    default_display_cols = ["district_id"]
+    other_cols = ["district", "winner"]
+
+    df = pd.concat([df, pd.DataFrame({"district": ["test"]})])
 
     app.layout = html.Div(
         [
@@ -68,10 +72,6 @@ def test_fi002_custom_filter(dash_duo):
 def test_fi003_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    df = pd.read_json('https://www.ag-grid.com/example-assets/olympic-winners.json', convert_dates=False)
-
-    rowData = df.to_dict('records')
-
     columnDefs = [
         {'field': 'age', 'filter': 'agNumberColumnFilter'},
         {'field': 'country', 'minWidth': 150},
@@ -125,11 +125,67 @@ def test_fi003_custom_filter(dash_duo):
     grid.wait_for_cell_text(0, 0, "23")
 
 
+def test_fi003_custom_filter_v34(dash_duo):
+    app = Dash(__name__)
+
+    columnDefs = [
+        {'field': 'age', 'filter': 'agNumberColumnFilter'},
+        {'field': 'country', 'minWidth': 150},
+        {'field': 'year', 'filter': {'component': 'YearFilter34', 'doesFilterPass': {'function': 'doesFilterPass'}}},
+        {
+            'field': 'date',
+            'minWidth': 130,
+            'filter': 'agDateColumnFilter',
+        },
+        {'field': 'sport'},
+        {'field': 'gold', 'filter': 'agNumberColumnFilter'},
+        {'field': 'silver', 'filter': 'agNumberColumnFilter'},
+        {'field': 'bronze', 'filter': 'agNumberColumnFilter'},
+        {'field': 'total', 'filter': 'agNumberColumnFilter'},
+    ]
+
+    defaultColDef = {
+        'editable': True,
+        'sortable': True,
+        'flex': 1,
+        'minWidth': 100,
+        'filter': True,
+        'resizable': True,
+    }
+
+    app.layout = html.Div(
+        [
+            dag.AgGrid(
+                id="grid",
+                columnDefs=columnDefs,
+                rowData=rowData,
+                defaultColDef=defaultColDef,
+                dashGridOptions={"enableFilterHandlers": True}
+            ),
+        ]
+    )
+
+    dash_duo.start_server(app)
+
+    grid = utils.Grid(dash_duo, "grid")
+
+    grid.wait_for_cell_text(0, 0, "23")
+
+    dash_duo.find_element('.ag-header-cell[aria-colindex="3"] span[data-ref="eFilterButton"]').click()
+
+    dash_duo.find_element('.ag-filter label:nth-child(2)').click()
+
+    grid.wait_for_cell_text(0, 0, "27")
+
+    dash_duo.find_element('.ag-filter label:nth-child(1)').click()
+
+    grid.wait_for_cell_text(0, 0, "23")
+
+
 # test filterParams.textFormatter, filterParams.textMatcher and filterParams.filterOptions.predicate functions
 def test_fi004_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    df = pd.read_json('https://www.ag-grid.com/example-assets/olympic-winners.json', convert_dates=False)
 
     columnDefs = [
         {
@@ -159,7 +215,7 @@ def test_fi004_custom_filter(dash_duo):
         [
             dag.AgGrid(
                 id="grid",
-                rowData=df.to_dict("records"),
+                rowData=rowData,
                 columnDefs=columnDefs,
                 columnSize="sizeToFit",
                 defaultColDef={"filter": True, "floatingFilter": True}
@@ -240,9 +296,6 @@ def test_fi005_custom_filter(dash_duo):
 def test_fi006_custom_filter(dash_duo):
     app = Dash(__name__)
 
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/plotly/datasets/master/ag-grid/olympic-winners.csv"
-    )
 
     columnDefs = [
         {"field": "athlete",
@@ -285,7 +338,7 @@ def test_fi006_custom_filter(dash_duo):
                 id="date-filter-example",
                 enableEnterpriseModules=True,
                 columnDefs=columnDefs,
-                rowData=df.to_dict("records"),
+                rowData=rowData,
                 defaultColDef={"flex": 1, "minWidth": 150, "floatingFilter": True},
                 dashGridOptions={"animateRows": False}
             ),
@@ -334,3 +387,48 @@ def test_fi006_custom_filter(dash_duo):
     apply_buttons = dash_duo.find_elements('button[data-ref="applyFilterButton"]')
     apply_buttons[1].click()
     grid.wait_for_cell_text(0, 2, "24/08/2008")
+    
+    
+def test_fi007_custom_filter(dash_duo):
+
+    app = Dash(__name__)
+    
+    column_defs = [
+        {"field": "country", "rowGroup": True, "hide": True},
+        {"field": "year"},
+        {"field": "total", "aggFunc": "sum", "filter": "agNumberColumnFilter"},
+    ]
+    
+    default_col_def = {
+        "flex": 1,
+        "floatingFilter": True,
+    }
+    
+    auto_group_column_def = {
+        "field": "athlete",
+    }
+    
+    app.layout = html.Div(
+        children=[
+            dag.AgGrid(
+                id="grid",
+                rowData=df.to_dict("records"),
+                columnDefs=column_defs,
+                defaultColDef=default_col_def,
+                dashGridOptions={
+                    "groupAggFiltering": {"function": "!!params.node.group"},
+                    "groupDefaultExpanded": -1,
+                    "autoGroupColumnDef": auto_group_column_def,
+                },
+                enableEnterpriseModules=True,
+            )
+        ],
+    )
+    
+    dash_duo.start_server(app)
+    grid = utils.Grid(dash_duo, "grid")
+    grid.wait_for_cell_text(1, 0, "Michael Phelps")
+
+    grid.set_filter(3, 8)
+    grid.wait_for_cell_text(0, 3, "8")
+    
