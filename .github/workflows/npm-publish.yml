@@ -26,17 +26,22 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
+      - name: Upgrade npm for trusted publishing
+        # Trusted publishing (OIDC) requires npm >= 11.5.1, newer than the
+        # version bundled with Node 20.
+        run: npm install -g npm@latest
+        shell: bash
       - name: Download npm package
         uses: actions/download-artifact@v4
         with:
           name: npm-package
           path: npm-dist/
       - name: Publish to npm
+        # Authenticates via GitHub OIDC using the trusted publisher configured
+        # on npmjs.com — no NPM_TOKEN needed. Provenance is generated automatically.
         run: |
           pushd npm-dist
           FILE=$(echo *.tgz)
-          npm publish "$FILE" --provenance --access public
+          npm publish "$FILE" --access public
           popd
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
