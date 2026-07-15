@@ -3,12 +3,14 @@ name: Check changelog entry
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   contents: read
 jobs:
   check-changelog:
+    # Allow intentional bypass by adding the `skip-changelog` label to the PR.
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-changelog') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
