@@ -24,12 +24,13 @@ jobs:
     steps:
       - uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Upgrade npm for trusted publishing
-        # Trusted publishing (OIDC) requires npm >= 11.5.1, newer than the
-        # version bundled with Node 20.
-        run: npm install -g npm@latest
+        # Trusted publishing (OIDC) requires npm >= 11.5.1. Pin to the 11.x
+        # line: npm@latest is now 12.x, which requires a newer Node than the
+        # runner provides (EBADENGINE).
+        run: npm install -g npm@11
         shell: bash
       - name: Download npm package
         uses: actions/download-artifact@v4
