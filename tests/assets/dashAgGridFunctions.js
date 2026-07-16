@@ -439,6 +439,15 @@ dagfuncs.dateFilterComparator = (filterLocalDateAtMidnight, cellValue) => {
 
 // END test_custom_filter.py
 
+// FOR test_column_pinning.py
+dagfuncs.unpinAllButFirstColumn = (params) => {
+    const {api} = params;
+    // columns contains the columns AgGrid would like to unpin, but we can override that by returning
+    // a different set of columns.  In this case, we will unpin all columns except the first column
+    return api.getColumns().filter((col, index) => index > 0 && col.isPinned());
+}
+// END test_column_pinning.py
+
 // FOR test_quick_filter.py
 dagfuncs.quickFilterMatcher = (quickFilterParts, rowQuickFilterAggregateText) => {
     return quickFilterParts.every(part => rowQuickFilterAggregateText.match(part));
@@ -548,3 +557,14 @@ dagfuncs.testToyota = (params) => {
 dagfuncs.customTheme = (theme, agGrid) => {
     return theme.withPart(agGrid.createPart(agGrid.colorSchemeDark)).withPart(agGrid.createPart(agGrid.iconSetAlpine));
 }
+
+
+dagfuncs.myTotalValueGetter = function (params) {
+    const isRootLevel = params.node.level === -1;
+
+        if (isRootLevel) {
+          return 'Grand Total';
+        }
+
+        return `Sub Total (${params.value})`;
+    }

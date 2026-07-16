@@ -1,0 +1,47 @@
+name: Publish to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      python-version: '3.10'
+      node-version: 'v18.16.0'
+
+  npm-publish:
+    name: Upload release to NPM
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+    permissions:
+      id-token: write
+      contents: read
+    needs: build
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Upgrade npm for trusted publishing
+        # Trusted publishing (OIDC) requires npm >= 11.5.1, newer than the
+        # version bundled with Node 20.
+        run: npm install -g npm@latest
+        shell: bash
+      - name: Download npm package
+        uses: actions/download-artifact@v4
+        with:
+          name: npm-package
+          path: npm-dist/
+      - name: Publish to npm
+        # Authenticates via GitHub OIDC using the trusted publisher configured
+        # on npmjs.com — no NPM_TOKEN needed. Provenance is generated automatically.
+        run: |
+          pushd npm-dist
+          FILE=$(echo *.tgz)
+          npm publish "$FILE" --access public
+          popd
+        shell: bash
