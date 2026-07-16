@@ -10,12 +10,16 @@ on:
       - v*
     paths:
       - src/**
+      - package.json
+      - package-lock.json
   pull_request:
     branches:
       - main
       - v*
     paths:
       - src/**
+      - package.json
+      - package-lock.json
 
 jobs:
   test:
