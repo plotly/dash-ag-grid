@@ -1451,6 +1451,9 @@ export function DashAgGrid(props) {
 
             const {rowData, rowCount} = props.getRowsResponse;
 
+            // guard against params.api not existing
+            const api = params?.api || gridApi;
+
             // If we were previously at 0 rows, tell ag‑Grid the new count first,
             // then defer the successCallback so ag‑Grid has processed setRowCount.
             // This avoids an edge case where ag‑Grid ignores the successCallback because it thinks the
@@ -1464,7 +1467,7 @@ export function DashAgGrid(props) {
                 prevRowCountRef.current === 0
             ) {
                 resettingCount.current = true;
-                params.api.setRowCount(rowCount, false);
+                api?.setRowCount(rowCount, null);
 
                 resetTimeoutRef.current = setTimeout(() => {
                     resettingCount.current = false;
