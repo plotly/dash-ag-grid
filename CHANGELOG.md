@@ -6,6 +6,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
+## [36.0.0rc0] - 2026-07-16
+### Changed
+- bumping to v`36.0.0` for the grid
+
 ## [35.3.0] - 2026-07-13
 ### Added
 - [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
