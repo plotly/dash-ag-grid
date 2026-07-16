@@ -48,22 +48,38 @@ class Grid:
     def wait_for_pinned_cols(self, expected):
         self.wait_for_pinned_column_count(expected, pin_state="left")
 
-    def _header_class_for_pin_state(self, pin_state: Literal["left", "right", "scrolling"]):
-        """Return the appropriate header class for the given pin state."""
+    def _header_selector_for_pin_state(
+        self, pin_state: Literal["left", "right", "scrolling"]
+    ):
+        """Return the appropriate header selector for the given pin state."""
         if pin_state == "scrolling":
-            return "ag-header-viewport"
+            return '.ag-header [aria-rowindex="1"] .ag-grid-scrolling-cells, .ag-header-viewport [aria-rowindex="1"]'
         elif pin_state == "left":
-            return "ag-pinned-left-header"
+            return '.ag-header [aria-rowindex="1"] .ag-grid-pinned-left-cells, .ag-pinned-left-header [aria-rowindex="1"]'
         elif pin_state == "right":
-            return "ag-pinned-right-header"
+            return '.ag-header [aria-rowindex="1"] .ag-grid-pinned-right-cells, .ag-pinned-right-header [aria-rowindex="1"]'
         else:
             raise ValueError(f"Invalid pin_state: {pin_state}")
-    
-    def wait_for_pinned_column_count(self, expected_count, pin_state: Literal["left", "right", "scrolling"] = "left"):
+
+    def _header_cell_selector_for_pin_state(
+        self, pin_state: Literal["left", "right", "scrolling"], cell_selector=""
+    ):
+        base_selectors = [
+            sel.strip() for sel in self._header_selector_for_pin_state(pin_state).split(",")
+        ]
+        return ", ".join(
+            f"{selector} .ag-header-cell{cell_selector}" for selector in base_selectors
+        )
+
+    def wait_for_pinned_column_count(
+        self,
+        expected_count,
+        pin_state: Literal["left", "right", "scrolling"] = "left",
+    ):
         """Wait for the number of columns in the specified pin state to match the expected count."""
-        header_class = self._header_class_for_pin_state(pin_state)
+        header_cell_selector = self._header_cell_selector_for_pin_state(pin_state)
         self._wait_for_count(
-            f'#{self.id} .{header_class} [aria-rowindex="1"] .ag-header-cell',
+            f'#{self.id} {header_cell_selector}',
             expected_count,
             f"pinned_cols '{pin_state}'",
         )
@@ -74,17 +90,20 @@ class Grid:
         pin_state: Literal["left", "right", "scrolling"] = "left",
     ) -> None:
         """Wait for a column to be in the specified pin state."""
-        header_class = self._header_class_for_pin_state(pin_state)
+        header_cell_selector = self._header_cell_selector_for_pin_state(
+            pin_state, f'[col-id="{col_id}"]'
+        )
 
         self._wait_for_count(
-            f'#{self.id} .{header_class} [aria-rowindex="1"] .ag-header-cell[col-id="{col_id}"]',
+            f'#{self.id} {header_cell_selector}',
             1,
             f"column '{col_id}' pinned '{pin_state}'",
         )
 
     def wait_for_viewport_cols(self, expected):
+        header_cell_selector = self._header_cell_selector_for_pin_state("scrolling")
         self._wait_for_count(
-            f'#{self.id} .ag-header-viewport [aria-rowindex="1"] .ag-header-cell',
+            f'#{self.id} {header_cell_selector}',
             expected,
             "viewport_cols",
         )
@@ -231,12 +250,22 @@ class Grid:
         chk.click()
 
     def cell_in_viewport(self, row, col):
-        grid_viewport = self.dash_duo.find_element(
-            f'#{self.id} .ag-body-viewport')
         cell = self.dash_duo.find_element(
             f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"]'
         )
-        return (cell.location['x'] >= grid_viewport.location['x']
-                and cell.location['y'] >= grid_viewport.location['y']
-                and cell.location['y'] < (grid_viewport.location['y'] + grid_viewport.size['height'])
-                and cell.location['x'] < (grid_viewport.location['x'] + grid_viewport.size['width'] - 20))
+        return self.dash_duo.driver.execute_script(
+            """
+            const cell = arguments[0];
+            const rect = cell.getBoundingClientRect();
+            const x = rect.left + Math.max(1, Math.min(rect.width - 1, rect.width / 2));
+            const y = rect.top + Math.max(1, Math.min(rect.height - 1, rect.height / 2));
+
+            if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) {
+                return false;
+            }
+
+            const topElement = document.elementFromPoint(x, y);
+            return topElement === cell || cell.contains(topElement);
+            """,
+            cell,
+        )

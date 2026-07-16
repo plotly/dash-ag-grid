@@ -55,7 +55,7 @@
 }
 
 /* Used in Column Spanning Simple example */
-.colSpanning .ag-body-viewport [col-id='country'] {
+.colSpanning .ag-grid-scrolling-container [col-id='country'] {
     background-color: #a6e1ec;
 }
 
@@ -77,5 +77,4 @@
 .center-header .ag-header-cell-label {
     justify-content: center;
 }
-
 

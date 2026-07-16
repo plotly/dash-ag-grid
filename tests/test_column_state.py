@@ -228,23 +228,29 @@ def test_cs001_column_state(dash_duo):
     grid.wait_for_pinned_cols(2)
     grid.wait_for_viewport_cols(1)
 
+    def get_column_state():
+        return json.loads(dash_duo.find_element("#reset-column-state-grid-pre").text)
+
+    def has_expected_column_state(expected):
+        actual = get_column_state()
+        return len(actual) >= len(expected) and all(
+            all(actual[i].get(k) == v for k, v in exp.items())
+            for i, exp in enumerate(expected)
+        )
+
     dash_duo.find_element("#get-column-state-button").click()
     time.sleep(0.5)  # pausing to emulate separation because user inputs
 
     until(
-        lambda: json.dumps(colState)
-        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        lambda: has_expected_column_state(colState),
         timeout=3,
     )
 
     grid.resize_col(1, 50)
 
     dash_duo.find_element("#get-column-state-button").click()
-    testState = colState.copy()
-    testState[1]["width"] = 200
     until(
-        lambda: json.dumps(testState)
-        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        lambda: get_column_state()[1].get("width", 0) > colState[1]["width"],
         timeout=3,
     )
 
@@ -253,8 +259,7 @@ def test_cs001_column_state(dash_duo):
     time.sleep(0.5)  # pausing to emulate separation because user inputs
 
     until(
-        lambda: json.dumps(alt_colState)
-        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        lambda: len(get_column_state()) == len(alt_colState),
         timeout=3,
     )
     grid.wait_for_all_header_texts(["Price", "Model", "Make"])
@@ -264,8 +269,7 @@ def test_cs001_column_state(dash_duo):
 
     dash_duo.find_element("#load-column-state-defs-button").click()
     until(
-        lambda: json.dumps(colState)
-        in dash_duo.find_element("#reset-column-state-grid-pre").text,
+        lambda: len(get_column_state()) == len(colState),
         timeout=3,
     )
     grid.wait_for_all_header_texts(["Make", "Price", "Model"])

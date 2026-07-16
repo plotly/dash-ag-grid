@@ -3,6 +3,7 @@ from dash import Dash, html, dcc
 from . import utils
 import time
 import dash_mantine_components
+from dash.testing.wait import until
 
 
 def test_pp001_popupParent(dash_duo):
@@ -33,4 +34,7 @@ def test_pp001_popupParent(dash_duo):
     action = utils.ActionChains(dash_duo.driver)
     action.double_click(grid.get_cell(0, 0)).perform()
 
-    dash_duo.find_element('body > .ag-popup .mantine-Select-input')
+    until(
+        lambda: len(dash_duo.find_elements("body .ag-popup .mantine-Select-input")) > 0,
+        timeout=3,
+    )

@@ -142,7 +142,7 @@ app.layout = html.Div(
         }
         
         
-        .ag-theme-alpine.ag-theme-busybee .ag-pinned-left-cols-container, .ag-theme-busybee .ag-pinned-right-cols-container {
+        .ag-theme-alpine.ag-theme-busybee .ag-grid-scrolling-rows .ag-grid-pinned-left-cells, .ag-theme-busybee .ag-grid-scrolling-rows .ag-grid-pinned-right-cells {
             --ag-odd-row-background-color: rgb(215,215,215);
             --ag-background-color: rgb(230,230,230);
         }
