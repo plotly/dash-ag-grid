@@ -18,6 +18,8 @@ on:
       - v*
     paths:
       - src/**
+      - package.json
+      - package-lock.json
 
 jobs:
   test:
