@@ -6,6 +6,8 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 
 ## [unreleased]
 
+## [36.0.0rc0] - 2026-07-16
+
 ### Changed
 - [#481](https://github.com/plotly/dash-ag-grid/issues/481) bump AG Grid packages to `36.0.1`.
 - [#481](https://github.com/plotly/dash-ag-grid/issues/481) update selectors in tests/examples/docs for AG Grid v36 DOM container class changes.
