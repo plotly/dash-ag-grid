@@ -45,7 +45,7 @@ Add the following to the .css file in the assets folder:
 
 --------------------
 
-.colSpanning .ag-body-viewport [col-id='country'] {
+.colSpanning .ag-grid-scrolling-container [col-id='country'] {
   background-color: #a6e1ec;
 }
 

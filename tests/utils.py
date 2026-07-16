@@ -48,22 +48,28 @@ class Grid:
     def wait_for_pinned_cols(self, expected):
         self.wait_for_pinned_column_count(expected, pin_state="left")
 
-    def _header_class_for_pin_state(self, pin_state: Literal["left", "right", "scrolling"]):
-        """Return the appropriate header class for the given pin state."""
+    def _header_selector_for_pin_state(
+        self, pin_state: Literal["left", "right", "scrolling"]
+    ):
+        """Return the appropriate header selector for the given pin state."""
         if pin_state == "scrolling":
-            return "ag-header-viewport"
+            return ".ag-header"
         elif pin_state == "left":
-            return "ag-pinned-left-header"
+            return ".ag-header .ag-grid-pinned-left-cells"
         elif pin_state == "right":
-            return "ag-pinned-right-header"
+            return ".ag-header .ag-grid-pinned-right-cells"
         else:
             raise ValueError(f"Invalid pin_state: {pin_state}")
-    
-    def wait_for_pinned_column_count(self, expected_count, pin_state: Literal["left", "right", "scrolling"] = "left"):
+
+    def wait_for_pinned_column_count(
+        self,
+        expected_count,
+        pin_state: Literal["left", "right", "scrolling"] = "left",
+    ):
         """Wait for the number of columns in the specified pin state to match the expected count."""
-        header_class = self._header_class_for_pin_state(pin_state)
+        header_selector = self._header_selector_for_pin_state(pin_state)
         self._wait_for_count(
-            f'#{self.id} .{header_class} [aria-rowindex="1"] .ag-header-cell',
+            f'#{self.id} {header_selector} [aria-rowindex="1"] .ag-header-cell',
             expected_count,
             f"pinned_cols '{pin_state}'",
         )
@@ -74,17 +80,17 @@ class Grid:
         pin_state: Literal["left", "right", "scrolling"] = "left",
     ) -> None:
         """Wait for a column to be in the specified pin state."""
-        header_class = self._header_class_for_pin_state(pin_state)
+        header_selector = self._header_selector_for_pin_state(pin_state)
 
         self._wait_for_count(
-            f'#{self.id} .{header_class} [aria-rowindex="1"] .ag-header-cell[col-id="{col_id}"]',
+            f'#{self.id} {header_selector} [aria-rowindex="1"] .ag-header-cell[col-id="{col_id}"]',
             1,
             f"column '{col_id}' pinned '{pin_state}'",
         )
 
     def wait_for_viewport_cols(self, expected):
         self._wait_for_count(
-            f'#{self.id} .ag-header-viewport [aria-rowindex="1"] .ag-header-cell',
+            f'#{self.id} .ag-header [aria-rowindex="1"] .ag-header-cell',
             expected,
             "viewport_cols",
         )
@@ -232,7 +238,8 @@ class Grid:
 
     def cell_in_viewport(self, row, col):
         grid_viewport = self.dash_duo.find_element(
-            f'#{self.id} .ag-body-viewport')
+            f'#{self.id} .ag-grid-scrolling-container'
+        )
         cell = self.dash_duo.find_element(
             f'#{self.id} .ag-row[row-index="{row}"] .ag-cell[aria-colindex="{col + 1}"]'
         )

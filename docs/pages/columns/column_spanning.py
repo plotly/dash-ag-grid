@@ -48,7 +48,7 @@ Olympic winners data before going a bit deeper into its usages. The following ca
 
 Here is the class added to the .css file in the assets folder:
 ```css
-.colSpanning .ag-body-viewport [col-id='country'] {
+.colSpanning .ag-grid-scrolling-container [col-id='country'] {
     background-color: #a6e1ec;
 }
 ```
