@@ -5,26 +5,16 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
 
 ## [unreleased]
-
 ### Added
+- [#436](https://github.com/plotly/dash-ag-grid/pull/436) Enabled Filter Handlers to simplify custom filter components by splitting the filter logic out from the UI component.
+- [#440](https://github.com/plotly/dash-ag-grid/pull/440)
+  - added `columnTypes` to prop categories for parsing functions
 - [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 - [#448](https://github.com/plotly/dash-ag-grid/pull/448) Added support for AG-Charts (split out in v33 of AG Grid).  Integrated Charts require enableEnterpriseModules=True, dashChartMode="community" or "enterprise", and dashGridOptions={"enableCharts": True}.
 - [#455](https://github.com/plotly/dash-ag-grid/pull/455) Added support for dynamic `detailCellRendererParams` in Master/Detail, including dynamic detail-grid column definitions.
 - [#468](https://github.com/plotly/dash-ag-grid/issues/468) Support passing a function to the grid option `processUnpinnedColumns`.
 - [#472](https://github.com/plotly/dash-ag-grid/pull/472) Added support for callback function for the groupAggFiltering options
 
-### Changed
-- [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
-  - Added test for `OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS` to test that the value is an object before parsing, 
-  - this allows for reused keys to not comply with being an object
-
-
-## [35.2.0] - 2026-04-03
-### Added 
-- [#436](https://github.com/plotly/dash-ag-grid/pull/436) Enabled Filter Handlers to simplify custom filter components by splitting the filter logic out from the UI component.
-- [#440](https://github.com/plotly/dash-ag-grid/pull/440)
-  - added `columnTypes` to prop categories for parsing functions
-- [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
 
 ### Changed
 - [#440](https://github.com/plotly/dash-ag-grid/pull/440) 
@@ -33,26 +23,10 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
     - `_self` will auto apply as a `linkTarget`.
     - `_blank` will auto apply `rel='noreferrer noopener 'nofollow'` for security reasons, but will open in a new tab.
   - version bump to v`35.2.0` for the grid
-  - [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
-  - Added test for `OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS` to test that the value is an object before parsing, 
-  - this allows for reused keys to not comply with being an object
-
-### Fixed
-- [#454](https://github.com/plotly/dash-ag-grid/pull/454) fixes issue where a rowCount of 0 would cause the grid not to display new data
-# Change Log for Dash AG Grid
-
-All notable changes to `dash-ag-grid` will be documented in this file.
-This project adheres to [Semantic Versioning](https://semver.org/).
-Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source Dash AG Grid repo
-
-## [unreleased]
-### Added
-- [#453](https://github.com/plotly/dash-ag-grid/pull/453) Test for changelog entry
-
-### Changed
 - [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
   - Added test for `OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS` to test that the value is an object before parsing, 
   - this allows for reused keys to not comply with being an object
+
 
 ### Fixed
 - [#454](https://github.com/plotly/dash-ag-grid/pull/454) fixes issue where a rowCount of 0 would cause the grid not to display new data
