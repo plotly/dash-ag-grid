@@ -17,18 +17,16 @@ Links "DE#nnn" prior to version 2.0 point to the Dash Enterprise closed-source D
 - [#468](https://github.com/plotly/dash-ag-grid/issues/468) Support passing a function to the grid option `processUnpinnedColumns`.
 - [#472](https://github.com/plotly/dash-ag-grid/pull/472) Added support for callback function for the groupAggFiltering options
 
-
 ### Changed
+- version bump to v`34.3.1` for the grid
 - [#440](https://github.com/plotly/dash-ag-grid/pull/440) 
   - Markdown update for npm
     - `linkTarget` now works even if `dangerously_allow_code` is `true` and no `target` is passed in the link. 
     - `_self` will auto apply as a `linkTarget`.
     - `_blank` will auto apply `rel='noreferrer noopener 'nofollow'` for security reasons, but will open in a new tab.
-  - version bump to v`35.2.0` for the grid
 - [#452](https://github.com/plotly/dash-ag-grid/pull/452) 
   - Added test for `OBJ_MAYBE_FUNCTION_OR_MAP_MAYBE_FUNCTIONS` to test that the value is an object before parsing, 
   - this allows for reused keys to not comply with being an object
-
 
 ### Fixed
 - [#454](https://github.com/plotly/dash-ag-grid/pull/454) fixes issue where a rowCount of 0 would cause the grid not to display new data
