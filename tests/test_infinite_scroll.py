@@ -328,7 +328,7 @@ def test_is003_infinite_scroll_clear(dash_duo):
         until(
             lambda: len(
                 dash_duo.find_elements(
-                    "#grid .ag-grid-scrolling-cells > *"
+                    "#grid .ag-grid-scrolling-container > *, #grid .ag-center-cols-container > *"
                 )
             )
                     == 0,

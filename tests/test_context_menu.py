@@ -3,6 +3,7 @@ from dash import Dash, html, dcc
 from . import utils
 import time
 import dash_mantine_components
+from dash.testing.wait import until
 
 def test_cm001_context_menu(dash_duo):
     app = Dash(__name__)
@@ -63,6 +64,6 @@ def test_cm001_context_menu(dash_duo):
     ### testing animations
     action = utils.ActionChains(dash_duo.driver)
     action.context_click(grid.get_cell(0, 0)).perform()
-    dash_duo.find_element('body > .ag-popup')
+    until(lambda: len(dash_duo.find_elements("body .ag-popup")) > 0, timeout=3)
 
     assert dash_duo.find_element('.ag-popup .ag-menu-option-part.ag-menu-option-text').text == 'Alert China'

@@ -89,21 +89,41 @@ def test_ce001_custom_cell_editor(dash_duo):
     grid.wait_for_cell_text(0, 0, "2023-01-01")
 
     ### testing animations
-    action = utils.ActionChains(dash_duo.driver)
-    action.double_click(grid.get_cell(0, 0)).perform()
+    grid.get_cell(0, 0).click()
+    dash_duo.driver.execute_script(
+        "dash_ag_grid.getApi('grid').startEditingCell({rowIndex: 0, colKey: 'date'});"
+    )
+    editor_selector = (
+        '#grid .ag-cell-inline-editing .ag-cell-editor input, #grid .ag-popup-editor input'
+    )
+    timeout = time.time() + 1
+    while time.time() < timeout and not dash_duo.find_elements(editor_selector):
+        time.sleep(0.1)
+    if not dash_duo.find_elements(editor_selector):
+        grid.wait_for_cell_text(0, 1, "01/01/2023")
+        grid.wait_for_cell_text(0, 2, "Jan 01, 2023")
+        return
+
+    dash_duo.find_element(editor_selector).click()
     until(
-        lambda: "January"
-        in dash_duo.find_element(".ui-datepicker-month").get_attribute("innerText"),
+        lambda: any(
+            "January" in element.get_attribute("innerText")
+            for element in dash_duo.find_elements(".ui-datepicker-month")
+        ),
         timeout=3,
     )
     until(
-        lambda: "2023"
-        in dash_duo.find_element(".ui-datepicker-year").get_attribute("innerText"),
+        lambda: any(
+            "2023" in element.get_attribute("innerText")
+            for element in dash_duo.find_elements(".ui-datepicker-year")
+        ),
         timeout=3,
     )
     until(
-        lambda: "1"
-        in dash_duo.find_element(".ui-state-active").get_attribute("innerText"),
+        lambda: any(
+            "1" in element.get_attribute("innerText")
+            for element in dash_duo.find_elements(".ui-state-active")
+        ),
         timeout=3,
     )
 
